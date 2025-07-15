@@ -52,8 +52,8 @@ const ScholarshipsCarousel = () => {
       >
         <CarouselContent className="flex items-center justify-center">
           {data?.length === 0 ? (
-            <div className="border-border ml-4 flex h-96 w-full items-center justify-center rounded-xl border">
-              <div>No Scholarship yet.</div>
+            <div className="ml-4 flex h-96 w-full items-center justify-center rounded-xl">
+              <div className="text-muted-foreground">No Scholarship yet.</div>
             </div>
           ) : (
             <>

@@ -25,35 +25,39 @@ export enum PageRoutes {
    *           SCHOLARSHIP ROUTES           *
    ******************************************/
 
+  SCHOLARSHIPS = "/scholarships",
+
   // Students only
-  SCHOLARSHIPS_BROWSE = "/browse",
+  SCHOLARSHIPS_BROWSE = `${SCHOLARSHIPS}/browse`,
 
   // Students + Coordinators/Admins (different views)
-  SCHOLARSHIPS_APPLICATIONS = "/applications",
+  SCHOLARSHIPS_APPLICATIONS = `${SCHOLARSHIPS}/applications`,
 
   // Coordinators + Admins
-  SCHOLARSHIPS_PROGRAMS = "/programs",
+  SCHOLARSHIPS_PROGRAMS = `${SCHOLARSHIPS}/programs`,
   SCHOLARSHIPS_PROGRAMS_CREATE = `${SCHOLARSHIPS_PROGRAMS}/create`,
-  SCHOLARSHIPS_SCHOLARS = "/scholars",
+  SCHOLARSHIPS_SCHOLARS = `${SCHOLARSHIPS}/scholars`,
 
   /******************************************
    *            INTERNSHIP ROUTES           *
    ******************************************/
 
+  INTERNSHIPS = "/internships",
+
   // Admins only
-  INTERNSHIPS_COMPANIES = "/companies",
-  INTERNSHIPS_DEPARTMENTS = "/departments",
-  INTERNSHIPS_SUPERVISORS = "/supervisors",
-  INTERNSHIPS_REPORTS = "/reports",
+  INTERNSHIPS_COMPANIES = `${INTERNSHIPS}/companies`,
+  INTERNSHIPS_DEPARTMENTS = `${INTERNSHIPS}/departments`,
+  INTERNSHIPS_SUPERVISORS = `${INTERNSHIPS}/supervisors`,
+  INTERNSHIPS_REPORTS = `${INTERNSHIPS}/reports`,
 
   // Coordinators + Admins
-  INTERNSHIPS_MANAGE = "/manage-internships",
+  INTERNSHIPS_MANAGE = `${INTERNSHIPS}/manage-internships`,
 
   // Students + Coordinators (different views)
-  INTERNSHIPS_PROGRESS = "/progress",
-  INTERNSHIPS_DOCUMENTS = "/documents",
+  INTERNSHIPS_PROGRESS = `${INTERNSHIPS}/progress`,
+  INTERNSHIPS_DOCUMENTS = `${INTERNSHIPS}/documents`,
 
   // Coordinators only
-  INTERNSHIPS_DOCUMENTS_REVIEW = `/documents-review`,
-  INTERNSHIPS_PROGRESS_MONITOR = `/progress-monitor`,
+  INTERNSHIPS_DOCUMENTS_REVIEW = `${INTERNSHIPS}/documents-review`,
+  INTERNSHIPS_PROGRESS_MONITOR = `${INTERNSHIPS}/progress-monitor`,
 }

@@ -12,14 +12,11 @@ import { NavMain } from "./nav-main";
 import NavHeader from "./nav-header";
 import { NavUser } from "./nav-user";
 import ModeToggle from "@/components/theme/mode-toggler";
-import type { roleType } from "@/constants/roles";
+import type { roleType, UserInfo } from "@/constants/roles";
 
 interface SideBarProps extends React.ComponentProps<typeof Sidebar> {
   userRole: roleType;
-  user: {
-    name: string;
-    email: string;
-  };
+  user: UserInfo;
 }
 
 export const SideBar = ({ userRole, user, ...props }: SideBarProps) => {

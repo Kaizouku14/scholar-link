@@ -8,3 +8,9 @@ export const ROLES = [
 ] as const;
 
 export type roleType = (typeof ROLES)[number];
+
+export type UserInfo = {
+  name: string;
+  email: string;
+  profile?: string;
+};
