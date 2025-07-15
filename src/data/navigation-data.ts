@@ -37,7 +37,7 @@ export const NAVIGATION_DATA: NavigationData = {
         items: [
           {
             title: "Internships",
-            url: PageRoutes.INTERNSHIPS_MANAGE,
+            url: PageRoutes.INTERNSHIP_MANAGE_INTERNSHIPS,
             icon: Handshake,
             description: "Manage all internships",
           },
@@ -93,7 +93,7 @@ export const NAVIGATION_DATA: NavigationData = {
         items: [
           {
             title: "User Accounts",
-            url: PageRoutes.ACCOUNTS,
+            url: PageRoutes.INTERNSHIPS_ACCOUNTS,
             icon: ShieldUser,
             description: "Manage user accounts",
           },
@@ -119,7 +119,7 @@ export const NAVIGATION_DATA: NavigationData = {
         items: [
           {
             title: "My Internships",
-            url: PageRoutes.INTERNSHIPS_MANAGE,
+            url: PageRoutes.INTERNSHIPS_INTERNS,
             icon: NotepadText,
             description: "Internships under supervision",
           },
@@ -213,7 +213,7 @@ export const NAVIGATION_DATA: NavigationData = {
           },
           {
             title: "My Applications",
-            url: PageRoutes.SCHOLARSHIPS_APPLICATIONS,
+            url: PageRoutes.SCHOLARSHIP_MY_APPLICATIONS,
             icon: FileText,
             description: "Track your applications",
           },
@@ -292,7 +292,7 @@ export const NAVIGATION_DATA: NavigationData = {
         items: [
           {
             title: "User Accounts",
-            url: PageRoutes.ACCOUNTS,
+            url: PageRoutes.SCHOLARSHIPS_ACCOUNTS,
             icon: ShieldUser,
             description: "Manage user accounts",
           },
