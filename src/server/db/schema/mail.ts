@@ -12,5 +12,4 @@ export const mailTable = createTable("mail", {
   date: text("date").notNull(),
   createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
   isRead: integer("is_read", { mode: "boolean" }).notNull().default(false),
-  
 });

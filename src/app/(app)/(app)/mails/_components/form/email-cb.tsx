@@ -41,7 +41,7 @@ const EmailComboBox = ({ value, onChange }: EmailListProps) => {
               variant="outline"
               role="combobox"
               aria-expanded={open}
-              className="w-full justify-between shadow-none"
+              className="text-muted-foreground w-full justify-between shadow-none"
             >
               {value
                 ? data?.find((email) => email === value)

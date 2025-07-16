@@ -1,7 +1,5 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { uploadFiles } from "./uploadthing";
-import { toast } from "sonner";
 import z from "zod";
 
 export function cn(...inputs: ClassValue[]) {
@@ -34,52 +32,6 @@ export const strongPasswordSchema = z
 export function generateUUID(): string {
   return crypto.randomUUID();
 }
-
-/**
- * Upload an image file using the "imageUploader" route.
- *
- * @param {File | undefined} image - The image file to upload. If undefined, no upload is performed.
- * @returns {Promise<{ url: string | undefined; key: string | undefined } | undefined>}
- *          A promise that resolves to an object containing the URL and key of the uploaded image,
- *          or undefined if the upload fails or the image is not provided.
- */
-
-export const uploadImage = async (
-  image: File | undefined,
-): Promise<
-  { url: string | undefined; key: string | undefined } | undefined
-> => {
-  if (!image) return;
-
-  try {
-    const res = await uploadFiles("imageUploader", {
-      files: [image],
-    });
-
-    if (!res || res.length === 0) {
-      toast.error("Failed to upload image. Please try again.");
-      return;
-    }
-
-    const uploadedFile = res[0];
-
-    return {
-      url: uploadedFile?.ufsUrl,
-      key: uploadedFile?.key,
-    };
-  } catch (error) {
-    console.error("Image upload error:", error);
-    return;
-  }
-};
-
-/**
- * Slugify a string by lowercasing it, removing non-alphanumeric characters,
- * replacing spaces with dashes, and collapsing multiple dashes.
- *
- * @param {string} text - The string to slugify.
- * @returns {string} The slugified string.
- */
 
 /**
  * Slugify a string by lowercasing it, removing non-alphanumeric characters,
