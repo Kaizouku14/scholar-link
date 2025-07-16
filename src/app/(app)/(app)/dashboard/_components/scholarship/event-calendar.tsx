@@ -62,12 +62,12 @@ const EventCalendar = ({ events = [] }: SimpleCalendarProps) => {
     );
     const daysInPrevMonth = prevMonth.getDate();
 
-    // Get next month info
-    const nextMonth = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth() + 1,
-      1,
-    );
+    //  Get next month info
+    // const nextMonth = new Date(
+    //   currentDate.getFullYear(),
+    //   currentDate.getMonth() + 1,
+    //   1,
+    // );
 
     // Previous month's trailing days (gray)
     for (let i = firstDay - 1; i >= 0; i--) {
@@ -105,7 +105,6 @@ const EventCalendar = ({ events = [] }: SimpleCalendarProps) => {
       );
     }
 
-    // Next month's leading days (gray) to complete the 6x7 grid
     const totalCells = 42; // 6 rows × 7 days
     const remainingCells = totalCells - days.length;
 
