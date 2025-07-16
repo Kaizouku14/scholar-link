@@ -16,7 +16,7 @@ export const getAllUserEmail = async () => {
       });
     }
 
-    return response;
+    return response.map((email) => email.email);
   } catch (error) {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",

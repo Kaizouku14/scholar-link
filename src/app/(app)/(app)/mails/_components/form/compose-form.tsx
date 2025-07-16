@@ -19,8 +19,9 @@ import {
 } from "@/components/ui/form";
 import { X } from "lucide-react";
 import { toast } from "sonner";
-import { Paperclip, ImageIcon, Smile, Send } from "lucide-react";
+import { Paperclip, ImageIcon, Send } from "lucide-react";
 import { formSchema, type FormSchema } from "./schema";
+import EmailComboBox from "./email-cb";
 
 interface ComposeFormProps {
   onSuccess?: () => void;
@@ -95,20 +96,11 @@ const ComposeForm = ({ onSuccess }: ComposeFormProps) => {
           name="to"
           render={({ field }) => (
             <FormItem>
-              <div className="flex items-center space-x-2">
-                <div className="flex-1 space-y-2">
-                  <FormLabel htmlFor="to">To :</FormLabel>
-                  <FormControl>
-                    <Input
-                      id="to"
-                      placeholder="Recipients (make it combo box)"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </div>
-                <div className="mt-6 flex space-x-1"></div>
-              </div>
+              <FormLabel htmlFor="to">To :</FormLabel>
+              <FormControl>
+                <EmailComboBox value={field.value} onChange={field.onChange} />
+              </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
