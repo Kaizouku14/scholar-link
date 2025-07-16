@@ -16,7 +16,7 @@ import { ProgramDetails } from "./form-sections/program-details";
 import { RequirementsSection } from "./form-sections/requirements-section";
 import { api } from "@/trpc/react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { uploadFile } from "@/lib/uploadthing";
+import { uploadSingleFile } from "@/lib/uploadthing";
 
 export default function ScholarshipForm() {
   const form = useForm<ScholarshipFormData>({
@@ -50,14 +50,12 @@ export default function ScholarshipForm() {
 
   const onSubmit = async (basicInfo: ScholarshipFormData) => {
     try {
-      let uploadedImage = null;
-      if (basicInfo.image) {
-        try {
-          uploadedImage = await uploadFile(basicInfo.image);
-        } catch (uploadError) {
-          toast.error("Failed to upload image. Please try again.");
-          return;
-        }
+      let uploadedImage;
+      try {
+        uploadedImage = await uploadSingleFile(basicInfo.image);
+      } catch (uploadError) {
+        toast.error("Failed to upload image. Please try again.");
+        return;
       }
 
       toast.info("Processing data, please wait...");
@@ -84,7 +82,6 @@ export default function ScholarshipForm() {
       form.reset();
       setFileName(null);
     } catch (error) {
-      console.error("Submission error:", error);
       toast.error("Failed to create scholarship program.");
     }
   };

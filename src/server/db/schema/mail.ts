@@ -12,4 +12,8 @@ export const mailTable = createTable("mail", {
   date: text("date").notNull(),
   createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
   isRead: integer("is_read", { mode: "boolean" }).notNull().default(false),
+  imageKeys: text("image_file_key"),
+  imageUrls: text("image_file_url"),
+  fileKeys: text("file_key"),
+  fileUrls: text("file_url"),
 });
