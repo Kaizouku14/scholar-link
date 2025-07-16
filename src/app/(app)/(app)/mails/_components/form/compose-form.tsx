@@ -3,7 +3,6 @@
 import { useState, useRef } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -22,6 +21,11 @@ import { toast } from "sonner";
 import { Paperclip, ImageIcon, Send } from "lucide-react";
 import { formSchema, type FormSchema } from "./schema";
 import EmailComboBox from "./email-cb";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface ComposeFormProps {
   onSuccess?: () => void;
@@ -165,28 +169,43 @@ const ComposeForm = ({ onSuccess }: ComposeFormProps) => {
           )}
         />
 
-        {/* Footer with interactive icons */}
         <div className="flex w-full items-center justify-between pt-4">
           <div className="flex items-center space-x-2">
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              onClick={triggerFileUpload}
-              title="Attach file"
-            >
-              <Paperclip className="h-4 w-4" />
-            </Button>
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              onClick={triggerImageUpload}
-              title="Attach image"
-            >
-              <ImageIcon className="h-4 w-4" />
-            </Button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={triggerFileUpload}
+                  title="Attach file"
+                >
+                  <Paperclip className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Upload File</p>
+              </TooltipContent>
+            </Tooltip>
+
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={triggerImageUpload}
+                  title="Attach image"
+                >
+                  <ImageIcon className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Upload Image</p>
+              </TooltipContent>
+            </Tooltip>
           </div>
+          
           <div className="flex items-center space-x-2">
             <Button
               type="button"
@@ -208,20 +227,19 @@ const ComposeForm = ({ onSuccess }: ComposeFormProps) => {
           </div>
         </div>
 
-        {/* Hidden file inputs */}
         <input
           type="file"
           ref={fileInputRef}
           onChange={handleFileUpload}
           className="hidden"
-          accept="*/*"
+          accept=".pdf, .doc, .docx, .xls, .xlsx"
         />
         <input
           type="file"
           ref={imageInputRef}
           onChange={handleImageUpload}
           className="hidden"
-          accept="image/*"
+          accept=".png, .jpg, .jpeg, .gif, .webp"
         />
       </form>
     </Form>

@@ -4,6 +4,7 @@ import { GENDERS } from "@/constants/genders";
 import { DEPARTMENTS } from "@/constants/departments";
 import { COURSES } from "@/constants/courses";
 import { getAllUserEmail } from "@/lib/api/user/query";
+import { TRPCError } from "@trpc/server";
 
 export const userRouter = createTRPCRouter({
   register: publicProcedure
@@ -29,7 +30,15 @@ export const userRouter = createTRPCRouter({
       console.log(input);
     }),
 
-  getAllUserEmail: publicProcedure.query(async () => {
-    return await getAllUserEmail();
+  getAllUserEmail: publicProcedure.query(async ({ ctx }) => {
+    if (!ctx.session) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "User is not authenticated",
+      });
+    }
+    const { email } = ctx.session.user;
+
+    return await getAllUserEmail({ email });
   }),
 });

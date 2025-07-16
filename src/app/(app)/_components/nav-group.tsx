@@ -58,7 +58,7 @@ export function NavGroups({ group, notificationCounts }: NavGroupProps) {
                     {showBadge && (
                       <div
                         className={cn(
-                          "bg-primary absolute top-0 right-0 size-2.5",
+                          `${isActiveRoute(item.url) ? "bg-white" : "bg-primary"} absolute top-0 right-0 size-2.5`,
                           "flex items-center justify-center rounded-full",
                           "hidden group-data-[collapsible=icon]:block",
                         )}
@@ -70,7 +70,12 @@ export function NavGroups({ group, notificationCounts }: NavGroupProps) {
 
                   {/* Badge for expanded mode */}
                   {showBadge && (
-                    <Badge className="ml-auto h-5 px-1.5 text-xs group-data-[collapsible=icon]:hidden">
+                    <Badge
+                      className={`ml-auto h-5 px-1.5 text-xs group-data-[collapsible=icon]:hidden ${isActiveRoute(item.url) ? "bg-white text-black" : ""}`}
+                      variant={
+                        isActiveRoute(item.url) ? "secondary" : "default"
+                      }
+                    >
                       {item.badgeType
                         ? badgeCount > 99
                           ? "99+"

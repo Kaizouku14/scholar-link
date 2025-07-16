@@ -41,7 +41,7 @@ const EmailComboBox = ({ value, onChange }: EmailListProps) => {
               variant="outline"
               role="combobox"
               aria-expanded={open}
-              className="w-full justify-between"
+              className="w-full justify-between shadow-none"
             >
               {value
                 ? data?.find((email) => email === value)
@@ -76,7 +76,9 @@ const EmailComboBox = ({ value, onChange }: EmailListProps) => {
                       </CommandItem>
                     ))
                   ) : (
-                    <CommandItem disabled>No emails available</CommandItem>
+                    <CommandItem disabled className="flex justify-center">
+                      <span> No emails available</span>
+                    </CommandItem>
                   )}
                 </CommandGroup>
               </CommandList>

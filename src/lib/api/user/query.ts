@@ -1,12 +1,13 @@
-import { db } from "@/server/db";
+import { db, ne } from "@/server/db";
 import { user } from "@/server/db/schema/auth";
 import { TRPCError } from "@trpc/server";
 
-export const getAllUserEmail = async () => {
+export const getAllUserEmail = async ({ email }: { email: string }) => {
   try {
     const response = await db
       .select({ email: user.email })
       .from(user)
+      .where(ne(user.email, email))
       .execute();
 
     if (!response) {

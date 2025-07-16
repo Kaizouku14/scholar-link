@@ -13,6 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import ComposeEmail from "./compose-email";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const mockEmails = [
   {
@@ -127,45 +128,9 @@ DevOps Engineer`,
     isRead: false,
     avatar: "AR",
   },
-  {
-    id: "5",
-    sender: "Lisa Wang",
-    senderEmail: "lisa.wang@company.com",
-    subject: "Welcome to the Team!",
-    preview:
-      "We're excited to have you join our growing team. Here's everything you need to know for your first day...",
-    content: `Welcome to the team!
-
-We're excited to have you join our growing team. Here's everything you need to know for your first day:
-
-Your first day schedule:
-9:00 AM - Welcome meeting with HR
-10:00 AM - Team introductions
-11:00 AM - IT setup and equipment
-12:00 PM - Lunch with your manager
-2:00 PM - Department overview
-3:00 PM - Project assignments
-
-What to bring:
-- Photo ID for building access
-- Signed paperwork (if not already submitted)
-- Any questions you might have!
-
-We're looking forward to working with you and seeing the great things you'll accomplish here.
-
-Welcome aboard!
-
-Lisa Wang
-HR Manager`,
-    timestamp: "3 days ago",
-    date: "March 13",
-    isRead: true,
-    avatar: "LW",
-  },
 ];
 
 const Mail = () => {
-  const [selectedEmail, setSelectedEmail] = useState(mockEmails[0]);
   const [searchQuery, setSearchQuery] = useState("");
 
   const filteredEmails = mockEmails.filter(
@@ -175,10 +140,11 @@ const Mail = () => {
       email.preview.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
+  const [selectedEmail, setSelectedEmail] = useState(filteredEmails[0]);
+
   return (
     <div className="flex">
       <div className="bg-background flex w-full flex-col border-r md:w-96 lg:w-80 xl:w-96">
-        {/* Header */}
         <div className="bg-background/95 supports-[backdrop-filter]:bg-background/60 border-border h-31.5 rounded-tl-xl border p-4 backdrop-blur">
           <div className="mb-3 flex items-center justify-between">
             <h1 className="text-xl font-semibold">Inbox</h1>
@@ -203,7 +169,6 @@ const Mail = () => {
             </div>
           </div>
 
-          {/* Search */}
           <div className="relative mt-4.5">
             <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform" />
             <Input
@@ -215,15 +180,15 @@ const Mail = () => {
           </div>
         </div>
 
-        {/* Email List */}
-        <EmailList
-          emails={filteredEmails}
-          selectedEmail={selectedEmail}
-          onEmailSelect={setSelectedEmail}
-        />
+        <ScrollArea className="border-border h-[665px] rounded-bl-xl border-x border-b">
+          <EmailList
+            emails={filteredEmails}
+            selectedEmail={selectedEmail}
+            onEmailSelect={setSelectedEmail}
+          />
+        </ScrollArea>
       </div>
 
-      {/* Email Detail Panel */}
       <div className="hidden flex-1 flex-col md:flex">
         <EmailDetail email={selectedEmail} />
       </div>
