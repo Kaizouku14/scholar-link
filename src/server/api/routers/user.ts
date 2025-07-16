@@ -3,8 +3,9 @@ import { createTRPCRouter, publicProcedure } from "../trpc";
 import { GENDERS } from "@/constants/genders";
 import { DEPARTMENTS } from "@/constants/departments";
 import { COURSES } from "@/constants/courses";
+import { getAllUserEmail } from "@/lib/api/user/query";
 
-export const authRouter = createTRPCRouter({
+export const userRouter = createTRPCRouter({
   register: publicProcedure
     .input(
       z.object({
@@ -27,4 +28,8 @@ export const authRouter = createTRPCRouter({
     .mutation(async ({ input }) => {
       console.log(input);
     }),
+
+  getAllUserEmail: publicProcedure.query(async () => {
+    return await getAllUserEmail();
+  }),
 });

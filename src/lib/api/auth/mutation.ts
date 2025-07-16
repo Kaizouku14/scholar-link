@@ -1,6 +1,6 @@
 import { generateUUID } from "@/lib/utils";
 import { db, eq } from "@/server/db";
-import { authorizedEmail as authorizedEmailTable } from "@/server/db/schema/auth-schema";
+import { authorizedEmail as authorizedEmailTable } from "@/server/db/schema/auth";
 
 export const isEmailAuthorized = async ({ email }: { email: string }) => {
   const [authorizedEmail] = await db
