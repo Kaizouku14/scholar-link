@@ -20,7 +20,7 @@ import {
   getProgramById,
 } from "@/lib/api/scholarship/programs/query";
 
-export const ScholarshipRouter = createTRPCRouter({
+export const scholarshipRouter = createTRPCRouter({
   createScholarshipProgram: adminRoute
     .input(
       z.object({
