@@ -45,8 +45,6 @@ export const NavUser = ({ user }: { user?: UserItem }) => {
         id: toastId,
         position: "top-center",
       });
-    } finally {
-      toast.dismiss(toastId);
     }
   };
 

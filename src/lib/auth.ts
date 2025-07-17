@@ -5,7 +5,7 @@ import * as schema from "@/server/db/schema/auth";
 import { admin } from "better-auth/plugins/admin";
 import { additionalFields } from "./utils";
 import { ROLES } from "@/constants/roles";
-import { ac, roles } from "./permission";
+// import { ac, roles } from "./permission";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -18,10 +18,6 @@ export const auth = betterAuth({
       verification: schema.verification,
     },
   }),
-  session: {
-    expiresIn: 60 * 60 * 24 * 7, // 7 days
-    updateAge: 60 * 60 * 24, // 24 hours
-  },    
   emailAndPassword: {
     enabled: true,
     autoSignIn: false,
@@ -34,10 +30,10 @@ export const auth = betterAuth({
     admin({
       defaultRole: ROLES[0], //Internship Student
       adminRoles: ["scholarship-admin", "internship-admin"],
-      ac,
-      roles: {
-        ...roles,
-      },
+      //   ac,
+      //   roles: {
+      //     ...roles,
+      //   },   
     }),
   ],
 });

@@ -41,11 +41,13 @@ const EmailComboBox = ({ value, onChange }: EmailListProps) => {
               variant="outline"
               role="combobox"
               aria-expanded={open}
-              className="text-muted-foreground w-full justify-between shadow-none"
+              className="w-full justify-between shadow-none"
             >
-              {value
-                ? data?.find((item) => item.id === value)?.id
-                : "Select Email..."}
+              {value ? (
+                data?.find((item) => item.id === value)?.email
+              ) : (
+                <span className="text-muted-foreground">Select Email...</span>
+              )}
               <ChevronsUpDown className="opacity-50" />
             </Button>
           </PopoverTrigger>

@@ -5,12 +5,12 @@ import { sql } from "drizzle-orm";
 
 export const mailTable = createTable("mail", {
   id: text("id").primaryKey(),
-  sender: text("user_id")
+  sender: text("sender_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
   senderName: text("sender_name").notNull(),
   senderEmail: text("sender_email").notNull(),
-  senderProfile: text("sender_avatar"),
+  senderProfile: text("sender_profile"),
   receiver: text("receiver_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),

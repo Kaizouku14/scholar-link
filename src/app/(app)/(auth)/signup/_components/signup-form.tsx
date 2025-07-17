@@ -30,6 +30,7 @@ import { DEPARTMENTS } from "@/constants/departments";
 import { useRouter } from "next/navigation";
 
 const SignUpForm = () => {
+  const router = useRouter();
   const form = useForm<SignUpSchema>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
@@ -79,6 +80,8 @@ const SignUpForm = () => {
           { id: toastId, duration: 5000, position: "top-center" },
         );
       }
+
+      router.push(PageRoutes.LOGIN);
       form.reset();
     } catch (error) {
       toast.error((error as Error).message, {
