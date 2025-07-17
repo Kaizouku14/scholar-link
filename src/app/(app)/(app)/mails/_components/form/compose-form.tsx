@@ -27,6 +27,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { api } from "@/trpc/react";
 
 interface ComposeFormProps {
   onSuccess?: () => void;
@@ -48,21 +49,39 @@ const ComposeForm = ({ onSuccess }: ComposeFormProps) => {
     },
   });
 
+  const { mutateAsync: sendMailToMutation } = api.mail.sendMailTo.useMutation();
   const handleSubmit = async (values: FormSchema) => {
+    const { to, subject, content } = values;
     try {
-      console.log("Sending email:", values);
-      console.log("Image Attachments:", imageAttachments);
-      console.log("File Attachments:", fileAttachments);
+      const toasdId = toast.loading("Sending email...");
+      toast.promise(
+        sendMailToMutation({
+          reciever: to,
+          subject,
+          content,
+          imageKeys: imageAttachments.map((file) => file.name),
+          imageUrls: imageAttachments.map((file) => URL.createObjectURL(file)),
+          fileKeys: fileAttachments.map((file) => file.name),
+          fileUrls: fileAttachments.map((file) => URL.createObjectURL(file)),
+        }),
+        {
+          success: () => {
+            form.reset();
+            setImageAttachments([]);
+            setFileAttachments([]);
+            onSuccess?.();
 
-      toast.success("Email sent successfully!");
+            return "Email sent successfully";
+          },
+          error: (error) => {
+            return (error as Error).message;
+          },
+        },
+      );
 
-      form.reset();
-      setImageAttachments([]);
-      setFileAttachments([]);
-      onSuccess?.();
+      toast.dismiss(toasdId);
     } catch (error) {
       toast.error("Failed to send email. Please try again.");
-      console.error("Email send error:", error);
     }
   };
 
