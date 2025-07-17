@@ -16,11 +16,8 @@ export const mailTable = createTable("mail", {
     .references(() => user.id, { onDelete: "cascade" }),
   subject: text("subject").notNull(),
   content: text("content").notNull(),
+  date: integer("date", { mode: "timestamp" }).notNull(),
   isRead: integer("is_read", { mode: "boolean" }).default(false),
-  imageKeys: text("image_file_key").default("[]"),
-  imageUrls: text("image_file_url").default("[]"),
-  fileKeys: text("file_key").default("[]"),
-  fileUrls: text("file_url").default("[]"),
   createdAt: integer("created_at", { mode: "timestamp" }).default(
     sql`(unixepoch())`,
   ),

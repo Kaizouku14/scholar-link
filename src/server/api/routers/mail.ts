@@ -11,10 +11,6 @@ export const mailRouter = createTRPCRouter({
         reciever: z.string(),
         subject: z.string(),
         content: z.string(),
-        imageKeys: z.array(z.string()).optional(),
-        imageUrls: z.array(z.string()).optional(),
-        fileKeys: z.array(z.string()).optional(),
-        fileUrls: z.array(z.string()).optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -36,10 +32,7 @@ export const mailRouter = createTRPCRouter({
           receiver: input.reciever,
           subject: input.subject,
           content: input.content,
-          imageKeys: input.imageKeys,
-          imageUrls: input.imageUrls,
-          fileKeys: input.fileKeys,
-          fileUrls: input.fileUrls,
+          date: new Date(),
         };
 
         return await sendMailTo({ mail: mailToSend });

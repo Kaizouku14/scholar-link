@@ -3,24 +3,13 @@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-
-interface Email {
-  id: string;
-  sender: string;
-  senderEmail: string;
-  subject: string;
-  content: string;
-  preview: string;
-  timestamp: string;
-  date: string;
-  isRead: boolean;
-  avatar: string;
-}
+import type { Email } from "@/types/email";
+import { format } from "date-fns";
 
 interface EmailListProps {
   emails: Email[];
-  selectedEmail: Email | undefined;
-  onEmailSelect: (email: Email) => void;
+  selectedEmail?: Email | undefined;
+  onEmailSelect?: (email: Email) => void;
 }
 
 const EmailList = ({
@@ -31,7 +20,7 @@ const EmailList = ({
   return (
     <ScrollArea className="flex-1">
       <div>
-        {emails.length > 0 ? (
+        {emails?.length > 0 ? (
           <>
             {emails.map((email) => (
               <div
@@ -42,13 +31,16 @@ const EmailList = ({
                     "bg-muted border-l-primary border-l-2",
                   !email.isRead && "bg-blue-50/30 dark:bg-blue-950/20",
                 )}
-                onClick={() => onEmailSelect(email)}
+                onClick={() => onEmailSelect?.(email)}
               >
                 <div className="flex items-start space-x-3">
                   <Avatar className="mt-0.5 h-8 w-8">
-                    <AvatarImage src={email?.avatar} alt={email.sender} />
-                    <AvatarFallback className="text-xs font-medium">
-                      {email.avatar}
+                    <AvatarImage
+                      src={email?.senderProfile ?? undefined}
+                      alt={email.sender}
+                    />
+                    <AvatarFallback className="bg-primary/10 text-primary text-sm font-medium">
+                      {"NA"}
                     </AvatarFallback>
                   </Avatar>
 
@@ -65,7 +57,7 @@ const EmailList = ({
                         {email.sender}
                       </p>
                       <span className="text-muted-foreground ml-2 text-xs whitespace-nowrap">
-                        {email.timestamp}
+                        {format("dd MMM yyyy", email.createdAt)}
                       </span>
                     </div>
 
@@ -81,7 +73,7 @@ const EmailList = ({
                     </h3>
 
                     <p className="text-muted-foreground line-clamp-2 text-sm leading-relaxed">
-                      {email.preview}
+                      {email.content}
                     </p>
                   </div>
                 </div>

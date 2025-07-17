@@ -14,133 +14,21 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import ComposeEmail from "./compose-email";
 import { ScrollArea } from "@/components/ui/scroll-area";
-
-const mockEmails = [
-  {
-    id: "1",
-    sender: "John Doe",
-    senderEmail: "john.doe@company.com",
-    subject: "Q4 Planning Meeting - Action Items",
-    preview:
-      "Hi team, following up on our Q4 planning session. Here are the key action items we discussed...",
-    content: `Hi team,
-
-Following up on our Q4 planning session. Here are the key action items we discussed:
-
-1. Finalize budget allocations by end of week
-2. Review and approve new hire requisitions
-3. Schedule follow-up meetings with department heads
-4. Prepare quarterly review presentations
-
-Please let me know if you have any questions or concerns about these items.
-
-Best regards,
-John Doe
-Senior Project Manager`,
-    timestamp: "10:30 AM",
-    date: "Today",
-    isRead: false,
-    avatar: "JD",
-  },
-  {
-    id: "2",
-    sender: "Sarah Chen",
-    senderEmail: "sarah.chen@company.com",
-    subject: "Design Review Feedback",
-    preview:
-      "Thanks for sharing the latest mockups. I've reviewed them and have some feedback to share...",
-    content: `Hi there,
-
-Thanks for sharing the latest mockups. I've reviewed them and have some feedback to share:
-
-Overall, the design direction looks great! The user flow is intuitive and the visual hierarchy is clear.
-
-Specific feedback:
-- Consider increasing the contrast on the secondary buttons
-- The mobile layout could benefit from larger touch targets
-- Love the new color palette - it's much more accessible
-
-Let's schedule a quick call to discuss these points in more detail.
-
-Best,
-Sarah Chen
-UX Designer`,
-    timestamp: "9:15 AM",
-    date: "Today",
-    isRead: true,
-    avatar: "SC",
-  },
-  {
-    id: "3",
-    sender: "Marketing Team",
-    senderEmail: "marketing@company.com",
-    subject: "Campaign Performance Update",
-    preview:
-      "Great news! Our latest email campaign exceeded expectations with impressive engagement rates...",
-    content: `Team,
-
-Great news! Our latest email campaign exceeded expectations with impressive engagement rates.
-
-Key metrics:
-• Open rate: 28.5% (industry average: 21%)
-• Click-through rate: 4.2% (industry average: 2.6%)
-• Conversion rate: 3.1% (previous campaign: 2.4%)
-
-The personalized subject lines and targeted content segments were particularly effective. Let's apply these learnings to our upcoming campaigns.
-
-Thanks to everyone who contributed to this success!
-
-Marketing Team`,
-    timestamp: "Yesterday",
-    date: "Yesterday",
-    isRead: true,
-    avatar: "MT",
-  },
-  {
-    id: "4",
-    sender: "Alex Rodriguez",
-    senderEmail: "alex.rodriguez@company.com",
-    subject: "Server Maintenance Window",
-    preview:
-      "Scheduled maintenance for our production servers this weekend. Please plan accordingly...",
-    content: `Hi everyone,
-
-We have scheduled maintenance for our production servers this weekend:
-
-Date: Saturday, March 16th
-Time: 11:00 PM - 3:00 AM EST
-Expected downtime: 2-3 hours
-
-During this maintenance window:
-- All services will be temporarily unavailable
-- Database backups will be performed
-- Security updates will be applied
-- Performance optimizations will be implemented
-
-We'll send updates throughout the maintenance window. Please save any work before the scheduled time.
-
-If you have any concerns, please reach out.
-
-Alex Rodriguez
-DevOps Engineer`,
-    timestamp: "2 days ago",
-    date: "March 14",
-    isRead: false,
-    avatar: "AR",
-  },
-];
+import type { Email } from "@/types/email";
 
 const Mail = () => {
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredEmails = mockEmails.filter(
-    (email) =>
-      email.sender.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      email.subject.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      email.preview.toLowerCase().includes(searchQuery.toLowerCase()),
-  );
+  //   const filteredEmails = mockEmails.filter(
+  //     (email) =>
+  //       email.sender.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  //       email.subject.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  //       email.preview.toLowerCase().includes(searchQuery.toLowerCase()),
+  //   );
 
-  const [selectedEmail, setSelectedEmail] = useState(filteredEmails[0]);
+  const [selectedEmail, setSelectedEmail] = useState<Email | undefined>(
+    undefined,
+  );
 
   return (
     <div className="flex">
@@ -182,7 +70,7 @@ const Mail = () => {
 
         <ScrollArea className="border-border h-[665px] rounded-bl-xl border-x border-b">
           <EmailList
-            emails={filteredEmails}
+            emails={[]}
             selectedEmail={selectedEmail}
             onEmailSelect={setSelectedEmail}
           />
