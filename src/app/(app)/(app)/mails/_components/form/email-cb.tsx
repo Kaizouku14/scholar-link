@@ -44,7 +44,7 @@ const EmailComboBox = ({ value, onChange }: EmailListProps) => {
               className="text-muted-foreground w-full justify-between shadow-none"
             >
               {value
-                ? data?.find((email) => email === value)
+                ? data?.find((item) => item.id === value)?.id
                 : "Select Email..."}
               <ChevronsUpDown className="opacity-50" />
             </Button>
@@ -56,21 +56,21 @@ const EmailComboBox = ({ value, onChange }: EmailListProps) => {
                 <CommandEmpty>No Email found.</CommandEmpty>
                 <CommandGroup>
                   {data && data.length > 0 ? (
-                    data.map((email) => (
+                    data.map((item) => (
                       <CommandItem
-                        key={email}
-                        value={email!}
+                        key={item.id}
+                        value={item.id}
                         onSelect={(selectedEmail) => {
                           onChange(selectedEmail);
                           setOpen(false);
                         }}
                         className="p-2"
                       >
-                        {email}
+                        {item.email}
                         <Check
                           className={cn(
                             "ml-auto",
-                            value === email ? "opacity-100" : "opacity-0",
+                            value === item.id ? "opacity-100" : "opacity-0",
                           )}
                         />
                       </CommandItem>
