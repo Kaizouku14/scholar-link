@@ -87,8 +87,8 @@ const EmailList = ({
             ))}
           </>
         ) : (
-          <div className="flex h-[400px] items-center justify-center">
-            <div className="text-muted-foreground">No mails yet. </div>
+          <div className="flex h-[540px] items-center justify-center">
+            <div className="text-muted-foreground">No mails yet.</div>
           </div>
         )}
       </div>
