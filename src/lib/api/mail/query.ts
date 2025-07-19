@@ -1,4 +1,4 @@
-import { db, eq, or } from "@/server/db";
+import { db, eq, or, desc } from "@/server/db";
 import { mailTable } from "@/server/db/schema/mail";
 import { TRPCError } from "@trpc/server";
 
@@ -7,11 +7,9 @@ export const getAllMails = async ({ userId }: { userId: string }) => {
     const response = await db
       .select()
       .from(mailTable)
-      //   .where(eq(mailTable.receiver, userId))
       .where(or(eq(mailTable.sender, userId), eq(mailTable.receiver, userId)))
+      .orderBy(desc(mailTable.createdAt))
       .execute();
-
-    console.log(response);
 
     return response;
   } catch (error) {

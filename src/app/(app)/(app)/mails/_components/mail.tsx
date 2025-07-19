@@ -36,8 +36,22 @@ const Mail = () => {
     filteredMails?.[0],
   );
 
-  console.log("Server: ", data);
-  console.log("Filtered: ", filteredMails);
+  const { mutateAsync: markAsReadMutation } =
+    api.mail.markMailAsRead.useMutation();
+  const handleSelectedEmail = async (email: Email) => {
+    if (email.isRead) {
+      setSelectedEmail(email);
+      return;
+    }
+
+    setSelectedEmail({ ...email, isRead: true }); // optimistically mark as read
+
+    try {
+      await markAsReadMutation({ id: email.id });
+    } catch (error) {
+      setSelectedEmail(email);
+    }
+  };
 
   return (
     <div className="flex">
@@ -87,7 +101,7 @@ const Mail = () => {
               <EmailList
                 emails={filteredMails}
                 selectedEmail={selectedEmail}
-                onEmailSelect={setSelectedEmail}
+                onEmailSelect={handleSelectedEmail}
               />
             </>
           )}
