@@ -45,7 +45,6 @@ export const markAsRead = async ({ id }: { id: string }) => {
         message: "Unexpected Error happened.",
       });
     }
-    
   } catch (error) {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",

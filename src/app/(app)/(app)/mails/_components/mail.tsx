@@ -26,14 +26,16 @@ const Mail = () => {
 
     return data.filter(
       (mail) =>
-        mail.senderName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        mail.senderEmail.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        mail.senderName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        mail.senderEmail?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        mail.receiverName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        mail.receiverEmail?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         mail.subject.toLowerCase().includes(searchQuery.toLowerCase()),
-    );
+    ) as Email[];
   }, [data, searchQuery]);
 
   const [selectedEmail, setSelectedEmail] = useState<Email | undefined>(
-    filteredMails?.[0],
+    filteredMails[0],
   );
 
   const { mutateAsync: markAsReadMutation } =

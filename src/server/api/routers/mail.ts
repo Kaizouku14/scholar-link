@@ -43,9 +43,6 @@ export const mailRouter = createTRPCRouter({
         const mailToSend = {
           id,
           sender: ctx.session.user.id,
-          senderName: ctx.session.user.name,
-          senderEmail: ctx.session.user.email,
-          senderProfile: ctx.session.user.image ?? null,
           receiver: input.reciever,
           subject: input.subject,
           content: input.content,
