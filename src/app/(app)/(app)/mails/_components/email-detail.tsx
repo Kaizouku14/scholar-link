@@ -3,7 +3,14 @@
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Reply, Forward, Archive, Trash2, ArrowLeft } from "lucide-react";
+import {
+  Reply,
+  Forward,
+  Archive,
+  Trash2,
+  ArrowLeft,
+  RotateCw,
+} from "lucide-react";
 import type { Email } from "@/types/email";
 import { differenceInSeconds, formatDistanceToNow, format } from "date-fns";
 import { getEmailDisplayInfo } from "./helper/email-utils";
@@ -13,18 +20,30 @@ interface EmailDetailProps {
   showBackButton?: boolean;
   onBack?: () => void;
   currentUserId?: string;
+  isfetching?: boolean;
+  isRefreshing: boolean;
 }
 const EmailDetail = ({
   email,
   showBackButton = false,
   onBack,
   currentUserId,
+  isfetching,
+  isRefreshing,
 }: EmailDetailProps) => {
   const displayInfo = getEmailDisplayInfo(email, currentUserId);
 
   return (
     <div className="bg-background border-border flex h-full flex-col rounded-r-xl border">
-      {email ? (
+      {isRefreshing || isfetching ? (
+        <div className="border-border flex h-full items-center justify-center rounded-r-xl border">
+          <RotateCw className="text-muted-foreground h-6 w-6 animate-spin" />
+        </div>
+      ) : !email ? (
+        <div className="text-muted-foreground flex h-full w-full items-center justify-center text-center">
+          No email selected.
+        </div>
+      ) : (
         <>
           <div className="bg-background border-border flex h-full flex-col rounded-r-xl border">
             <div className="bg-background/95 supports-[backdrop-filter]:bg-background/60 border-border rounded-tr-xl border-b p-4 backdrop-blur">
@@ -123,10 +142,6 @@ const EmailDetail = ({
             </div>
           </div>
         </>
-      ) : (
-        <div className="text-muted-foreground flex h-full w-full items-center justify-center text-center">
-          No email selected.
-        </div>
       )}
     </div>
   );

@@ -2,14 +2,7 @@
 
 import EmailList from "./email-list";
 import EmailDetail from "./email-detail";
-import { RotateCw, MoreVertical, RefreshCw, Search } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { RotateCw, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useState, useMemo } from "react";
 import ComposeEmail from "./compose-email";
@@ -17,11 +10,18 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import type { Email } from "@/types/email";
 import { api } from "@/trpc/react";
 import { authClient } from "@/lib/auth-client";
+import EmailActions from "./email-actions";
+import { toast } from "sonner";
+
+export type SortOrder = "newest" | "oldest";
 
 const Mail = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const { data, isLoading, refetch } = api.mail.getAllUserMail.useQuery();
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [sortOrder, setSortOrder] = useState<SortOrder>("newest");
   const { data: session } = authClient.useSession();
+
   const filteredMails = useMemo(() => {
     if (!data) return [];
 
@@ -39,6 +39,10 @@ const Mail = () => {
     filteredMails[0],
   );
 
+  const unreadCount = useMemo(() => {
+    return filteredMails.filter((mail) => !mail.isRead).length;
+  }, [filteredMails]);
+
   const { mutateAsync: markAsReadMutation } =
     api.mail.markMailAsRead.useMutation();
   const handleSelectedEmail = async (email: Email) => {
@@ -46,7 +50,6 @@ const Mail = () => {
       setSelectedEmail(email);
       return;
     }
-
     setSelectedEmail({ ...email, isRead: true }); // optimistically mark as read
 
     try {
@@ -54,6 +57,29 @@ const Mail = () => {
     } catch (error) {
       setSelectedEmail(email);
     }
+  };
+
+  const handleMarkAllAsRead = () => {
+    //TODO: Mark All As Read Mutation
+  };
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+
+    try {
+      await refetch();
+      await new Promise((resolve) => setTimeout(resolve, 500));
+    } catch (error) {
+      toast.error("Unexpected error occurred. Please try again.", {
+        position: "top-center",
+      });
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
+
+  const handleSort = (order: SortOrder) => {
+    setSortOrder(order);
   };
 
   return (
@@ -65,20 +91,14 @@ const Mail = () => {
 
             <div className="flex items-center space-x-1">
               <ComposeEmail />
-              <Button variant="ghost" size="sm" onClick={() => refetch()}>
-                <RefreshCw className="h-4 w-4" />
-              </Button>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm">
-                    <MoreVertical className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem>Mark all as read</DropdownMenuItem>
-                  <DropdownMenuItem>Sort by date</DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <EmailActions
+                onRefresh={handleRefresh}
+                isRefreshing={isRefreshing}
+                onMarkAllAsRead={handleRefresh}
+                onSort={handleSort}
+                currentSort={sortOrder}
+                unreadCount={unreadCount}
+              />
             </div>
           </div>
 
@@ -94,34 +114,24 @@ const Mail = () => {
         </div>
 
         <ScrollArea className="border-border h-[665px] rounded-bl-xl border-x border-b">
-          {isLoading ? (
-            <div className="flex h-[540px] items-center justify-center">
-              <RotateCw className="text-muted-foreground h-6 w-6 animate-spin" />
-            </div>
-          ) : (
-            <>
-              <EmailList
-                emails={filteredMails}
-                selectedEmail={selectedEmail}
-                onEmailSelect={handleSelectedEmail}
-                currentUserId={session?.user?.id}
-              />
-            </>
-          )}
+          <EmailList
+            emails={filteredMails}
+            selectedEmail={selectedEmail}
+            onEmailSelect={handleSelectedEmail}
+            currentUserId={session?.user?.id}
+            isfetching={isLoading}
+            isRefreshing={isRefreshing}
+          />
         </ScrollArea>
       </div>
 
       <div className="hidden flex-1 flex-col md:flex">
-        {isLoading ? (
-          <div className="border-border flex h-full items-center justify-center rounded-r-xl border">
-            <RotateCw className="text-muted-foreground h-6 w-6 animate-spin" />
-          </div>
-        ) : (
-          <EmailDetail
-            email={selectedEmail}
-            currentUserId={session?.user?.id}
-          />
-        )}
+        <EmailDetail
+          email={selectedEmail}
+          currentUserId={session?.user?.id}
+          isfetching={isLoading}
+          isRefreshing={isRefreshing}
+        />
       </div>
 
       {/* Mobile Email Detail Overlay */}
@@ -131,6 +141,8 @@ const Mail = () => {
           showBackButton
           onBack={() => {}}
           currentUserId={session?.user?.id}
+          isfetching={isLoading}
+          isRefreshing={isRefreshing}
         />
       </div>
     </div>

@@ -6,12 +6,15 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import type { Email } from "@/types/email";
 import { formatDistanceToNow, differenceInSeconds } from "date-fns";
 import { getEmailDisplayInfo } from "./helper/email-utils";
+import { RotateCw } from "lucide-react";
 
 interface EmailListProps {
   emails: Email[];
   selectedEmail?: Email | undefined;
   onEmailSelect?: (email: Email) => void;
   currentUserId?: string;
+  isfetching?: boolean;
+  isRefreshing?: boolean;
 }
 
 const EmailList = ({
@@ -19,11 +22,17 @@ const EmailList = ({
   selectedEmail,
   onEmailSelect,
   currentUserId,
+  isfetching,
+  isRefreshing,
 }: EmailListProps) => {
   return (
     <ScrollArea className="flex-1">
       <div>
-        {emails?.length > 0 ? (
+        {isfetching || isRefreshing ? (
+          <div className="flex h-[540px] items-center justify-center">
+            <RotateCw className="text-muted-foreground h-6 w-6 animate-spin" />
+          </div>
+        ) : emails?.length > 0 ? (
           <>
             {emails.map((email) => {
               const displayInfo = getEmailDisplayInfo(email, currentUserId);
@@ -105,7 +114,7 @@ const EmailList = ({
           </>
         ) : (
           <div className="flex h-[540px] items-center justify-center">
-            <div className="text-muted-foreground">No mails yet.</div>
+            <p className="text-muted-foreground">No emails found.</p>
           </div>
         )}
       </div>
