@@ -7,9 +7,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { RefreshCw, MoreVertical } from "lucide-react";
+import { RefreshCw, MoreVertical, ArrowUp, ArrowDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { SortOrder } from "./mail";
+import { Separator } from "@/components/ui/separator";
 
 export interface EmailActionsProps {
   onRefresh: () => void;
@@ -57,19 +58,26 @@ export default function EmailActions({
           >
             Mark all read {unreadCount > 0 && `(${unreadCount})`}
           </DropdownMenuItem>
-
+          <Separator />
+          <div className="text-muted-foreground px-2 py-1.5 text-xs font-medium">
+            Sort by
+          </div>
           <DropdownMenuItem
             onClick={() => onSort("newest")}
-            className={currentSort === "newest" ? "bg-accent" : ""}
+            className={`${currentSort === "newest" ? "bg-accent" : ""} text-foreground flex gap-1`}
           >
-            Newest first
+            <span>Date</span>
+            <ArrowDown className="text-foreground h-4 w-4" />
+            <span>(Newest first)</span>
           </DropdownMenuItem>
 
           <DropdownMenuItem
             onClick={() => onSort("oldest")}
-            className={currentSort === "oldest" ? "bg-accent" : ""}
+            className={`${currentSort === "oldest" ? "bg-accent" : ""} text-foreground flex gap-1`}
           >
-            Oldest first
+            <span>Date</span>
+            <ArrowUp className="text-foreground h-4 w-4" />
+            <span>(Oldest first)</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

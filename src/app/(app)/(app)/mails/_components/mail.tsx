@@ -2,7 +2,7 @@
 
 import EmailList from "./email-list";
 import EmailDetail from "./email-detail";
-import {  Search } from "lucide-react";
+import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useState, useMemo } from "react";
 import ComposeEmail from "./compose-email";
