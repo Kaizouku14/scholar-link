@@ -5,7 +5,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Reply, Forward, Archive, Trash2, ArrowLeft } from "lucide-react";
 import type { Email } from "@/types/email";
-import { format } from "date-fns";
+import { differenceInSeconds, formatDistanceToNow, format } from "date-fns";
 
 interface EmailDetailProps {
   email?: Email;
@@ -58,7 +58,7 @@ const EmailDetail = ({
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-foreground font-medium">
-                      {email?.sender}
+                      {email?.senderName}
                     </p>
                     <p className="text-muted-foreground text-sm">
                       {email?.senderEmail}
@@ -66,10 +66,20 @@ const EmailDetail = ({
                   </div>
                   <div className="text-right">
                     <p className="text-muted-foreground text-sm">
-                      {format("dd MMM yyyy", email?.date)}
+                      {email.date &&
+                        format(new Date(email.date), "MMM dd, yyyy")}
                     </p>
                     <p className="text-muted-foreground text-sm">
-                      {format("dd MMM yyyy", email?.timestamp)}
+                      {email.createdAt
+                        ? differenceInSeconds(
+                            new Date(),
+                            new Date(email.createdAt),
+                          ) < 60
+                          ? "Just now"
+                          : formatDistanceToNow(new Date(email.createdAt), {
+                              addSuffix: true,
+                            })
+                        : ""}
                     </p>
                   </div>
                 </div>

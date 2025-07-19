@@ -4,7 +4,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import type { Email } from "@/types/email";
-import { format } from "date-fns";
+import { formatDistanceToNow, differenceInSeconds } from "date-fns";
 
 interface EmailListProps {
   emails: Email[];
@@ -54,10 +54,19 @@ const EmailList = ({
                             : "text-foreground/80 font-medium",
                         )}
                       >
-                        {email.sender}
+                        {email.senderName}
                       </p>
                       <span className="text-muted-foreground ml-2 text-xs whitespace-nowrap">
-                        {format("dd MMM yyyy", email.createdAt)}
+                        {email.createdAt
+                          ? differenceInSeconds(
+                              new Date(),
+                              new Date(email.createdAt),
+                            ) < 60
+                            ? "Just now"
+                            : formatDistanceToNow(new Date(email.createdAt), {
+                                addSuffix: true,
+                              })
+                          : ""}
                       </span>
                     </div>
 

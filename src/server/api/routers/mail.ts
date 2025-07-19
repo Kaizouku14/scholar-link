@@ -14,8 +14,8 @@ export const mailRouter = createTRPCRouter({
       });
     }
 
-    const { role } = ctx.session.user;
-    return await getAllMails(role!);
+    const { id } = ctx.session.user;
+    return await getAllMails({ userId: id });
   }),
   sendMailTo: protectedRoute
     .input(

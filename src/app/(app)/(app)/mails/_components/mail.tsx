@@ -2,7 +2,7 @@
 
 import EmailList from "./email-list";
 import EmailDetail from "./email-detail";
-import { MoreVertical, RefreshCw, Search } from "lucide-react";
+import { RotateCw, MoreVertical, RefreshCw, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -11,24 +11,33 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import ComposeEmail from "./compose-email";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import type { Email } from "@/types/email";
+import { api } from "@/trpc/react";
 
 const Mail = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const { data, isLoading, refetch } = api.mail.getAllUserMail.useQuery();
 
-  //   const filteredEmails = mockEmails.filter(
-  //     (email) =>
-  //       email.sender.toLowerCase().includes(searchQuery.toLowerCase()) ||
-  //       email.subject.toLowerCase().includes(searchQuery.toLowerCase()) ||
-  //       email.preview.toLowerCase().includes(searchQuery.toLowerCase()),
-  //   );
+  const filteredMails = useMemo(() => {
+    if (!data) return [];
+
+    return data.filter(
+      (mail) =>
+        mail.senderName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        mail.senderEmail.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        mail.subject.toLowerCase().includes(searchQuery.toLowerCase()),
+    );
+  }, [data, searchQuery]);
 
   const [selectedEmail, setSelectedEmail] = useState<Email | undefined>(
-    undefined,
+    filteredMails?.[0],
   );
+
+  console.log("Server: ", data);
+  console.log("Filtered: ", filteredMails);
 
   return (
     <div className="flex">
@@ -39,7 +48,7 @@ const Mail = () => {
 
             <div className="flex items-center space-x-1">
               <ComposeEmail />
-              <Button variant="ghost" size="sm">
+              <Button variant="ghost" size="sm" onClick={() => refetch()}>
                 <RefreshCw className="h-4 w-4" />
               </Button>
               <DropdownMenu>
@@ -69,16 +78,30 @@ const Mail = () => {
         </div>
 
         <ScrollArea className="border-border h-[665px] rounded-bl-xl border-x border-b">
-          <EmailList
-            emails={[]}
-            selectedEmail={selectedEmail}
-            onEmailSelect={setSelectedEmail}
-          />
+          {isLoading ? (
+            <div className="flex h-[540px] items-center justify-center">
+              <RotateCw className="text-muted-foreground h-6 w-6 animate-spin" />
+            </div>
+          ) : (
+            <>
+              <EmailList
+                emails={filteredMails}
+                selectedEmail={selectedEmail}
+                onEmailSelect={setSelectedEmail}
+              />
+            </>
+          )}
         </ScrollArea>
       </div>
 
       <div className="hidden flex-1 flex-col md:flex">
-        <EmailDetail email={selectedEmail} />
+        {isLoading ? (
+          <div className="border-border flex h-full items-center justify-center rounded-r-xl border">
+            <RotateCw className="text-muted-foreground h-6 w-6 animate-spin" />
+          </div>
+        ) : (
+          <EmailDetail email={selectedEmail} />
+        )}
       </div>
 
       {/* Mobile Email Detail Overlay */}
