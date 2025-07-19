@@ -44,13 +44,13 @@ const Mail = () => {
   const [selectedEmail, setSelectedEmail] = useState<Email | undefined>(
     filteredMails[0],
   );
-
   const unreadCount = useMemo(() => {
     return filteredMails.filter((mail) => !mail.isRead).length;
   }, [filteredMails]);
+  const { mutateAsync: markAsRead } = api.mail.markMailAsRead.useMutation();
+  const { mutateAsync: markAllAsRead } =
+    api.mail.markAllMailAsRead.useMutation();
 
-  const { mutateAsync: markAsReadMutation } =
-    api.mail.markMailAsRead.useMutation();
   const handleSelectedEmail = async (email: Email) => {
     if (email.isRead) {
       setSelectedEmail(email);
@@ -59,14 +59,25 @@ const Mail = () => {
     setSelectedEmail({ ...email, isRead: true }); // optimistically mark as read
 
     try {
-      await markAsReadMutation({ id: email.id });
+      await markAsRead({ id: email.id });
     } catch (error) {
       setSelectedEmail(email);
     }
   };
 
-  const handleMarkAllAsRead = () => {
-    //TODO: Mark All As Read Mutation
+  const handleMarkAllAsRead = async () => {
+    setIsRefreshing(true);
+
+    try {
+      await markAllAsRead();
+      refetch();
+    } catch (error) {
+      toast.error("Unexpected error occurred. Please try again.", {
+        position: "top-center",
+      });
+    } finally {
+      setIsRefreshing(false);
+    }
   };
 
   const handleRefresh = async () => {
@@ -100,7 +111,7 @@ const Mail = () => {
               <EmailActions
                 onRefresh={handleRefresh}
                 isRefreshing={isRefreshing}
-                onMarkAllAsRead={handleRefresh}
+                onMarkAllAsRead={handleMarkAllAsRead}
                 onSort={handleSort}
                 currentSort={sortOrder}
                 unreadCount={unreadCount}

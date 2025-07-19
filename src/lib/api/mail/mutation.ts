@@ -52,3 +52,25 @@ export const markAsRead = async ({ id }: { id: string }) => {
     });
   }
 };
+
+export const markAllAsRead = async () => {
+  try {
+    const response = await db
+      .update(mailTable)
+      .set({ isRead: true })
+      .where(eq(mailTable.isRead, false))
+      .execute();
+
+    if (!response) {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Unexpected Error happened.",
+      });
+    }
+  } catch (error) {
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "Failed to send mail," + (error as Error).message,
+    });
+  }
+};
