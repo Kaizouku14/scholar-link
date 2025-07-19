@@ -16,11 +16,12 @@ import ComposeEmail from "./compose-email";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import type { Email } from "@/types/email";
 import { api } from "@/trpc/react";
+import { authClient } from "@/lib/auth-client";
 
 const Mail = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const { data, isLoading, refetch } = api.mail.getAllUserMail.useQuery();
-
+  const { data: session } = authClient.useSession();
   const filteredMails = useMemo(() => {
     if (!data) return [];
 
@@ -76,7 +77,6 @@ const Mail = () => {
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem>Mark all as read</DropdownMenuItem>
                   <DropdownMenuItem>Sort by date</DropdownMenuItem>
-                  <DropdownMenuItem>Sort by sender</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
@@ -104,6 +104,7 @@ const Mail = () => {
                 emails={filteredMails}
                 selectedEmail={selectedEmail}
                 onEmailSelect={handleSelectedEmail}
+                currentUserId={session?.user?.id}
               />
             </>
           )}
@@ -116,13 +117,21 @@ const Mail = () => {
             <RotateCw className="text-muted-foreground h-6 w-6 animate-spin" />
           </div>
         ) : (
-          <EmailDetail email={selectedEmail} />
+          <EmailDetail
+            email={selectedEmail}
+            currentUserId={session?.user?.id}
+          />
         )}
       </div>
 
       {/* Mobile Email Detail Overlay */}
       <div className="bg-background fixed inset-0 z-50 flex flex-col md:hidden">
-        <EmailDetail email={selectedEmail} showBackButton onBack={() => {}} />
+        <EmailDetail
+          email={selectedEmail}
+          showBackButton
+          onBack={() => {}}
+          currentUserId={session?.user?.id}
+        />
       </div>
     </div>
   );
