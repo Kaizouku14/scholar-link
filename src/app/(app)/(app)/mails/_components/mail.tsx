@@ -2,7 +2,7 @@
 
 import EmailList from "./email-list";
 import EmailDetail from "./email-detail";
-import { RotateCw, Search } from "lucide-react";
+import {  Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useState, useMemo } from "react";
 import ComposeEmail from "./compose-email";
@@ -25,7 +25,7 @@ const Mail = () => {
   const filteredMails = useMemo(() => {
     if (!data) return [];
 
-    return data.filter(
+    const filtered = data.filter(
       (mail) =>
         mail.senderName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         mail.senderEmail?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -33,7 +33,13 @@ const Mail = () => {
         mail.receiverEmail?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         mail.subject.toLowerCase().includes(searchQuery.toLowerCase()),
     ) as Email[];
-  }, [data, searchQuery]);
+
+    return filtered.sort((a, b) => {
+      const dateA = new Date(a.createdAt as Date).getTime();
+      const dateB = new Date(b.createdAt as Date).getTime();
+      return sortOrder === "newest" ? dateB - dateA : dateA - dateB;
+    });
+  }, [data, searchQuery, sortOrder]);
 
   const [selectedEmail, setSelectedEmail] = useState<Email | undefined>(
     filteredMails[0],
