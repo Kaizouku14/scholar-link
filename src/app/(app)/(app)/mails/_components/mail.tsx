@@ -56,7 +56,7 @@ const Mail = () => {
       setSelectedEmail(email);
       return;
     }
-    setSelectedEmail({ ...email, isRead: true }); // optimistically mark as read
+    setSelectedEmail({ ...email, isRead: true });
 
     try {
       await markAsRead({ id: email.id });
@@ -79,6 +79,10 @@ const Mail = () => {
       setIsRefreshing(false);
     }
   };
+
+  const handleViewArchived = () => {
+
+  }
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
@@ -110,11 +114,12 @@ const Mail = () => {
               <ComposeEmail />
               <EmailActions
                 onRefresh={handleRefresh}
-                isRefreshing={isRefreshing}
                 onMarkAllAsRead={handleMarkAllAsRead}
+                unreadCount={unreadCount}
+                viewArchived={handleViewArchived}
                 onSort={handleSort}
                 currentSort={sortOrder}
-                unreadCount={unreadCount}
+                isRefreshing={isRefreshing}
               />
             </div>
           </div>

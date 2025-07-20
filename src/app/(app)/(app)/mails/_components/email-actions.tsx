@@ -15,18 +15,20 @@ import { Separator } from "@/components/ui/separator";
 export interface EmailActionsProps {
   onRefresh: () => void;
   onMarkAllAsRead: () => void;
+  unreadCount: number;
+  viewArchived: () => void;
   onSort: (order: SortOrder) => void;
   currentSort: SortOrder;
-  unreadCount: number;
   isRefreshing?: boolean;
 }
 
 export default function EmailActions({
   onRefresh,
   onMarkAllAsRead,
+  unreadCount,
+  viewArchived
   onSort,
   currentSort,
-  unreadCount,
   isRefreshing = false,
 }: EmailActionsProps) {
   return (
@@ -58,6 +60,13 @@ export default function EmailActions({
           >
             Mark all read {unreadCount > 0 && `(${unreadCount})`}
           </DropdownMenuItem>
+
+          <DropdownMenuItem
+            onClick={viewArchived}
+          >
+            Archived
+          </DropdownMenuItem>
+
           <Separator />
           <div className="text-muted-foreground px-2 py-1.5 text-xs font-medium">
             Sort by
