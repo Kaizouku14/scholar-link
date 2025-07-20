@@ -52,7 +52,7 @@ const EmailList = ({
                     <Avatar className="mt-0.5 h-8 w-8">
                       <AvatarImage
                         src={displayInfo.profile ?? undefined}
-                        alt={displayInfo.name}
+                        alt={displayInfo.name ?? undefined}
                       />
                       <AvatarFallback className="bg-primary/10 text-primary text-sm font-medium">
                         {displayInfo.fallback}

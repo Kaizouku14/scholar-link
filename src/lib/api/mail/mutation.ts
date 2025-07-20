@@ -7,7 +7,7 @@ type mailType = InferSelectModel<typeof mailTable>;
 export const sendMailTo = async ({
   mail,
 }: {
-  mail: Omit<mailType, "createdAt" | "isRead">;
+  mail: Omit<mailType, "createdAt" | "isRead" | "archived">;
 }) => {
   try {
     const response = await db
@@ -59,6 +59,28 @@ export const markAllAsRead = async () => {
       .update(mailTable)
       .set({ isRead: true })
       .where(eq(mailTable.isRead, false))
+      .execute();
+
+    if (!response) {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Unexpected Error happened.",
+      });
+    }
+  } catch (error) {
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "Failed to send mail," + (error as Error).message,
+    });
+  }
+};
+
+export const ArchivedMail = async ({ id }: { id: string }) => {
+  try {
+    const response = await db
+      .update(mailTable)
+      .set({ archived: true })
+      .where(eq(mailTable.id, id))
       .execute();
 
     if (!response) {

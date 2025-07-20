@@ -14,6 +14,7 @@ import {
 import type { Email } from "@/types/email";
 import { differenceInSeconds, formatDistanceToNow, format } from "date-fns";
 import { getEmailDisplayInfo } from "./helper/email-utils";
+import { api } from "@/trpc/react";
 
 interface EmailDetailProps {
   email?: Email;
@@ -32,6 +33,12 @@ const EmailDetail = ({
   isRefreshing,
 }: EmailDetailProps) => {
   const displayInfo = getEmailDisplayInfo(email, currentUserId);
+
+  const { mutateAsync: ArchivedMail } = api.mail.archivedMail.useMutation();
+
+  const handleArchivedMail = async () => {
+    if (email) await ArchivedMail({ id: email.id });
+  };
 
   return (
     <div className="bg-background border-border flex h-full flex-col rounded-r-xl border">
@@ -60,7 +67,11 @@ const EmailDetail = ({
                 </div>
 
                 <div className="flex items-center space-x-1">
-                  <Button variant="ghost" size="sm">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleArchivedMail}
+                  >
                     <Archive className="h-4 w-4" />
                   </Button>
                   <Button variant="ghost" size="sm">
@@ -73,7 +84,7 @@ const EmailDetail = ({
                 <Avatar className="h-10 w-10">
                   <AvatarImage
                     src={displayInfo.profile ?? undefined}
-                    alt={displayInfo.name}
+                    alt={displayInfo.name ?? undefined}
                   />
                   <AvatarFallback className="bg-primary/10 text-primary text-sm font-medium">
                     {displayInfo.fallback}

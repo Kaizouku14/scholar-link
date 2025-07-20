@@ -10,10 +10,9 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import type { Email } from "@/types/email";
 import { api } from "@/trpc/react";
 import { authClient } from "@/lib/auth-client";
+import { filterAndSortMails, type SortOrder } from "./helper/email-utils";
 import EmailActions from "./email-actions";
 import { toast } from "sonner";
-
-export type SortOrder = "newest" | "oldest";
 
 const Mail = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -21,8 +20,6 @@ const Mail = () => {
   const [sortOrder, setSortOrder] = useState<SortOrder>("newest");
   const [viewArchived, setViewArchived] = useState(false);
   const { data: session } = authClient.useSession();
-  const { data: ArchivedMails, isLoading: FetchingArchivedMails } =
-    api.mail.getAllUserArchivedMails.useQuery();
   const {
     data: Mails,
     isLoading: FetchingMails,
@@ -33,32 +30,22 @@ const Mail = () => {
     api.mail.markAllMailAsRead.useMutation();
 
   const filteredMails = useMemo(() => {
-    const mailToFilter = viewArchived ? ArchivedMails : Mails;
-    if (!mailToFilter) return [];
+    if (!Mails) return [];
 
     const normalizedQuery = searchQuery?.toLowerCase() || "";
-    const filtered = mailToFilter.filter((mail) => {
-      return (
-        mail.senderName?.toLowerCase().includes(normalizedQuery) ||
-        mail.senderEmail?.toLowerCase().includes(normalizedQuery) ||
-        mail.receiverName?.toLowerCase().includes(normalizedQuery) ||
-        mail.receiverEmail?.toLowerCase().includes(normalizedQuery) ||
-        mail.subject?.toLowerCase().includes(normalizedQuery)
-      );
-    }) as Email[];
+    const mailsToFilter: Email[] = viewArchived
+      ? Mails
+      : Mails.filter((mail) => !mail.archived);
 
-    return filtered.sort((a, b) => {
-      const dateA = new Date(a.createdAt as Date).getTime();
-      const dateB = new Date(b.createdAt as Date).getTime();
-      return sortOrder === "newest" ? dateB - dateA : dateA - dateB;
-    });
+    return filterAndSortMails(mailsToFilter, normalizedQuery, sortOrder);
   }, [Mails, searchQuery, sortOrder, viewArchived]);
 
   const [selectedEmail, setSelectedEmail] = useState<Email | undefined>(
     filteredMails[0],
   );
+
   const unreadCount = useMemo(() => {
-    return filteredMails.filter((mail) => !mail.isRead).length;
+    return filteredMails.filter((mail: Email) => !mail.isRead).length;
   }, [filteredMails]);
 
   const handleSelectedEmail = async (email: Email) => {
@@ -91,10 +78,9 @@ const Mail = () => {
   };
 
   const handleViewArchived = () => {
-    setViewArchived((prev) => !prev);
-    return !viewArchived;
+    setViewArchived(!viewArchived);
   };
-``
+
   const handleRefresh = async () => {
     setIsRefreshing(true);
 
@@ -130,6 +116,7 @@ const Mail = () => {
                 onMarkAllAsRead={handleMarkAllAsRead}
                 unreadCount={unreadCount}
                 viewArchived={handleViewArchived}
+                onArchive={viewArchived}
                 onSort={handleSort}
                 currentSort={sortOrder}
                 isRefreshing={isRefreshing}
@@ -154,7 +141,7 @@ const Mail = () => {
             selectedEmail={selectedEmail}
             onEmailSelect={handleSelectedEmail}
             currentUserId={session?.user?.id}
-            isfetching={FetchingMails ?? FetchingArchivedMails}
+            isfetching={FetchingMails}
             isRefreshing={isRefreshing}
           />
         </ScrollArea>

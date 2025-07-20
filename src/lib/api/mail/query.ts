@@ -23,6 +23,7 @@ const baseMailQuery = () =>
       content: mailTable.content,
       date: mailTable.date,
       isRead: mailTable.isRead,
+      archived: mailTable.archived,
       createdAt: mailTable.createdAt,
     })
     .from(mailTable)
@@ -48,7 +49,12 @@ export const getAllMails = async ({ userId }: { userId: string }) => {
 export const getAllArchivedMails = async ({ userId }: { userId: string }) => {
   try {
     const response = await baseMailQuery()
-      .where(and(eq(mailTable.archived, true), eq(mailTable.sender, userId)))
+      .where(
+        and(
+          or(eq(mailTable.sender, userId), eq(mailTable.receiver, userId)),
+          eq(mailTable.archived, true),
+        ),
+      )
       .orderBy(desc(mailTable.createdAt))
       .execute();
 
