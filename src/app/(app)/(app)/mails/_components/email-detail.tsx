@@ -7,6 +7,7 @@ import { Reply, Forward, Trash2, ArrowLeft, RotateCw } from "lucide-react";
 import type { Email } from "@/types/email";
 import { differenceInSeconds, formatDistanceToNow, format } from "date-fns";
 import { getEmailDisplayInfo } from "./helper/email-utils";
+import { api } from "@/trpc/react";
 
 interface EmailDetailProps {
   email?: Email;
@@ -15,6 +16,7 @@ interface EmailDetailProps {
   currentUserId?: string;
   isfetching?: boolean;
   isRefreshing: boolean;
+  refresh: () => void;
 }
 const EmailDetail = ({
   email,
@@ -23,8 +25,16 @@ const EmailDetail = ({
   currentUserId,
   isfetching,
   isRefreshing,
+  refresh,
 }: EmailDetailProps) => {
   const displayInfo = getEmailDisplayInfo(email, currentUserId);
+  const { mutateAsync: deleteMail } = api.mail.deleteMail.useMutation();
+  const handleDeleteMail = () => {
+    if (email) {
+      deleteMail({ id: email.id });
+      refresh();
+    }
+  };
 
   return (
     <div className="bg-background border-border flex h-full flex-col rounded-r-xl border">
@@ -52,7 +62,7 @@ const EmailDetail = ({
                   </h1>
                 </div>
 
-                <Button variant="ghost" size="sm">
+                <Button variant="ghost" size="sm" onClick={handleDeleteMail}>
                   <Trash2 className="h-4 w-4" />
                 </Button>
               </div>

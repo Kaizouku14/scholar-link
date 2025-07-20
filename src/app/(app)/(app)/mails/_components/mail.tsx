@@ -140,6 +140,7 @@ const Mail = () => {
           currentUserId={session?.user?.id}
           isfetching={FetchingMails}
           isRefreshing={isRefreshing}
+          refresh={handleRefresh}
         />
       </div>
 
@@ -152,6 +153,7 @@ const Mail = () => {
           currentUserId={session?.user?.id}
           isfetching={FetchingMails}
           isRefreshing={isRefreshing}
+          refresh={handleRefresh}
         />
       </div>
     </div>
