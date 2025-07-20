@@ -1,6 +1,11 @@
 import z from "zod";
 import { createTRPCRouter, protectedRoute } from "../trpc";
-import { markAllAsRead, markAsRead, sendMailTo } from "@/lib/api/mail/mutation";
+import {
+  deleteMail,
+  markAllAsRead,
+  markAsRead,
+  sendMailTo,
+} from "@/lib/api/mail/mutation";
 import { TRPCError } from "@trpc/server";
 import { generateUUID } from "@/lib/utils";
 import { getAllMails } from "@/lib/api/mail/query";
@@ -26,6 +31,11 @@ export const mailRouter = createTRPCRouter({
   markAllMailAsRead: protectedRoute.mutation(async () => {
     return await markAllAsRead();
   }),
+  deleteMail: protectedRoute
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ input }) => {
+      return deleteMail({ id: input.id });
+    }),
   sendMailTo: protectedRoute
     .input(
       z.object({

@@ -77,6 +77,17 @@ export const markAllAsRead = async () => {
 
 export const deleteMail = async ({ id }: { id: string }) => {
   try {
+    const response = await db
+      .delete(mailTable)
+      .where(eq(mailTable.id, id))
+      .execute();
+
+    if (!response) {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Unexpected Error happened.",
+      });
+    }
   } catch (error) {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
