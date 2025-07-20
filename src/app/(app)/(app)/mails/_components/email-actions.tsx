@@ -16,7 +16,7 @@ export interface EmailActionsProps {
   onRefresh: () => void;
   onMarkAllAsRead: () => void;
   unreadCount: number;
-  viewArchived: () => void;
+  viewArchived: () => boolean;
   onSort: (order: SortOrder) => void;
   currentSort: SortOrder;
   isRefreshing?: boolean;
@@ -26,7 +26,7 @@ export default function EmailActions({
   onRefresh,
   onMarkAllAsRead,
   unreadCount,
-  viewArchived
+  viewArchived,
   onSort,
   currentSort,
   isRefreshing = false,
@@ -61,10 +61,8 @@ export default function EmailActions({
             Mark all read {unreadCount > 0 && `(${unreadCount})`}
           </DropdownMenuItem>
 
-          <DropdownMenuItem
-            onClick={viewArchived}
-          >
-            Archived
+          <DropdownMenuItem onClick={viewArchived}>
+            {viewArchived() ? "Archived" : "Inbox"}
           </DropdownMenuItem>
 
           <Separator />

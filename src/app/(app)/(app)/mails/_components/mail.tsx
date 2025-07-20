@@ -17,29 +17,42 @@ export type SortOrder = "newest" | "oldest";
 
 const Mail = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const { data, isLoading, refetch } = api.mail.getAllUserMail.useQuery();
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [sortOrder, setSortOrder] = useState<SortOrder>("newest");
+  const [viewArchived, setViewArchived] = useState(false);
   const { data: session } = authClient.useSession();
+  const { data: ArchivedMails, isLoading: FetchingArchivedMails } =
+    api.mail.getAllUserArchivedMails.useQuery();
+  const {
+    data: Mails,
+    isLoading: FetchingMails,
+    refetch: refetchMails,
+  } = api.mail.getAllUserMail.useQuery();
+  const { mutateAsync: markAsRead } = api.mail.markMailAsRead.useMutation();
+  const { mutateAsync: markAllAsRead } =
+    api.mail.markAllMailAsRead.useMutation();
 
   const filteredMails = useMemo(() => {
-    if (!data) return [];
+    const mailToFilter = viewArchived ? ArchivedMails : Mails;
+    if (!mailToFilter) return [];
 
-    const filtered = data.filter(
-      (mail) =>
-        mail.senderName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        mail.senderEmail?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        mail.receiverName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        mail.receiverEmail?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        mail.subject.toLowerCase().includes(searchQuery.toLowerCase()),
-    ) as Email[];
+    const normalizedQuery = searchQuery?.toLowerCase() || "";
+    const filtered = mailToFilter.filter((mail) => {
+      return (
+        mail.senderName?.toLowerCase().includes(normalizedQuery) ||
+        mail.senderEmail?.toLowerCase().includes(normalizedQuery) ||
+        mail.receiverName?.toLowerCase().includes(normalizedQuery) ||
+        mail.receiverEmail?.toLowerCase().includes(normalizedQuery) ||
+        mail.subject?.toLowerCase().includes(normalizedQuery)
+      );
+    }) as Email[];
 
     return filtered.sort((a, b) => {
       const dateA = new Date(a.createdAt as Date).getTime();
       const dateB = new Date(b.createdAt as Date).getTime();
       return sortOrder === "newest" ? dateB - dateA : dateA - dateB;
     });
-  }, [data, searchQuery, sortOrder]);
+  }, [Mails, searchQuery, sortOrder, viewArchived]);
 
   const [selectedEmail, setSelectedEmail] = useState<Email | undefined>(
     filteredMails[0],
@@ -47,9 +60,6 @@ const Mail = () => {
   const unreadCount = useMemo(() => {
     return filteredMails.filter((mail) => !mail.isRead).length;
   }, [filteredMails]);
-  const { mutateAsync: markAsRead } = api.mail.markMailAsRead.useMutation();
-  const { mutateAsync: markAllAsRead } =
-    api.mail.markAllMailAsRead.useMutation();
 
   const handleSelectedEmail = async (email: Email) => {
     if (email.isRead) {
@@ -70,7 +80,7 @@ const Mail = () => {
 
     try {
       await markAllAsRead();
-      refetch();
+      refetchMails();
     } catch (error) {
       toast.error("Unexpected error occurred. Please try again.", {
         position: "top-center",
@@ -81,14 +91,15 @@ const Mail = () => {
   };
 
   const handleViewArchived = () => {
-
-  }
-
+    setViewArchived((prev) => !prev);
+    return !viewArchived;
+  };
+``
   const handleRefresh = async () => {
     setIsRefreshing(true);
 
     try {
-      await refetch();
+      await refetchMails();
       await new Promise((resolve) => setTimeout(resolve, 500));
     } catch (error) {
       toast.error("Unexpected error occurred. Please try again.", {
@@ -108,7 +119,9 @@ const Mail = () => {
       <div className="bg-background flex w-full flex-col border-r md:w-96 lg:w-80 xl:w-96">
         <div className="bg-background/95 supports-[backdrop-filter]:bg-background/60 border-border h-31.5 rounded-tl-xl border p-4 backdrop-blur">
           <div className="mb-3 flex items-center justify-between">
-            <h1 className="text-xl font-semibold">Inbox</h1>
+            <h1 className="text-xl font-semibold">
+              {viewArchived ? "Archived" : "Inbox"}
+            </h1>
 
             <div className="flex items-center space-x-1">
               <ComposeEmail />
@@ -141,7 +154,7 @@ const Mail = () => {
             selectedEmail={selectedEmail}
             onEmailSelect={handleSelectedEmail}
             currentUserId={session?.user?.id}
-            isfetching={isLoading}
+            isfetching={FetchingMails ?? FetchingArchivedMails}
             isRefreshing={isRefreshing}
           />
         </ScrollArea>
@@ -151,7 +164,7 @@ const Mail = () => {
         <EmailDetail
           email={selectedEmail}
           currentUserId={session?.user?.id}
-          isfetching={isLoading}
+          isfetching={FetchingMails}
           isRefreshing={isRefreshing}
         />
       </div>
@@ -163,7 +176,7 @@ const Mail = () => {
           showBackButton
           onBack={() => {}}
           currentUserId={session?.user?.id}
-          isfetching={isLoading}
+          isfetching={FetchingMails}
           isRefreshing={isRefreshing}
         />
       </div>
