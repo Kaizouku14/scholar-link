@@ -44,7 +44,9 @@ const EmailList = ({
                     "hover:bg-muted/50 border-border cursor-pointer border-b p-4 transition-colors",
                     selectedEmail?.id === email.id &&
                       "bg-muted border-l-primary border-l-2",
-                    !email.isRead && "bg-blue-50/30 dark:bg-blue-950/20",
+                    !displayInfo.isSender &&
+                      !email.isRead &&
+                      "bg-blue-50/30 dark:bg-blue-950/20",
                   )}
                   onClick={() => onEmailSelect?.(email)}
                 >
@@ -64,7 +66,7 @@ const EmailList = ({
                         <p
                           className={cn(
                             "truncate text-sm",
-                            !email.isRead
+                            !displayInfo.isSender && !email.isRead
                               ? "text-foreground font-semibold"
                               : "text-foreground/80 font-medium",
                           )}
@@ -89,7 +91,7 @@ const EmailList = ({
                       <h3
                         className={cn(
                           "truncate text-sm",
-                          !email.isRead
+                          !displayInfo.isSender && !email.isRead
                             ? "text-foreground font-semibold"
                             : "text-foreground/90",
                         )}
@@ -103,7 +105,7 @@ const EmailList = ({
                     </div>
                   </div>
 
-                  {!email.isRead && (
+                  {!displayInfo.isSender && !email.isRead && (
                     <div className="mt-2 flex justify-end">
                       <div className="bg-primary h-2 w-2 rounded-full"></div>
                     </div>

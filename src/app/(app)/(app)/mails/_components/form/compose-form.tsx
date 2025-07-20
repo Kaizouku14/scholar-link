@@ -14,18 +14,19 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { LoaderCircle } from "lucide-react";
 import { toast } from "sonner";
-import { Send } from "lucide-react";
+import { LoaderCircle, Send } from "lucide-react";
 import { formSchema, type FormSchema } from "./schema";
 import EmailComboBox from "./email-cb";
 import { api } from "@/trpc/react";
+import SubmitButton from "@/components/forms/submit-button";
+import { useState } from "react";
 
 interface ComposeFormProps {
   onSuccess?: () => void;
 }
-
 const ComposeForm = ({ onSuccess }: ComposeFormProps) => {
+  const [isLoading, setIsLoading] = useState(false);
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -38,20 +39,20 @@ const ComposeForm = ({ onSuccess }: ComposeFormProps) => {
   const { mutateAsync: sendMailToMutation } = api.mail.sendMailTo.useMutation();
   const handleSubmit = async (values: FormSchema) => {
     const { to, subject, content } = values;
-    try {
-      const toasdId = toast.loading("Sending email...");
 
-      toast.promise(
+    setIsLoading(true);
+    try {
+      await toast.promise(
         sendMailToMutation({
           reciever: to,
           subject,
           content,
         }),
         {
+          loading: "Sending email...",
           success: () => {
             form.reset();
-            onSuccess?.();
-
+            setIsLoading(false);
             return "Email sent successfully";
           },
           error: (error) => {
@@ -59,8 +60,6 @@ const ComposeForm = ({ onSuccess }: ComposeFormProps) => {
           },
         },
       );
-
-      toast.dismiss(toasdId);
     } catch (error) {
       toast.error("Failed to send email. Please try again.");
     }
@@ -122,15 +121,15 @@ const ComposeForm = ({ onSuccess }: ComposeFormProps) => {
           <Button type="button" variant="outline" onClick={() => onSuccess?.()}>
             Cancel
           </Button>
-          <Button type="submit" disabled={form.formState.isSubmitting}>
-            {form.formState.isSubmitting ? (
-              <div className="flex gap-1">
-                <LoaderCircle className="text-primary-foreground h-6 w-6 animate-spin" />
-                <span>Sending...</span>
+          <Button type="submit" disabled={isLoading}>
+            {isLoading ? (
+              <div className="text-foreground flex items-center gap-1">
+                <LoaderCircle className="h-6 w-6 animate-spin" />
+                <span className="animate-pulse">Sending...</span>
               </div>
             ) : (
               <>
-                <Send className="mr-2 h-4 w-4" />
+                <Send className="h-4 w-4" />
                 Send
               </>
             )}

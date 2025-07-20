@@ -48,10 +48,14 @@ const Mail = () => {
       setSelectedEmail(email);
       return;
     }
-    setSelectedEmail({ ...email, isRead: true });
+    //TODO: FIX THIS
+    const updatedEmail = { ...email, isRead: true };
+    setSelectedEmail(updatedEmail);
+    console.log(email.isRead);
 
     try {
       await markAsRead({ id: email.id });
+      await refetchMails();
     } catch (error) {
       setSelectedEmail(email);
     }
@@ -78,6 +82,7 @@ const Mail = () => {
     try {
       await refetchMails();
       await new Promise((resolve) => setTimeout(resolve, 500));
+      setSelectedEmail(undefined);
     } catch (error) {
       toast.error("Unexpected error occurred. Please try again.", {
         position: "top-center",
