@@ -18,7 +18,6 @@ const Mail = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [sortOrder, setSortOrder] = useState<SortOrder>("newest");
-  const [viewArchived, setViewArchived] = useState(false);
   const { data: session } = authClient.useSession();
   const {
     data: Mails,
@@ -33,12 +32,8 @@ const Mail = () => {
     if (!Mails) return [];
 
     const normalizedQuery = searchQuery?.toLowerCase() || "";
-    const mailsToFilter: Email[] = viewArchived
-      ? Mails
-      : Mails.filter((mail) => !mail.archived);
-
-    return filterAndSortMails(mailsToFilter, normalizedQuery, sortOrder);
-  }, [Mails, searchQuery, sortOrder, viewArchived]);
+    return filterAndSortMails(Mails, normalizedQuery, sortOrder);
+  }, [Mails, searchQuery, sortOrder]);
 
   const [selectedEmail, setSelectedEmail] = useState<Email | undefined>(
     filteredMails[0],
@@ -77,10 +72,6 @@ const Mail = () => {
     }
   };
 
-  const handleViewArchived = () => {
-    setViewArchived(!viewArchived);
-  };
-
   const handleRefresh = async () => {
     setIsRefreshing(true);
 
@@ -105,9 +96,7 @@ const Mail = () => {
       <div className="bg-background flex w-full flex-col border-r md:w-96 lg:w-80 xl:w-96">
         <div className="bg-background/95 supports-[backdrop-filter]:bg-background/60 border-border h-31.5 rounded-tl-xl border p-4 backdrop-blur">
           <div className="mb-3 flex items-center justify-between">
-            <h1 className="text-xl font-semibold">
-              {viewArchived ? "Archived" : "Inbox"}
-            </h1>
+            <h1 className="text-xl font-semibold">Inbox</h1>
 
             <div className="flex items-center space-x-1">
               <ComposeEmail />
@@ -115,8 +104,6 @@ const Mail = () => {
                 onRefresh={handleRefresh}
                 onMarkAllAsRead={handleMarkAllAsRead}
                 unreadCount={unreadCount}
-                viewArchived={handleViewArchived}
-                onArchive={viewArchived}
                 onSort={handleSort}
                 currentSort={sortOrder}
                 isRefreshing={isRefreshing}

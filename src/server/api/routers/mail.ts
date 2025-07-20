@@ -1,14 +1,9 @@
 import z from "zod";
 import { createTRPCRouter, protectedRoute } from "../trpc";
-import {
-  ArchivedMail,
-  markAllAsRead,
-  markAsRead,
-  sendMailTo,
-} from "@/lib/api/mail/mutation";
+import { markAllAsRead, markAsRead, sendMailTo } from "@/lib/api/mail/mutation";
 import { TRPCError } from "@trpc/server";
 import { generateUUID } from "@/lib/utils";
-import { getAllArchivedMails, getAllMails } from "@/lib/api/mail/query";
+import { getAllMails } from "@/lib/api/mail/query";
 
 export const mailRouter = createTRPCRouter({
   getAllUserMail: protectedRoute.query(async ({ ctx }) => {
@@ -22,17 +17,6 @@ export const mailRouter = createTRPCRouter({
     const { id } = ctx.session.user;
     return await getAllMails({ userId: id });
   }),
-  getAllUserArchivedMails: protectedRoute.query(async ({ ctx }) => {
-    if (!ctx.session) {
-      throw new TRPCError({
-        code: "UNAUTHORIZED",
-        message: "User is not authenticated",
-      });
-    }
-
-    const { id } = ctx.session.user;
-    return await getAllArchivedMails({ userId: id });
-  }),
 
   markMailAsRead: protectedRoute
     .input(z.object({ id: z.string() }))
@@ -42,11 +26,6 @@ export const mailRouter = createTRPCRouter({
   markAllMailAsRead: protectedRoute.mutation(async () => {
     return await markAllAsRead();
   }),
-  archivedMail: protectedRoute
-    .input(z.object({ id: z.string() }))
-    .mutation(async ({ input }) => {
-      return await ArchivedMail({ id: input.id });
-    }),
   sendMailTo: protectedRoute
     .input(
       z.object({

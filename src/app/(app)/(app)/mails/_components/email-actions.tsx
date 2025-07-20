@@ -9,15 +9,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { RefreshCw, MoreVertical, ArrowUp, ArrowDown } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { SortOrder } from "./mail";
+import type { SortOrder } from "./helper/email-utils";
 import { Separator } from "@/components/ui/separator";
 
 export interface EmailActionsProps {
   onRefresh: () => void;
   onMarkAllAsRead: () => void;
   unreadCount: number;
-  viewArchived: () => void;
-  onArchive: boolean;
   onSort: (order: SortOrder) => void;
   currentSort: SortOrder;
   isRefreshing?: boolean;
@@ -27,8 +25,6 @@ export default function EmailActions({
   onRefresh,
   onMarkAllAsRead,
   unreadCount,
-  viewArchived,
-  onArchive,
   onSort,
   currentSort,
   isRefreshing = false,
@@ -61,10 +57,6 @@ export default function EmailActions({
             disabled={unreadCount === 0}
           >
             Mark all read {unreadCount > 0 && `(${unreadCount})`}
-          </DropdownMenuItem>
-
-          <DropdownMenuItem onClick={viewArchived}>
-            {!onArchive ? "Archived" : "Inbox"}
           </DropdownMenuItem>
 
           <Separator />

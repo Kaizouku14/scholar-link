@@ -3,18 +3,10 @@
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  Reply,
-  Forward,
-  Archive,
-  Trash2,
-  ArrowLeft,
-  RotateCw,
-} from "lucide-react";
+import { Reply, Forward, Trash2, ArrowLeft, RotateCw } from "lucide-react";
 import type { Email } from "@/types/email";
 import { differenceInSeconds, formatDistanceToNow, format } from "date-fns";
 import { getEmailDisplayInfo } from "./helper/email-utils";
-import { api } from "@/trpc/react";
 
 interface EmailDetailProps {
   email?: Email;
@@ -33,12 +25,6 @@ const EmailDetail = ({
   isRefreshing,
 }: EmailDetailProps) => {
   const displayInfo = getEmailDisplayInfo(email, currentUserId);
-
-  const { mutateAsync: ArchivedMail } = api.mail.archivedMail.useMutation();
-
-  const handleArchivedMail = async () => {
-    if (email) await ArchivedMail({ id: email.id });
-  };
 
   return (
     <div className="bg-background border-border flex h-full flex-col rounded-r-xl border">
@@ -66,18 +52,9 @@ const EmailDetail = ({
                   </h1>
                 </div>
 
-                <div className="flex items-center space-x-1">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={handleArchivedMail}
-                  >
-                    <Archive className="h-4 w-4" />
-                  </Button>
-                  <Button variant="ghost" size="sm">
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
+                <Button variant="ghost" size="sm">
+                  <Trash2 className="h-4 w-4" />
+                </Button>
               </div>
 
               <div className="flex items-center space-x-3">

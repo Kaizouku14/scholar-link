@@ -28,6 +28,14 @@ export const getEmailDisplayInfo = (email?: Email, currentUserId?: string) => {
   }
 };
 
+/**
+ * Filter emails by a search query.
+ * @param mails List of emails to search through
+ * @param searchQuery Query to search for
+ * @returns Filtered list of emails
+ * @example
+ * searchMails(emails, "hello") // returns emails with sender/recipient name/email or subject containing "hello"
+ */
 export const searchMails = (mails: Email[], searchQuery: string): Email[] => {
   const normalizedQuery = searchQuery?.toLowerCase().trim() || "";
 
@@ -50,6 +58,12 @@ export const searchMails = (mails: Email[], searchQuery: string): Email[] => {
   });
 };
 
+/**
+ * Sorts a list of emails by their creation date.
+ * @param mails Array of emails to be sorted
+ * @param sortOrder Specifies the order of sorting: "newest" for descending order and "oldest" for ascending order
+ * @returns A new array of emails sorted by the specified order
+ */
 export const sortMails = (mails: Email[], sortOrder: SortOrder): Email[] => {
   return [...mails].sort((a, b) => {
     const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;

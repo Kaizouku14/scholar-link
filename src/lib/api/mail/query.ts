@@ -23,7 +23,6 @@ const baseMailQuery = () =>
       content: mailTable.content,
       date: mailTable.date,
       isRead: mailTable.isRead,
-      archived: mailTable.archived,
       createdAt: mailTable.createdAt,
     })
     .from(mailTable)
@@ -42,27 +41,6 @@ export const getAllMails = async ({ userId }: { userId: string }) => {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
       message: "Failed to get all mails, " + (error as Error).message,
-    });
-  }
-};
-
-export const getAllArchivedMails = async ({ userId }: { userId: string }) => {
-  try {
-    const response = await baseMailQuery()
-      .where(
-        and(
-          or(eq(mailTable.sender, userId), eq(mailTable.receiver, userId)),
-          eq(mailTable.archived, true),
-        ),
-      )
-      .orderBy(desc(mailTable.createdAt))
-      .execute();
-
-    return response;
-  } catch (error) {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: "Failed to get all archived mails, " + (error as Error).message,
     });
   }
 };

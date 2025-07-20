@@ -15,7 +15,6 @@ export const mailTable = createTable("mail", {
   content: text("content").notNull(),
   date: integer("date", { mode: "timestamp" }).notNull(),
   isRead: integer("is_read", { mode: "boolean" }).default(false),
-  archived: integer("archived", { mode: "boolean" }).default(false),
   createdAt: integer("created_at", { mode: "timestamp" }).default(
     sql`(unixepoch())`,
   ),
