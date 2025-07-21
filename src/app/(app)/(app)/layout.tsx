@@ -15,12 +15,10 @@ const Layout = async ({ children }: PropsWithChildren) => {
   if (!session) {
     redirect(PageRoutes.LOGIN);
   }
-  const { name, email, role } = session.user;
 
   return (
     <SidebarProvider>
-      <SideBar user={{ name, email }} userRole={role as roleType} />
-
+      <SideBar />
       <main className="border-border my-2 mr-2 min-h-screen w-full flex-1 rounded-lg p-4 px-2.5 shadow-sm md:border">
         <div className="flex flex-row">
           <SidebarTrigger />

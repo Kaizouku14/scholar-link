@@ -13,21 +13,21 @@ import NavHeader from "./nav-header";
 import { NavUser } from "./nav-user";
 import ModeToggle from "@/components/theme/mode-toggler";
 import type { roleType, UserInfo } from "@/constants/roles";
+import { authClient } from "@/lib/auth-client";
 
-interface SideBarProps extends React.ComponentProps<typeof Sidebar> {
-  userRole: roleType;
-  user: UserInfo;
-}
+export const SideBar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
+  const { data: session } = authClient.useSession();
+  const role = session?.user?.role as roleType;
+  const user = session?.user as UserInfo;
 
-export const SideBar = ({ userRole, user, ...props }: SideBarProps) => {
   return (
     <Sidebar variant="floating" collapsible="icon" {...props}>
       <SidebarHeader>
         <NavHeader />
         <SidebarSeparator className="mx-auto" />
-      </SidebarHeader>
+      </SidebarHeader>``
       <SidebarContent className="px-1.5">
-        <NavMain userRole={userRole} />
+        <NavMain userRole={role} />
         <ModeToggle />
       </SidebarContent>
       <SidebarSeparator className="mx-auto" />
