@@ -151,7 +151,7 @@ const EmailList = ({
                   </div>
                 </div>
 
-                {unreadCount > 0 && (
+                {!thread[0]?.isRead && (
                   <div className="mt-2 flex justify-end">
                     <div className="bg-primary h-2 w-2 rounded-full"></div>
                   </div>

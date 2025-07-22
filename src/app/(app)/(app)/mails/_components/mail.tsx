@@ -125,7 +125,7 @@ const Mail = () => {
             <h1 className="text-xl font-semibold">Inbox</h1>
 
             <div className="flex items-center space-x-1">
-              <ComposeEmail />
+              <ComposeEmail refetch={refetchMails} />
               <EmailActions
                 onRefresh={handleRefresh}
                 onMarkAllAsRead={handleMarkAllAsRead}

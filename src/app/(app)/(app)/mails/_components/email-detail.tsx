@@ -61,6 +61,7 @@ const EmailDetail = ({
             </div>
             <RotateCw className="text-muted-foreground h-4 w-4 animate-spin" />
           </div>
+          <Skeleton className="mx-6 h-[500px]" />
         </>
       ) : !thread || thread.length === 0 ? (
         <EmptyState />
@@ -116,7 +117,7 @@ const EmailDetail = ({
             </Button>
           </div>
 
-          <ScrollArea className="flex-1">
+          <ScrollArea className="h-[700px]">
             <div className="space-y-4 px-6 py-6">
               {thread.map((email, idx) => {
                 const isSenderCurrentUser = email.sender === currentUserId;
@@ -131,7 +132,7 @@ const EmailDetail = ({
                     key={email.id}
                     className={cn(
                       "shadow-sm transition-all duration-200 hover:shadow-md",
-                      !email.isRead
+                      !email.isRead && isSenderCurrentUser
                         ? "bg-gradient-to-r from-blue-50/50 to-transparent ring-1 ring-blue-200/50 dark:from-blue-950/20 dark:ring-blue-800/30"
                         : "bg-background hover:bg-muted/30",
                       isLastMessage && "ring-primary/20 ring-2",
@@ -150,7 +151,7 @@ const EmailDetail = ({
                                 {senderName.charAt(0).toUpperCase()}
                               </AvatarFallback>
                             </Avatar>
-                            {!email.isRead && (
+                            {!email.isRead && isSenderCurrentUser && (
                               <div className="ring-background absolute -top-1 -right-1 h-3 w-3 rounded-full bg-blue-500 ring-2" />
                             )}
                           </div>
@@ -211,14 +212,16 @@ const EmailDetail = ({
                               ? `${thread.length} messages in this thread`
                               : "Start of conversation"}
                           </div>
-                          <Button
-                            onClick={handleReplyClick}
-                            className="flex items-center space-x-2 shadow-sm"
-                            size="sm"
-                          >
-                            <Reply className="h-4 w-4" />
-                            <span>Reply</span>
-                          </Button>
+                          {!isSenderCurrentUser && (
+                            <Button
+                              onClick={handleReplyClick}
+                              className="flex items-center space-x-2 shadow-sm"
+                              size="sm"
+                            >
+                              <Reply className="h-4 w-4" />
+                              <span>Reply</span>
+                            </Button>
+                          )}
                         </div>
                       )}
                     </CardContent>

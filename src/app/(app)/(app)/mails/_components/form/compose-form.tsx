@@ -19,13 +19,13 @@ import { LoaderCircle, Send } from "lucide-react";
 import { formSchema, type FormSchema } from "./schema";
 import EmailComboBox from "./email-cb";
 import { api } from "@/trpc/react";
-import SubmitButton from "@/components/forms/submit-button";
 import { useState } from "react";
 
 interface ComposeFormProps {
   onSuccess?: () => void;
+  refetch: () => Promise<any>;
 }
-const ComposeForm = ({ onSuccess }: ComposeFormProps) => {
+const ComposeForm = ({ onSuccess, refetch }: ComposeFormProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
@@ -53,6 +53,8 @@ const ComposeForm = ({ onSuccess }: ComposeFormProps) => {
           success: () => {
             form.reset();
             setIsLoading(false);
+            refetch();
+
             return "Email sent successfully";
           },
           error: (error) => {
