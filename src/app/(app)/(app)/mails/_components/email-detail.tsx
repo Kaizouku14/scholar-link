@@ -132,7 +132,7 @@ const EmailDetail = ({
                     key={email.id}
                     className={cn(
                       "shadow-sm transition-all duration-200 hover:shadow-md",
-                      !email.isRead && isSenderCurrentUser
+                      !email.isRead && !isSenderCurrentUser
                         ? "bg-gradient-to-r from-blue-50/50 to-transparent ring-1 ring-blue-200/50 dark:from-blue-950/20 dark:ring-blue-800/30"
                         : "bg-background hover:bg-muted/30",
                       isLastMessage && "ring-primary/20 ring-2",
@@ -151,14 +151,14 @@ const EmailDetail = ({
                                 {senderName.charAt(0).toUpperCase()}
                               </AvatarFallback>
                             </Avatar>
-                            {!email.isRead && isSenderCurrentUser && (
-                              <div className="ring-background absolute -top-1 -right-1 h-3 w-3 rounded-full bg-blue-500 ring-2" />
+                            {!email.isRead && !isSenderCurrentUser && (
+                              <div className="ring-background bg-primary absolute -top-0 -right-0 h-3 w-3 rounded-full ring-2" />
                             )}
                           </div>
                           <div className="space-y-1">
                             <div className="flex items-center space-x-2">
                               <CardTitle className="text-foreground text-base font-semibold">
-                                {senderName}
+                                {isSenderCurrentUser ? "You" : senderName}
                               </CardTitle>
                               {isFirstMessage && (
                                 <Badge
@@ -199,31 +199,29 @@ const EmailDetail = ({
 
                     <CardContent className="space-y-4">
                       <div className="from-border via-border/50 h-px bg-gradient-to-r to-transparent" />
-                      <div className="h-80 overflow-auto">
+                      <div className="h-52 overflow-auto">
                         <p className="text-foreground text-sm leading-relaxed whitespace-pre-wrap">
                           {email.content}
                         </p>
                       </div>
 
-                      {isLastMessage && (
-                        <div className="bg-muted/20 -mx-6 mt-6 -mb-6 flex items-center justify-between border-t px-6 py-4">
-                          <div className="text-muted-foreground text-xs">
-                            {thread.length > 1
-                              ? `${thread.length} messages in this thread`
-                              : "Start of conversation"}
-                          </div>
-                          {!isSenderCurrentUser && (
-                            <Button
-                              onClick={handleReplyClick}
-                              className="flex items-center space-x-2 shadow-sm"
-                              size="sm"
-                            >
-                              <Reply className="h-4 w-4" />
-                              <span>Reply</span>
-                            </Button>
-                          )}
+                      <div className="bg-muted/20 -mx-6 mt-6 -mb-6 flex items-center justify-between border-t px-6 py-4">
+                        <div className="text-muted-foreground text-xs">
+                          {thread.length > 1
+                            ? `${thread.length} messages in this thread`
+                            : "Start of conversation"}
                         </div>
-                      )}
+                        {!isSenderCurrentUser && (
+                          <Button
+                            onClick={handleReplyClick}
+                            className="flex items-center space-x-2 shadow-sm"
+                            size="sm"
+                          >
+                            <Reply className="h-4 w-4" />
+                            <span>Reply</span>
+                          </Button>
+                        )}
+                      </div>
                     </CardContent>
                   </Card>
                 );

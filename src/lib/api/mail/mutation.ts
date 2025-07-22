@@ -3,6 +3,7 @@ import { mailTable } from "@/server/db/schema/mail";
 import { TRPCError } from "@trpc/server";
 
 type mailType = InferSelectModel<typeof mailTable>;
+
 type MailInsert = Omit<mailType, "createdAt">;
 
 export const sendOrReplyMail = async ({

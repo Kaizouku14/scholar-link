@@ -53,6 +53,7 @@ const LoginForm = () => {
         position: "top-center",
       });
 
+      toast.dismiss(toastId);
       router.push(PageRoutes.DASHBOARD);
     } catch (error) {
       toast.error((error as Error).message, {

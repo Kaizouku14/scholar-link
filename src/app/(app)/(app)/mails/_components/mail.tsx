@@ -17,8 +17,10 @@ import { toast } from "sonner";
 const Mail = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isMarkingRead, setIsMarkingRead] = useState(false);
   const [sortOrder, setSortOrder] = useState<SortOrder>("newest");
   const { data: session } = authClient.useSession();
+  const currentUserId = session?.user.id;
   const {
     data: Mails,
     isLoading: FetchingMails,
@@ -63,6 +65,9 @@ const Mail = () => {
   }, [groupedThreads]);
 
   const handleSelectedThread = async (thread: Email[]) => {
+    if (isMarkingRead) return;
+
+    setIsMarkingRead(true);
     const lastEmail = thread[thread.length - 1];
 
     if (lastEmail?.isRead) {
@@ -79,6 +84,7 @@ const Mail = () => {
       await refetchMails();
     } catch (error) {
       setSelectedThread(thread);
+      setIsMarkingRead(false);
     }
   };
 
@@ -164,7 +170,7 @@ const Mail = () => {
       <div className="hidden flex-1 flex-col md:flex">
         <EmailDetail
           thread={selectedThread}
-          currentUserId={session?.user?.id}
+          currentUserId={currentUserId}
           isfetching={FetchingMails}
           isRefreshing={isRefreshing}
           refresh={handleRefresh}
@@ -177,7 +183,7 @@ const Mail = () => {
           thread={selectedThread}
           showBackButton
           onBack={() => setSelectedThread(undefined)}
-          currentUserId={session?.user?.id}
+          currentUserId={currentUserId}
           isfetching={FetchingMails}
           isRefreshing={isRefreshing}
           refresh={handleRefresh}
