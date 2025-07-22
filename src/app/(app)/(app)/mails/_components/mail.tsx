@@ -31,7 +31,7 @@ const Mail = () => {
 
   const groupedThreads = useMemo(() => {
     if (!Mails) return [];
-    
+
     const normalizedQuery = searchQuery?.toLowerCase() || "";
     const filtered = filterAndSortMails(Mails, normalizedQuery, sortOrder);
 

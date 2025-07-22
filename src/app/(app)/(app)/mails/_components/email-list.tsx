@@ -88,7 +88,7 @@ const EmailList = ({
                 <div className="flex items-start space-x-3">
                   <Avatar className="mt-0.5 h-8 w-8">
                     <AvatarImage
-                      src={otherParticipant.avatar || "/placeholder.svg"}
+                      src={otherParticipant.avatar || undefined}
                       alt={otherParticipant.name ?? undefined}
                     />
                     <AvatarFallback className="bg-primary/10 text-primary text-sm font-medium">

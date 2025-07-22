@@ -3,30 +3,34 @@ import { mailTable } from "@/server/db/schema/mail";
 import { TRPCError } from "@trpc/server";
 
 type mailType = InferSelectModel<typeof mailTable>;
+type MailInsert = Omit<mailType, "createdAt">;
 
-export const sendMailTo = async ({
+export const sendOrReplyMail = async ({
   mail,
+  omitCreatedAt = false,
+  errorMessage = "Failed to send mail",
 }: {
-  mail: Omit<mailType, "createdAt" | "isRead">;
+  mail: MailInsert;
+  omitCreatedAt?: boolean;
+  errorMessage?: string;
 }) => {
   try {
-    const response = await db
-      .insert(mailTable)
-      .values({
-        ...mail,
-      })
-      .execute();
+    const values = omitCreatedAt
+      ? (mail as Omit<mailType, "createdAt" | "isRead">)
+      : mail;
+
+    const response = await db.insert(mailTable).values(values).execute();
 
     if (!response) {
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
-        message: "Failed to send mail",
+        message: errorMessage,
       });
     }
   } catch (error) {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
-      message: "Failed to send mail," + (error as Error).message,
+      message: `${errorMessage}, ${(error as Error).message}`,
     });
   }
 };

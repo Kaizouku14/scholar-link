@@ -5,7 +5,6 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Send, RotateCw } from "lucide-react";
-import { toast } from "sonner";
 import { api } from "@/trpc/react";
 import type { Email } from "@/types/email";
 import {
@@ -15,19 +14,20 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
+import { toast } from "sonner";
 
 interface ReplyFormProps {
-  email?: Email;
+  thread: Email[];
   recipientName?: string | null;
   recipientEmail?: string | null;
-  currentUserId?: string;
+  currentUserId: string;
   isOpen: boolean;
   onClose: () => void;
   onSuccess?: () => void;
 }
 
 const ReplyForm = ({
-  email,
+  thread,
   recipientName,
   recipientEmail,
   currentUserId,
@@ -38,10 +38,37 @@ const ReplyForm = ({
   const [replyContent, setReplyContent] = useState("");
   const [isSending, setIsSending] = useState(false);
 
-  const { mutateAsync: sendMailToMutation } = api.mail.sendMailTo.useMutation();
+  const { mutateAsync: sendMailToMutation } =
+    api.mail.replyToMail.useMutation();
+  const lastMessage = thread[thread.length - 1];
+
+  console.log(lastMessage);
 
   const handleSendReply = async () => {
-    if (!replyContent.trim()) return;
+    if (!replyContent.trim() || !thread) return;
+
+    setIsSending(true);
+    try {
+      if (!lastMessage) return;
+
+      await sendMailToMutation({
+        threadId: lastMessage.threadId,
+        parentId: lastMessage.id,
+        sender: currentUserId,
+        receiver:
+          lastMessage?.sender === currentUserId
+            ? lastMessage?.receiver
+            : lastMessage?.sender,
+        subject: lastMessage.subject.startsWith("Re: ")
+          ? lastMessage.subject
+          : `Re: ${lastMessage.subject}`,
+        content: replyContent,
+      });
+    } catch (error) {
+      toast.error("Failed to send reply. Please try again.");
+    } finally {
+      setIsSending(false);
+    }
   };
 
   const handleClose = () => {
@@ -68,11 +95,8 @@ const ReplyForm = ({
             <div className="flex items-center justify-between">
               <p className="text-sm font-medium">Original Message</p>
               <p className="text-muted-foreground text-xs">
-                Subject: {email?.subject}
+                Subject: {lastMessage?.subject}
               </p>
-            </div>
-            <div className="text-muted-foreground line-clamp-3 text-sm">
-              {email?.content}
             </div>
           </div>
 

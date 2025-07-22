@@ -4,7 +4,7 @@ import {
   deleteMail,
   markAllAsRead,
   markAsRead,
-  sendMailTo,
+  sendOrReplyMail,
 } from "@/lib/api/mail/mutation";
 import { TRPCError } from "@trpc/server";
 import { generateUUID } from "@/lib/utils";
@@ -61,14 +61,51 @@ export const mailRouter = createTRPCRouter({
           receiver: input.reciever,
           subject: input.subject,
           content: input.content,
+          isRead: false,
           date: new Date(),
         };
 
-        return await sendMailTo({ mail: mailToSend });
+        return await sendOrReplyMail({ mail: mailToSend, omitCreatedAt: true });
       } catch (error) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Failed to send mail," + (error as Error).message,
+        });
+      }
+    }),
+  replyToMail: protectedRoute
+    .input(
+      z.object({
+        threadId: z.string(),
+        parentId: z.string(),
+        sender: z.string(),
+        receiver: z.string(),
+        subject: z.string(),
+        content: z.string(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      try {
+        const mailToReply = {
+          id: generateUUID(),
+          threadId: input.threadId,
+          parentId: input.parentId,
+          sender: input.sender,
+          receiver: input.receiver,
+          subject: input.subject,
+          content: input.content,
+          isRead: true,
+          date: new Date(),
+        };
+
+        return await sendOrReplyMail({
+          mail: mailToReply,
+          omitCreatedAt: true,
+        });
+      } catch (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to reply to this mail," + (error as Error).message,
         });
       }
     }),

@@ -1,3 +1,5 @@
+"use client";
+
 import { ArrowLeft, RotateCw, Reply, Mail, Clock } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -141,7 +143,7 @@ const EmailDetail = ({
                           <div className="relative">
                             <Avatar className="h-12 w-12">
                               <AvatarImage
-                                src={senderProfile ?? "/placeholder.svg"}
+                                src={senderProfile ?? undefined}
                                 alt={senderName}
                               />
                               <AvatarFallback className="bg-primary/10 text-primary text-sm font-medium">
@@ -228,7 +230,7 @@ const EmailDetail = ({
 
           {showReplyForm && lastMessage && (
             <ReplyForm
-              email={lastMessage}
+              thread={thread}
               recipientName={
                 lastMessage.sender === currentUserId
                   ? (lastMessage.receiverName ?? "")
@@ -239,7 +241,7 @@ const EmailDetail = ({
                   ? (lastMessage.receiverEmail ?? "")
                   : (lastMessage.senderEmail ?? "")
               }
-              currentUserId={currentUserId}
+              currentUserId={currentUserId!}
               isOpen={showReplyForm}
               onClose={handleReplyClose}
             />
