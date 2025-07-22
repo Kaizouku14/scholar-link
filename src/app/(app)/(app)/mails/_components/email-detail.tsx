@@ -19,6 +19,7 @@ import { api } from "@/trpc/react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Textarea } from "@/components/ui/textarea";
+import ReplyForm from "./form/reply-form";
 
 interface EmailDetailProps {
   email?: Email;
@@ -39,8 +40,6 @@ const EmailDetail = ({
   refresh,
 }: EmailDetailProps) => {
   const [showReplyForm, setShowReplyForm] = useState(false);
-  const [replyContent, setReplyContent] = useState("");
-  const [isSending, setIsSending] = useState(false);
 
   const displayInfo = getEmailDisplayInfo(email, currentUserId);
   const { mutateAsync: deleteMail } = api.mail.deleteMail.useMutation();
@@ -53,42 +52,6 @@ const EmailDetail = ({
 
   const handleReplyClick = () => {
     setShowReplyForm(true);
-  };
-
-  const handleCancelReply = () => {
-    setShowReplyForm(false);
-    setReplyContent("");
-  };
-
-  const handleSendReply = async () => {
-    if (!email || !replyContent.trim()) return;
-
-    setIsSending(true);
-    try {
-      //   await toast.promise(
-      //     sendMailToMutation({
-      //       reciever: email.sender, // Reply to the sender
-      //       subject: `Re: ${email.subject}`,
-      //       content: replyContent,
-      //     }),
-      //     {
-      //       loading: "Sending reply...",
-      //       success: () => {
-      //         setReplyContent("")
-      //         setShowReplyForm(false)
-      //         refresh()
-      //         return "Reply sent successfully"
-      //       },
-      //       error: (error) => {
-      //         return (error as Error).message
-      //       },
-      //     },
-      //   )
-    } catch (error) {
-      toast.error("Failed to send reply. Please try again.");
-    } finally {
-      setIsSending(false);
-    }
   };
 
   return (
@@ -175,64 +138,33 @@ const EmailDetail = ({
               </div>
             </ScrollArea>
 
-            {showReplyForm ? (
-              <div className="bg-muted/30 border-border border-t p-4">
-                <div className="mb-2 flex items-center">
-                  <p className="text-sm font-medium">
-                    Reply to {displayInfo.name}
-                  </p>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="ml-auto"
-                    onClick={handleCancelReply}
-                  >
-                    <X className="h-4 w-4" />
+            <div className="bg-background/95 supports-[backdrop-filter]:bg-background/60 border-border rounded-b-xl border-t p-4 backdrop-blur">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Button onClick={handleReplyClick}>
+                    <Reply className="mr-2 h-4 w-4" />
+                    Reply
                   </Button>
                 </div>
-                <Textarea
-                  value={replyContent}
-                  onChange={(e) => setReplyContent(e.target.value)}
-                  placeholder={`Write your reply to ${displayInfo.name}...`}
-                  className="mb-2 min-h-[100px] resize-none"
-                />
-                <div className="flex justify-end">
-                  <Button
-                    onClick={handleSendReply}
-                    disabled={!replyContent.trim() || isSending}
-                  >
-                    {isSending ? (
-                      <div className="flex items-center gap-1">
-                        <RotateCw className="h-4 w-4 animate-spin" />
-                        <span>Sending...</span>
-                      </div>
-                    ) : (
-                      <>
-                        <Send className="mr-2 h-4 w-4" />
-                        Send
-                      </>
-                    )}
-                  </Button>
-                </div>
-              </div>
-            ) : (
-              <div className="bg-background/95 supports-[backdrop-filter]:bg-background/60 border-border rounded-b-xl border-t p-4 backdrop-blur">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <Button onClick={handleReplyClick}>
-                      <Reply className="mr-2 h-4 w-4" />
-                      Reply
-                    </Button>
-                  </div>
 
-                  <div className="text-muted-foreground hidden items-center space-x-2 text-sm sm:flex">
-                    <span>1 of {5} messages</span>
-                  </div>
+                <div className="text-muted-foreground hidden items-center space-x-2 text-sm sm:flex">
+                  <span>1 of {5} messages</span>
                 </div>
               </div>
-            )}
+            </div>
           </div>
         </>
+      )}
+
+      {showReplyForm && (
+        <ReplyForm
+          email={email}
+          recipientName={displayInfo.name ?? ""}
+          recipientEmail={displayInfo.email ?? ""}
+          currentUserId={currentUserId}
+          isOpen={showReplyForm}
+          onClose={() => setShowReplyForm(false)}
+        />
       )}
     </div>
   );

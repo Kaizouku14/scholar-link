@@ -1,69 +1,101 @@
 "use client";
 
 import type React from "react";
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Send, X, RotateCw } from "lucide-react";
+import { Send, RotateCw } from "lucide-react";
+import { toast } from "sonner";
+import { api } from "@/trpc/react";
 import type { Email } from "@/types/email";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Separator } from "@/components/ui/separator";
 
 interface ReplyFormProps {
-  email: Email;
-  recipientName?: string;
-  onCancel: () => void;
-  onSuccess: () => void;
+  email?: Email;
+  recipientName?: string | null;
+  recipientEmail?: string | null;
+  currentUserId?: string;
+  isOpen: boolean;
+  onClose: () => void;
+  onSuccess?: () => void;
 }
 
 const ReplyForm = ({
   email,
   recipientName,
-  onCancel,
+  recipientEmail,
+  currentUserId,
+  isOpen,
+  onClose,
   onSuccess,
 }: ReplyFormProps) => {
   const [replyContent, setReplyContent] = useState("");
   const [isSending, setIsSending] = useState(false);
 
+  const { mutateAsync: sendMailToMutation } = api.mail.sendMailTo.useMutation();
+
   const handleSendReply = async () => {
     if (!replyContent.trim()) return;
+  };
 
-    setIsSending(true);
+  const handleClose = () => {
+    if (!isSending) {
+      setReplyContent("");
+      onClose();
+    }
   };
 
   return (
-    <div className="bg-muted/30 border-border space-y-3 border-t p-4">
-      <div className="flex items-center justify-between">
-        <p className="text-sm font-medium">Reply to {recipientName}</p>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={onCancel}
-          disabled={isSending}
-        >
-          <X className="h-4 w-4" />
-        </Button>
-      </div>
+    <Dialog open={isOpen} onOpenChange={handleClose}>
+      <DialogContent className="flex max-h-[80vh] flex-col sm:max-w-[600px]">
+        <DialogHeader className="flex-shrink-0">
+          <DialogTitle className="flex items-center gap-2">
+            <span>Reply to :</span>
+            <span className="font-medium">
+              {recipientName || recipientEmail}
+            </span>
+          </DialogTitle>
+        </DialogHeader>
 
-      <Textarea
-        value={replyContent}
-        onChange={(e) => setReplyContent(e.target.value)}
-        placeholder={`Write your reply to ${recipientName}...`}
-        className="min-h-[120px] resize-none"
-        disabled={isSending}
-        autoFocus
-      />
+        <div className="flex-1 space-y-4">
+          <div className="bg-muted/30 space-y-2 rounded-lg p-4">
+            <div className="flex items-center justify-between">
+              <p className="text-sm font-medium">Original Message</p>
+              <p className="text-muted-foreground text-xs">
+                Subject: {email?.subject}
+              </p>
+            </div>
+            <div className="text-muted-foreground line-clamp-3 text-sm">
+              {email?.content}
+            </div>
+          </div>
 
-      <div className="flex items-center justify-between">
-        <div className="text-muted-foreground text-xs">
-          Press{" "}
-          <kbd className="bg-muted rounded px-1 py-0.5 text-xs">Ctrl+Enter</kbd>{" "}
-          to send,{" "}
-          <kbd className="bg-muted rounded px-1 py-0.5 text-xs">Esc</kbd> to
-          cancel
+          <Separator />
+
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <p className="text-sm font-medium">Your Reply</p>
+            </div>
+
+            <Textarea
+              value={replyContent}
+              onChange={(e) => setReplyContent(e.target.value)}
+              placeholder={`Write your reply to ${recipientName || recipientEmail}...`}
+              className="min-h-[200px] resize-none"
+              disabled={isSending}
+              autoFocus
+            />
+          </div>
         </div>
 
-        <div className="flex space-x-2">
-          <Button variant="outline" onClick={onCancel} disabled={isSending}>
+        <div className="flex flex-shrink-0 justify-end space-x-2 border-t pt-4">
+          <Button variant="outline" onClick={handleClose} disabled={isSending}>
             Cancel
           </Button>
           <Button
@@ -83,8 +115,8 @@ const ReplyForm = ({
             )}
           </Button>
         </div>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 };
 
