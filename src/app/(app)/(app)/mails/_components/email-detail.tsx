@@ -1,170 +1,250 @@
-"use client";
-
-import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ArrowLeft, RotateCw, Reply, Mail, Clock } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  Reply,
-  Forward,
-  Trash2,
-  ArrowLeft,
-  RotateCw,
-  Send,
-  X,
-} from "lucide-react";
-import type { Email } from "@/types/email";
-import { differenceInSeconds, formatDistanceToNow, format } from "date-fns";
-import { getEmailDisplayInfo } from "./helper/email-utils";
-import { api } from "@/trpc/react";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Button } from "@/components/ui/button";
+import { formatDistanceToNow, differenceInSeconds, format } from "date-fns";
 import { useState } from "react";
-import { toast } from "sonner";
-import { Textarea } from "@/components/ui/textarea";
 import ReplyForm from "./form/reply-form";
+import type { Email } from "@/types/email";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { cn } from "@/lib/utils";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Badge } from "@/components/ui/badge";
+import EmptyState from "./helper/no-selected";
 
 interface EmailDetailProps {
-  email?: Email;
+  thread?: Email[];
+  currentUserId?: string;
+  isRefreshing: boolean;
+  isfetching?: boolean;
+  refresh: () => void;
   showBackButton?: boolean;
   onBack?: () => void;
-  currentUserId?: string;
-  isfetching?: boolean;
-  isRefreshing: boolean;
-  refresh: () => void;
 }
+
 const EmailDetail = ({
-  email,
+  thread,
+  currentUserId,
+  isRefreshing,
+  isfetching,
+  refresh,
   showBackButton = false,
   onBack,
-  currentUserId,
-  isfetching,
-  isRefreshing,
-  refresh,
 }: EmailDetailProps) => {
   const [showReplyForm, setShowReplyForm] = useState(false);
 
-  const displayInfo = getEmailDisplayInfo(email, currentUserId);
-  const { mutateAsync: deleteMail } = api.mail.deleteMail.useMutation();
-  const handleDeleteMail = () => {
-    if (email) {
-      deleteMail({ id: email.id });
-      refresh();
-    }
-  };
+  const handleReplyClick = () => setShowReplyForm(true);
+  const handleReplyClose = () => setShowReplyForm(false);
 
-  const handleReplyClick = () => {
-    setShowReplyForm(true);
-  };
+  const lastMessage = thread?.[thread.length - 1];
 
   return (
     <div className="bg-background border-border flex h-full flex-col rounded-r-xl border">
-      {isRefreshing || isfetching ? (
-        <div className="border-border flex h-full items-center justify-center rounded-r-xl border">
-          <RotateCw className="text-muted-foreground h-6 w-6 animate-spin" />
-        </div>
-      ) : !email ? (
-        <div className="text-muted-foreground flex h-full w-full items-center justify-center text-center">
-          No email selected.
-        </div>
-      ) : (
+      {isfetching || isRefreshing ? (
         <>
-          <div className="bg-background border-border flex h-full flex-col rounded-r-xl border">
-            <div className="bg-background/95 supports-[backdrop-filter]:bg-background/60 border-border rounded-tr-xl border-b p-4 backdrop-blur">
-              <div className="mb-4 flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  {showBackButton && (
-                    <Button variant="ghost" size="sm" onClick={onBack}>
-                      <ArrowLeft className="h-4 w-4" />
-                    </Button>
-                  )}
-                  <h1 className="line-clamp-1 flex-1 text-lg font-semibold">
-                    {email?.subject}
-                  </h1>
-                </div>
-
-                <Button variant="ghost" size="sm" onClick={handleDeleteMail}>
-                  <Trash2 className="h-4 w-4" />
+          <div className="flex items-center justify-between border-b px-6 py-4">
+            <div className="flex items-center space-x-3">
+              {showBackButton && (
+                <Button variant="ghost" size="sm" disabled>
+                  <ArrowLeft className="h-4 w-4" />
                 </Button>
-              </div>
-
-              <div className="flex items-center space-x-3">
-                <Avatar className="h-10 w-10">
-                  <AvatarImage
-                    src={displayInfo.profile ?? undefined}
-                    alt={displayInfo.name ?? undefined}
-                  />
-                  <AvatarFallback className="bg-primary/10 text-primary text-sm font-medium">
-                    {displayInfo.fallback}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="flex-1">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-foreground font-medium">
-                        {displayInfo.label}: {displayInfo.name}
-                      </p>
-                      <p className="text-muted-foreground text-sm">
-                        {displayInfo.email}
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-muted-foreground text-sm">
-                        {email.date &&
-                          format(new Date(email.date), "MMM dd, yyyy")}
-                      </p>
-                      <p className="text-muted-foreground text-sm">
-                        {email.createdAt
-                          ? differenceInSeconds(
-                              new Date(),
-                              new Date(email.createdAt),
-                            ) < 60
-                            ? "Just now"
-                            : formatDistanceToNow(new Date(email.createdAt), {
-                                addSuffix: true,
-                              })
-                          : ""}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              )}
+              <Skeleton className="h-6 w-64" />
             </div>
-
-            <ScrollArea className={showReplyForm ? "h-[495px]" : "h-[595px]"}>
-              <div className="p-6">
-                <div className="prose prose-sm dark:prose-invert max-w-none">
-                  <div className="text-foreground leading-relaxed whitespace-pre-wrap">
-                    {email?.content}
-                  </div>
-                </div>
-              </div>
-            </ScrollArea>
-
-            <div className="bg-background/95 supports-[backdrop-filter]:bg-background/60 border-border rounded-b-xl border-t p-4 backdrop-blur">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <Button onClick={handleReplyClick}>
-                    <Reply className="mr-2 h-4 w-4" />
-                    Reply
-                  </Button>
-                </div>
-
-                <div className="text-muted-foreground hidden items-center space-x-2 text-sm sm:flex">
-                  <span>1 of {5} messages</span>
-                </div>
-              </div>
-            </div>
+            <RotateCw className="text-muted-foreground h-4 w-4 animate-spin" />
           </div>
         </>
-      )}
+      ) : !thread || thread.length === 0 ? (
+        <EmptyState />
+      ) : (
+        <>
+          <div className="bg-muted/20 flex items-center justify-between border-b px-6 py-4">
+            <div className="flex min-w-0 flex-1 items-center space-x-3">
+              {showBackButton && (
+                <Button variant="ghost" size="sm" onClick={onBack}>
+                  <ArrowLeft className="h-4 w-4" />
+                </Button>
+              )}
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center space-x-2">
+                  <h1 className="flex space-x-1 truncate text-lg">
+                    <span className="text-foreground font-semibold">
+                      Subject :
+                    </span>
+                    <span className="font-medium">{thread[0]?.subject}</span>
+                  </h1>
+                </div>
+                <div className="text-muted-foreground mt-1 flex items-center space-x-4 text-sm">
+                  <div className="flex items-center space-x-1">
+                    <Mail className="h-3 w-3" />
+                    <span>
+                      {thread.length} message{thread.length > 1 ? "s" : ""}
+                    </span>
+                  </div>
+                  {lastMessage?.createdAt && (
+                    <div className="flex items-center space-x-1">
+                      <Clock className="h-3 w-3" />
+                      <span>
+                        Last reply{" "}
+                        {formatDistanceToNow(new Date(lastMessage.createdAt), {
+                          addSuffix: true,
+                        })}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={refresh}
+              disabled={isRefreshing}
+              className="shrink-0"
+            >
+              <RotateCw
+                className={cn("h-4 w-4", isRefreshing && "animate-spin")}
+              />
+            </Button>
+          </div>
 
-      {showReplyForm && (
-        <ReplyForm
-          email={email}
-          recipientName={displayInfo.name ?? ""}
-          recipientEmail={displayInfo.email ?? ""}
-          currentUserId={currentUserId}
-          isOpen={showReplyForm}
-          onClose={() => setShowReplyForm(false)}
-        />
+          <ScrollArea className="flex-1">
+            <div className="space-y-4 px-6 py-6">
+              {thread.map((email, idx) => {
+                const isSenderCurrentUser = email.sender === currentUserId;
+                const senderName = email.senderName || "Unknown User";
+                const senderEmail = email.senderEmail;
+                const senderProfile = email.senderProfile;
+                const isLastMessage = idx === thread.length - 1;
+                const isFirstMessage = idx === 0;
+
+                return (
+                  <Card
+                    key={email.id}
+                    className={cn(
+                      "shadow-sm transition-all duration-200 hover:shadow-md",
+                      !email.isRead
+                        ? "bg-gradient-to-r from-blue-50/50 to-transparent ring-1 ring-blue-200/50 dark:from-blue-950/20 dark:ring-blue-800/30"
+                        : "bg-background hover:bg-muted/30",
+                      isLastMessage && "ring-primary/20 ring-2",
+                    )}
+                  >
+                    <CardHeader className="pb-3">
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-start space-x-4">
+                          <div className="relative">
+                            <Avatar className="h-12 w-12">
+                              <AvatarImage
+                                src={senderProfile ?? "/placeholder.svg"}
+                                alt={senderName}
+                              />
+                              <AvatarFallback className="bg-primary/10 text-primary text-sm font-medium">
+                                {senderName.charAt(0).toUpperCase()}
+                              </AvatarFallback>
+                            </Avatar>
+                            {!email.isRead && (
+                              <div className="ring-background absolute -top-1 -right-1 h-3 w-3 rounded-full bg-blue-500 ring-2" />
+                            )}
+                          </div>
+                          <div className="space-y-1">
+                            <div className="flex items-center space-x-2">
+                              <CardTitle className="text-foreground text-base font-semibold">
+                                {senderName}
+                              </CardTitle>
+                              {isFirstMessage && (
+                                <Badge
+                                  variant="secondary"
+                                  className="px-2 py-0 text-xs"
+                                >
+                                  Original
+                                </Badge>
+                              )}
+                            </div>
+                            <CardDescription className="text-muted-foreground text-sm">
+                              {senderEmail}
+                            </CardDescription>
+                          </div>
+                        </div>
+
+                        <div className="space-y-1 text-right">
+                          <div className="text-foreground text-sm font-medium">
+                            {email.date &&
+                              format(new Date(email.date), "MMM dd, yyyy")}
+                          </div>
+                          <div className="text-muted-foreground text-xs">
+                            {email.createdAt
+                              ? differenceInSeconds(
+                                  new Date(),
+                                  new Date(email.createdAt),
+                                ) < 60
+                                ? "Just now"
+                                : formatDistanceToNow(
+                                    new Date(email.createdAt),
+                                    { addSuffix: true },
+                                  )
+                              : ""}
+                          </div>
+                        </div>
+                      </div>
+                    </CardHeader>
+
+                    <CardContent className="space-y-4">
+                      <div className="from-border via-border/50 h-px bg-gradient-to-r to-transparent" />
+                      <div className="h-80 overflow-auto">
+                        <p className="text-foreground text-sm leading-relaxed whitespace-pre-wrap">
+                          {email.content}
+                        </p>
+                      </div>
+
+                      {isLastMessage && (
+                        <div className="bg-muted/20 -mx-6 mt-6 -mb-6 flex items-center justify-between border-t px-6 py-4">
+                          <div className="text-muted-foreground text-xs">
+                            {thread.length > 1
+                              ? `${thread.length} messages in this thread`
+                              : "Start of conversation"}
+                          </div>
+                          <Button
+                            onClick={handleReplyClick}
+                            className="flex items-center space-x-2 shadow-sm"
+                            size="sm"
+                          >
+                            <Reply className="h-4 w-4" />
+                            <span>Reply</span>
+                          </Button>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          </ScrollArea>
+
+          {showReplyForm && lastMessage && (
+            <ReplyForm
+              email={lastMessage}
+              recipientName={
+                lastMessage.sender === currentUserId
+                  ? (lastMessage.receiverName ?? "")
+                  : (lastMessage.senderName ?? "")
+              }
+              recipientEmail={
+                lastMessage.sender === currentUserId
+                  ? (lastMessage.receiverEmail ?? "")
+                  : (lastMessage.senderEmail ?? "")
+              }
+              currentUserId={currentUserId}
+              isOpen={showReplyForm}
+              onClose={handleReplyClose}
+            />
+          )}
+        </>
       )}
     </div>
   );

@@ -46,7 +46,6 @@ export const mailRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       try {
-        const id = generateUUID();
         if (!ctx.session) {
           throw new TRPCError({
             code: "UNAUTHORIZED",
@@ -55,7 +54,9 @@ export const mailRouter = createTRPCRouter({
         }
 
         const mailToSend = {
-          id,
+          id: generateUUID(),
+          threadId: generateUUID(),
+          parentId: null,
           sender: ctx.session.user.id,
           receiver: input.reciever,
           subject: input.subject,

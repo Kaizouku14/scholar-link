@@ -26,7 +26,6 @@ export const SideBar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
         <NavHeader />
         <SidebarSeparator className="mx-auto" />
       </SidebarHeader>
-      ``
       <SidebarContent className="px-1.5">
         <NavMain userRole={role} />
         <ModeToggle />

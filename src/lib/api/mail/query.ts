@@ -11,6 +11,8 @@ const baseMailQuery = () =>
   db
     .select({
       id: mailTable.id,
+      threadId: mailTable.threadId,
+      parentId: mailTable.parentId,
       sender: mailTable.sender,
       senderName: sender.name,
       senderEmail: sender.email,

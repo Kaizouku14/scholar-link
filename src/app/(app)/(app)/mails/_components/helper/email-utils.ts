@@ -73,20 +73,11 @@ export const sortMails = (mails: Email[], sortOrder: SortOrder): Email[] => {
   });
 };
 
-export const filterMailsByArchiveStatus = (
-  mails: Email[],
-  viewArchived: boolean,
-): Email[] => {
-  return viewArchived ? mails : mails.filter((mail) => !mail.archived);
-};
-
 export const filterAndSortMails = (
   mails: Email[],
   searchQuery: string,
   sortOrder: SortOrder,
-  viewArchived: boolean = false,
 ): Email[] => {
-  const archivedFiltered = filterMailsByArchiveStatus(mails, viewArchived);
-  const searched = searchMails(archivedFiltered, searchQuery);
+  const searched = searchMails(mails, searchQuery);
   return sortMails(searched, sortOrder);
 };

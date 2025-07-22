@@ -5,6 +5,8 @@ import { sql } from "drizzle-orm";
 
 export const mailTable = createTable("mail", {
   id: text("id").primaryKey(),
+  threadId: text("thread_id").notNull(),
+  parentId: text("parent_id"),
   sender: text("sender_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),

@@ -24,40 +24,61 @@ const Mail = () => {
     isLoading: FetchingMails,
     refetch: refetchMails,
   } = api.mail.getAllUserMail.useQuery();
+
   const { mutateAsync: markAsRead } = api.mail.markMailAsRead.useMutation();
   const { mutateAsync: markAllAsRead } =
     api.mail.markAllMailAsRead.useMutation();
 
-  const filteredMails = useMemo(() => {
+  const groupedThreads = useMemo(() => {
     if (!Mails) return [];
-
+    
     const normalizedQuery = searchQuery?.toLowerCase() || "";
-    return filterAndSortMails(Mails, normalizedQuery, sortOrder);
+    const filtered = filterAndSortMails(Mails, normalizedQuery, sortOrder);
+
+    const grouped = filtered.reduce(
+      (acc, email) => {
+        if (!acc[email.threadId]) acc[email.threadId] = [];
+        acc[email.threadId]?.push(email);
+        return acc;
+      },
+      {} as Record<string, Email[]>,
+    );
+
+    return Object.values(grouped).map((thread) =>
+      thread.sort((a, b) => {
+        const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        return sortOrder === "newest" ? dateB - dateA : dateA - dateB;
+      }),
+    );
   }, [Mails, searchQuery, sortOrder]);
 
-  const [selectedEmail, setSelectedEmail] = useState<Email | undefined>(
-    filteredMails[0],
-  );
+  const [selectedThread, setSelectedThread] = useState<Email[] | undefined>();
 
   const unreadCount = useMemo(() => {
-    return filteredMails.filter((mail: Email) => !mail.isRead).length;
-  }, [filteredMails]);
+    return groupedThreads.reduce(
+      (total, thread) => total + thread.filter((mail) => !mail.isRead).length,
+      0,
+    );
+  }, [groupedThreads]);
 
-  const handleSelectedEmail = async (email: Email) => {
-    if (email.isRead) {
-      setSelectedEmail(email);
+  const handleSelectedThread = async (thread: Email[]) => {
+    const lastEmail = thread[thread.length - 1];
+
+    if (lastEmail?.isRead) {
+      setSelectedThread(thread);
       return;
     }
-    //TODO: FIX THIS
-    const updatedEmail = { ...email, isRead: true };
-    setSelectedEmail(updatedEmail);
-    console.log(email.isRead);
+
+    const updatedLastEmail = { ...lastEmail, isRead: true };
+    const updatedThread = [...thread.slice(0, -1), updatedLastEmail] as Email[];
+    setSelectedThread(updatedThread);
 
     try {
-      await markAsRead({ id: email.id });
+      await markAsRead({ id: lastEmail!.id });
       await refetchMails();
     } catch (error) {
-      setSelectedEmail(email);
+      setSelectedThread(thread);
     }
   };
 
@@ -82,7 +103,7 @@ const Mail = () => {
     try {
       await refetchMails();
       await new Promise((resolve) => setTimeout(resolve, 500));
-      setSelectedEmail(undefined);
+      setSelectedThread(undefined);
     } catch (error) {
       toast.error("Unexpected error occurred. Please try again.", {
         position: "top-center",
@@ -129,9 +150,9 @@ const Mail = () => {
 
         <ScrollArea className="border-border h-[665px] rounded-bl-xl border-x border-b">
           <EmailList
-            emails={filteredMails}
-            selectedEmail={selectedEmail}
-            onEmailSelect={handleSelectedEmail}
+            threads={groupedThreads}
+            selectedThread={selectedThread}
+            onThreadSelect={handleSelectedThread}
             currentUserId={session?.user?.id}
             isfetching={FetchingMails}
             isRefreshing={isRefreshing}
@@ -139,9 +160,10 @@ const Mail = () => {
         </ScrollArea>
       </div>
 
+      {/* Desktop: Email Detail */}
       <div className="hidden flex-1 flex-col md:flex">
         <EmailDetail
-          email={selectedEmail}
+          thread={selectedThread}
           currentUserId={session?.user?.id}
           isfetching={FetchingMails}
           isRefreshing={isRefreshing}
@@ -149,12 +171,12 @@ const Mail = () => {
         />
       </div>
 
-      {/* Mobile Email Detail Overlay */}
+      {/* Mobile: Overlay Detail */}
       <div className="bg-background fixed inset-0 z-50 flex flex-col md:hidden">
         <EmailDetail
-          email={selectedEmail}
+          thread={selectedThread}
           showBackButton
-          onBack={() => {}}
+          onBack={() => setSelectedThread(undefined)}
           currentUserId={session?.user?.id}
           isfetching={FetchingMails}
           isRefreshing={isRefreshing}
