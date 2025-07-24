@@ -41,7 +41,6 @@ const EmailDetail = ({
   thread,
   currentUserId,
   isfetching,
-  refresh,
   showBackButton = false,
   onBack,
   refetch,
@@ -111,17 +110,6 @@ const EmailDetail = ({
                 </div>
               </div>
             </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={refresh}
-              disabled={isfetching}
-              className="shrink-0"
-            >
-              <RotateCw
-                className={cn("h-4 w-4", isfetching && "animate-spin")}
-              />
-            </Button>
           </div>
 
           <ScrollArea className="h-[700px]">
@@ -274,6 +262,7 @@ const EmailDetail = ({
               currentUserId={currentUserId!}
               isOpen={showReplyForm}
               onClose={handleReplyClose}
+              refetch={refetch}
             />
           )}
         </>

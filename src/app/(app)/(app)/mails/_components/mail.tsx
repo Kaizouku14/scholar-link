@@ -84,7 +84,7 @@ const Mail = () => {
       setSelectedThread(thread);
       return;
     }
-    
+
     const updatedThread = thread.map((email) =>
       unreadMails.some((unread) => unread.id === email.id)
         ? { ...email, isRead: true }
@@ -98,7 +98,6 @@ const Mail = () => {
       await markThreadAsRead({
         ids: unreadMails.map((email) => email.id),
       });
-
       await refetchMails();
     } catch (error) {
       setSelectedThread(thread);
