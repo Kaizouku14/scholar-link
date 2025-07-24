@@ -23,7 +23,7 @@ interface ReplyFormProps {
   currentUserId: string;
   isOpen: boolean;
   onClose: () => void;
-  onSuccess?: () => void;
+  refetch?: () => Promise<any>;
 }
 
 const ReplyForm = ({
@@ -33,7 +33,7 @@ const ReplyForm = ({
   currentUserId,
   isOpen,
   onClose,
-  onSuccess,
+  refetch,
 }: ReplyFormProps) => {
   const [replyContent, setReplyContent] = useState("");
   const [isSending, setIsSending] = useState(false);
@@ -41,8 +41,6 @@ const ReplyForm = ({
   const { mutateAsync: sendMailToMutation } =
     api.mail.replyToMail.useMutation();
   const lastMessage = thread[thread.length - 1];
-
-  console.log(lastMessage);
 
   const handleSendReply = async () => {
     if (!replyContent.trim() || !thread) return;
@@ -62,6 +60,10 @@ const ReplyForm = ({
         subject: lastMessage.subject,
         content: replyContent,
       });
+
+      refetch?.();
+      setReplyContent("");
+      handleClose?.();
     } catch (error) {
       toast.error("Failed to send reply. Please try again.");
     } finally {

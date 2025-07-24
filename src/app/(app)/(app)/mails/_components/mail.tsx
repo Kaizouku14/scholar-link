@@ -84,7 +84,7 @@ const Mail = () => {
       setSelectedThread(thread);
       return;
     }
-
+    
     const updatedThread = thread.map((email) =>
       unreadMails.some((unread) => unread.id === email.id)
         ? { ...email, isRead: true }
@@ -190,9 +190,9 @@ const Mail = () => {
         <EmailDetail
           thread={selectedThread}
           currentUserId={currentUserId}
-          isfetching={FetchingMails}
-          isRefreshing={isRefreshing}
+          isfetching={FetchingMails || isRefreshing}
           refresh={handleRefresh}
+          refetch={refetchMails}
         />
       </div>
 
@@ -203,9 +203,9 @@ const Mail = () => {
           showBackButton
           onBack={() => setSelectedThread(undefined)}
           currentUserId={currentUserId}
-          isfetching={FetchingMails}
-          isRefreshing={isRefreshing}
+          isfetching={FetchingMails || isRefreshing}
           refresh={handleRefresh}
+          refetch={refetchMails}
         />
       </div>
     </div>

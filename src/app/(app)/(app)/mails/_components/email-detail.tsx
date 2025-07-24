@@ -30,21 +30,21 @@ import EmptyState from "./helper/no-selected";
 interface EmailDetailProps {
   thread?: Email[];
   currentUserId?: string;
-  isRefreshing: boolean;
   isfetching?: boolean;
   refresh: () => void;
   showBackButton?: boolean;
   onBack?: () => void;
+  refetch?: () => Promise<any>;
 }
 
 const EmailDetail = ({
   thread,
   currentUserId,
-  isRefreshing,
   isfetching,
   refresh,
   showBackButton = false,
   onBack,
+  refetch,
 }: EmailDetailProps) => {
   const [showReplyForm, setShowReplyForm] = useState(false);
 
@@ -55,7 +55,7 @@ const EmailDetail = ({
 
   return (
     <div className="bg-background border-border flex h-full flex-col rounded-r-xl border">
-      {isfetching || isRefreshing ? (
+      {isfetching ? (
         <>
           <div className="flex items-center justify-between border-b px-6 py-4">
             <div className="flex items-center space-x-3">
@@ -115,133 +115,146 @@ const EmailDetail = ({
               variant="ghost"
               size="sm"
               onClick={refresh}
-              disabled={isRefreshing}
+              disabled={isfetching}
               className="shrink-0"
             >
               <RotateCw
-                className={cn("h-4 w-4", isRefreshing && "animate-spin")}
+                className={cn("h-4 w-4", isfetching && "animate-spin")}
               />
             </Button>
           </div>
 
           <ScrollArea className="h-[700px]">
             <div className="space-y-4 px-6 py-6">
-              {thread.map((email, idx) => {
-                const isSenderCurrentUser = email.sender === currentUserId;
-                const senderName = email.senderName || "Unknown User";
-                const senderEmail = email.senderEmail;
-                const senderProfile = email.senderProfile;
-                const isLastMessage = idx === thread.length - 1;
-                const isFirstMessage = idx === 0;
+              {thread
+                .slice()
+                .sort((a, b) => {
+                  const dateA = a.createdAt
+                    ? new Date(a.createdAt).getTime()
+                    : 0;
+                  const dateB = b.createdAt
+                    ? new Date(b.createdAt).getTime()
+                    : 0;
+                  return dateB - dateA; // descending: newest to oldest
+                })
+                .map((email, idx) => {
+                  const isSenderCurrentUser = email.sender === currentUserId;
+                  const senderName = email.senderName || "Unknown User";
+                  const senderEmail = email.senderEmail;
+                  const senderProfile = email.senderProfile;
+                  const isLastMessage = idx === thread.length - 1;
+                  const isFirstMessage = idx === 0;
 
-                return (
-                  <Card
-                    key={email.id}
-                    className={cn(
-                      "shadow-sm transition-all duration-200 hover:shadow-md",
-                      !email.isRead && !isSenderCurrentUser
-                        ? "bg-gradient-to-r from-blue-50/50 to-transparent ring-1 ring-blue-200/50 dark:from-blue-950/20 dark:ring-blue-800/30"
-                        : "bg-background hover:bg-muted/30",
-                      isLastMessage && "ring-primary/20 ring-2",
-                    )}
-                  >
-                    <CardHeader className="pb-3">
-                      <div className="flex items-start justify-between">
-                        <div className="flex items-start space-x-4">
-                          <div className="relative">
-                            <Avatar className="h-12 w-12">
-                              <AvatarImage
-                                src={senderProfile ?? undefined}
-                                alt={senderName}
-                              />
-                              <AvatarFallback className="bg-primary/10 text-primary text-sm font-medium">
-                                {senderName.charAt(0).toUpperCase()}
-                              </AvatarFallback>
-                            </Avatar>
-                            {!email.isRead && !isSenderCurrentUser && (
-                              <div className="ring-background bg-primary absolute -top-0 -right-0 h-3 w-3 rounded-full ring-2" />
+                  return (
+                    <Card
+                      key={email.id}
+                      className={cn(
+                        "shadow-sm transition-all duration-200 hover:shadow-md",
+                        isLastMessage && "ring-primary/20 ring-2",
+                      )}
+                    >
+                      <CardHeader className="pb-3">
+                        <div className="flex items-start justify-between">
+                          <div className="flex items-start space-x-4">
+                            <div className="relative">
+                              <Avatar className="h-12 w-12">
+                                <AvatarImage
+                                  src={senderProfile ?? undefined}
+                                  alt={senderName}
+                                />
+                                <AvatarFallback className="bg-primary/10 text-primary text-sm font-medium">
+                                  {senderName.charAt(0).toUpperCase()}
+                                </AvatarFallback>
+                              </Avatar>
+                            </div>
+                            <div className="space-y-1">
+                              <div className="flex items-center space-x-2">
+                                <CardTitle className="text-foreground text-base font-semibold">
+                                  {isSenderCurrentUser ? "You" : senderName}
+                                </CardTitle>
+                                {isLastMessage && (
+                                  <Badge
+                                    variant="secondary"
+                                    className="px-2 py-0 text-xs"
+                                  >
+                                    Original
+                                  </Badge>
+                                )}
+                                {isFirstMessage && (
+                                  <Badge
+                                    variant="secondary"
+                                    className="px-2 py-0 text-xs"
+                                  >
+                                    New
+                                  </Badge>
+                                )}
+                              </div>
+                              <CardDescription className="text-muted-foreground text-sm">
+                                {senderEmail}
+                              </CardDescription>
+                            </div>
+                          </div>
+
+                          <div className="space-y-1 text-right">
+                            <div className="text-foreground text-sm font-medium">
+                              {email.date &&
+                                format(new Date(email.date), "MMM dd, yyyy")}
+                            </div>
+                            <div className="text-muted-foreground text-xs">
+                              {email.createdAt
+                                ? differenceInSeconds(
+                                    new Date(),
+                                    new Date(email.createdAt),
+                                  ) < 60
+                                  ? "Just now"
+                                  : formatDistanceToNow(
+                                      new Date(email.createdAt),
+                                      { addSuffix: true },
+                                    )
+                                : ""}
+                            </div>
+                          </div>
+                        </div>
+                      </CardHeader>
+
+                      <CardContent className="space-y-4">
+                        <div className="from-border via-border/50 h-px bg-gradient-to-r to-transparent" />
+                        <div className="h-52 overflow-auto">
+                          <p className="text-foreground text-sm leading-relaxed whitespace-pre-wrap">
+                            {email.content}
+                          </p>
+                        </div>
+
+                        <div className="bg-muted/20 -mx-6 mt-6 -mb-6 flex items-center justify-between border-t px-6 py-4">
+                          <div className="text-muted-foreground text-xs">
+                            {thread.length > 1
+                              ? `${thread.length} messages in this thread`
+                              : "Start of conversation"}
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            {email.isRead && isSenderCurrentUser && (
+                              <Badge
+                                variant="secondary"
+                                className="px-2 py-0 text-xs"
+                              >
+                                Read
+                              </Badge>
+                            )}
+                            {!isSenderCurrentUser && (
+                              <Button
+                                onClick={handleReplyClick}
+                                className="flex cursor-pointer items-center space-x-2 shadow-sm"
+                              >
+                                <Reply className="h-4 w-4" />
+                                Reply
+                              </Button>
                             )}
                           </div>
-                          <div className="space-y-1">
-                            <div className="flex items-center space-x-2">
-                              <CardTitle className="text-foreground text-base font-semibold">
-                                {isSenderCurrentUser ? "You" : senderName}
-                              </CardTitle>
-                              {isFirstMessage && (
-                                <Badge
-                                  variant="secondary"
-                                  className="px-2 py-0 text-xs"
-                                >
-                                  Original
-                                </Badge>
-                              )}
-                            </div>
-                            <CardDescription className="text-muted-foreground text-sm">
-                              {senderEmail}
-                            </CardDescription>
-                          </div>
                         </div>
-
-                        <div className="space-y-1 text-right">
-                          <div className="text-foreground text-sm font-medium">
-                            {email.date &&
-                              format(new Date(email.date), "MMM dd, yyyy")}
-                          </div>
-                          <div className="text-muted-foreground text-xs">
-                            {email.createdAt
-                              ? differenceInSeconds(
-                                  new Date(),
-                                  new Date(email.createdAt),
-                                ) < 60
-                                ? "Just now"
-                                : formatDistanceToNow(
-                                    new Date(email.createdAt),
-                                    { addSuffix: true },
-                                  )
-                              : ""}
-                          </div>
-                        </div>
-                      </div>
-                    </CardHeader>
-
-                    <CardContent className="space-y-4">
-                      <div className="from-border via-border/50 h-px bg-gradient-to-r to-transparent" />
-                      <div className="h-52 overflow-auto">
-                        <p className="text-foreground text-sm leading-relaxed whitespace-pre-wrap">
-                          {email.content}
-                        </p>
-                      </div>
-
-                      <div className="bg-muted/20 -mx-6 mt-6 -mb-6 flex items-center justify-between border-t px-6 py-4">
-                        <div className="text-muted-foreground text-xs">
-                          {thread.length > 1
-                            ? `${thread.length} messages in this thread`
-                            : "Start of conversation"}
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          {email.isRead && isSenderCurrentUser && (
-                            <Badge
-                              variant="secondary"
-                              className="px-2 py-0 text-xs"
-                            >
-                              Read
-                            </Badge>
-                          )}
-                          {!isSenderCurrentUser && (
-                            <Button
-                              onClick={handleReplyClick}
-                              className="flex cursor-pointer items-center space-x-2 shadow-sm"
-                            >
-                              <Reply className="h-4 w-4" />
-                              Reply
-                            </Button>
-                          )}
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                );
-              })}
+                      </CardContent>
+                    </Card>
+                  );
+                })}
             </div>
           </ScrollArea>
 

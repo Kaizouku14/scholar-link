@@ -47,6 +47,7 @@ const EmailList = ({
       subject: lastMessage?.subject,
       lastMessageContent: lastMessage?.content,
       lastMessageDate: lastMessage?.createdAt,
+      lastMesageIsRead: lastMessage?.isRead,
       isFromCurrentUser,
       unreadCount,
       otherParticipant,
@@ -67,6 +68,7 @@ const EmailList = ({
               subject,
               lastMessageContent,
               lastMessageDate,
+              lastMesageIsRead,
               isFromCurrentUser,
               unreadCount,
               otherParticipant,
@@ -81,7 +83,7 @@ const EmailList = ({
                 className={cn(
                   "hover:bg-muted/50 border-border cursor-pointer border-b p-4 transition-colors",
                   isSelected && "bg-muted border-l-primary border-l-2",
-                  !thread[0]?.isRead &&
+                  !lastMesageIsRead &&
                     !isFromCurrentUser &&
                     "bg-blue-50/30 dark:bg-blue-950/20",
                 )}
@@ -115,7 +117,7 @@ const EmailList = ({
                       <div className="flex items-center space-x-2">
                         {thread.length > 1 && (
                           <Badge variant="secondary" className="text-xs">
-                            {thread.length}
+                            {thread.length - 1}
                           </Badge>
                         )}
                         <span className="text-muted-foreground ml-2 text-xs whitespace-nowrap">
@@ -153,7 +155,7 @@ const EmailList = ({
                   </div>
                 </div>
 
-                {!thread[0]?.isRead && !isFromCurrentUser && (
+                {!lastMesageIsRead && !isFromCurrentUser && (
                   <div className="mt-2 flex justify-end">
                     <div className="bg-primary h-2 w-2 rounded-full"></div>
                   </div>
