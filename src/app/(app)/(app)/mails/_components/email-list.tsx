@@ -82,7 +82,7 @@ const EmailList = ({
                   "hover:bg-muted/50 border-border cursor-pointer border-b p-4 transition-colors",
                   isSelected && "bg-muted border-l-primary border-l-2",
                   !thread[0]?.isRead &&
-                    isFromCurrentUser &&
+                    !isFromCurrentUser &&
                     "bg-blue-50/30 dark:bg-blue-950/20",
                 )}
                 onClick={() => onThreadSelect?.(thread)}
@@ -148,12 +148,12 @@ const EmailList = ({
                       {isFromCurrentUser && (
                         <span className="text-foreground/60 mr-1">You:</span>
                       )}
-                      {lastMessageContent + "" + isFromCurrentUser}
+                      {lastMessageContent}
                     </p>
                   </div>
                 </div>
 
-                {!thread[0]?.isRead && isFromCurrentUser && (
+                {!thread[0]?.isRead && !isFromCurrentUser && (
                   <div className="mt-2 flex justify-end">
                     <div className="bg-primary h-2 w-2 rounded-full"></div>
                   </div>

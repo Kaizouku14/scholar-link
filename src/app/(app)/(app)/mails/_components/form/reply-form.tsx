@@ -59,9 +59,7 @@ const ReplyForm = ({
           lastMessage?.sender === currentUserId
             ? lastMessage?.receiver
             : lastMessage?.sender,
-        subject: lastMessage.subject.startsWith("Re: ")
-          ? lastMessage.subject
-          : `Re: ${lastMessage.subject}`,
+        subject: lastMessage.subject,
         content: replyContent,
       });
     } catch (error) {

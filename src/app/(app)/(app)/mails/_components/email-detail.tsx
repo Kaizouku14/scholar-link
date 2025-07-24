@@ -1,6 +1,13 @@
 "use client";
 
-import { ArrowLeft, RotateCw, Reply, Mail, Clock } from "lucide-react";
+import {
+  ArrowLeft,
+  RotateCw,
+  Reply,
+  Mail,
+  Clock,
+  CircleCheck,
+} from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
@@ -61,7 +68,7 @@ const EmailDetail = ({
             </div>
             <RotateCw className="text-muted-foreground h-4 w-4 animate-spin" />
           </div>
-          <Skeleton className="mx-6 h-[500px]" />
+          <Skeleton className="mx-6 mb-6 h-full" />
         </>
       ) : !thread || thread.length === 0 ? (
         <EmptyState />
@@ -211,16 +218,25 @@ const EmailDetail = ({
                             ? `${thread.length} messages in this thread`
                             : "Start of conversation"}
                         </div>
-                        {!isSenderCurrentUser && (
-                          <Button
-                            onClick={handleReplyClick}
-                            className="flex items-center space-x-2 shadow-sm"
-                            size="sm"
-                          >
-                            <Reply className="h-4 w-4" />
-                            <span>Reply</span>
-                          </Button>
-                        )}
+                        <div className="flex items-center space-x-2">
+                          {email.isRead && isSenderCurrentUser && (
+                            <Badge
+                              variant="secondary"
+                              className="px-2 py-0 text-xs"
+                            >
+                              Read
+                            </Badge>
+                          )}
+                          {!isSenderCurrentUser && (
+                            <Button
+                              onClick={handleReplyClick}
+                              className="flex cursor-pointer items-center space-x-2 shadow-sm"
+                            >
+                              <Reply className="h-4 w-4" />
+                              Reply
+                            </Button>
+                          )}
+                        </div>
                       </div>
                     </CardContent>
                   </Card>

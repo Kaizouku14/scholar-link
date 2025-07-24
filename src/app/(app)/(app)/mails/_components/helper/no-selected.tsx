@@ -10,7 +10,7 @@ const EmptyState = () => {
         <h3 className="text-foreground text-lg font-semibold">
           No email selected
         </h3>
-        <p className="text-muted-foreground max-w-sm text-sm">
+        <p className="text-muted-foreground max-w-sm px-2.5 text-sm">
           Select an email from the list to view its contents and reply to the
           conversation.
         </p>

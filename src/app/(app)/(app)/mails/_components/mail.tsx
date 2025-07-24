@@ -27,7 +27,8 @@ const Mail = () => {
     refetch: refetchMails,
   } = api.mail.getAllUserMail.useQuery();
 
-  const { mutateAsync: markAsRead } = api.mail.markMailAsRead.useMutation();
+  const { mutateAsync: markThreadAsRead } =
+    api.mail.markMailAsRead.useMutation();
   const { mutateAsync: markAllAsRead } =
     api.mail.markAllMailAsRead.useMutation();
 
@@ -46,13 +47,21 @@ const Mail = () => {
       {} as Record<string, Email[]>,
     );
 
-    return Object.values(grouped).map((thread) =>
+    const threads = Object.values(grouped).map((thread) =>
       thread.sort((a, b) => {
         const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
         const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-        return sortOrder === "newest" ? dateB - dateA : dateA - dateB;
+        return dateA - dateB; // always oldest to newest inside thread
       }),
     );
+
+    return threads.sort((a, b) => {
+      const lastA = a[a.length - 1];
+      const lastB = b[b.length - 1];
+      const dateA = lastA?.createdAt ? new Date(lastA.createdAt).getTime() : 0;
+      const dateB = lastB?.createdAt ? new Date(lastB.createdAt).getTime() : 0;
+      return sortOrder === "newest" ? dateB - dateA : dateA - dateB;
+    });
   }, [Mails, searchQuery, sortOrder]);
 
   const [selectedThread, setSelectedThread] = useState<Email[] | undefined>();
@@ -65,25 +74,35 @@ const Mail = () => {
   }, [groupedThreads]);
 
   const handleSelectedThread = async (thread: Email[]) => {
-    if (isMarkingRead) return;
+    if (!currentUserId || isMarkingRead) return;
 
-    setIsMarkingRead(true);
-    const lastEmail = thread[thread.length - 1];
+    const unreadMails = thread.filter(
+      (email) => email.sender !== currentUserId && !email.isRead,
+    );
 
-    if (lastEmail?.isRead) {
+    if (unreadMails.length === 0) {
       setSelectedThread(thread);
       return;
     }
 
-    const updatedLastEmail = { ...lastEmail, isRead: true };
-    const updatedThread = [...thread.slice(0, -1), updatedLastEmail] as Email[];
+    const updatedThread = thread.map((email) =>
+      unreadMails.some((unread) => unread.id === email.id)
+        ? { ...email, isRead: true }
+        : email,
+    ) as Email[];
+
     setSelectedThread(updatedThread);
+    setIsMarkingRead(true);
 
     try {
-      await markAsRead({ id: lastEmail!.id });
+      await markThreadAsRead({
+        ids: unreadMails.map((email) => email.id),
+      });
+
       await refetchMails();
     } catch (error) {
       setSelectedThread(thread);
+    } finally {
       setIsMarkingRead(false);
     }
   };

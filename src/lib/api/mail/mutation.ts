@@ -1,4 +1,4 @@
-import { db, type InferSelectModel, eq } from "@/server/db";
+import { db, type InferSelectModel, eq, inArray } from "@/server/db";
 import { mailTable } from "@/server/db/schema/mail";
 import { TRPCError } from "@trpc/server";
 
@@ -36,12 +36,12 @@ export const sendOrReplyMail = async ({
   }
 };
 
-export const markAsRead = async ({ id }: { id: string }) => {
+export const markAsRead = async ({ ids }: { ids: string[] }) => {
   try {
     const response = await db
       .update(mailTable)
       .set({ isRead: true })
-      .where(eq(mailTable.id, id))
+      .where(inArray(mailTable.id, ids))
       .execute();
 
     if (!response) {
