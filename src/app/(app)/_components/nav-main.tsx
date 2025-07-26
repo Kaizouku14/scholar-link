@@ -6,12 +6,14 @@ import { NavGroups } from "./nav-group";
 import { NAVIGATION_DATA } from "@/data/navigation-data";
 import type { roleType } from "@/constants/roles";
 import type { NavGroup } from "@/types/navigation";
+import NavItemsSkeleton from "./nav-main-skeleton";
 
 interface NavMainProps {
   userRole: roleType;
+  isPending: boolean;
 }
 
-export function NavMain({ userRole }: NavMainProps) {
+export function NavMain({ userRole, isPending }: NavMainProps) {
   const navigation = useMemo(() => {
     return (
       NAVIGATION_DATA[userRole] || { main: [], secondary: [], management: [] }
@@ -26,29 +28,35 @@ export function NavMain({ userRole }: NavMainProps) {
   return (
     <div>
       {/* Main Navigation */}
-      {navigation.main.map((group: NavGroup, index: number) => (
-        <NavGroups
-          key={`main-${index}`}
-          group={group}
-          notificationCounts={{ messages: 0, applications: 0, documents: 0 }}
-        />
-      ))}
+      {isPending ? (
+        <NavItemsSkeleton itemLength={navigation.main.length} />
+      ) : (
+        <>
+          {navigation.main.map((group: NavGroup, index: number) => (
+            <NavGroups key={`main-${index}`} group={group} />
+          ))}
+        </>
+      )}
 
       {/* Secondary Navigation */}
       {hasSecondaryNav && (
         <>
           <SidebarSeparator className="mx-auto" />
-          {navigation.secondary!.map((group: NavGroup, index: number) => (
-            <NavGroups
-              key={`secondary-${index}`}
-              group={group}
-              notificationCounts={{
-                messages: 1,
-                applications: 0,
-                documents: 0,
-              }}
-            />
-          ))}
+          {isPending ? (
+            <NavItemsSkeleton itemLength={navigation.secondary!.length} />
+          ) : (
+            <>
+              {navigation.secondary!.map((group: NavGroup, index: number) => (
+                <NavGroups
+                  key={`secondary-${index}`}
+                  group={group}
+                  notificationCounts={{
+                    messages: 100,
+                  }}
+                />
+              ))}
+            </>
+          )}
         </>
       )}
 
@@ -56,9 +64,15 @@ export function NavMain({ userRole }: NavMainProps) {
       {hasManagementNav && (
         <>
           <SidebarSeparator className="mx-auto" />
-          {navigation.management!.map((group: NavGroup, index: number) => (
-            <NavGroups key={`management-${index}`} group={group} />
-          ))}
+          {isPending ? (
+            <NavItemsSkeleton itemLength={navigation.management!.length} />
+          ) : (
+            <>
+              {navigation.management!.map((group: NavGroup, index: number) => (
+                <NavGroups key={`management-${index}`} group={group} />
+              ))}
+            </>
+          )}
         </>
       )}
     </div>

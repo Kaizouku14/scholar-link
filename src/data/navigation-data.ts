@@ -144,7 +144,7 @@ export const NAVIGATION_DATA: NavigationData = {
         title: "Communication",
         items: [
           {
-            title: "Messages",
+            title: "Mails",
             url: PageRoutes.MAILS,
             icon: Mail,
             description: "Student communications",
@@ -181,7 +181,7 @@ export const NAVIGATION_DATA: NavigationData = {
     ],
     secondary: [
       {
-        title: "Support",
+        title: "Communication",
         items: [
           {
             title: "Messages",

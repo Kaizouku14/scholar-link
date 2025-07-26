@@ -14,9 +14,10 @@ import { NavUser } from "./nav-user";
 import ModeToggle from "@/components/theme/mode-toggler";
 import type { roleType, UserInfo } from "@/constants/roles";
 import { authClient } from "@/lib/auth-client";
+import NavUserSkeleton from "./nav-user-skeleton";
 
 export const SideBar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
-  const { data: session } = authClient.useSession();
+  const { data: session, isPending } = authClient.useSession();
   const role = session?.user?.role as roleType;
   const user = session?.user as UserInfo;
 
@@ -27,12 +28,12 @@ export const SideBar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
         <SidebarSeparator className="mx-auto" />
       </SidebarHeader>
       <SidebarContent className="px-1.5">
-        <NavMain userRole={role} />
+        <NavMain userRole={role} isPending={isPending} />
         <ModeToggle />
       </SidebarContent>
       <SidebarSeparator className="mx-auto" />
       <SidebarFooter>
-        <NavUser user={user} />
+        {isPending ? <NavUserSkeleton /> : <NavUser user={user} />}
       </SidebarFooter>
     </Sidebar>
   );
