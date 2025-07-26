@@ -7,7 +7,7 @@ const Layout = async ({ children }: PropsWithChildren) => {
     headers: await headers(),
   });
 
-  return <main>{children}</main>;
+  return <main className="mx-auto w-full">{children}</main>;
 };
 
 export default Layout;
