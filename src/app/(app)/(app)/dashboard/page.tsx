@@ -1,5 +1,5 @@
 import PageBreadCrumb from "@/components/breadcrumbs/page-header";
-import StudentDashboard from "./_components/student-dashboard";
+import StudentDashboard from "./_components/internship/student-dashboard";
 
 const Pages = () => {
   return (

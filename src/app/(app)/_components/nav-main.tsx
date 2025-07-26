@@ -29,14 +29,7 @@ export function NavMain({ userRole, isPending }: NavMainProps) {
     <div>
       {/* Main Navigation */}
       {isPending ? (
-        <>
-          {navigation.main.map((group: NavGroup, index: number) => (
-            <NavItemsSkeleton
-              key={`main-${index}`}
-              itemLength={group.items.length}
-            />
-          ))}
-        </>
+        <NavItemsSkeleton itemLength={5} />
       ) : (
         <>
           {navigation.main.map((group: NavGroup, index: number) => (
@@ -46,13 +39,13 @@ export function NavMain({ userRole, isPending }: NavMainProps) {
       )}
 
       {/* Secondary Navigation */}
-      {hasSecondaryNav && (
+      {isPending ? (
+        <NavItemsSkeleton itemLength={1} />
+      ) : (
         <>
-          <SidebarSeparator className="mx-auto" />
-          {isPending ? (
-            <NavItemsSkeleton itemLength={1} />
-          ) : (
+          {hasSecondaryNav && (
             <>
+              <SidebarSeparator className="mx-auto" />
               {navigation.secondary!.map((group: NavGroup, index: number) => (
                 <NavGroups
                   key={`secondary-${index}`}
@@ -68,13 +61,14 @@ export function NavMain({ userRole, isPending }: NavMainProps) {
       )}
 
       {/* Management Navigation */}
-      {hasManagementNav && (
+      {isPending ? (
+        <NavItemsSkeleton itemLength={1} />
+      ) : (
         <>
-          <SidebarSeparator className="mx-auto" />
-          {isPending ? (
-            <NavItemsSkeleton itemLength={1} />
-          ) : (
+          {hasManagementNav && (
             <>
+              <SidebarSeparator className="mx-auto" />
+
               {navigation.management!.map((group: NavGroup, index: number) => (
                 <NavGroups key={`management-${index}`} group={group} />
               ))}
