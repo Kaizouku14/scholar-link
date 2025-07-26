@@ -1,6 +1,7 @@
 import PageBreadCrumb from "@/components/breadcrumbs/page-header";
 import ProgressOverview from "./_component/progress-overview";
 import ManageProgressHeader from "./_component/header";
+import ProgressForm from "./_component/form/progress-form";
 
 const Pages = () => {
   return (
@@ -8,9 +9,7 @@ const Pages = () => {
       <PageBreadCrumb currentPage="Progress" />
 
       <ManageProgressHeader />
-      <div className="grid grid-cols-2 space-x-2">
-        <ProgressOverview />
-      </div>
+      <ProgressOverview />
     </div>
   );
 };
