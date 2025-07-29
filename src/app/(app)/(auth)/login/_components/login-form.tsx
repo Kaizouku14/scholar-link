@@ -21,6 +21,7 @@ import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { api } from "@/trpc/react";
+import { Hand } from "lucide-react";
 
 const LoginForm = () => {
   const router = useRouter();
@@ -135,7 +136,7 @@ const LoginForm = () => {
               />
 
               <Link
-                href=""
+                href={PageRoutes.FORGOT_PASSWORD}
                 className="text-primary flex h-6 items-end text-xs underline"
               >
                 <div>Forgot Password?</div>

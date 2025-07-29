@@ -3,12 +3,15 @@ export enum PageRoutes {
    *               PUBLIC ROUTES            *
    ******************************************/
   HOME = "/",
-  LOGIN = "/login",
-  SIGN_UP = "/signup",
-  SETUP = "/setup",
   SCHOLARSHIPS_PUBLIC = "/scholarships",
   SCHOLARSHIP_DETAILS = "/scholarship-details",
   UNAUTHORIZED = "/unauthorized",
+
+  //Auth
+  LOGIN = "/login",
+  SIGN_UP = "/signup",
+  SETUP = "/setup",
+  FORGOT_PASSWORD = "/forgot-password",
 
   /******************************************
    *                ROUTES                  *

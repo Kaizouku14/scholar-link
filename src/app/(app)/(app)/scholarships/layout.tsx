@@ -15,7 +15,6 @@ const Layout = async ({ children }: PropsWithChildren) => {
   }
 
   const { id } = session.user;
-
   const isOnboarded = await checkStudentOnBoarded({ id });
   if (!isOnboarded) redirect(PageRoutes.SETUP);
 

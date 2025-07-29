@@ -2,7 +2,7 @@ import { db } from "@/server/db";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import * as schema from "@/server/db/schema/auth";
-import { admin } from "better-auth/plugins/admin";
+import { admin, emailOTP } from "better-auth/plugins";
 import { ROLES } from "@/constants/roles";
 
 export const auth = betterAuth({
@@ -31,6 +31,9 @@ export const auth = betterAuth({
     admin({
       defaultRole: ROLES[0], //Internship Student
       adminRoles: ["scholarship-admin", "internship-admin"],
+    }),
+    emailOTP({
+      async sendVerificationOTP({ email, otp, type }) {},
     }),
   ],
 });
