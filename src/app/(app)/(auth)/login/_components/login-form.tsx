@@ -20,6 +20,7 @@ import { PageRoutes } from "@/constants/page-routes";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
+import { api } from "@/trpc/react";
 
 const LoginForm = () => {
   const router = useRouter();
@@ -32,28 +33,33 @@ const LoginForm = () => {
     },
   });
 
+  const { mutateAsync: onBoardedMutation } =
+    api.user.checkStudendIsOnBoarded.useMutation();
   const onSubmit = async (values: LoginSchema) => {
     const { email, password, rememberMe } = values;
-    const toastId = toast.loading("Signing in...", {
+    const toastId = toast.loading("Processing sign-in request...", {
       position: "top-center",
     });
+
     try {
-      const response = await authClient.signIn.email({
+      const { data, error } = await authClient.signIn.email({
         email,
         password,
         rememberMe,
       });
 
-      if (response.error) {
-        throw new Error(response.error.message);
+      if (error) {
+        throw new Error(error.message);
       }
 
-      toast.success("Signed in successfully!", {
+      toast.success("You're signed in! Redirecting shortly...", {
         id: toastId,
         position: "top-center",
       });
 
-      router.push(PageRoutes.DASHBOARD);
+      const onboarded = await onBoardedMutation({ id: data.user.id });
+      if (onboarded) router.push(PageRoutes.DASHBOARD);
+      else router.push(PageRoutes.SETUP);
     } catch (error) {
       toast.error((error as Error).message, {
         position: "top-center",

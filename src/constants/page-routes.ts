@@ -5,6 +5,7 @@ export enum PageRoutes {
   HOME = "/",
   LOGIN = "/login",
   SIGN_UP = "/signup",
+  SETUP = "/setup",
   SCHOLARSHIPS_PUBLIC = "/scholarships",
   SCHOLARSHIP_DETAILS = "/scholarship-details",
   UNAUTHORIZED = "/unauthorized",

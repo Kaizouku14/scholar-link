@@ -6,6 +6,7 @@ import { COURSES } from "@/constants/courses";
 import { DEPARTMENTS } from "@/constants/departments";
 import { SECTIONS } from "@/constants/sections";
 import { YEAR_LEVEL } from "@/constants/year-level";
+import { GENDERS } from "@/constants/genders";
 
 export const user = createTable("user", {
   id: text("id").primaryKey(),
@@ -16,7 +17,7 @@ export const user = createTable("user", {
   profilePicture: text("profile_picture"),
   contact: text("contact"),
   address: text("address"),
-  gender: text("gender", { enum: ROLES }),
+  gender: text("gender", { enum: GENDERS }),
   department: text("department", { enum: DEPARTMENTS }),
   role: text("role", { enum: ROLES }),
   emailVerified: integer("email_verified", { mode: "boolean" }),
@@ -37,6 +38,7 @@ export const student = createTable("student", {
   course: text("course", { enum: COURSES }),
   section: text("section", { enum: SECTIONS }),
   yearLevel: text("year_level", { enum: YEAR_LEVEL }),
+  onboarded: integer("onboarded", { mode: "boolean" }).default(false),
 });
 
 export const session = createTable("session", {
