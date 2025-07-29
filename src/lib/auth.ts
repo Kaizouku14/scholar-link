@@ -4,7 +4,6 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import * as schema from "@/server/db/schema/auth";
 import { admin } from "better-auth/plugins/admin";
 import { ROLES } from "@/constants/roles";
-// import { ac, roles } from "./permission";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -32,10 +31,6 @@ export const auth = betterAuth({
     admin({
       defaultRole: ROLES[0], //Internship Student
       adminRoles: ["scholarship-admin", "internship-admin"],
-      //   ac,
-      //   roles: {
-      //     ...roles,
-      //   },
     }),
   ],
 });

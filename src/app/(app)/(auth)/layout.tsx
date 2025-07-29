@@ -6,6 +6,7 @@ import Link from "next/link";
 import { GraduationCap } from "lucide-react";
 import { PageRoutes } from "@/constants/page-routes";
 import { redirect } from "next/navigation";
+import { checkStudentOnBoarded } from "@/lib/api/auth/mutation";
 
 const Layout = async ({ children }: PropsWithChildren) => {
   const session = await auth.api.getSession({
@@ -13,7 +14,12 @@ const Layout = async ({ children }: PropsWithChildren) => {
   });
 
   if (session) {
-    redirect(PageRoutes.DASHBOARD);
+    const response = await checkStudentOnBoarded({
+      id: session.user.id,
+    });
+
+    if (!response) redirect(PageRoutes.SETUP);
+    else redirect(PageRoutes.DASHBOARD);
   }
 
   return (
