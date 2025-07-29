@@ -78,6 +78,12 @@ export const verification = createTable("verification", {
   identifier: text("identifier").notNull(),
   value: text("value").notNull(),
   expiresAt: integer("expires_at", { mode: "timestamp" }).notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" }).default(
+    sql`(unixepoch())`,
+  ),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).$onUpdateFn(
+    () => new Date(),
+  ),
 });
 
 export const authorizedEmail = createTable("authorized_email", {

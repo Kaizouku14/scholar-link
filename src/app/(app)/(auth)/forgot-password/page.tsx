@@ -1,9 +1,5 @@
-const ForgotPassword = () => {
-  return (
-    <div>
-      <h1>Forgot Password</h1>
-    </div>
-  );
+const ResetPassword = () => {
+  return <div>Reset Password</div>;
 };
 
-export default ForgotPassword;
+export default ResetPassword;
