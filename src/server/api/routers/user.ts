@@ -1,12 +1,36 @@
 import { z } from "zod";
-import { createTRPCRouter, publicProcedure } from "../trpc";
+import { createTRPCRouter, protectedRoute, publicProcedure } from "../trpc";
 import { GENDERS } from "@/constants/genders";
 import { DEPARTMENTS } from "@/constants/departments";
 import { COURSES } from "@/constants/courses";
 import { getAllUserEmail } from "@/lib/api/user/query";
 import { TRPCError } from "@trpc/server";
+import {
+  checkStudentNoAvailability,
+  createdStudentNo,
+} from "@/lib/api/auth/mutation";
 
 export const userRouter = createTRPCRouter({
+  createStudentNo: protectedRoute
+    .input(
+      z.object({
+        email: z.string().email(),
+        studentNo: z.string(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      return await createdStudentNo(input);
+    }),
+  checkStudentNoAvailability: protectedRoute
+    .input(
+      z.object({
+        studentNo: z.string(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      return await checkStudentNoAvailability(input);
+    }),
+
   register: publicProcedure
     .input(
       z.object({

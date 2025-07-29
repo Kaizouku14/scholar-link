@@ -31,8 +31,9 @@ export const user = createTable("user", {
 export const student = createTable("student", {
   id: text("id")
     .notNull()
+    .primaryKey()
     .references(() => user.id, { onDelete: "cascade" }),
-  studentNo: text("student_no").unique(),
+  studentNo: text("student_no").unique().notNull(),
   course: text("course", { enum: COURSES }),
   section: text("section", { enum: SECTIONS }),
   yearLevel: text("year_level", { enum: YEAR_LEVEL }),

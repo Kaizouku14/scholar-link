@@ -19,6 +19,7 @@ import { PageRoutes } from "@/constants/page-routes";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
+import { api } from "@/trpc/react";
 
 const SignUpForm = () => {
   const router = useRouter();
@@ -34,21 +35,42 @@ const SignUpForm = () => {
     },
   });
 
+  const { mutateAsync: checkStudentNoAvailability } =
+    api.user.checkStudentNoAvailability.useMutation();
+  const { mutateAsync: createdStudentNo } =
+    api.user.createStudentNo.useMutation();
   const onSubmit = async (values: SignUpSchema) => {
     const { studentNo, name, surname, middleName, email, password } = values;
-    const toastId = toast.loading("Signing up...", {
-      position: "top-center",
-    });
+    const toastId = toast.loading(
+      "Signing you up. This may take a few seconds...",
+      {
+        position: "top-center",
+      },
+    );
 
     try {
-      const response = await authClient.signUp.email({
+      const available = await checkStudentNoAvailability({
         studentNo,
+      });
+
+      if (available) {
+        throw new Error(
+          `The student number ${studentNo} is already registered.`,
+        );
+      }
+
+      const response = await authClient.signUp.email({
         name,
         surname,
         middleName,
         email,
         password,
         callbackURL: PageRoutes.LOGIN,
+      });
+
+      await createdStudentNo({
+        email,
+        studentNo,
       });
 
       if (response.error) {
