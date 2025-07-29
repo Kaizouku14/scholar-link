@@ -1,15 +1,12 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedRoute, publicProcedure } from "../trpc";
-import { GENDERS } from "@/constants/genders";
-import { DEPARTMENTS } from "@/constants/departments";
-import { COURSES } from "@/constants/courses";
 import { getAllUserEmail } from "@/lib/api/user/query";
 import { TRPCError } from "@trpc/server";
 import {
   checkStudentNoAvailability,
   checkStudentOnBoarded,
   createdStudentNo,
-} from "@/lib/api/auth/mutation";
+} from "@/lib/api/user/mutation";
 
 export const userRouter = createTRPCRouter({
   createStudentNo: protectedRoute
@@ -22,6 +19,7 @@ export const userRouter = createTRPCRouter({
     .mutation(async ({ input }) => {
       return await createdStudentNo(input);
     }),
+
   checkStudentNoAvailability: protectedRoute
     .input(
       z.object({
@@ -39,29 +37,6 @@ export const userRouter = createTRPCRouter({
     )
     .mutation(async ({ input }) => {
       return await checkStudentOnBoarded(input);
-    }),
-
-  register: publicProcedure
-    .input(
-      z.object({
-        name: z.string(),
-        email: z.string().email(),
-        password: z.string(),
-        confirmPassword: z.string(),
-        contact_no: z.string(),
-        address: z.string(),
-        gender: z.enum(GENDERS),
-        department: z.enum(DEPARTMENTS),
-
-        //Students
-        studentNumber: z.string().optional(),
-        course: z.enum(COURSES).optional(),
-        yearLevel: z.string().optional(),
-        profilePicture: z.string().optional(),
-      }),
-    )
-    .mutation(async ({ input }) => {
-      console.log(input);
     }),
 
   getAllUserEmail: publicProcedure.query(async ({ ctx }) => {

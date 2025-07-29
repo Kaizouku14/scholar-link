@@ -6,8 +6,10 @@ import { admin, emailOTP } from "better-auth/plugins";
 import { ROLES } from "@/constants/roles";
 import { sendEmail } from "@/services/email";
 import { otpEmailTemplate } from "@/config/verfityOtpEmailTemplate";
+import { siteConfig } from "@/config/site.config";
 
 export const auth = betterAuth({
+  appName: siteConfig.title,
   database: drizzleAdapter(db, {
     provider: "sqlite",
     schema: {
@@ -40,7 +42,7 @@ export const auth = betterAuth({
       async sendVerificationOTP({ email, otp }) {
         await sendEmail({
           to: email,
-          subject: "OTP Verification",
+          subject: "Password Reset: OTP Verification",
           html: otpEmailTemplate(otp),
         });
       },

@@ -1,0 +1,42 @@
+import { COURSES } from "@/constants/courses";
+import { DEPARTMENTS } from "@/constants/departments";
+import { GENDERS } from "@/constants/genders";
+import z from "zod";
+import { createTRPCRouter, publicProcedure } from "../trpc";
+import { verifyResetOtp } from "@/lib/api/auth/mutation";
+
+export const authRouter = createTRPCRouter({
+  verifyOTP: publicProcedure
+    .input(
+      z.object({
+        email: z.string().email(),
+        otp: z.string(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      return await verifyResetOtp(input);
+    }),
+
+  register: publicProcedure
+    .input(
+      z.object({
+        name: z.string(),
+        email: z.string().email(),
+        password: z.string(),
+        confirmPassword: z.string(),
+        contact_no: z.string(),
+        address: z.string(),
+        gender: z.enum(GENDERS),
+        department: z.enum(DEPARTMENTS),
+
+        //Students
+        studentNumber: z.string().optional(),
+        course: z.enum(COURSES).optional(),
+        yearLevel: z.string().optional(),
+        profilePicture: z.string().optional(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      console.log(input);
+    }),
+});
