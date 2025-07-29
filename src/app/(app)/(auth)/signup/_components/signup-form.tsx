@@ -100,7 +100,7 @@ const SignUpForm = () => {
                 <FormItem className="grid gap-2">
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="John" type="text" {...field} />
+                    <Input placeholder="John" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -114,7 +114,7 @@ const SignUpForm = () => {
                 <FormItem className="grid gap-2">
                   <FormLabel>Middle Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="Denzel" type="text" {...field} />
+                    <Input placeholder="Denzel" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -128,7 +128,7 @@ const SignUpForm = () => {
                 <FormItem className="grid gap-2">
                   <FormLabel>Surname</FormLabel>
                   <FormControl>
-                    <Input placeholder="Doe" type="text" {...field} />
+                    <Input placeholder="Doe" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -143,7 +143,7 @@ const SignUpForm = () => {
               <FormItem className="grid gap-2">
                 <FormLabel>Student No.</FormLabel>
                 <FormControl>
-                  <Input type="text" placeholder="e.g 2022123456" {...field} />
+                  <Input placeholder="e.g 2022123456" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

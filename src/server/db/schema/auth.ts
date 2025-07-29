@@ -17,7 +17,6 @@ export const user = createTable("user", {
   contact: text("contact"),
   address: text("address"),
   gender: text("gender", { enum: ROLES }),
-  course: text("course", { enum: COURSES }),
   department: text("department", { enum: DEPARTMENTS }),
   role: text("role", { enum: ROLES }),
   emailVerified: integer("email_verified", { mode: "boolean" }),
@@ -33,9 +32,10 @@ export const student = createTable("student", {
   id: text("id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
-  studentNumber: text("student_number").unique(),
-  section: text("section", { enum: SECTIONS }), // Remove enum constraint for SQLite
-  yearLevel: text("year_level", { enum: YEAR_LEVEL }), // Remove enum constraint for SQLite
+  studentNo: text("student_no").unique(),
+  course: text("course", { enum: COURSES }),
+  section: text("section", { enum: SECTIONS }),
+  yearLevel: text("year_level", { enum: YEAR_LEVEL }),
 });
 
 export const session = createTable("session", {
