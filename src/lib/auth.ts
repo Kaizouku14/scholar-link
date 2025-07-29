@@ -3,7 +3,6 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import * as schema from "@/server/db/schema/auth";
 import { admin } from "better-auth/plugins/admin";
-import { additionalFields } from "./utils";
 import { ROLES } from "@/constants/roles";
 // import { ac, roles } from "./permission";
 
@@ -24,7 +23,11 @@ export const auth = betterAuth({
     requireEmailVerification: true,
   },
   user: {
-    additionalFields,
+    additionalFields: {
+      studentNo: { type: "string", required: true },
+      surname: { type: "string", required: true },
+      middleName: { type: "string", required: true },
+    },
   },
   plugins: [
     admin({
@@ -33,7 +36,7 @@ export const auth = betterAuth({
       //   ac,
       //   roles: {
       //     ...roles,
-      //   },   
+      //   },
     }),
   ],
 });

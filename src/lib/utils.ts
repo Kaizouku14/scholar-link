@@ -6,13 +6,6 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const additionalFields = {
-  surname: { type: "string", required: false },
-  middleName: { type: "string", required: true },
-  course: { type: "string", required: true },
-  department: { type: "string", required: true },
-} as const;
-
 export const strongPasswordSchema = z
   .string()
   .min(8, "Password must be at least 8 characters long")

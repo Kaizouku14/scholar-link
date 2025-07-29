@@ -18,15 +18,6 @@ import Link from "next/link";
 import { PageRoutes } from "@/constants/page-routes";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { COURSES } from "@/constants/courses";
-import { DEPARTMENTS } from "@/constants/departments";
 import { useRouter } from "next/navigation";
 
 const SignUpForm = () => {
@@ -34,30 +25,27 @@ const SignUpForm = () => {
   const form = useForm<SignUpSchema>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
+      studentNo: "",
       name: "",
       surname: "",
       middleName: "",
-      course: "",
-      department: "",
       email: "",
       password: "",
     },
   });
 
   const onSubmit = async (values: SignUpSchema) => {
-    const { name, surname, middleName, course, department, email, password } =
-      values;
+    const { studentNo, name, surname, middleName, email, password } = values;
     const toastId = toast.loading("Signing up...", {
       position: "top-center",
     });
 
     try {
       const response = await authClient.signUp.email({
+        studentNo,
         name,
         surname,
         middleName,
-        course,
-        department,
         email,
         password,
         callbackURL: PageRoutes.LOGIN,
@@ -95,7 +83,7 @@ const SignUpForm = () => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-col gap-6"
+        className="flex flex-col gap-4"
       >
         <div className="flex flex-col items-center gap-2 text-center">
           <h1 className="text-2xl font-bold">Welcome Future Professional!</h1>
@@ -103,7 +91,7 @@ const SignUpForm = () => {
             Manage your internship journey — all in one place.
           </p>
         </div>
-        <div className="grid gap-6">
+        <div className="grid gap-4">
           <div className="grid grid-cols-3 items-center gap-2">
             <FormField
               control={form.control}
@@ -148,57 +136,19 @@ const SignUpForm = () => {
             />
           </div>
 
-          <div className="grid grid-cols-2 items-center gap-2">
-            <FormField
-              control={form.control}
-              name="course"
-              render={({ field }) => (
-                <FormItem className="grid gap-2">
-                  <FormLabel>Course</FormLabel>
-                  <Select onValueChange={field.onChange}>
-                    <FormControl>
-                      <SelectTrigger className="w-full max-w-[220px] overflow-hidden text-ellipsis whitespace-nowrap">
-                        <SelectValue placeholder="Select course" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {COURSES.map((course) => (
-                        <SelectItem key={course} value={course}>
-                          {course}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="department"
-              render={({ field }) => (
-                <FormItem className="grid gap-2">
-                  <FormLabel>Deparment</FormLabel>
-                  <Select onValueChange={field.onChange}>
-                    <FormControl>
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select department" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {DEPARTMENTS.map((department) => (
-                        <SelectItem key={department} value={department}>
-                          {department}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+          <FormField
+            control={form.control}
+            name="studentNo"
+            render={({ field }) => (
+              <FormItem className="grid gap-2">
+                <FormLabel>Student No.</FormLabel>
+                <FormControl>
+                  <Input type="text" placeholder="e.g 2022123456" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
           <FormField
             control={form.control}
