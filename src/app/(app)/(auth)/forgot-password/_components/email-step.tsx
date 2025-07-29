@@ -48,54 +48,37 @@ export const EmailStep = ({
   };
 
   return (
-    <div className="flex flex-1 items-center justify-center">
-      <div className="w-full max-w-sm space-y-6">
-        <div className="space-y-2 text-center">
-          <h1 className="text-2xl font-bold">Reset password</h1>
-          <p className="text-muted-foreground text-sm">
-            Enter your email address and we'll send you a verification code to
-            reset your password.
-          </p>
-        </div>
-
-        <form onSubmit={handleEmailSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <div className="relative">
-              <Mail className="text-muted-foreground absolute top-3 left-3 h-4 w-4" />
-              <Input
-                id="email"
-                type="email"
-                placeholder="m@example.com"
-                className="pl-10"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
-          </div>
-
-          <Button
-            type="submit"
-            className="w-full"
-            disabled={!email || isLoading}
-          >
-            {isLoading
-              ? "Sending verification code..."
-              : "Send verification code"}
-          </Button>
-        </form>
-
-        <div className="text-muted-foreground text-center text-sm">
-          Remember your password?{" "}
-          <Link
-            href={PageRoutes.LOGIN}
-            className="hover:text-primary/85 text-primary underline"
-          >
-            Back to login
-          </Link>
+    <form onSubmit={handleEmailSubmit} className="space-y-4">
+      <div className="space-y-2">
+        <Label htmlFor="email">Email</Label>
+        <div className="relative">
+          <Mail className="text-muted-foreground absolute top-3 left-3 h-4 w-4" />
+          <Input
+            id="email"
+            type="email"
+            placeholder="m@example.com"
+            className="pl-10"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
         </div>
       </div>
-    </div>
+
+      <div></div>
+      <Button type="submit" className="w-full" disabled={!email || isLoading}>
+        {isLoading ? "Sending verification code..." : "Send verification code"}
+      </Button>
+
+      <div className="text-muted-foreground text-center text-sm">
+        Remember your password?{" "}
+        <Link
+          href={PageRoutes.LOGIN}
+          className="hover:text-primary/85 text-primary underline"
+        >
+          Back to login
+        </Link>
+      </div>
+    </form>
   );
 };

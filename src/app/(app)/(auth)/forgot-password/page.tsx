@@ -1,5 +1,7 @@
+import ForgotPassword from "./_components/forgot-password";
+
 const Page = () => {
-  return <div>Reset Password</div>;
+  return <ForgotPassword />;
 };
 
 export default Page;

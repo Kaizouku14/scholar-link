@@ -17,26 +17,44 @@ const ForgetPassword = () => {
 
   return (
     <div className="flex flex-1 items-center justify-center">
-      <div className="w-full max-w-xs">
+      <div className="w-full max-w-xs space-y-4">
         {step === "email" ? (
-          <EmailStep
-            email={email}
-            setEmail={setEmail}
-            onSuccess={onSuccess}
-            isLoading={isLoading}
-            setIsLoading={setIsLoading}
-          />
+          <>
+            <div className="space-y-2 text-center">
+              <h1 className="text-2xl font-bold">Reset password</h1>
+              <p className="text-muted-foreground text-sm">
+                Enter your email address and we'll send you a verification code
+                to reset your password.
+              </p>
+            </div>
+            <EmailStep
+              email={email}
+              setEmail={setEmail}
+              onSuccess={onSuccess}
+              isLoading={isLoading}
+              setIsLoading={setIsLoading}
+            />
+          </>
         ) : (
-          <OtpStep
-            email={email}
-            otp={otp}
-            setOtp={setOtp}
-            isLoading={isLoading}
-            setIsLoading={setIsLoading}
-            handleResend={handleResend}
-            onSubmit={handleSubmit}
-            remainingTime={countDown}
-          />
+          <>
+            <div className="space-y-2 text-center">
+              <h1 className="text-2xl font-bold">Verify your email</h1>
+              <div className="text-muted-foreground">
+                We sent a 6-digit verification code to{" "}
+                <span className="text-foreground font-medium">{email}</span>
+              </div>
+            </div>
+            <OtpStep
+              email={email}
+              otp={otp}
+              setOtp={setOtp}
+              isLoading={isLoading}
+              setIsLoading={setIsLoading}
+              handleResend={handleResend}
+              onSubmit={handleSubmit}
+              remainingTime={countDown}
+            />
+          </>
         )}
       </div>
     </div>
