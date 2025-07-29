@@ -1,5 +1,5 @@
-const ResetPassword = () => {
+const Page = () => {
   return <div>Reset Password</div>;
 };
 
-export default ResetPassword;
+export default Page;
