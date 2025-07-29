@@ -1,4 +1,5 @@
 import { PageRoutes } from "@/constants/page-routes";
+import { checkStudentOnBoarded } from "@/lib/api/auth/mutation";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
@@ -9,13 +10,14 @@ const Layout = async ({ children }: PropsWithChildren) => {
     headers: await headers(),
   });
 
-  if (session) {
-    const { role } = session.user;
-
-    if (role?.startsWith("internship")) {
-      redirect(PageRoutes.DASHBOARD);
-    }
+  if (!session) {
+    redirect(PageRoutes.LOGIN);
   }
+
+  const { id } = session.user;
+
+  const isOnboarded = await checkStudentOnBoarded({ id });
+  if (!isOnboarded) redirect(PageRoutes.SETUP);
 
   return <main>{children}</main>;
 };
