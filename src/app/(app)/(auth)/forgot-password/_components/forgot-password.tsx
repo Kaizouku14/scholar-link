@@ -43,6 +43,7 @@ const ForgetPassword = () => {
               </div>
             </div>
             <OtpStep
+              email={email}
               otp={otp}
               setOtp={setOtp}
               isLoading={isLoading}

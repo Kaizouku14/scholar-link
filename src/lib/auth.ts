@@ -4,6 +4,8 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import * as schema from "@/server/db/schema/auth";
 import { admin, emailOTP } from "better-auth/plugins";
 import { ROLES } from "@/constants/roles";
+import { sendEmail } from "@/services/email";
+import { otpEmailTemplate } from "@/config/verfityOtpEmailTemplate";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -33,7 +35,15 @@ export const auth = betterAuth({
       adminRoles: ["scholarship-admin", "internship-admin"],
     }),
     emailOTP({
-      async sendVerificationOTP({ email, otp, type }) {},
+      otpLength: 6,
+      expiresIn: 5 * 60 * 1000, // 5 minutes
+      async sendVerificationOTP({ email, otp }) {
+        await sendEmail({
+          to: email,
+          subject: "OTP Verification",
+          html: otpEmailTemplate(otp),
+        });
+      },
     }),
   ],
 });

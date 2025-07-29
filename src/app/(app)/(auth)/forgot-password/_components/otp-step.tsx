@@ -7,9 +7,12 @@ import {
   InputOTPSeparator,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
+import { authClient } from "@/lib/auth-client";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 interface OtpStepProps {
+  email: string;
   otp: string;
   setOtp: (otp: string) => void;
   isLoading: boolean;
@@ -17,7 +20,13 @@ interface OtpStepProps {
   onSubmit: () => void;
 }
 
-export const OtpStep = ({ otp, setOtp, isLoading, onSubmit }: OtpStepProps) => {
+export const OtpStep = ({
+  email,
+  otp,
+  setOtp,
+  isLoading,
+  onSubmit,
+}: OtpStepProps) => {
   const [remainingTime, setRemainingTime] = useState(0);
 
   useEffect(() => {
@@ -30,8 +39,20 @@ export const OtpStep = ({ otp, setOtp, isLoading, onSubmit }: OtpStepProps) => {
     return () => clearInterval(timer);
   }, [remainingTime]);
 
-  const handleResend = () => {
-    setRemainingTime(100);
+  const handleResend = async () => {
+    try {
+      const response = await authClient.forgetPassword.emailOtp({ email });
+      if (response.error) throw new Error(response.error.message);
+
+      toast.success("OTP sent successfully! Check your email.", {
+        position: "top-center",
+      });
+      setRemainingTime(60);
+    } catch (error) {
+      toast.error("An error occurred: " + (error as Error).message, {
+        position: "top-center",
+      });
+    }
   };
 
   const formatTime = (totalSeconds: number) => {
