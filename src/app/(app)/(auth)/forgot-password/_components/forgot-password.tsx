@@ -8,10 +8,8 @@ const ForgetPassword = () => {
   const [email, setEmail] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [otp, setOtp] = useState<string>("");
-  const countDown = 300000;
 
   const onSuccess = () => setStep("otp");
-  const handleResend = () => {};
 
   const handleSubmit = () => {};
 
@@ -45,14 +43,11 @@ const ForgetPassword = () => {
               </div>
             </div>
             <OtpStep
-              email={email}
               otp={otp}
               setOtp={setOtp}
               isLoading={isLoading}
               setIsLoading={setIsLoading}
-              handleResend={handleResend}
               onSubmit={handleSubmit}
-              remainingTime={countDown}
             />
           </>
         )}

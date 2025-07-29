@@ -7,25 +7,41 @@ import {
   InputOTPSeparator,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
+import { useEffect, useState } from "react";
 
 interface OtpStepProps {
   otp: string;
   setOtp: (otp: string) => void;
   isLoading: boolean;
   setIsLoading: (loading: boolean) => void;
-  handleResend: () => void;
   onSubmit: () => void;
-  remainingTime: number;
 }
 
-export const OtpStep = ({
-  otp,
-  setOtp,
-  isLoading,
-  handleResend,
-  onSubmit,
-  remainingTime,
-}: OtpStepProps) => {
+export const OtpStep = ({ otp, setOtp, isLoading, onSubmit }: OtpStepProps) => {
+  const [remainingTime, setRemainingTime] = useState(0);
+
+  useEffect(() => {
+    if (remainingTime <= 0) return;
+
+    const timer = setInterval(() => {
+      setRemainingTime((prev) => prev - 1);
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [remainingTime]);
+
+  const handleResend = () => {
+    setRemainingTime(100);
+  };
+
+  const formatTime = (totalSeconds: number) => {
+    const minutes = Math.floor(totalSeconds / 60)
+      .toString()
+      .padStart(2, "0");
+    const seconds = (totalSeconds % 60).toString().padStart(2, "0");
+    return `${minutes}:${seconds}`;
+  };
+
   return (
     <>
       <form onSubmit={onSubmit} className="space-y-6">
@@ -65,7 +81,9 @@ export const OtpStep = ({
             onClick={handleResend}
             disabled={remainingTime > 0}
           >
-            {remainingTime > 0 ? `Resend in ${remainingTime}s` : "Resend code"}
+            {remainingTime > 0
+              ? `Resend in (${formatTime(remainingTime)})s`
+              : "Resend code"}
           </Button>
         </div>
       </div>
