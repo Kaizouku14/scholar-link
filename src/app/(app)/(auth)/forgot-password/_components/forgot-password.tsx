@@ -2,16 +2,28 @@
 import { useState } from "react";
 import { EmailStep } from "./email-step";
 import { OtpStep } from "./otp-step";
+import { authClient } from "@/lib/auth-client";
+import { api } from "@/trpc/react";
+import { toast } from "sonner";
 
 const ForgetPassword = () => {
-  const [step, setStep] = useState<"email" | "otp">("email");
+  const [step, setStep] = useState<"email" | "otp" | "reset">("email");
   const [email, setEmail] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [otp, setOtp] = useState<string>("");
 
   const onSuccess = () => setStep("otp");
 
-  const handleSubmit = () => {};
+  const { mutateAsync: verifyOtp } = api.auth.verifyOTP.useMutation();
+  const handleSubmit = async () => {
+    const response = await verifyOtp({ email, otp });
+
+    if (!response) {
+      toast.error("Invalid OTP");
+      return;
+    }
+    setStep("reset");
+  };
 
   return (
     <div className="flex flex-1 items-center justify-center">
@@ -51,6 +63,55 @@ const ForgetPassword = () => {
               onSubmit={handleSubmit}
             />
           </>
+        )}
+
+        {step === "reset" && (
+          <form onSubmit={handleResetPassword} className="space-y-4">
+            <div>
+              <Label htmlFor="new-password">New Password</Label>
+              <Input
+                id="new-password"
+                type="password"
+                placeholder="Enter your new password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                required
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="confirm-password">Confirm Password</Label>
+              <Input
+                id="confirm-password"
+                type="password"
+                placeholder="Re-enter your new password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+              />
+            </div>
+
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={
+                isLoading ||
+                !newPassword ||
+                !confirmPassword ||
+                newPassword !== confirmPassword
+              }
+            >
+              {isLoading ? "Resetting..." : "Reset Password"}
+            </Button>
+
+            {newPassword &&
+              confirmPassword &&
+              newPassword !== confirmPassword && (
+                <p className="text-destructive text-center text-sm">
+                  Passwords do not match.
+                </p>
+              )}
+          </form>
         )}
       </div>
     </div>

@@ -2,6 +2,7 @@ import { createCallerFactory, createTRPCRouter } from "@/server/api/trpc";
 import { userRouter } from "./routers/user";
 import { scholarshipRouter } from "./routers/scholarship";
 import { mailRouter } from "./routers/mail";
+import { authRouter } from "./routers/auth";
 
 /**
  * This is the primary router for your server.
@@ -9,6 +10,7 @@ import { mailRouter } from "./routers/mail";
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
+  auth: authRouter,
   user: userRouter,
   mail: mailRouter,
   scholarships: scholarshipRouter,
