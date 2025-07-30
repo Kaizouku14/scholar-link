@@ -5,13 +5,14 @@ import { YEAR_LEVEL } from "@/constants/year-level";
 import z from "zod";
 
 export const profileSetupSchema = z.object({
+  profilePicture: z.instanceof(File).optional(),
   gender: z.enum(GENDERS),
   address: z.string().min(1, { message: "Address is required" }),
   contactNo: z
     .string()
     .min(1, { message: "Contact number is required" })
     .regex(/^09\d{9}$/, { message: "Invalid phone number format" }),
-  profilePicture: z.instanceof(File).optional(),
+  dateOfBirth: z.date({ message: "Date of birth is required" }),
 });
 
 export const studentSetupSchema = z.object({

@@ -281,7 +281,7 @@ const SignUpForm = () => {
             )}
           />
 
-          <div className="flex flex-col gap-2">
+          <div className="mt-2 flex flex-col gap-2">
             <SubmitButton className="w-full" formState={form.formState}>
               Sign Up
             </SubmitButton>

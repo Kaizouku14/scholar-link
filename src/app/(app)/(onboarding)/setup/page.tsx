@@ -12,7 +12,7 @@ const Page = () => {
         y={-1}
         squaresClassName="hover:fill-primary"
         className={cn(
-          "[mask-image:linear-gradient(to_bottom_right,white,transparent,transparent)]",
+          "z-0 [mask-image:linear-gradient(to_bottom_right,white,transparent,transparent)]",
         )}
       />
       <SetupPage />

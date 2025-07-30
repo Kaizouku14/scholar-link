@@ -17,6 +17,7 @@ export const user = createTable("user", {
   profilePicture: text("profile_picture"),
   contact: text("contact"),
   address: text("address"),
+  dateOfBirth: integer("date_of_birth", { mode: "timestamp" }),
   gender: text("gender", { enum: GENDERS }),
   department: text("department", { enum: DEPARTMENTS }),
   role: text("role", { enum: ROLES }),
