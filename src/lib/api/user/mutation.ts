@@ -1,3 +1,4 @@
+import type { courseType } from "@/constants/courses";
 import { db, eq } from "@/server/db";
 import {
   user as userTable,
@@ -28,17 +29,19 @@ export const checkStudentNoAvailability = async ({
 };
 
 export const createdStudentNo = async ({
-  email,
+  id,
   studentNo,
+  course,
 }: {
-  email: string;
+  id: string;
   studentNo: string;
+  course: courseType;
 }) => {
   try {
     const [createdUser] = await db
       .select()
       .from(userTable)
-      .where(eq(userTable.email, email))
+      .where(eq(userTable.id, id))
       .limit(1);
 
     if (!createdUser) {
@@ -51,6 +54,7 @@ export const createdStudentNo = async ({
     await db.insert(studentTable).values({
       id: createdUser.id,
       studentNo,
+      course,
     });
   } catch (error) {
     throw new TRPCError({

@@ -7,13 +7,15 @@ import {
   checkStudentOnBoarded,
   createdStudentNo,
 } from "@/lib/api/user/mutation";
+import { COURSES } from "@/constants/courses";
 
 export const userRouter = createTRPCRouter({
   createStudentNo: protectedRoute
     .input(
       z.object({
-        email: z.string().email(),
+        id: z.string(),
         studentNo: z.string(),
+        course: z.enum(COURSES),
       }),
     )
     .mutation(async ({ input }) => {

@@ -20,6 +20,15 @@ import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { api } from "@/trpc/react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { COURSES } from "@/constants/courses";
+import { DEPARTMENTS } from "@/constants/departments";
 
 const SignUpForm = () => {
   const router = useRouter();
@@ -30,6 +39,8 @@ const SignUpForm = () => {
       name: "",
       surname: "",
       middleName: "",
+      department: undefined,
+      course: undefined,
       email: "",
       password: "",
     },
@@ -40,7 +51,17 @@ const SignUpForm = () => {
   const { mutateAsync: createdStudentNo } =
     api.user.createStudentNo.useMutation();
   const onSubmit = async (values: SignUpSchema) => {
-    const { studentNo, name, surname, middleName, email, password } = values;
+    const {
+      studentNo,
+      name,
+      surname,
+      middleName,
+      department,
+      course,
+      email,
+      password,
+    } = values;
+
     const toastId = toast.loading(
       "Signing you up. This may take a few seconds...",
       {
@@ -59,23 +80,25 @@ const SignUpForm = () => {
         );
       }
 
-      const response = await authClient.signUp.email({
+      const { data, error } = await authClient.signUp.email({
         name,
         surname,
         middleName,
+        department,
         email,
         password,
         callbackURL: PageRoutes.LOGIN,
       });
 
-      await createdStudentNo({
-        email,
-        studentNo,
-      });
-
-      if (response.error) {
-        throw new Error(response.error.message);
+      if (error) {
+        throw new Error(error.message);
       } else {
+        await createdStudentNo({
+          id: data.user.id,
+          studentNo,
+          course,
+        });
+
         toast.success(
           () => {
             return (
@@ -171,6 +194,64 @@ const SignUpForm = () => {
               </FormItem>
             )}
           />
+
+          <div className="flex space-x-2">
+            <FormField
+              control={form.control}
+              name="course"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Course</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select course" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {COURSES.map((type) => (
+                        <SelectItem key={type} value={type}>
+                          {type}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="department"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Department</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select department" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {DEPARTMENTS.map((type) => (
+                        <SelectItem key={type} value={type}>
+                          {type}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
 
           <FormField
             control={form.control}

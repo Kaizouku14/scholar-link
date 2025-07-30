@@ -39,6 +39,7 @@ export const auth = betterAuth({
     additionalFields: {
       surname: { type: "string", required: true },
       middleName: { type: "string", required: true },
+      department: { type: "string", required: true },
     },
   },
   plugins: [
