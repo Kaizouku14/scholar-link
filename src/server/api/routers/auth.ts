@@ -3,20 +3,8 @@ import { DEPARTMENTS } from "@/constants/departments";
 import { GENDERS } from "@/constants/genders";
 import z from "zod";
 import { createTRPCRouter, publicProcedure } from "../trpc";
-import { verifyResetOtp } from "@/lib/api/auth/mutation";
 
 export const authRouter = createTRPCRouter({
-  verifyOTP: publicProcedure
-    .input(
-      z.object({
-        email: z.string().email(),
-        otp: z.string(),
-      }),
-    )
-    .mutation(async ({ input }) => {
-      return await verifyResetOtp(input);
-    }),
-
   register: publicProcedure
     .input(
       z.object({

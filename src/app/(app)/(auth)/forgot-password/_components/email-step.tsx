@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { Mail } from "lucide-react";
+import { Loader2, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,35 +8,20 @@ import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
 import { PageRoutes } from "@/constants/page-routes";
+import { useState } from "react";
 
-interface EmailStepProps {
-  email: string;
-  setEmail: (email: string) => void;
-  onSuccess: () => void;
-  isLoading: boolean;
-  setIsLoading: (loading: boolean) => void;
-}
+export const EmailStep = () => {
+  const [email, setEmail] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-export const EmailStep = ({
-  email,
-  setEmail,
-  onSuccess,
-  isLoading,
-  setIsLoading,
-}: EmailStepProps) => {
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
     setIsLoading(true);
     try {
-      const response = await authClient.forgetPassword.emailOtp({ email });
-      if (response.error) throw new Error(response.error.message);
-
       toast.success("OTP sent successfully! Check your email.", {
         position: "top-center",
       });
-
-      onSuccess();
     } catch (error) {
       toast.error("An error occurred: " + (error as Error).message, {
         position: "top-center",
@@ -67,7 +51,11 @@ export const EmailStep = ({
 
       <div></div>
       <Button type="submit" className="w-full" disabled={!email || isLoading}>
-        {isLoading ? "Sending verification code..." : "Send verification code"}
+        {isLoading ? (
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+        ) : (
+          "Send verification code"
+        )}
       </Button>
 
       <div className="text-muted-foreground text-center text-sm">

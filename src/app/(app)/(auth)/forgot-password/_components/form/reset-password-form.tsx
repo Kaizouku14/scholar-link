@@ -16,13 +16,11 @@ import {
 } from "@/components/ui/form";
 import { resetPasswordSchema, type ResetPasswordSchema } from "./schema";
 import SubmitButton from "@/components/forms/submit-button";
+import { useRouter } from "next/navigation";
+import { PageRoutes } from "@/constants/page-routes";
 
-interface ResetPasswordFormProps {
-  email: string;
-  otp: string;
-}
-
-export const ResetPasswordForm = ({ email, otp }: ResetPasswordFormProps) => {
+export const ResetPasswordForm = () => {
+  const router = useRouter();
   const form = useForm<ResetPasswordSchema>({
     resolver: zodResolver(resetPasswordSchema),
     defaultValues: {
@@ -32,16 +30,12 @@ export const ResetPasswordForm = ({ email, otp }: ResetPasswordFormProps) => {
   });
 
   const onSubmit = async (values: ResetPasswordSchema) => {
+    const { newPassword } = values;
     try {
-      const { error } = await authClient.emailOtp.resetPassword({
-        email,
-        otp,
-        password: values.newPassword,
+      toast.success("Password reset successfully. You can now log in.", {
+        position: "top-center",
       });
-      if (error) throw new Error(error.message);
-      toast.success("Password reset successfully. You can now log in.");
-      // Optionally, redirect the user to the login page
-      // router.push('/login');
+      router.push(PageRoutes.LOGIN);
     } catch (err) {
       toast.error("Failed to reset password: " + (err as Error).message);
     }

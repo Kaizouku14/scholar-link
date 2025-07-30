@@ -36,16 +36,5 @@ export const auth = betterAuth({
       defaultRole: ROLES[0], //Internship Student
       adminRoles: ["scholarship-admin", "internship-admin"],
     }),
-    emailOTP({
-      otpLength: 6,
-      expiresIn: 5 * 60 * 1000, // 5 minutes
-      async sendVerificationOTP({ email, otp }) {
-        await sendEmail({
-          to: email,
-          subject: "Password Reset: OTP Verification",
-          html: otpEmailTemplate(otp),
-        });
-      },
-    }),
   ],
 });

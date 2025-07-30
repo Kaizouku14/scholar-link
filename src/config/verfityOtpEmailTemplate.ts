@@ -27,7 +27,7 @@ export const otpEmailTemplate = (otpCode: string) => `
             <tr>
               <td align="center" style="padding-bottom: 24px;">
                 <p style="color: hsl(0, 0%, 45.1%); font-size: 16px; margin: 0;">
-                  Use the 6-digit code below to verify your email address. This code will expire in 10 minutes.
+                  Use the 6-digit code below to verify your email address. This code will expire in 5 minutes.
                 </p>
               </td>
             </tr>
