@@ -130,13 +130,13 @@ const SignUpForm = () => {
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-4"
       >
-        <div className="flex flex-col items-center gap-2 text-center">
+        <div className="flex flex-col items-center text-center">
           <h1 className="text-2xl font-bold">Welcome Future Professional!</h1>
           <p className="text-muted-foreground text-sm">
             Manage your internship journey — all in one place.
           </p>
         </div>
-        <div className="grid gap-4">
+        <div className="grid gap-x-4 gap-y-2">
           <div className="grid grid-cols-3 items-center gap-2">
             <FormField
               control={form.control}
@@ -195,7 +195,7 @@ const SignUpForm = () => {
             )}
           />
 
-          <div className="flex space-x-2">
+          <div className="grid grid-cols-2 items-center gap-x-2">
             <FormField
               control={form.control}
               name="course"
