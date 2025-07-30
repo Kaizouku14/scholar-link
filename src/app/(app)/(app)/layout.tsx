@@ -5,7 +5,7 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { PageRoutes } from "@/constants/page-routes";
-import type { roleType } from "@/constants/roles";
+import { checkStudentOnBoarded } from "@/lib/api/user/mutation";
 
 const Layout = async ({ children }: PropsWithChildren) => {
   const session = await auth.api.getSession({
@@ -15,6 +15,10 @@ const Layout = async ({ children }: PropsWithChildren) => {
   if (!session) {
     redirect(PageRoutes.LOGIN);
   }
+
+  const { id } = session.user;
+  const isOnboarded = await checkStudentOnBoarded({ id });
+  if (!isOnboarded) redirect(PageRoutes.SETUP);
 
   return (
     <SidebarProvider>
