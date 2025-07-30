@@ -1,12 +1,34 @@
-import { generateUUID } from "@/lib/utils";
 import { db, eq } from "@/server/db";
 import {
   user as userTable,
-  verification as verificationTable,
-  authorizedEmail as authorizedEmailTable,
+  student as studentTable,
 } from "@/server/db/schema/auth";
 import { TRPCError } from "@trpc/server";
 
+export const checkStudentOnBoarded = async ({ id }: { id: string }) => {
+  try {
+    const allowedRoles = ["internshipStudent"];
+    const [studentOnBoarded] = await db
+      .select({
+        onboarded: studentTable.onboarded,
+        role: userTable.role,
+      })
+      .from(studentTable)
+      .innerJoin(userTable, eq(studentTable.id, userTable.id))
+      .where(eq(studentTable.id, id))
+      .limit(1);
+
+    if (!studentOnBoarded || !allowedRoles.includes(studentOnBoarded.role!))
+      return false;
+
+    return studentOnBoarded.onboarded;
+  } catch (error) {
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "Failed to check student on boarded," + (error as Error).message,
+    });
+  }
+};
 
 // export const isEmailAuthorized = async ({ email }: { email: string }) => {
 //   const [authorizedEmail] = await db

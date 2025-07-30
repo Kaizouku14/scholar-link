@@ -1,5 +1,5 @@
 import { PageRoutes } from "@/constants/page-routes";
-import { checkStudentOnBoarded } from "@/lib/api/user/mutation";
+import { checkStudentOnBoarded } from "@/lib/api/auth/mutation";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
