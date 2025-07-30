@@ -12,7 +12,7 @@ export enum PageRoutes {
   SIGN_UP = "/signup",
   SETUP = "/setup",
   FORGOT_PASSWORD = "/forgot-password",
-  RESET_PASSWORD = "/reset-password:token",
+  RESET_PASSWORD = "/reset-password",
 
   /******************************************
    *                ROUTES                  *

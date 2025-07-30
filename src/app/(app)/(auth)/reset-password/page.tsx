@@ -1,9 +1,14 @@
 "use client";
 
+import { redirect, useSearchParams } from "next/navigation";
 import { ResetPasswordForm } from "./_components/form/reset-password-form";
+import { PageRoutes } from "@/constants/page-routes";
 
 const ResetPasswordPage = () => {
-  const token = new URLSearchParams(window.location.search).get("token");
+  const searchParams = useSearchParams();
+  const token = searchParams.get("token");
+
+  if (!token) return redirect(PageRoutes.LOGIN);
 
   return (
     <div className="flex flex-1 items-center justify-center">
