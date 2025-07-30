@@ -66,7 +66,7 @@ export const createdStudentNo = async ({
 
 export const checkStudentOnBoarded = async ({ id }: { id: string }) => {
   try {
-    const allowedRoles = ["scholarshipStudent", "internshipStudent"];
+    const allowedRoles = ["internshipStudent"];
     const [studentOnBoarded] = await db
       .select({
         onboarded: studentTable.onboarded,
