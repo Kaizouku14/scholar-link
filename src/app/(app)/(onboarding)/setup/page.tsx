@@ -1,5 +1,23 @@
-const Setup = () => {
-  return <div>Setup</div>;
+import { InteractiveGridPattern } from "@/components/magicui/interactive-grid-pattern";
+import { cn } from "@/lib/utils";
+import SetupPage from "./_components/setup";
+
+const Page = () => {
+  return (
+    <div className="flex min-h-screen flex-col items-center justify-center">
+      <InteractiveGridPattern
+        width={80}
+        height={80}
+        x={-1}
+        y={-1}
+        squaresClassName="hover:fill-primary"
+        className={cn(
+          "[mask-image:linear-gradient(to_bottom_right,white,transparent,transparent)]",
+        )}
+      />
+      <SetupPage />
+    </div>
+  );
 };
 
-export default Setup;
+export default Page;

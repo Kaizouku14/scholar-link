@@ -1,6 +1,5 @@
 "use client";
 
-import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
 
@@ -18,6 +17,7 @@ import { resetPasswordSchema, type ResetPasswordSchema } from "./schema";
 import SubmitButton from "@/components/forms/submit-button";
 import { useRouter } from "next/navigation";
 import { PageRoutes } from "@/constants/page-routes";
+import PasswordInput from "@/components/forms/password-input";
 
 export const ResetPasswordForm = ({ token }: { token: string }) => {
   const router = useRouter();
@@ -60,7 +60,7 @@ export const ResetPasswordForm = ({ token }: { token: string }) => {
             <FormItem>
               <FormLabel htmlFor="new-password">New Password</FormLabel>
               <FormControl>
-                <Input
+                <PasswordInput
                   id="new-password"
                   type="password"
                   placeholder="Enter your new password"
@@ -78,7 +78,7 @@ export const ResetPasswordForm = ({ token }: { token: string }) => {
             <FormItem>
               <FormLabel htmlFor="confirm-password">Confirm Password</FormLabel>
               <FormControl>
-                <Input
+                <PasswordInput
                   id="confirm-password"
                   type="password"
                   placeholder="Re-enter your new password"

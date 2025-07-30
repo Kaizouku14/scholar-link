@@ -36,6 +36,6 @@ const ModeToggle = () => {
       )}
     </Button>
   );
-}
+};
 
 export default ModeToggle;
