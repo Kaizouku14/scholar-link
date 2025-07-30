@@ -9,6 +9,7 @@ import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
 import { PageRoutes } from "@/constants/page-routes";
 import { useState } from "react";
+import { env } from "@/env";
 
 export const EmailStep = () => {
   const [email, setEmail] = useState<string>("");
@@ -19,9 +20,21 @@ export const EmailStep = () => {
     if (!email) return;
     setIsLoading(true);
     try {
-      toast.success("OTP sent successfully! Check your email.", {
-        position: "top-center",
+      const { error } = await authClient.requestPasswordReset({
+        email,
+        redirectTo: `${env.NEXT_PUBLIC_BETTER_AUTH_URL}${PageRoutes.RESET_PASSWORD}`,
       });
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      toast.success(
+        "We sent a verifiation link on your email! Check your email.",
+        {
+          position: "top-center",
+        },
+      );
     } catch (error) {
       toast.error("An error occurred: " + (error as Error).message, {
         position: "top-center",

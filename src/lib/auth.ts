@@ -2,13 +2,15 @@ import { db } from "@/server/db";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import * as schema from "@/server/db/schema/auth";
-import { admin, emailOTP } from "better-auth/plugins";
+import { admin } from "better-auth/plugins";
 import { ROLES } from "@/constants/roles";
 import { sendEmail } from "@/services/email";
-import { otpEmailTemplate } from "@/config/verfityOtpEmailTemplate";
+import { linkVerificationTemplate } from "@/config/verfityOtpEmailTemplate";
 import { siteConfig } from "@/config/site.config";
+import { env } from "@/env";
 
 export const auth = betterAuth({
+  trustedOrigins: [env.NEXT_PUBLIC_BETTER_AUTH_URL!],
   appName: siteConfig.title,
   database: drizzleAdapter(db, {
     provider: "sqlite",
@@ -24,6 +26,16 @@ export const auth = betterAuth({
     enabled: true,
     autoSignIn: false,
     requireEmailVerification: true,
+    sendResetPassword: async ({ user, url, token }) => {
+      console.log("Email", user.email);
+      console.log("Url", url);
+      console.log("token", token);
+      await sendEmail({
+        to: user.email,
+        subject: "Reset Password ",
+        html: linkVerificationTemplate({ url }),
+      });
+    },
   },
   user: {
     additionalFields: {

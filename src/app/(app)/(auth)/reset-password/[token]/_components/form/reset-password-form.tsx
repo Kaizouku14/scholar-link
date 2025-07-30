@@ -19,7 +19,7 @@ import SubmitButton from "@/components/forms/submit-button";
 import { useRouter } from "next/navigation";
 import { PageRoutes } from "@/constants/page-routes";
 
-export const ResetPasswordForm = () => {
+export const ResetPasswordForm = ({ token }: { token: string | null }) => {
   const router = useRouter();
   const form = useForm<ResetPasswordSchema>({
     resolver: zodResolver(resetPasswordSchema),
@@ -35,6 +35,7 @@ export const ResetPasswordForm = () => {
       toast.success("Password reset successfully. You can now log in.", {
         position: "top-center",
       });
+
       router.push(PageRoutes.LOGIN);
     } catch (err) {
       toast.error("Failed to reset password: " + (err as Error).message);

@@ -8,7 +8,7 @@ export const resetPasswordSchema = z
   })
   .refine((data) => data.newPassword === data.confirmPassword, {
     message: "Passwords do not match.",
-    path: ["confirmPassword"], // Path to the field that will show the error
+    path: ["confirmPassword"],
   });
 
 export type ResetPasswordSchema = z.infer<typeof resetPasswordSchema>;
