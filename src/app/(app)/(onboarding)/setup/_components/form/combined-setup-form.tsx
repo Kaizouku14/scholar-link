@@ -9,6 +9,8 @@ import ProfileSetupForm from "./profile-setup";
 import StudentSetupForm from "./student-setup";
 import { Form } from "@/components/ui/form";
 import { authClient } from "@/lib/auth-client";
+import { api } from "@/trpc/react";
+import { uploadSingleFile } from "@/lib/uploadthing";
 
 interface CombinedSetupFormProps {
   currentStep: number;
@@ -40,7 +42,6 @@ const CombinedSetupForm = ({
 
   const handleFileSelect = (file: File) => {
     if (file.name === "") {
-      form.setValue("profile", undefined);
       setProfilePreview("");
       return;
     }
@@ -69,8 +70,24 @@ const CombinedSetupForm = ({
     }
   };
 
+  const { mutateAsync: insertStudentProfile } =
+    api.user.insertStudentProfile.useMutation();
   const onSubmit = async (values: CombinedSetupSchema) => {
     try {
+      if (!userId) throw new Error("User not found");
+
+      const uploadedImage = await uploadSingleFile(values.profile);
+      if (!uploadedImage?.url || !uploadedImage?.key) {
+        toast.error("Failed to upload image. Please try again.");
+        return;
+      }
+
+      await insertStudentProfile({
+        id: userId,
+        profileKey: uploadedImage.key,
+        ...values,
+        profile: uploadedImage.url,
+      });
     } catch (error) {
       toast.error("Failed to save data. Please try again.");
     }

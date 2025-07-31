@@ -4,19 +4,16 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import ProfileSetupForm from "./form/profile-setup";
-import StudentSetupForm from "./form/student-setup";
 import { useState } from "react";
 import CombinedSetupForm from "./form/combined-setup-form";
 
 const SetupPage = () => {
   const [currentStep, setCurrentStep] = useState(1);
-  const totalSteps = 2; // Profile Setup (1) + Student Setup (2)
+  const totalSteps = 2;
   const progressValue = (currentStep / totalSteps) * 100;
 
   return (
@@ -48,7 +45,6 @@ const SetupPage = () => {
           setCurrentStep={setCurrentStep}
         />
       </CardContent>
-      <CardFooter className="flex justify-end"></CardFooter>
     </Card>
   );
 };

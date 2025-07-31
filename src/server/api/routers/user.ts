@@ -40,6 +40,7 @@ export const userRouter = createTRPCRouter({
       z.object({
         id: z.string(),
         profile: z.string(),
+        profileKey: z.string(),
         contact: z.string(),
         address: z.string(),
         gender: z.enum(GENDERS),
@@ -50,6 +51,7 @@ export const userRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ input }) => {
+      console.log(input);
       return await insertStudentProfile({ data: input });
     }),
 

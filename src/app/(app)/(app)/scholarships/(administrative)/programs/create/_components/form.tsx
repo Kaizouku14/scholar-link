@@ -50,10 +50,8 @@ export default function ScholarshipForm() {
 
   const onSubmit = async (basicInfo: ScholarshipFormData) => {
     try {
-      let uploadedImage;
-      try {
-        uploadedImage = await uploadSingleFile(basicInfo.image);
-      } catch (uploadError) {
+      const uploadedImage = await uploadSingleFile(basicInfo.image);
+      if (!uploadedImage?.url || !uploadedImage?.key) {
         toast.error("Failed to upload image. Please try again.");
         return;
       }
@@ -64,8 +62,8 @@ export default function ScholarshipForm() {
         createProgramMutation({
           basicInfo: {
             ...basicInfo,
-            imageUrl: uploadedImage?.url,
-            imageKey: uploadedImage?.key,
+            imageUrl: uploadedImage.url,
+            imageKey: uploadedImage.key,
           },
           formFields,
           additionalInfo: JSON.stringify(additionalInfo),

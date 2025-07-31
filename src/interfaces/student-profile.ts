@@ -6,6 +6,7 @@ import type { YearLevelType } from "@/constants/year-level";
 export interface StudentProfileType {
   id: string;
   profile: string;
+  profileKey: string;
   gender: GenderType;
   address: string;
   contact: string;

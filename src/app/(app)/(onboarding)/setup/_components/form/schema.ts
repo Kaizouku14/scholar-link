@@ -1,12 +1,11 @@
 import { COURSES } from "@/constants/courses";
-import { DEPARTMENTS } from "@/constants/departments";
 import { GENDERS } from "@/constants/genders";
 import { SECTIONS } from "@/constants/sections";
 import { YEAR_LEVEL } from "@/constants/year-level";
 import z from "zod";
 
 export const profileSetupSchema = z.object({
-  profile: z.instanceof(File).optional(),
+  profile: z.instanceof(File),
   gender: z.enum(GENDERS),
   address: z.string().min(1, { message: "Address is required" }),
   contact: z
