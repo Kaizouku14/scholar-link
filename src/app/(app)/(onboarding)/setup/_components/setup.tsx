@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import ProfileSetupForm from "./form/profile-setup";
+import StudentSetupForm from "./form/student-setup";
 
 const SetupPage = () => {
   const currentStep = 1;
@@ -40,7 +41,10 @@ const SetupPage = () => {
             </span>
           </div>
         </div>
+        {/* first Step */}
         <ProfileSetupForm />
+        {/* second Step */}
+        <StudentSetupForm />
       </CardContent>
       <CardFooter className="flex justify-end"></CardFooter>
     </Card>

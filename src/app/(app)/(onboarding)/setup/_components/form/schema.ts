@@ -1,6 +1,7 @@
 import { COURSES } from "@/constants/courses";
 import { DEPARTMENTS } from "@/constants/departments";
 import { GENDERS } from "@/constants/genders";
+import { SECTIONS } from "@/constants/sections";
 import { YEAR_LEVEL } from "@/constants/year-level";
 import z from "zod";
 
@@ -17,9 +18,12 @@ export const profileSetupSchema = z.object({
 
 export const studentSetupSchema = z.object({
   course: z.enum(COURSES),
-  department: z.enum(DEPARTMENTS),
+  section: z.enum(SECTIONS),
   yearLevel: z.enum(YEAR_LEVEL),
 });
 
+export const combinedSetupSchema = profileSetupSchema.and(studentSetupSchema);
+
 export type ProfileSetupSchema = z.infer<typeof profileSetupSchema>;
 export type StudentSetupSchema = z.infer<typeof studentSetupSchema>;
+export type CombinedSetupSchema = z.infer<typeof combinedSetupSchema>;
