@@ -20,11 +20,13 @@ import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { PageRoutes } from "@/constants/page-routes";
 import { toast } from "sonner";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export interface UserItem {
   name?: string;
   email?: string;
   role?: string;
+  profile?: string;
 }
 
 export const NavUser = ({ user }: { user?: UserItem }) => {
@@ -68,7 +70,10 @@ export const NavUser = ({ user }: { user?: UserItem }) => {
                   </span>
                 </div>
                 <div className="flex size-8 items-center justify-center group-data-[collapsible=icon]:w-full">
-                  <CircleUser className="size-6 group-data-[collapsible=icon]:mx-auto" />
+                  <Avatar>
+                    <AvatarImage src={user?.profile} />
+                    <AvatarFallback>{user?.name?.charAt(0)}</AvatarFallback>
+                  </Avatar>
                 </div>
               </div>
             </SidebarMenuButton>
