@@ -116,8 +116,6 @@ export const insertStudentProfile = async ({
           message: "Student not found.",
         });
       }
-
-      return true;
     });
   } catch (error) {
     if (error instanceof TRPCError) throw error;

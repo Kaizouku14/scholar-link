@@ -17,11 +17,13 @@ import { PageRoutes } from "@/constants/page-routes";
 interface CombinedSetupFormProps {
   currentStep: number;
   setCurrentStep: (step: number) => void;
+  setIsLoading: (isLoading: boolean) => void;
 }
 
 const CombinedSetupForm = ({
   currentStep,
   setCurrentStep,
+  setIsLoading,
 }: CombinedSetupFormProps) => {
   const [profilePreview, setProfilePreview] = useState<string>("");
   const { data: session } = authClient.useSession();
@@ -78,22 +80,25 @@ const CombinedSetupForm = ({
     try {
       if (!userId) throw new Error("User not found");
 
+      setIsLoading(true);
       const uploadedImage = await uploadSingleFile(values.profile);
       if (!uploadedImage?.url || !uploadedImage?.key) {
         toast.error("Failed to upload image. Please try again.");
         return;
       }
 
-      const response = await insertStudentProfile({
+      await insertStudentProfile({
         id: userId,
         profileKey: uploadedImage.key,
         ...values,
         profile: uploadedImage.url,
       });
 
-      if (response) router.push(PageRoutes.DASHBOARD);
+      router.push(PageRoutes.DASHBOARD);
     } catch (error) {
       toast.error("Failed to save data. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
