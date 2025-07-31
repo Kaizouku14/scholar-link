@@ -4,7 +4,6 @@ import { getAllUserEmail } from "@/lib/api/user/query";
 import { TRPCError } from "@trpc/server";
 import {
   checkStudentNoAvailability,
-  checkStudentOnBoarded,
   createdStudentNo,
 } from "@/lib/api/user/mutation";
 import { COURSES } from "@/constants/courses";
@@ -31,16 +30,6 @@ export const userRouter = createTRPCRouter({
     .mutation(async ({ input }) => {
       return await checkStudentNoAvailability(input);
     }),
-  checkStudendIsOnBoarded: protectedRoute
-    .input(
-      z.object({
-        id: z.string(),
-      }),
-    )
-    .mutation(async ({ input }) => {
-      return await checkStudentOnBoarded(input);
-    }),
-
   getAllUserEmail: publicProcedure.query(async ({ ctx }) => {
     if (!ctx.session) {
       throw new TRPCError({

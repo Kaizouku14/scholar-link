@@ -61,21 +61,16 @@ export function NavMain({ userRole, isPending }: NavMainProps) {
       )}
 
       {/* Management Navigation */}
-      {isPending ? (
+      {isPending && hasManagementNav ? (
         <NavItemsSkeleton itemLength={1} />
-      ) : (
+      ) : hasManagementNav ? (
         <>
-          {hasManagementNav && (
-            <>
-              <SidebarSeparator className="mx-auto" />
-
-              {navigation.management!.map((group: NavGroup, index: number) => (
-                <NavGroups key={`management-${index}`} group={group} />
-              ))}
-            </>
-          )}
+          <SidebarSeparator className="mx-auto" />
+          {navigation.management!.map((group: NavGroup, index: number) => (
+            <NavGroups key={`management-${index}`} group={group} />
+          ))}
         </>
-      )}
+      ) : null}
     </div>
   );
 }

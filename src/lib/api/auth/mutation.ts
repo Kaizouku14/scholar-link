@@ -19,7 +19,7 @@ export const checkStudentOnBoarded = async ({ id }: { id: string }) => {
       .limit(1);
 
     if (!studentOnBoarded || !allowedRoles.includes(studentOnBoarded.role!))
-      return false;
+      return true;
 
     return studentOnBoarded.onboarded;
   } catch (error) {

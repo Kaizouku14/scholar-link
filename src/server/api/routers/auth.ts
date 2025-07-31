@@ -2,9 +2,20 @@ import { COURSES } from "@/constants/courses";
 import { DEPARTMENTS } from "@/constants/departments";
 import { GENDERS } from "@/constants/genders";
 import z from "zod";
-import { createTRPCRouter, publicProcedure } from "../trpc";
+import { createTRPCRouter, protectedRoute, publicProcedure } from "../trpc";
+import { checkStudentOnBoarded } from "@/lib/api/auth/mutation";
 
 export const authRouter = createTRPCRouter({
+  checkStudendIsOnBoarded: protectedRoute
+    .input(
+      z.object({
+        id: z.string(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      return await checkStudentOnBoarded(input);
+    }),
+
   register: publicProcedure
     .input(
       z.object({

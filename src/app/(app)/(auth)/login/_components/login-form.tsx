@@ -35,7 +35,7 @@ const LoginForm = () => {
   });
 
   const { mutateAsync: onBoardedMutation } =
-    api.user.checkStudendIsOnBoarded.useMutation();
+    api.auth.checkStudendIsOnBoarded.useMutation();
   const onSubmit = async (values: LoginSchema) => {
     const { email, password, rememberMe } = values;
     const toastId = toast.loading("Processing sign-in request...", {
