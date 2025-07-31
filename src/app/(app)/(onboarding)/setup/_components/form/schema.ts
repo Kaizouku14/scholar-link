@@ -6,10 +6,10 @@ import { YEAR_LEVEL } from "@/constants/year-level";
 import z from "zod";
 
 export const profileSetupSchema = z.object({
-  profilePicture: z.instanceof(File).optional(),
+  profile: z.instanceof(File).optional(),
   gender: z.enum(GENDERS),
   address: z.string().min(1, { message: "Address is required" }),
-  contactNo: z
+  contact: z
     .string()
     .min(1, { message: "Contact number is required" })
     .regex(/^09\d{9}$/, { message: "Invalid phone number format" }),

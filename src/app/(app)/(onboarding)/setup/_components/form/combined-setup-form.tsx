@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import ProfileSetupForm from "./profile-setup";
 import StudentSetupForm from "./student-setup";
 import { Form } from "@/components/ui/form";
+import { authClient } from "@/lib/auth-client";
 
 interface CombinedSetupFormProps {
   currentStep: number;
@@ -19,14 +20,16 @@ const CombinedSetupForm = ({
   setCurrentStep,
 }: CombinedSetupFormProps) => {
   const [profilePreview, setProfilePreview] = useState<string>("");
+  const { data: session } = authClient.useSession();
+  const userId = session?.user.id;
 
   const form = useForm<CombinedSetupSchema>({
     resolver: zodResolver(combinedSetupSchema),
     defaultValues: {
-      profilePicture: undefined,
+      profile: undefined,
       gender: undefined,
       address: "",
-      contactNo: "",
+      contact: "",
       dateOfBirth: undefined,
       course: undefined,
       section: undefined,
@@ -37,12 +40,12 @@ const CombinedSetupForm = ({
 
   const handleFileSelect = (file: File) => {
     if (file.name === "") {
-      form.setValue("profilePicture", undefined);
+      form.setValue("profile", undefined);
       setProfilePreview("");
       return;
     }
 
-    form.setValue("profilePicture", file);
+    form.setValue("profile", file);
 
     const reader = new FileReader();
     reader.onloadend = () => {
@@ -53,10 +56,10 @@ const CombinedSetupForm = ({
 
   const handleProfileNext = async () => {
     const isValid = await form.trigger([
-      "profilePicture",
+      "profile",
       "gender",
       "address",
-      "contactNo",
+      "contact",
       "dateOfBirth",
     ]);
     if (isValid) {
@@ -68,7 +71,6 @@ const CombinedSetupForm = ({
 
   const onSubmit = async (values: CombinedSetupSchema) => {
     try {
-      console.log(values);
     } catch (error) {
       toast.error("Failed to save data. Please try again.");
     }
@@ -80,7 +82,6 @@ const CombinedSetupForm = ({
         {currentStep === 1 && (
           <ProfileSetupForm
             control={form.control}
-            formState={form.formState}
             onFileSelect={handleFileSelect}
             profilePreview={profilePreview}
             onNext={handleProfileNext}

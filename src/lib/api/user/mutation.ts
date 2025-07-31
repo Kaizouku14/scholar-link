@@ -1,4 +1,6 @@
 import type { courseType } from "@/constants/courses";
+import type { GenderType } from "@/constants/genders";
+import type { StudentProfileType } from "@/interfaces/student-profile";
 import { db, eq } from "@/server/db";
 import {
   user as userTable,
@@ -60,6 +62,67 @@ export const createdStudentNo = async ({
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
       message: "Failed to create student no," + (error as Error).message,
+    });
+  }
+};
+
+export const insertStudentProfile = async ({
+  data,
+}: {
+  data: StudentProfileType;
+}) => {
+  if (!data.id) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: "Student ID is required.",
+    });
+  }
+
+  try {
+    return await db.transaction(async (tx) => {
+      const [updatedUser] = await tx
+        .update(userTable)
+        .set({
+          profile: data.profile,
+          gender: data.gender,
+          dateOfBirth: data.dateOfBirth,
+          contact: data.contact,
+          address: data.address,
+        })
+        .where(eq(userTable.id, data.id))
+        .returning();
+
+      if (!updatedUser) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found.",
+        });
+      }
+
+      const [updatedStudent] = await tx
+        .update(studentTable)
+        .set({
+          course: data.course,
+          section: data.section,
+          yearLevel: data.yearLevel,
+          onboarded: true,
+        })
+        .where(eq(studentTable.id, data.id))
+        .returning();
+
+      if (!updatedStudent) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Student not found.",
+        });
+      }
+    });
+  } catch (error) {
+    if (error instanceof TRPCError) throw error;
+
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "Failed to update student profile.",
     });
   }
 };

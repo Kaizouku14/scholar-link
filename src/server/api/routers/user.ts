@@ -5,8 +5,12 @@ import { TRPCError } from "@trpc/server";
 import {
   checkStudentNoAvailability,
   createdStudentNo,
+  insertStudentProfile,
 } from "@/lib/api/user/mutation";
 import { COURSES } from "@/constants/courses";
+import { GENDERS } from "@/constants/genders";
+import { SECTIONS } from "@/constants/sections";
+import { YEAR_LEVEL } from "@/constants/year-level";
 
 export const userRouter = createTRPCRouter({
   createStudentNo: protectedRoute
@@ -30,6 +34,25 @@ export const userRouter = createTRPCRouter({
     .mutation(async ({ input }) => {
       return await checkStudentNoAvailability(input);
     }),
+
+  insertStudentProfile: protectedRoute
+    .input(
+      z.object({
+        id: z.string(),
+        profile: z.string(),
+        contact: z.string(),
+        address: z.string(),
+        gender: z.enum(GENDERS),
+        dateOfBirth: z.date(),
+        course: z.enum(COURSES),
+        section: z.enum(SECTIONS),
+        yearLevel: z.enum(YEAR_LEVEL),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      return await insertStudentProfile({ data: input });
+    }),
+
   getAllUserEmail: publicProcedure.query(async ({ ctx }) => {
     if (!ctx.session) {
       throw new TRPCError({

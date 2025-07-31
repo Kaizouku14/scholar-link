@@ -34,7 +34,6 @@ import type { CombinedSetupSchema } from "./schema";
 
 interface ProfileSetupFormProps {
   control: Control<CombinedSetupSchema>;
-  formState: FormState<CombinedSetupSchema>;
   onFileSelect: (file: File) => void;
   profilePreview: string;
   onNext: () => void;
@@ -42,7 +41,6 @@ interface ProfileSetupFormProps {
 
 const ProfileSetupForm = ({
   control,
-  formState,
   onFileSelect,
   profilePreview,
   onNext,
@@ -51,7 +49,7 @@ const ProfileSetupForm = ({
     <div className="space-y-4">
       <FormField
         control={control}
-        name="profilePicture"
+        name="profile"
         render={({ field }) => (
           <FormItem>
             <FormLabel className="text-base font-semibold">
@@ -144,7 +142,7 @@ const ProfileSetupForm = ({
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <FormField
           control={control}
-          name="contactNo"
+          name="contact"
           render={({ field }) => (
             <FormItem>
               <FormLabel className="flex items-center gap-2">
