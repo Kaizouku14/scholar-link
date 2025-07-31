@@ -21,6 +21,7 @@ import { useRouter } from "next/navigation";
 import { PageRoutes } from "@/constants/page-routes";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { profile } from "console";
 
 export interface UserItem {
   name?: string;

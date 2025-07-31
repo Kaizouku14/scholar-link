@@ -51,7 +51,6 @@ export const userRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ input }) => {
-      console.log(input);
       return await insertStudentProfile({ data: input });
     }),
 

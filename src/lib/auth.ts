@@ -40,6 +40,7 @@ export const auth = betterAuth({
       surname: { type: "string", required: true },
       middleName: { type: "string", required: true },
       department: { type: "string", required: true },
+      profile: { type: "string", required: false },
     },
   },
   plugins: [

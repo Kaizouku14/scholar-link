@@ -11,6 +11,8 @@ import { Form } from "@/components/ui/form";
 import { authClient } from "@/lib/auth-client";
 import { api } from "@/trpc/react";
 import { uploadSingleFile } from "@/lib/uploadthing";
+import { useRouter } from "next/navigation";
+import { PageRoutes } from "@/constants/page-routes";
 
 interface CombinedSetupFormProps {
   currentStep: number;
@@ -24,7 +26,7 @@ const CombinedSetupForm = ({
   const [profilePreview, setProfilePreview] = useState<string>("");
   const { data: session } = authClient.useSession();
   const userId = session?.user.id;
-
+  const router = useRouter();
   const form = useForm<CombinedSetupSchema>({
     resolver: zodResolver(combinedSetupSchema),
     defaultValues: {
@@ -82,12 +84,14 @@ const CombinedSetupForm = ({
         return;
       }
 
-      await insertStudentProfile({
+      const response = await insertStudentProfile({
         id: userId,
         profileKey: uploadedImage.key,
         ...values,
         profile: uploadedImage.url,
       });
+
+      if (response) router.push(PageRoutes.DASHBOARD);
     } catch (error) {
       toast.error("Failed to save data. Please try again.");
     }

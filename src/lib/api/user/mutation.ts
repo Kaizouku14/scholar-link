@@ -24,8 +24,7 @@ export const checkStudentNoAvailability = async ({
   } catch (error) {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
-      message:
-        "Failed to check student no availability," + (error as Error).message,
+      message: "Failed to check student no availability,",
     });
   }
 };
@@ -61,7 +60,7 @@ export const createdStudentNo = async ({
   } catch (error) {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
-      message: "Failed to create student no," + (error as Error).message,
+      message: "Failed to create student no",
     });
   }
 };
@@ -71,51 +70,61 @@ export const insertStudentProfile = async ({
 }: {
   data: StudentProfileType;
 }) => {
-  console.log(data);
+  if (!data.id) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: "Student ID is required.",
+    });
+  }
+
   try {
-    const [updatedUser] = await db
-      .update(userTable)
-      .set({
-        profile: data.profile,
-        profileKey: data.profileKey,
-        gender: data.gender,
-        dateOfBirth: data.dateOfBirth,
-        contact: data.contact,
-        address: data.address,
-      })
-      .where(eq(userTable.id, data.id))
-      .returning();
+    return await db.transaction(async (tx) => {
+      const [updatedUser] = await tx
+        .update(userTable)
+        .set({
+          profile: data.profile,
+          profileKey: data.profileKey,
+          gender: data.gender,
+          dateOfBirth: data.dateOfBirth,
+          contact: data.contact,
+          address: data.address,
+        })
+        .where(eq(userTable.id, data.id))
+        .returning();
 
-    if (!updatedUser) {
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: "User not found.",
-      });
-    }
+      if (!updatedUser) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found.",
+        });
+      }
 
-    const [updatedStudent] = await db
-      .update(studentTable)
-      .set({
-        course: data.course,
-        section: data.section,
-        yearLevel: data.yearLevel,
-        onboarded: true,
-      })
-      .where(eq(studentTable.id, data.id))
-      .returning();
+      const [updatedStudent] = await tx
+        .update(studentTable)
+        .set({
+          course: data.course,
+          section: data.section,
+          yearLevel: data.yearLevel,
+          onboarded: true,
+        })
+        .where(eq(studentTable.id, data.id))
+        .returning();
 
-    if (!updatedStudent) {
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: "Student not found.",
-      });
-    }
+      if (!updatedStudent) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Student not found.",
+        });
+      }
+
+      return true;
+    });
   } catch (error) {
     if (error instanceof TRPCError) throw error;
 
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
-      message: "Failed to update student profile." + (error as Error).message,
+      message: "Failed to update student profile.",
     });
   }
 };
