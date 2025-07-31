@@ -1,6 +1,6 @@
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import type { FormFieldProps } from "@/types/scholarship-form";
+import type { FormFieldProps } from "@/interfaces/scholarship-form";
 
 interface FieldPreviewProps {
   field: FormFieldProps;

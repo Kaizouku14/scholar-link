@@ -16,7 +16,7 @@ import {
   FileText,
 } from "lucide-react";
 import { PageRoutes } from "../constants/page-routes";
-import type { NavigationData } from "@/types/navigation";
+import type { NavigationData } from "@/interfaces/navigation";
 
 export const NAVIGATION_DATA: NavigationData = {
   internshipAdmin: {

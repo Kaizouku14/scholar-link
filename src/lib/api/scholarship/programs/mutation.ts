@@ -5,7 +5,7 @@ import { scholarshipProgram } from "@/server/db/schema/scholarship";
 import type {
   FormFieldProps,
   ScholarshipFormData,
-} from "@/types/scholarship-form";
+} from "@/interfaces/scholarship-form";
 import { TRPCError } from "@trpc/server";
 
 export const createScholarshipProgram = async ({

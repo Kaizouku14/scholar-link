@@ -10,7 +10,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import ArrayField from "../form-builder/array-field";
-import type { AdditionalInfo } from "@/types/scholarship-form";
+import type { AdditionalInfo } from "@/interfaces/scholarship-form";
 
 interface EligibilitySectionProps {
   additionalInfo: AdditionalInfo;

@@ -1,7 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import type { AdditionalInfo, FormFieldProps } from "@/types/scholarship-form";
+import type {
+  AdditionalInfo,
+  FormFieldProps,
+} from "@/interfaces/scholarship-form";
 
 /**
  * Custom hook to manage form state and operations

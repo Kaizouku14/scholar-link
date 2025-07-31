@@ -14,7 +14,7 @@ export const user = createTable("user", {
   surname: text("surname"),
   middleName: text("middle_name"),
   email: text("email").unique(),
-  profilePicture: text("profile_picture"),
+  profile: text("profile"),
   contact: text("contact"),
   address: text("address"),
   dateOfBirth: integer("date_of_birth", { mode: "timestamp" }),

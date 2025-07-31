@@ -5,7 +5,7 @@ import { SidebarSeparator } from "@/components/ui/sidebar";
 import { NavGroups } from "./nav-group";
 import { NAVIGATION_DATA } from "@/data/navigation-data";
 import type { roleType } from "@/constants/roles";
-import type { NavGroup } from "@/types/navigation";
+import type { NavGroup } from "@/interfaces/navigation";
 import NavItemsSkeleton from "./nav-main-skeleton";
 
 interface NavMainProps {

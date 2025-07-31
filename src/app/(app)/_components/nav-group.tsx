@@ -14,7 +14,7 @@ import { usePathname } from "next/navigation";
 import type {
   NavGroup as NavGroupType,
   NotificationCounts,
-} from "@/types/navigation";
+} from "@/interfaces/navigation";
 import { cn } from "@/lib/utils";
 
 interface NavGroupProps {
