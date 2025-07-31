@@ -39,23 +39,23 @@ const StudentSetupForm = ({
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <FormField
           control={control}
-          name="course"
+          name="yearLevel"
           render={({ field }) => (
             <FormItem>
               <FormLabel className="flex items-center gap-2">
-                <BookOpen className="h-4 w-4" />
-                Course
+                <GraduationCap className="h-4 w-4" />
+                Year Level
               </FormLabel>
               <Select onValueChange={field.onChange} value={field.value}>
                 <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select your course" />
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select your year level" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {COURSES.map((course) => (
-                    <SelectItem key={course} value={course}>
-                      {course}
+                  {YEAR_LEVEL.map((yearLevel) => (
+                    <SelectItem key={yearLevel} value={yearLevel}>
+                      {yearLevel}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -76,12 +76,12 @@ const StudentSetupForm = ({
               </FormLabel>
               <Select onValueChange={field.onChange} value={field.value}>
                 <FormControl>
-                  <SelectTrigger>
+                  <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select your section" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {SECTIONS.map((section) => (
+                  {SECTIONS.map((section, index) => (
                     <SelectItem key={section} value={section}>
                       {section}
                     </SelectItem>
@@ -96,23 +96,23 @@ const StudentSetupForm = ({
 
       <FormField
         control={control}
-        name="yearLevel"
+        name="course"
         render={({ field }) => (
           <FormItem>
             <FormLabel className="flex items-center gap-2">
-              <GraduationCap className="h-4 w-4" />
-              Year Level
+              <BookOpen className="h-4 w-4" />
+              Course
             </FormLabel>
             <Select onValueChange={field.onChange} value={field.value}>
               <FormControl>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select your year level" />
+                <SelectTrigger className="w-full overflow-hidden">
+                  <SelectValue placeholder="Select your course" />
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
-                {YEAR_LEVEL.map((yearLevel) => (
-                  <SelectItem key={yearLevel} value={yearLevel}>
-                    {yearLevel}
+                {COURSES.map((course) => (
+                  <SelectItem key={course} value={course}>
+                    {course}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -122,7 +122,7 @@ const StudentSetupForm = ({
         )}
       />
 
-      <div className="flex justify-between gap-4">
+      <div className="mt-4 flex justify-between gap-4">
         <Button
           type="button"
           variant="outline"
