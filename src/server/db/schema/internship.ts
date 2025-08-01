@@ -2,22 +2,19 @@ import { integer, text } from "drizzle-orm/sqlite-core";
 import { user } from "./auth";
 import { createTable } from "../schema";
 import { DEPARTMENTS } from "@/constants/departments";
+import { STATUS } from "@/constants/status";
+import { DOCUMENTS } from "@/constants/document-types";
 
 export const internship = createTable("internship", {
   internshipId: text("internship_id").primaryKey(),
   companyId: text("company_id")
     .notNull()
     .references(() => company.companyId, { onDelete: "cascade" }),
-  departmentId: text("department_id")
-    .notNull()
-    .references(() => department.departmentId, { onDelete: "cascade" }),
-  supervisorId: text("supervisor_id")
-    .notNull()
-    .references(() => supervisor.supervisorId, { onDelete: "cascade" }),
+  department: text("department", { enum: DEPARTMENTS }).notNull(),
   startDate: integer("start_date", { mode: "timestamp" }).notNull(),
   endDate: integer("end_date", { mode: "timestamp" }).notNull(),
-  totalOfHoursRequired: integer("total_of_hours_required").notNull(), //Possible to become enum
-  status: text("status").notNull(), //ENUM (ie. pending, ongoing, completed, cancelled)
+  totalOfHoursRequired: integer("total_of_hours_required").notNull(), //Values i.e(450, 600)
+  status: text("status", { enum: STATUS }).notNull(),
 });
 
 export const interns = createTable("interns", {
@@ -25,9 +22,11 @@ export const interns = createTable("interns", {
   userId: text("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
-  internshipId: text("internship_id").notNull(), //Reference to internship Table
+  internshipId: text("internship_id")
+    .notNull()
+    .references(() => internship.internshipId, { onDelete: "cascade" }),
   applicationDate: integer("application_date", { mode: "timestamp" }).notNull(),
-  approvalStatus: text("approval_status").notNull(), // ENUM
+  approvalStatus: text("approval_status", { enum: STATUS }).notNull(),
   completedHours: integer("completed_hours").notNull().default(0),
 });
 
@@ -36,17 +35,11 @@ export const internship_submissions = createTable("submissions", {
   internId: text("intern_id")
     .notNull()
     .references(() => interns.internsId, { onDelete: "cascade" }),
-  documentType: text("documentType").notNull(), //ENUM
+  documentType: text("documentType", { enum: DOCUMENTS }).notNull(),
   submittedAt: integer("submitted_at", { mode: "timestamp" }).notNull(),
-  //   documentUrl: text('document_url').notNull(),
-  //   reviewStatus: text('review-status').notNull(), //ENUM
-});
-
-export const department = createTable("department", {
-  departmentId: text("department_id").primaryKey(),
-  name: text("name", { enum: DEPARTMENTS }).notNull(),
-  headOfDepartment: text("head_of_department").notNull(),
-  //   requiredHours: integer("required_hours").notNull(), //TO CONSIDER
+  documentUrl: text("document_url").notNull(),
+  documentKey: text("document_key").notNull(),
+  reviewStatus: text("review-status", { enum: STATUS }).notNull(),
 });
 
 export const company = createTable("company", {
@@ -54,16 +47,6 @@ export const company = createTable("company", {
   name: text("name").notNull(),
   address: text("address").notNull(),
   contactPerson: text("contact_person").notNull(),
-  contactNo: text("contact_no").notNull(),
-});
-
-export const supervisor = createTable("supervisor", {
-  supervisorId: text("supervisor_id").primaryKey(),
-  companyId: text("company_id")
-    .notNull()
-    .references(() => company.companyId, { onDelete: "cascade" }),
-  name: text("name").notNull(),
-  position: text("position").notNull(),
-  email: text("email").notNull(),
+  contactEmail: text("contact_email"),
   contactNo: text("contact_no").notNull(),
 });
