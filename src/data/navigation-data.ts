@@ -118,7 +118,7 @@ export const NAVIGATION_DATA: NavigationData = {
         title: "Coordination",
         items: [
           {
-            title: "My Internships",
+            title: "Internships",
             url: PageRoutes.INTERNSHIPS_INTERNS,
             icon: NotepadText,
             description: "Internships under supervision",
