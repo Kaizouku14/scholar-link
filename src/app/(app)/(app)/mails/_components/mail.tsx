@@ -144,7 +144,7 @@ const Mail = () => {
   return (
     <div className="flex">
       <div className="bg-background flex w-full flex-col border-r md:w-96 lg:w-80 xl:w-96">
-        <div className="bg-background/95 supports-[backdrop-filter]:bg-background/60 border-border h-31.5 rounded-tl-xl border p-4 backdrop-blur">
+        <div className="bg-background/95 supports-[backdrop-filter]:bg-background/60 border-border h-31.5 rounded-tl-xl border p-4 backdrop-blur max-md:rounded-t-xl">
           <div className="mb-3 flex items-center justify-between">
             <h1 className="text-xl font-semibold">Inbox</h1>
 
@@ -172,7 +172,7 @@ const Mail = () => {
           </div>
         </div>
 
-        <ScrollArea className="border-border h-[665px] rounded-bl-xl border-x border-b">
+        <ScrollArea className="border-border h-[662px] border-x border-b max-md:rounded-b-xl md:rounded-bl-xl">
           <EmailList
             threads={groupedThreads}
             selectedThread={selectedThread}
@@ -196,17 +196,19 @@ const Mail = () => {
       </div>
 
       {/* Mobile: Overlay Detail */}
-      <div className="bg-background fixed inset-0 z-50 flex flex-col md:hidden">
-        <EmailDetail
-          thread={selectedThread}
-          showBackButton
-          onBack={() => setSelectedThread(undefined)}
-          currentUserId={currentUserId}
-          isfetching={FetchingMails || isRefreshing}
-          refresh={handleRefresh}
-          refetch={refetchMails}
-        />
-      </div>
+      {selectedThread && (
+        <div className="bg-background fixed inset-0 z-50 flex flex-col md:hidden">
+          <EmailDetail
+            thread={selectedThread}
+            showBackButton
+            onBack={() => setSelectedThread(undefined)}
+            currentUserId={currentUserId}
+            isfetching={FetchingMails || isRefreshing}
+            refresh={handleRefresh}
+            refetch={refetchMails}
+          />
+        </div>
+      )}
     </div>
   );
 };

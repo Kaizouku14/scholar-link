@@ -1,6 +1,5 @@
 "use client";
 
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -55,7 +54,7 @@ const EmailList = ({
   };
 
   return (
-    <ScrollArea className="flex-1">
+    <div className="flex-1">
       <div>
         {isfetching || isRefreshing ? (
           <div className="flex h-[540px] items-center justify-center">
@@ -169,7 +168,7 @@ const EmailList = ({
           </div>
         )}
       </div>
-    </ScrollArea>
+    </div>
   );
 };
 

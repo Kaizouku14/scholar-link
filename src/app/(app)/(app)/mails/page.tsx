@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 const Pages = () => {
   return (
-    <div className="mx-auto h-auto w-full space-y-4 px-2">
+    <div className="mx-auto h-auto w-full space-y-4 md:px-2">
       <PageBreadCrumb currentPage="Mails" />
       <Mail />
     </div>
