@@ -2,6 +2,10 @@ import { InteractiveGridPattern } from "@/components/magicui/interactive-grid-pa
 import { cn } from "@/lib/utils";
 import SetupPage from "./_components/setup";
 
+export const metadata = {
+  title: "Setup",
+};
+
 const Page = () => {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center">

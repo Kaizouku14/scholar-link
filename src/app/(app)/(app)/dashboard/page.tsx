@@ -1,5 +1,10 @@
 import PageBreadCrumb from "@/components/breadcrumbs/page-header";
 import StudentDashboard from "./_components/internship/student-dashboard";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Dashboard",
+};
 
 const Pages = () => {
   return (

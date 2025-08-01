@@ -3,6 +3,11 @@
 import { redirect, useSearchParams } from "next/navigation";
 import { ResetPasswordForm } from "./_components/form/reset-password-form";
 import { PageRoutes } from "@/constants/page-routes";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Reset Password",
+};
 
 const ResetPasswordPage = () => {
   const searchParams = useSearchParams();

@@ -1,8 +1,11 @@
 import PageBreadCrumb from "@/components/breadcrumbs/page-header";
 import ProgressOverview from "./_component/progress-overview";
 import ManageProgressHeader from "./_component/header";
-import ProgressForm from "./_component/form/progress-form";
+import type { Metadata } from "next";
 
+export const metadata: Metadata = {
+  title: "Progress",
+};
 const Pages = () => {
   return (
     <div className="mx-auto space-y-4 px-2">

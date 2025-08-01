@@ -5,7 +5,12 @@ import PagePagination from "@/components/pagination/page-pagination";
 import { Skeleton } from "@/components/ui/skeleton";
 import { api } from "@/trpc/react";
 import { GraduationCap } from "lucide-react";
+import type { Metadata } from "next";
 import { useState } from "react";
+
+export const metadata: Metadata = {
+  title: "Scholarships",
+};
 
 const Page = () => {
   const [currentPage, setCurrentPage] = useState(1);

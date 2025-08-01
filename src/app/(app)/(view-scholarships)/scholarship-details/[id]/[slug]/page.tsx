@@ -1,4 +1,9 @@
 import Section from "@/components/scholarship-details/scholarship-section";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Scholarship Details",
+};
 
 const ScholarshipDetailsPage = async ({
   params,

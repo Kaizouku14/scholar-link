@@ -1,5 +1,10 @@
 import PageBreadCrumb from "@/components/breadcrumbs/page-header";
 import Mail from "./_components/mail";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Mail",
+};
 
 const Pages = () => {
   return (
