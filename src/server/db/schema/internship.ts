@@ -4,6 +4,7 @@ import { createTable } from "../schema";
 import { DEPARTMENTS } from "@/constants/departments";
 import { STATUS } from "@/constants/status";
 import { DOCUMENTS } from "@/constants/document-types";
+import { sql } from "drizzle-orm";
 
 export const internship = createTable("internship", {
   internshipId: text("internship_id").primaryKey(),
@@ -17,7 +18,7 @@ export const internship = createTable("internship", {
   status: text("status", { enum: STATUS }).notNull(),
 });
 
-export const interns = createTable("interns", {
+export const intern = createTable("interns", {
   internsId: text("interns_id").primaryKey(),
   userId: text("user_id")
     .notNull()
@@ -25,21 +26,27 @@ export const interns = createTable("interns", {
   internshipId: text("internship_id")
     .notNull()
     .references(() => internship.internshipId, { onDelete: "cascade" }),
-  applicationDate: integer("application_date", { mode: "timestamp" }).notNull(),
+  applicationDate: integer("application_date", { mode: "timestamp" }).notNull(), //To Consider
   approvalStatus: text("approval_status", { enum: STATUS }).notNull(),
   completedHours: integer("completed_hours").notNull().default(0),
 });
 
-export const internship_submissions = createTable("submissions", {
+export const documents = createTable("documents", {
   submissionId: text("submission_id").primaryKey(),
   internId: text("intern_id")
     .notNull()
-    .references(() => interns.internsId, { onDelete: "cascade" }),
+    .references(() => intern.internsId, { onDelete: "cascade" }),
   documentType: text("documentType", { enum: DOCUMENTS }).notNull(),
   submittedAt: integer("submitted_at", { mode: "timestamp" }).notNull(),
   documentUrl: text("document_url").notNull(),
   documentKey: text("document_key").notNull(),
   reviewStatus: text("review-status", { enum: STATUS }).notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" }).default(
+    sql`(unixepoch())`,
+  ),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).$onUpdateFn(
+    () => new Date(),
+  ),
 });
 
 export const company = createTable("company", {

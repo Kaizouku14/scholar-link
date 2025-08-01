@@ -1,5 +1,6 @@
 import PageBreadCrumb from "@/components/breadcrumbs/page-header";
 import { type Metadata } from "next";
+import DocumentsHeader from "./_components/header";
 
 export const metadata: Metadata = {
   title: "Documents",
@@ -7,8 +8,9 @@ export const metadata: Metadata = {
 
 const Page = () => {
   return (
-    <div>
+    <div className="spacy-y-4 mx-auto w-full px-2">
       <PageBreadCrumb currentPage="Documents" />
+      <DocumentsHeader />
     </div>
   );
 };
