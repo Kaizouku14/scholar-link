@@ -22,12 +22,12 @@ const ProgressOverview = () => {
                 <div className="hidden rounded-lg bg-blue-100 p-2 md:block dark:bg-blue-900/30">
                   <TrendingUp className="text-primary h-6 w-6" />
                 </div>
-                <div>
-                  <h1 className="bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-3xl font-bold text-transparent dark:from-white dark:to-gray-300">
+                <div className="text-center md:text-start">
+                  <h1 className="bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-2xl font-bold text-transparent md:text-3xl dark:from-white dark:to-gray-300">
                     Progress Overview
                   </h1>
                   <p className="text-muted-foreground mt-1 text-sm">
-                    Track your internship completion journey
+                    Track your internship completion journey.
                   </p>
                 </div>
               </div>

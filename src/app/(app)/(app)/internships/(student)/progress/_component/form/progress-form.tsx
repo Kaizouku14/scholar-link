@@ -12,13 +12,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CalendarIcon, Clock, Plus } from "lucide-react";
 import { format } from "date-fns";
@@ -28,7 +22,7 @@ const ProgressForm = () => {
   const form = useForm<ProgressFormSchema>({
     resolver: zodResolver(progressFormSchema),
     defaultValues: {
-      date: undefined,
+      date: new Date(),
       hoursCompleted: 0,
     },
   });
@@ -62,7 +56,6 @@ const ProgressForm = () => {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <div className="space-y-4">
-              {/* Date Field */}
               <FormField
                 control={form.control}
                 name="date"
@@ -70,46 +63,27 @@ const ProgressForm = () => {
                   <FormItem>
                     <FormLabel className="flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
                       <CalendarIcon className="text-primary h-4 w-4" />
-                      Deadline
+                      Current Date
                     </FormLabel>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            variant="outline"
-                            className={cn(
-                              "h-11 w-full justify-start border-gray-200 bg-white text-left font-normal transition-all duration-200 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800/50 dark:hover:bg-gray-700/50",
-                              !field.value && "text-muted-foreground",
-                            )}
-                          >
-                            <div className="flex flex-1 items-center gap-2">
-                              {field.value ? (
-                                <>
-                                  <div className="h-2 w-2 rounded-full bg-blue-500"></div>
-                                  <span className="font-medium">
-                                    {format(field.value, "PPP")}
-                                  </span>
-                                </>
-                              ) : (
-                                <>
-                                  <div className="h-2 w-2 rounded-full bg-gray-300"></div>
-                                  <span>Pick a deadline date</span>
-                                </>
-                              )}
-                            </div>
-                            <CalendarIcon className="h-4 w-4 opacity-50" />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={field.value}
-                          onSelect={field.onChange}
-                          className="rounded-md border shadow-md"
-                        />
-                      </PopoverContent>
-                    </Popover>
+
+                    <FormControl>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className={cn(
+                          "h-11 w-full justify-start border-gray-200 bg-white text-left font-normal transition-all duration-200 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800/50 dark:hover:bg-gray-700/50",
+                          !field.value && "text-muted-foreground",
+                        )}
+                      >
+                        <div className="flex flex-1 items-center gap-2">
+                          <div className="h-2 w-2 rounded-full bg-blue-500"></div>
+                          <span className="font-medium">
+                            {format(field.value, "PPP")}
+                          </span>
+                        </div>
+                        <CalendarIcon className="h-4 w-4 opacity-50" />
+                      </Button>
+                    </FormControl>
                     <FormMessage className="text-xs" />
                   </FormItem>
                 )}
