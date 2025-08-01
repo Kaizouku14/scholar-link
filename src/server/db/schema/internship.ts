@@ -3,7 +3,7 @@ import { user } from "./auth";
 import { createTable } from "../schema";
 import { DEPARTMENTS } from "@/constants/departments";
 import { STATUS } from "@/constants/status";
-import { DOCUMENTS } from "@/constants/document-types";
+import { DOCUMENTS } from "@/constants/documents";
 import { sql } from "drizzle-orm";
 
 export const internship = createTable("internship", {
@@ -37,7 +37,8 @@ export const documents = createTable("documents", {
     .notNull()
     .references(() => intern.internsId, { onDelete: "cascade" }),
   documentType: text("documentType", { enum: DOCUMENTS }).notNull(),
-  submittedAt: integer("submitted_at", { mode: "timestamp" }).notNull(),
+  submittedAt: integer("submitted_at", { mode: "timestamp" }),
+  deadline: integer("deadline", { mode: "timestamp" }),
   documentUrl: text("document_url").notNull(),
   documentKey: text("document_key").notNull(),
   reviewStatus: text("review-status", { enum: STATUS }).notNull(),

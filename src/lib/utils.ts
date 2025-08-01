@@ -62,3 +62,25 @@ export const isActiveRoute = (
     currentPath.charAt(itemUrl.length) === "/"
   );
 };
+
+/**
+ * Check if deadline is within 7 days
+ * @returns {boolean} Whether deadline is approaching
+ */
+export const isDeadlineApproaching = (deadline: Date) => {
+  const today = new Date();
+  const timeDiff = deadline.getTime() - today.getTime();
+  const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+  return daysDiff <= 7 && daysDiff > 0;
+};
+
+export const isDeadlinePassed = (deadline: Date) => {
+  const today = new Date();
+  return deadline < today;
+};
+
+export const calculateDaysLeft = (deadline: Date) => {
+  const today = new Date();
+  const diffTime = deadline.getTime() - today.getTime();
+  return Math.abs(Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
+};

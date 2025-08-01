@@ -24,6 +24,7 @@ import type { QueryObserverResult } from "@tanstack/react-query";
 import { format } from "date-fns";
 import ActivateProgram from "../dialog/activate-program";
 import type { submissionType } from "@/constants/submittion-type";
+import { isDeadlineApproaching, isDeadlinePassed } from "@/lib/utils";
 
 interface ScholarshipCardProps {
   programId: string;
@@ -49,23 +50,6 @@ const ScholarshipCard = ({
 }) => {
   const { mutateAsync: disableProgram } =
     api.scholarships.disableScholarshipProgram.useMutation();
-
-  /**
-   * Check if deadline is within 7 days
-   * @returns {boolean} Whether deadline is approaching
-   */
-  const isDeadlineApproaching = () => {
-    const today = new Date();
-    const timeDiff = data.deadline.getTime() - today.getTime();
-    const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
-    return daysDiff <= 7 && daysDiff > 0;
-  };
-
-  // Check if deadline has passed
-  const isDeadlinePassed = () => {
-    const today = new Date();
-    return data.deadline < today;
-  };
 
   const handleDisableProgram = () => {
     toast.promise(
@@ -116,12 +100,12 @@ const ScholarshipCard = ({
                 >
                   {data.isActive ? "Active" : "Inactive"}
                 </Badge>
-                {isDeadlineApproaching() && (
+                {isDeadlineApproaching(data.deadline) && (
                   <Badge variant="destructive" className="text-xs">
                     Deadline Soon
                   </Badge>
                 )}
-                {isDeadlinePassed() && (
+                {isDeadlinePassed(data.deadline) && (
                   <Badge
                     variant="outline"
                     className="text-muted-foreground text-xs"
@@ -151,9 +135,9 @@ const ScholarshipCard = ({
             </div>
             <span
               className={`font-medium ${
-                isDeadlinePassed()
+                isDeadlinePassed(data.deadline)
                   ? "text-destructive"
-                  : isDeadlineApproaching()
+                  : isDeadlineApproaching(data.deadline)
                     ? "text-primary"
                     : "text-foreground"
               }`}
@@ -202,9 +186,11 @@ const ScholarshipCard = ({
             <Button
               size="lg"
               className="w-full cursor-pointer"
-              disabled={isDeadlinePassed()}
+              disabled={isDeadlinePassed(data.deadline)}
             >
-              {isDeadlinePassed() ? "Application Closed" : "View Details"}
+              {isDeadlinePassed(data.deadline)
+                ? "Application Closed"
+                : "View Details"}
             </Button>
 
             {data.isActive ? (
