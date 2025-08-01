@@ -3,7 +3,7 @@ import Mail from "./_components/mail";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Mail",
+  title: "Mails",
 };
 
 const Pages = () => {

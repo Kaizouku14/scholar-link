@@ -62,7 +62,6 @@ export enum PageRoutes {
 
   // Students
   INTERNSHIPS_PROGRESS = `${INTERNSHIPS}/progress`,
-  INTERNSHIPS_PROGRESS_DETAILS = `${INTERNSHIPS_PROGRESS}/details`,
   INTERNSHIPS_DOCUMENTS = `${INTERNSHIPS}/documents`,
 
   // Coordinators only

@@ -1,9 +1,13 @@
+"use client";
+
 import { Progress } from "@/components/ui/progress";
 import { Card, CardContent } from "@/components/ui/card";
 import { Clock, CheckCircle, CalendarDays, TrendingUp } from "lucide-react";
 import ProgressForm from "./form/progress-form";
+import { useState } from "react";
 
 const ProgressOverview = () => {
+  const [progress, setProgress] = useState(120);
   const TOTAL_HOURS_NEED = 240;
   const TOTAL_PROGRESS = 120;
   const TOTAL_PERCENTAGE = 50;
@@ -11,7 +15,7 @@ const ProgressOverview = () => {
 
   return (
     <div className="mx-auto w-full">
-      <Card className="border-border border bg-gradient-to-br from-white to-gray-50/50 dark:from-gray-900 dark:to-gray-800/50">
+      <Card>
         <CardContent className="md:flex md:space-x-6">
           <div className="mb-6 block md:hidden">
             <ProgressForm />
@@ -40,7 +44,7 @@ const ProgressOverview = () => {
                     Hours Completed
                   </span>
                   <span className="text-muted-foreground rounded-full bg-gray-100 px-3 py-1 text-xs dark:bg-gray-700">
-                    {TOTAL_PROGRESS} / {TOTAL_HOURS_NEED}
+                    {progress} / {TOTAL_HOURS_NEED}
                   </span>
                 </div>
 
