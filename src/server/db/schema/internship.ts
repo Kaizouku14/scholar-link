@@ -31,19 +31,20 @@ export const intern = createTable("interns", {
   completedHours: integer("completed_hours").notNull().default(0),
 });
 
-export const documentDeadlines = createTable("document_deadline", {
-  documentType: text("documentType", { enum: DOCUMENTS }).notNull(),
-  deadline: integer("deadline", { mode: "timestamp" }),
+export const document = createTable("document", {
+  documentType: text("document_type", { enum: DOCUMENTS }).primaryKey(),
+  deadline: integer("deadline", { mode: "timestamp" }).notNull(),
 });
 
-export const documents = createTable("documents", {
+export const submission = createTable("submission", {
   submissionId: text("submission_id").primaryKey(),
-  internId: text("intern_id")
+  internId: text("intern_id").references(() => intern.internsId, {
+    onDelete: "cascade",
+  }),
+  documentType: text("document_type", { enum: DOCUMENTS })
     .notNull()
-    .references(() => intern.internsId, { onDelete: "cascade" }),
-  documentType: text("documentType", { enum: DOCUMENTS }),
+    .references(() => document.documentType, { onDelete: "cascade" }),
   submittedAt: integer("submitted_at", { mode: "timestamp" }),
-  deadline: integer("deadline", { mode: "timestamp" }),
   documentUrl: text("document_url"),
   documentKey: text("document_key"),
   reviewStatus: text("review-status", { enum: STATUS }),
