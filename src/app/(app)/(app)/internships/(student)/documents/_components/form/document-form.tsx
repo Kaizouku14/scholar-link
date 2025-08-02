@@ -39,6 +39,7 @@ const DocumentForm = () => {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const { data } = api.internships.getAllDocuments.useQuery();
   const { mutateAsync: uploadDocument } =
     api.internships.insertStudentDocument.useMutation();
   const onSubmit = async (data: DocumentSchema) => {
@@ -52,8 +53,8 @@ const DocumentForm = () => {
     toast.promise(
       uploadDocument({
         documentType: data.documentType,
-        documentUrl: "afsafsfsaf",
-        documentKey: "fasdfasfafa",
+        documentUrl: uploadedDocument.url,
+        documentKey: uploadedDocument.key,
       }),
       {
         success: "Document uploaded successfully!",
@@ -94,11 +95,12 @@ const DocumentForm = () => {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent className="bg-popover text-popover-foreground">
-                      {DOCUMENTS.map((type) => (
-                        <SelectItem key={type} value={type}>
-                          {DOCUMENT_LABELS[type]}
-                        </SelectItem>
-                      ))}
+                      {data &&
+                        data?.map((type, index) => (
+                          <SelectItem key={index} value={type.documentType}>
+                            {DOCUMENT_LABELS[type.documentType]}
+                          </SelectItem>
+                        ))}
                     </SelectContent>
                   </Select>
                   <FormMessage className="text-destructive" />

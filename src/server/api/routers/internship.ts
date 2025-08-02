@@ -2,6 +2,7 @@ import { insertDocument } from "@/lib/api/internship/student/documents/mutation"
 import { createTRPCRouter, protectedRoute } from "../trpc";
 import z from "zod";
 import { DOCUMENTS } from "@/constants/documents";
+import { getAllDocumentsAvailable } from "@/lib/api/internship/student/documents/query";
 
 export const internshipRouter = createTRPCRouter({
   //Student Routes
@@ -23,4 +24,9 @@ export const internshipRouter = createTRPCRouter({
 
       return await insertDocument(document);
     }),
+
+  //global
+  getAllDocuments: protectedRoute.query(async () => {
+    return await getAllDocumentsAvailable();
+  }),
 });
