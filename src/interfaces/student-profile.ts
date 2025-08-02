@@ -11,7 +11,6 @@ export interface StudentProfileType {
   address: string;
   contact: string;
   dateOfBirth: Date;
-  course: courseType;
   section: SectionType;
   yearLevel: YearLevelType;
 }

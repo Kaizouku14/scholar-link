@@ -21,10 +21,10 @@ import { useRouter } from "next/navigation";
 import { PageRoutes } from "@/constants/page-routes";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { profile } from "console";
 
 export interface UserItem {
   name?: string;
+  surname?: string;
   email?: string;
   role?: string;
   profile?: string;
@@ -63,9 +63,10 @@ export const NavUser = ({ user }: { user?: UserItem }) => {
             >
               <div className="flex w-full items-center">
                 <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
-                  <span className="truncate font-semibold">
-                    {user?.name ?? "User"}
-                  </span>
+                  <div className="flex gap-x-1 truncate font-semibold">
+                    <span> {user?.name ?? "John"}</span>
+                    <span> {user?.surname ?? "Doe"}</span>
+                  </div>
                   <span className="truncate text-xs">
                     {user?.email ?? "Email"}
                   </span>

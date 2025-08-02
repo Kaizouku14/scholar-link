@@ -16,7 +16,6 @@ export const profileSetupSchema = z.object({
 });
 
 export const studentSetupSchema = z.object({
-  course: z.enum(COURSES),
   section: z.enum(SECTIONS),
   yearLevel: z.enum(YEAR_LEVEL),
 });

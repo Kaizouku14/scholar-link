@@ -45,7 +45,6 @@ export const userRouter = createTRPCRouter({
         address: z.string(),
         gender: z.enum(GENDERS),
         dateOfBirth: z.date(),
-        course: z.enum(COURSES),
         section: z.enum(SECTIONS),
         yearLevel: z.enum(YEAR_LEVEL),
       }),

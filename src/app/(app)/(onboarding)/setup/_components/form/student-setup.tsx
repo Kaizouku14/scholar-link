@@ -21,7 +21,7 @@ import { YEAR_LEVEL } from "@/constants/year-level";
 import SubmitButton from "@/components/forms/submit-button";
 import type { CombinedSetupSchema } from "./schema";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, BookOpen, GraduationCap, Users } from "lucide-react";
+import { ArrowLeft, GraduationCap, Users } from "lucide-react";
 
 interface StudentSetupFormProps {
   control: Control<CombinedSetupSchema>;
@@ -93,34 +93,6 @@ const StudentSetupForm = ({
           )}
         />
       </div>
-
-      <FormField
-        control={control}
-        name="course"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel className="flex items-center gap-2">
-              <BookOpen className="h-4 w-4" />
-              Course
-            </FormLabel>
-            <Select onValueChange={field.onChange} value={field.value}>
-              <FormControl>
-                <SelectTrigger className="w-full overflow-hidden">
-                  <SelectValue placeholder="Select your course" />
-                </SelectTrigger>
-              </FormControl>
-              <SelectContent>
-                {COURSES.map((course) => (
-                  <SelectItem key={course} value={course}>
-                    {course}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
 
       <div className="mt-4 flex justify-between gap-4">
         <Button

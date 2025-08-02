@@ -37,7 +37,6 @@ const CombinedSetupForm = ({
       address: "",
       contact: "",
       dateOfBirth: undefined,
-      course: undefined,
       section: undefined,
       yearLevel: undefined,
     },
