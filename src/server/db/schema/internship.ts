@@ -36,8 +36,8 @@ export const document = createTable("document", {
   deadline: integer("deadline", { mode: "timestamp" }).notNull(),
 });
 
-export const submission = createTable("submission", {
-  submissionId: text("submission_id").primaryKey(),
+export const internDocuments = createTable("intern_documents", {
+  documentsId: text("documents_id").primaryKey(),
   internId: text("intern_id").references(() => intern.internsId, {
     onDelete: "cascade",
   }),
@@ -47,7 +47,7 @@ export const submission = createTable("submission", {
   submittedAt: integer("submitted_at", { mode: "timestamp" }),
   documentUrl: text("document_url"),
   documentKey: text("document_key"),
-  reviewStatus: text("review-status", { enum: STATUS }),
+  reviewStatus: text("review_status", { enum: STATUS }).default("pending"),
   createdAt: integer("created_at", { mode: "timestamp" }).default(
     sql`(unixepoch())`,
   ),

@@ -1,7 +1,7 @@
 import type { documentsType } from "@/constants/documents";
 import { generateUUID } from "@/lib/utils";
 import { db } from "@/server/db";
-import { submission as SubmissionTable } from "@/server/db/schema/internship";
+import { internDocuments as internDocumentsTable } from "@/server/db/schema/internship";
 import { TRPCError } from "@trpc/server";
 
 export const insertDocument = async ({
@@ -16,16 +16,16 @@ export const insertDocument = async ({
   documentKey: string;
 }) => {
   try {
-    const response = await db
-      .insert(SubmissionTable)
+    await db
+      .insert(internDocumentsTable)
       .values({
-        submissionId: generateUUID(),
+        documentsId: generateUUID(),
         internId: userId,
-        documentType: documentType,
-        documentUrl: documentUrl,
-        documentKey: documentKey,
+        documentType,
+        documentUrl,
+        documentKey,
+        submittedAt: new Date(),
       })
-      .returning()
       .execute();
   } catch (error) {
     throw new TRPCError({

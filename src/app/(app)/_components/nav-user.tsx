@@ -67,7 +67,7 @@ export const NavUser = ({ user }: { user?: UserItem }) => {
                     <span> {user?.name ?? "John"}</span>
                     <span> {user?.surname ?? "Doe"}</span>
                   </div>
-                  <span className="truncate text-xs">
+                  <span className="text-muted-foreground truncate text-xs">
                     {user?.email ?? "Email"}
                   </span>
                 </div>
