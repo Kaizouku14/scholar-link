@@ -32,15 +32,19 @@ export const intern = createTable("interns", {
 });
 
 export const document = createTable("document", {
-  documentType: text("document_type", { enum: DOCUMENTS }).primaryKey(),
+  documentType: text("document_type", { enum: DOCUMENTS })
+    .notNull()
+    .primaryKey(),
   deadline: integer("deadline", { mode: "timestamp" }).notNull(),
 });
 
 export const internDocuments = createTable("intern_documents", {
   documentsId: text("documents_id").primaryKey(),
-  internId: text("intern_id").references(() => intern.internsId, {
-    onDelete: "cascade",
-  }),
+  internId: text("intern_id")
+    .notNull()
+    .references(() => user.id, {
+      onDelete: "cascade",
+    }),
   documentType: text("document_type", { enum: DOCUMENTS })
     .notNull()
     .references(() => document.documentType, { onDelete: "cascade" }),

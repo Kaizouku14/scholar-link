@@ -28,6 +28,7 @@ export const insertDocument = async ({
       })
       .execute();
   } catch (error) {
+    console.error("Insert error:", error);
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
       message: "Failed to insert document," + (error as Error).message,

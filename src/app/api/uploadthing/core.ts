@@ -7,17 +7,17 @@ const f = createUploadthing();
 export const ourFileRouter = {
   FileUploader: f({
     image: { maxFileSize: "4MB", maxFileCount: 4 },
-    "application/pdf": { maxFileSize: "16MB", maxFileCount: 4 },
+    "application/pdf": { maxFileSize: "8MB", maxFileCount: 1 },
     "application/vnd.openxmlformats-officedocument.wordprocessingml.document": {
-      maxFileSize: "16MB",
-      maxFileCount: 4,
+      maxFileSize: "8MB",
+      maxFileCount: 1,
     }, // .docx
-    "application/msword": { maxFileSize: "16MB", maxFileCount: 5 }, // .doc
+    "application/msword": { maxFileSize: "8MB", maxFileCount: 1 }, // .doc
     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {
       maxFileSize: "16MB",
-      maxFileCount: 4,
+      maxFileCount: 1,
     }, // .xlsx
-    "application/vnd.ms-excel": { maxFileSize: "16MB", maxFileCount: 4 }, // .xls
+    "application/vnd.ms-excel": { maxFileSize: "16MB", maxFileCount: 1 }, // .xls
   })
     .middleware(async ({ req }) => {
       const session = await auth.api.getSession({ headers: req.headers });

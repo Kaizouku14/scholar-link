@@ -22,8 +22,11 @@ import { Button } from "@/components/ui/button";
 import { FileTextIcon, Upload, XIcon } from "lucide-react";
 import { useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { DOCUMENTS } from "@/constants/documents";
+import { DOCUMENT_LABELS, DOCUMENTS } from "@/constants/documents";
 import SubmitButton from "@/components/forms/submit-button";
+import { api } from "@/trpc/react";
+import { toast } from "sonner";
+import { uploadSingleFile } from "@/lib/uploadthing";
 
 const DocumentForm = () => {
   const form = useForm<DocumentSchema>({
@@ -36,8 +39,31 @@ const DocumentForm = () => {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const onSubmit = (data: DocumentSchema) => {
-    console.log(data);
+  const { mutateAsync: uploadDocument } =
+    api.internships.insertStudentDocument.useMutation();
+  const onSubmit = async (data: DocumentSchema) => {
+    const toastId = toast.loading("Uploading document...");
+    const uploadedDocument = await uploadSingleFile(data.documentFile);
+    if (!uploadedDocument?.url || !uploadedDocument?.key) {
+      toast.error("Failed to upload document. Please try again.");
+      return;
+    }
+
+    toast.promise(
+      uploadDocument({
+        documentType: data.documentType,
+        documentUrl: "afsafsfsaf",
+        documentKey: "fasdfasfafa",
+      }),
+      {
+        success: "Document uploaded successfully!",
+        error: (error: unknown) => {
+          return (error as Error).message;
+        },
+      },
+    );
+
+    toast.dismiss(toastId);
   };
 
   return (
@@ -70,7 +96,7 @@ const DocumentForm = () => {
                     <SelectContent className="bg-popover text-popover-foreground">
                       {DOCUMENTS.map((type) => (
                         <SelectItem key={type} value={type}>
-                          {type}
+                          {DOCUMENT_LABELS[type]}
                         </SelectItem>
                       ))}
                     </SelectContent>
