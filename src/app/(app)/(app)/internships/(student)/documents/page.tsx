@@ -14,9 +14,9 @@ const Page = () => {
       <PageBreadCrumb currentPage="Documents" />
       <div className="flex gap-2">
         <UpcomingDeadlines />
-        <Documents />
+        <DocumentForm />
       </div>
-      <DocumentForm />
+      <Documents />
     </div>
   );
 };

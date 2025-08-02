@@ -31,17 +31,22 @@ export const intern = createTable("interns", {
   completedHours: integer("completed_hours").notNull().default(0),
 });
 
+export const documentDeadlines = createTable("document_deadline", {
+  documentType: text("documentType", { enum: DOCUMENTS }).notNull(),
+  deadline: integer("deadline", { mode: "timestamp" }),
+});
+
 export const documents = createTable("documents", {
   submissionId: text("submission_id").primaryKey(),
   internId: text("intern_id")
     .notNull()
     .references(() => intern.internsId, { onDelete: "cascade" }),
-  documentType: text("documentType", { enum: DOCUMENTS }).notNull(),
+  documentType: text("documentType", { enum: DOCUMENTS }),
   submittedAt: integer("submitted_at", { mode: "timestamp" }),
   deadline: integer("deadline", { mode: "timestamp" }),
-  documentUrl: text("document_url").notNull(),
-  documentKey: text("document_key").notNull(),
-  reviewStatus: text("review-status", { enum: STATUS }).notNull(),
+  documentUrl: text("document_url"),
+  documentKey: text("document_key"),
+  reviewStatus: text("review-status", { enum: STATUS }),
   createdAt: integer("created_at", { mode: "timestamp" }).default(
     sql`(unixepoch())`,
   ),

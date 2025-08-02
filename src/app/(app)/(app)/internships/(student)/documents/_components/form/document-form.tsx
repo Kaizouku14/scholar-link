@@ -41,7 +41,7 @@ const DocumentForm = () => {
   };
 
   return (
-    <Card className="w-full max-w-lg">
+    <Card className="w-full">
       <CardHeader>
         <CardTitle className="text-foreground text-2xl font-bold">
           Upload Document
