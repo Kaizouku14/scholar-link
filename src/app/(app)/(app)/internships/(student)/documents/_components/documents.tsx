@@ -2,7 +2,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const Documents = () => {
   return (
-    <Tabs defaultValue="documents">
+    <Tabs defaultValue="documents" className="w-full">
       <TabsList className="gap-x-2 rounded">
         <TabsTrigger value="documents" className="rounded">
           My Documents

@@ -45,10 +45,10 @@ const UpcomingDeadlines = () => {
   ];
 
   return (
-    <Card>
+    <Card className="w-full max-w-md">
       <CardHeader>
         <CardTitle className="flex items-center gap-1.5 font-bold tracking-tight">
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
             <div className="bg-primary/20 flex h-11 w-11 items-center justify-center rounded-full">
               <Calendar className="text-primary h-5 w-5" />
             </div>
@@ -68,12 +68,11 @@ const UpcomingDeadlines = () => {
         {internshipDocuments.map((doc) => {
           const daysLeft = calculateDaysLeft(doc.deadline);
           const isApproaching = isDeadlineApproaching(doc.deadline);
-          const isPassed = isDeadlinePassed(doc.deadline);
 
           return (
             <div
               key={doc.id}
-              className="group border-border dark:bg-muted flex items-center gap-3 rounded-xl border bg-white p-4"
+              className="group border-border dark:bg-muted flex items-center gap-3 rounded-xl border bg-white p-2"
             >
               <div className="flex h-11 w-11 items-center justify-center rounded-full bg-green-100 transition group-hover:scale-105 dark:bg-green-900/40">
                 <FileText className="h-5 w-5 text-green-700 dark:text-green-300" />
@@ -94,16 +93,11 @@ const UpcomingDeadlines = () => {
                   <span
                     className={cn(
                       "font-semibold",
-                      isPassed
-                        ? "text-red-500"
-                        : isApproaching
-                          ? "text-yellow-600 dark:text-yellow-400"
-                          : "text-foreground",
+                      isApproaching ? "text-primary" : "text-muted-foreground",
                     )}
                   >
                     {Math.abs(daysLeft)} day
-                    {Math.abs(daysLeft) !== 1 ? "s" : ""}{" "}
-                    {isPassed ? "overdue" : "left"}
+                    {Math.abs(daysLeft) !== 1 ? "s" : ""} left
                   </span>
                 </span>
               </div>
