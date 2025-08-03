@@ -1,16 +1,62 @@
-import { db } from "@/server/db";
+import { db, eq, and, isNull, desc } from "@/server/db";
 import { TRPCError } from "@trpc/server";
-import { document as DocumentsTable } from "@/server/db/schema/internship";
+import {
+  document as DocumentsTable,
+  internDocuments as InternDocumentsTable,
+} from "@/server/db/schema/internship";
 
 export const getAllDocumentsAvailable = async () => {
   try {
-    const response = await db.select().from(DocumentsTable).execute();
+    const response = await db
+      .select({
+        documentType: DocumentsTable.documentType,
+      })
+      .from(DocumentsTable)
+      .execute();
     return response;
   } catch (error) {
-    console.error("Get error:", error);
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
       message: "Failed to get documents," + (error as Error).message,
+    });
+  }
+};
+
+export const getAllUpcomingDeadlines = async ({
+  userId,
+}: {
+  userId: string;
+}) => {
+  try {
+    const response = await db
+      .select({
+        documentType: DocumentsTable.documentType,
+        deadline: DocumentsTable.deadline,
+      })
+      .from(DocumentsTable)
+      .leftJoin(
+        InternDocumentsTable,
+        and(
+          eq(DocumentsTable.documentType, InternDocumentsTable.documentType),
+          eq(InternDocumentsTable.internId, userId),
+        ),
+      )
+      //  If you only want upcoming documents (i.e., deadline > now):
+      // .where(
+      //   and(
+      //     isNull(InternDocumentsTable.submittedAt),
+      //     gt(DocumentsTable.deadline, Math.floor(Date.now() / 1000))
+      //   )
+      // );
+      .where(isNull(InternDocumentsTable.submittedAt))
+      .orderBy(desc(DocumentsTable.deadline));
+
+    return response ?? [];
+  } catch (error) {
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message:
+        "Failed to get all upcoming deadlines," + (error as Error).message,
     });
   }
 };
