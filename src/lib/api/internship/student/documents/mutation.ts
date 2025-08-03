@@ -1,6 +1,6 @@
 import type { documentsType } from "@/constants/documents";
 import { generateUUID } from "@/lib/utils";
-import { db } from "@/server/db";
+import { db, eq, and } from "@/server/db";
 import { internDocuments as internDocumentsTable } from "@/server/db/schema/internship";
 import { TRPCError } from "@trpc/server";
 
@@ -16,17 +16,47 @@ export const insertDocument = async ({
   documentKey: string;
 }) => {
   try {
-    await db
-      .insert(internDocumentsTable)
-      .values({
-        documentsId: generateUUID(),
-        internId: userId,
-        documentType,
-        documentUrl,
-        documentKey,
-        submittedAt: new Date(),
+    const documentExist = await db
+      .select({
+        documentType: internDocumentsTable.documentType,
       })
+      .from(internDocumentsTable)
+      .where(
+        and(
+          eq(internDocumentsTable.documentType, documentType),
+          eq(internDocumentsTable.internId, userId),
+        ),
+      )
       .execute();
+
+    if (documentExist.length > 0) {
+      await db
+        .update(internDocumentsTable)
+        .set({
+          documentKey,
+          documentUrl,
+          submittedAt: new Date(),
+        })
+        .where(
+          and(
+            eq(internDocumentsTable.documentType, documentType),
+            eq(internDocumentsTable.internId, userId),
+          ),
+        )
+        .execute();
+    } else {
+      await db
+        .insert(internDocumentsTable)
+        .values({
+          documentsId: generateUUID(),
+          internId: userId,
+          documentType,
+          documentUrl,
+          documentKey,
+          submittedAt: new Date(),
+        })
+        .execute();
+    }
   } catch (error) {
     console.error("Insert error:", error);
     throw new TRPCError({

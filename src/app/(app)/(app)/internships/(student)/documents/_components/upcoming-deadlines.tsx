@@ -7,7 +7,7 @@ import { calculateDaysLeft, cn, isDeadlineApproaching } from "@/lib/utils";
 import { api } from "@/trpc/react";
 import { Calendar, FileText } from "lucide-react";
 
-const UpcomingDeadlines = () => {
+const UpcomingDeadlines = ({}) => {
   const { data: internshipDocuments } =
     api.internships.getAllUpcomingDeadlines.useQuery();
 
@@ -39,7 +39,7 @@ const UpcomingDeadlines = () => {
             </div>
           </div>
         ) : (
-          <ScrollArea className="border-border h-50 rounded-xl border p-2">
+          <ScrollArea className="h-50 p-2">
             {internshipDocuments?.map((doc, index) => {
               const daysLeft = calculateDaysLeft(doc.deadline);
               const isApproaching = isDeadlineApproaching(doc.deadline);
