@@ -110,7 +110,8 @@ const DocumentList = ({ documents }: { documents: DocumentCardProps }) => {
 
           <Button
             variant="outline"
-            className="border-input text-foreground hover:bg-accent mt-2 h-10 w-full bg-transparent font-medium transition-all duration-200 hover:scale-[1.02]"
+            className="border-input text-foreground hover:bg-accent mt-2 h-10 w-full cursor-pointer bg-transparent font-medium transition-all duration-200 hover:scale-[1.02]"
+            onClick={() => window.open(documents.documentUrl, "_blank")}
           >
             <EyeIcon className="mr-2 h-4 w-4" />
             View Document

@@ -57,7 +57,7 @@ const Documents = () => {
       >
         <h3 className="mb-4 text-lg font-semibold">All Documents</h3>
         {filteredDocuments.all.length === 0 ? (
-          <div className="flex h-full items-center justify-center">
+          <div className="flex h-74 items-center justify-center">
             <p className="text-muted-foreground">No documents uploaded yet.</p>
           </div>
         ) : (
@@ -75,11 +75,11 @@ const Documents = () => {
       >
         <h3 className="mb-4 text-lg font-semibold">Pending Review</h3>
         {filteredDocuments.pending.length === 0 ? (
-          <div className="flex h-full items-center justify-center">
+          <div className="flex h-74 items-center justify-center">
             <p className="text-muted-foreground">No pending documents.</p>
           </div>
         ) : (
-          <ScrollArea className="flex h-full gap-2">
+          <ScrollArea className="flex h-74 gap-2">
             {filteredDocuments.pending.map((doc) => (
               <DocumentList key={doc.documentId} documents={doc} />
             ))}
@@ -93,11 +93,11 @@ const Documents = () => {
       >
         <h3 className="mb-4 text-lg font-semibold">Approved Documents</h3>
         {filteredDocuments.approved.length === 0 ? (
-          <div className="flex h-full items-center justify-center">
+          <div className="flex h-74 items-center justify-center">
             <p className="text-muted-foreground">No approved documents yet.</p>
           </div>
         ) : (
-          <ScrollArea className="flex h-full gap-2">
+          <ScrollArea className="flex h-74 gap-2">
             {filteredDocuments.approved.map((doc) => (
               <DocumentList key={doc.documentId} documents={doc} />
             ))}
