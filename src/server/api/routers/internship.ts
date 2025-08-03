@@ -5,6 +5,7 @@ import { DOCUMENTS } from "@/constants/documents";
 import {
   getAllDocumentsAvailable,
   getAllUpcomingDeadlines,
+  getAllUploadedDocuments,
 } from "@/lib/api/internship/student/documents/query";
 
 export const internshipRouter = createTRPCRouter({
@@ -27,6 +28,9 @@ export const internshipRouter = createTRPCRouter({
 
       return await insertDocument(document);
     }),
+  getUserUploadedDocuments: protectedRoute.query(async ({ ctx }) => {
+    return await getAllUploadedDocuments({ userId: ctx.session?.user.id! });
+  }),
 
   //global
   getAllDocuments: protectedRoute.query(async () => {

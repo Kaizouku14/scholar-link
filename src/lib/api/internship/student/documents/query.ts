@@ -60,3 +60,30 @@ export const getAllUpcomingDeadlines = async ({
     });
   }
 };
+
+export const getAllUploadedDocuments = async ({
+  userId,
+}: {
+  userId: string;
+}) => {
+  try {
+    const response = await db
+      .select({
+        docementId: InternDocumentsTable.documentsId,
+        documentType: InternDocumentsTable.documentType,
+        documentUrl: InternDocumentsTable.documentUrl,
+        submittedAt: InternDocumentsTable.submittedAt,
+        status: InternDocumentsTable.reviewStatus,
+      })
+      .from(InternDocumentsTable)
+      .where(eq(InternDocumentsTable.internId, userId))
+      .execute();
+
+    return response;
+  } catch (error) {
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "Failed to get documents," + (error as Error).message,
+    });
+  }
+};
