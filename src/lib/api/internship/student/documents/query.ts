@@ -30,7 +30,7 @@ export const getAllUpcomingDeadlines = async ({
   try {
     const response = await db
       .select({
-        documentType: DocumentsTable.documentType,
+        name: DocumentsTable.documentType,
         deadline: DocumentsTable.deadline,
       })
       .from(DocumentsTable)
