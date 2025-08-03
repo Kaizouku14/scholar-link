@@ -69,7 +69,7 @@ export const getAllUploadedDocuments = async ({
   try {
     const response = await db
       .select({
-        docementId: InternDocumentsTable.documentsId,
+        documentId: InternDocumentsTable.documentsId,
         documentType: InternDocumentsTable.documentType,
         documentUrl: InternDocumentsTable.documentUrl,
         submittedAt: InternDocumentsTable.submittedAt,
