@@ -1,6 +1,7 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { DOCUMENT_LABELS } from "@/constants/documents";
 import { calculateDaysLeft, cn, isDeadlineApproaching } from "@/lib/utils";
 import { api } from "@/trpc/react";
@@ -13,7 +14,7 @@ const UpcomingDeadlines = () => {
   return (
     <Card className="w-full max-w-md">
       <CardHeader>
-        <CardTitle className="flex items-center gap-1.5 font-bold tracking-tight">
+        <CardTitle className="flex items-center gap-1 font-bold tracking-tight">
           <div className="flex items-center gap-2">
             <div className="bg-primary/20 flex h-11 w-11 items-center justify-center rounded-full">
               <Calendar className="text-primary h-5 w-5" />
@@ -22,7 +23,7 @@ const UpcomingDeadlines = () => {
               <h2 className="text-foreground text-xl leading-tight font-semibold">
                 Upcoming Deadlines
               </h2>
-              <p className="text-muted-foreground text-sm">
+              <p className="text-muted-foreground m-0 p-0 text-sm">
                 Important dates to remember
               </p>
             </div>
@@ -30,13 +31,15 @@ const UpcomingDeadlines = () => {
         </CardTitle>
       </CardHeader>
 
-      <CardContent className="h-full space-y-3 pt-0">
+      <CardContent className="h-full pt-0">
         {!internshipDocuments || internshipDocuments.length === 0 ? (
           <div className="flex h-full items-center justify-center gap-2">
-            <div className="text-muted-foreground">No Upcoming Deadlines.</div>
+            <div className="text-muted-foreground text-sm">
+              No Upcoming Deadlines.
+            </div>
           </div>
         ) : (
-          <>
+          <ScrollArea className="border-border h-50 rounded-xl border p-2">
             {internshipDocuments?.map((doc, index) => {
               const daysLeft = calculateDaysLeft(doc.deadline);
               const isApproaching = isDeadlineApproaching(doc.deadline);
@@ -78,7 +81,7 @@ const UpcomingDeadlines = () => {
                 </div>
               );
             })}
-          </>
+          </ScrollArea>
         )}
       </CardContent>
     </Card>
