@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 const Page = () => {
   return (
-    <div className="mx-auto w-full space-y-4 px-2">
+    <div className="mx-auto h-auto w-full space-y-4 px-2 pb-12">
       <PageBreadCrumb currentPage="Documents" />
       <div className="flex gap-2">
         <UpcomingDeadlines />

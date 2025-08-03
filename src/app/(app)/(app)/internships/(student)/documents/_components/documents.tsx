@@ -4,6 +4,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { api } from "@/trpc/react";
 import { useMemo } from "react";
 import DocumentList, { type DocumentCardProps } from "./document-list";
+import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const Documents = () => {
   const { data: uploadedDocuments } =
@@ -32,17 +34,14 @@ const Documents = () => {
       approved: transformedDocuments.filter(
         (doc) => doc.status && doc.status.toLowerCase() === "approved",
       ),
-      rejected: transformedDocuments.filter(
-        (doc) => doc.status && doc.status.toLowerCase() === "rejected",
-      ),
     };
   }, [transformedDocuments]);
 
   return (
-    <Tabs defaultValue="documents" className="w-full">
+    <Tabs defaultValue="documents" className="h-96 w-full">
       <TabsList className="gap-x-2 rounded">
         <TabsTrigger value="documents" className="rounded">
-          My Documents ({filteredDocuments.all.length})
+          My Documents
         </TabsTrigger>
         <TabsTrigger value="pending" className="rounded">
           Pending ({filteredDocuments.pending.length})
@@ -58,13 +57,15 @@ const Documents = () => {
       >
         <h3 className="mb-4 text-lg font-semibold">All Documents</h3>
         {filteredDocuments.all.length === 0 ? (
-          <p className="text-muted-foreground">No documents uploaded yet.</p>
+          <div className="flex h-full items-center justify-center">
+            <p className="text-muted-foreground">No documents uploaded yet.</p>
+          </div>
         ) : (
-          <>
+          <ScrollArea className="flex h-74 gap-2">
             {filteredDocuments.all.map((doc) => (
               <DocumentList key={doc.documentId} documents={doc} />
             ))}
-          </>
+          </ScrollArea>
         )}
       </TabsContent>
 
@@ -74,13 +75,15 @@ const Documents = () => {
       >
         <h3 className="mb-4 text-lg font-semibold">Pending Review</h3>
         {filteredDocuments.pending.length === 0 ? (
-          <p className="text-muted-foreground">No pending documents.</p>
+          <div className="flex h-full items-center justify-center">
+            <p className="text-muted-foreground">No pending documents.</p>
+          </div>
         ) : (
-          <>
+          <ScrollArea className="flex h-full gap-2">
             {filteredDocuments.pending.map((doc) => (
               <DocumentList key={doc.documentId} documents={doc} />
             ))}
-          </>
+          </ScrollArea>
         )}
       </TabsContent>
 
@@ -90,13 +93,15 @@ const Documents = () => {
       >
         <h3 className="mb-4 text-lg font-semibold">Approved Documents</h3>
         {filteredDocuments.approved.length === 0 ? (
-          <p className="text-muted-foreground">No approved documents yet.</p>
+          <div className="flex h-full items-center justify-center">
+            <p className="text-muted-foreground">No approved documents yet.</p>
+          </div>
         ) : (
-          <>
+          <ScrollArea className="flex h-full gap-2">
             {filteredDocuments.approved.map((doc) => (
               <DocumentList key={doc.documentId} documents={doc} />
             ))}
-          </>
+          </ScrollArea>
         )}
       </TabsContent>
     </Tabs>
