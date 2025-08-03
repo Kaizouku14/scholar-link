@@ -40,39 +40,3 @@ export const uploadSingleFile = async (
     return;
   }
 };
-
-/**
- * Uploads multiple files using the FileUploader.
- *
- * @param files - The files to be uploaded. If undefined or empty, the function will return immediately.
- * @returns A promise that resolves to an array of objects containing the URL and key of each uploaded file, or undefined if the upload fails.
- *
- * The function attempts to upload the provided files and returns an array of objects containing the URL and key of each uploaded file.
- * In case of failure, it logs the error and shows a toast notification.
- */
-export const uploadMultipleFiles = async (
-  files: File[] | undefined,
-): Promise<
-  { url: string | undefined; key: string | undefined }[] | undefined
-> => {
-  if (!files || files.length === 0) return;
-
-  try {
-    const res = await uploadFiles("FileUploader", {
-      files: files,
-    });
-
-    if (!res || res.length === 0) {
-      toast.error("Failed to upload files. Please try again.");
-      return;
-    }
-
-    return res.map((file) => ({
-      url: file?.ufsUrl,
-      key: file?.key,
-    }));
-  } catch (error) {
-    console.error("Failed upload error:", error);
-    return;
-  }
-};

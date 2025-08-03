@@ -2,6 +2,7 @@ import type { documentsType } from "@/constants/documents";
 import { generateUUID } from "@/lib/utils";
 import { db, eq, and } from "@/server/db";
 import { internDocuments as internDocumentsTable } from "@/server/db/schema/internship";
+import { deleteFileIfExists } from "@/server/uploadthing";
 import { TRPCError } from "@trpc/server";
 
 export const insertDocument = async ({
@@ -18,7 +19,7 @@ export const insertDocument = async ({
   try {
     const documentExist = await db
       .select({
-        documentType: internDocumentsTable.documentType,
+        documentKey: internDocumentsTable.documentKey,
       })
       .from(internDocumentsTable)
       .where(
@@ -30,6 +31,11 @@ export const insertDocument = async ({
       .execute();
 
     if (documentExist.length > 0) {
+      const oldFileKey = documentExist[0]?.documentKey;
+      if (oldFileKey && oldFileKey !== documentKey) {
+        await deleteFileIfExists(oldFileKey);
+      }
+
       await db
         .update(internDocumentsTable)
         .set({
