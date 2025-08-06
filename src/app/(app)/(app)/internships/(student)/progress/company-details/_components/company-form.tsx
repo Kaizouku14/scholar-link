@@ -17,6 +17,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { companyformSchema, type CompanyFormSchema } from "./schema";
+import SubmitButton from "@/components/forms/submit-button";
 
 const CompanyForm = () => {
   const form = useForm<CompanyFormSchema>({
@@ -124,9 +125,11 @@ const CompanyForm = () => {
             />
           </div>
 
-          <Button type="submit" className="w-full">
-            Add Company
-          </Button>
+          <div className="flex justify-end">
+            <SubmitButton formState={form.formState} className="mt-4 w-40">
+              Add Company
+            </SubmitButton>
+          </div>
         </form>
       </Form>
     </div>
