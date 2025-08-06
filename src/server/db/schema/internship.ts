@@ -1,7 +1,6 @@
 import { integer, text } from "drizzle-orm/sqlite-core";
 import { user } from "./auth";
 import { createTable } from "../schema";
-import { DEPARTMENTS } from "@/constants/departments";
 import { STATUS, INTERNSHIP_STATUS } from "@/constants/status";
 import { DOCUMENTS } from "@/constants/documents";
 import { sql } from "drizzle-orm";
@@ -14,9 +13,6 @@ export const internship = createTable("internship", {
   companyId: text("company_id")
     .notNull()
     .references(() => company.companyId, { onDelete: "cascade" }),
-  progressId: text("progress_id")
-    .notNull()
-    .references(() => studentProgress.progressId, { onDelete: "cascade" }),
   startDate: integer("start_date", { mode: "timestamp" }).notNull(),
   endDate: integer("end_date", { mode: "timestamp" }), //Add value when internship is completed
   totalOfHoursRequired: integer("total_of_hours_required").notNull(), //Values i.e(450, 600)
@@ -25,10 +21,13 @@ export const internship = createTable("internship", {
     .default("pending"),
 });
 
-export const studentProgress = createTable("student_progress", {
+export const progressLog = createTable("student_progress", {
   progressId: text("progress_id").primaryKey(),
-  progressDate: integer("progress_date", { mode: "timestamp" }).notNull(),
-  completedHours: integer("completed_hours").notNull().default(0),
+  internshipId: text("internship_id")
+    .notNull()
+    .references(() => internship.internshipId, { onDelete: "cascade" }),
+  logDate: integer("log_date", { mode: "timestamp" }).notNull(),
+  hours: integer("hours").notNull().default(0),
 });
 
 export const company = createTable("company", {
