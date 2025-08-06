@@ -41,7 +41,7 @@ export const insertStudentProgress = async ({
   });
 };
 
-export const createStudentProgress2 = async ({
+export const createStudentInternship = async ({
   userId,
   department,
   name,
@@ -51,7 +51,7 @@ export const createStudentProgress2 = async ({
   contactNo,
 }: {
   userId: string;
-  department: departmentType;
+  department: string;
   name: string;
   address: string;
   contactPerson: string;

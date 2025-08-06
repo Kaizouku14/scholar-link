@@ -7,10 +7,34 @@ import {
   getAllUpcomingDeadlines,
   getAllUploadedDocuments,
 } from "@/lib/api/internship/student/documents/query";
-import { insertStudentProgress } from "@/lib/api/internship/student/progress/mutation";
+import {
+  createStudentInternship,
+  insertStudentProgress,
+} from "@/lib/api/internship/student/progress/mutation";
 
 export const internshipRouter = createTRPCRouter({
   //Student Routes
+  createStudentInternship: protectedRoute
+    .input(
+      z.object({
+        name: z.string(),
+        address: z.string(),
+        contactPerson: z.string(),
+        contactEmail: z.string(),
+        contactNo: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      await createStudentInternship({
+        userId: ctx.session?.user.id!,
+        department: ctx.session?.user.department!,
+        name: input.name,
+        address: input.address,
+        contactPerson: input.contactPerson,
+        contactEmail: input.contactEmail,
+        contactNo: input.contactNo,
+      });
+    }),
   insertStudentDocument: protectedRoute
     .input(
       z.object({
@@ -26,8 +50,7 @@ export const internshipRouter = createTRPCRouter({
         documentUrl: input.documentUrl,
         documentKey: input.documentKey,
       };
-
-      return await insertDocument(document);
+      await insertDocument(document);
     }),
   insertStudentProgress: protectedRoute
     .input(

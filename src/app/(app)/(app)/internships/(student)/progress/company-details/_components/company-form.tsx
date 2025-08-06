@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { companyformSchema, type CompanyFormSchema } from "./schema";
 import SubmitButton from "@/components/forms/submit-button";
+import { api } from "@/trpc/react";
 
 const CompanyForm = () => {
   const form = useForm<CompanyFormSchema>({
@@ -31,7 +32,28 @@ const CompanyForm = () => {
     },
   });
 
-  function onSubmit(values: CompanyFormSchema) {}
+  const { mutateAsync: createInternship } =
+    api.internships.createStudentInternship.useMutation();
+  function onSubmit(values: CompanyFormSchema) {
+    const { name, address, contactPerson, contactEmail, contactNo } = values;
+    toast.promise(
+      createInternship({
+        name,
+        address,
+        contactPerson,
+        contactEmail,
+        contactNo,
+      }),
+      {
+        loading: "Creating Company",
+        success: "Company created successfully",
+        error: (error: unknown) => ({
+          message: (error as Error).message,
+          duration: 5000,
+        }),
+      },
+    );
+  }
 
   return (
     <div className="border-border mx-auto w-full space-y-6 rounded-xl border p-8">
