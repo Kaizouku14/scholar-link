@@ -18,6 +18,13 @@ interface DataTableToolbarProps<TData> {
 }
 import { Search } from "lucide-react";
 
+function formatDocumentType(documentType: string) {
+  return documentType
+    .split("_") // Split by underscores
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize each word
+    .join(" ");
+}
+
 export const DataTableToolbar = <TData,>({
   table,
   filteredTitle,
@@ -32,7 +39,7 @@ export const DataTableToolbar = <TData,>({
         <div className="relative flex-1">
           <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform text-gray-400" />
           <Input
-            placeholder={`Search ${filteredTitle}...`}
+            placeholder={`Search ${formatDocumentType(filteredTitle)}...`}
             value={
               (table.getColumn(filteredTitle)?.getFilterValue() as string) ?? ""
             }
