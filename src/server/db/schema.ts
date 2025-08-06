@@ -9,4 +9,4 @@ import { sqliteTableCreator } from "drizzle-orm/sqlite-core";
  *
  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
  */
-export const createTable = sqliteTableCreator((name) => `ls_${name}`);
+export const createTable = sqliteTableCreator((name) => `sl_${name}`);

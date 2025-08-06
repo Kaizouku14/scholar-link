@@ -2,33 +2,40 @@ import { integer, text } from "drizzle-orm/sqlite-core";
 import { user } from "./auth";
 import { createTable } from "../schema";
 import { DEPARTMENTS } from "@/constants/departments";
-import { STATUS } from "@/constants/status";
+import { STATUS, INTERNSHIP_STATUS } from "@/constants/status";
 import { DOCUMENTS } from "@/constants/documents";
 import { sql } from "drizzle-orm";
 
 export const internship = createTable("internship", {
   internshipId: text("internship_id").primaryKey(),
-  companyId: text("company_id")
-    .notNull()
-    .references(() => company.companyId, { onDelete: "cascade" }),
-  department: text("department", { enum: DEPARTMENTS }).notNull(),
-  startDate: integer("start_date", { mode: "timestamp" }).notNull(),
-  endDate: integer("end_date", { mode: "timestamp" }).notNull(),
-  totalOfHoursRequired: integer("total_of_hours_required").notNull(), //Values i.e(450, 600)
-  status: text("status", { enum: STATUS }).notNull(),
-});
-
-export const intern = createTable("interns", {
-  internsId: text("interns_id").primaryKey(),
   userId: text("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
-  internshipId: text("internship_id")
+  companyId: text("company_id")
     .notNull()
-    .references(() => internship.internshipId, { onDelete: "cascade" }),
-  applicationDate: integer("application_date", { mode: "timestamp" }).notNull(), //To Consider
-  approvalStatus: text("approval_status", { enum: STATUS }).notNull(),
+    .references(() => company.companyId, { onDelete: "cascade" }),
+  progressId: text("progress_id")
+    .notNull()
+    .references(() => studentProgress.progressId, { onDelete: "cascade" }),
+  startDate: integer("start_date", { mode: "timestamp" }).notNull(),
+  endDate: integer("end_date", { mode: "timestamp" }).notNull(),
+  totalOfHoursRequired: integer("total_of_hours_required").notNull(), //Values i.e(450, 600)
+  status: text("status", { enum: INTERNSHIP_STATUS }).notNull(),
+});
+
+export const studentProgress = createTable("student_progress", {
+  progressId: text("progress_id").primaryKey(),
+  progressDate: integer("progress_date", { mode: "timestamp" }).notNull(),
   completedHours: integer("completed_hours").notNull().default(0),
+});
+
+export const company = createTable("company", {
+  companyId: text("company_id").primaryKey(),
+  name: text("name").notNull(),
+  address: text("address").notNull(),
+  contactPerson: text("contact_person").notNull(),
+  contactEmail: text("contact_email"),
+  contactNo: text("contact_no").notNull(),
 });
 
 export const document = createTable("document", {
@@ -58,13 +65,4 @@ export const internDocuments = createTable("intern_documents", {
   updatedAt: integer("updated_at", { mode: "timestamp" }).$onUpdateFn(
     () => new Date(),
   ),
-});
-
-export const company = createTable("company", {
-  companyId: text("company_id").primaryKey(),
-  name: text("name").notNull(),
-  address: text("address").notNull(),
-  contactPerson: text("contact_person").notNull(),
-  contactEmail: text("contact_email"),
-  contactNo: text("contact_no").notNull(),
 });
