@@ -18,9 +18,11 @@ export const internship = createTable("internship", {
     .notNull()
     .references(() => studentProgress.progressId, { onDelete: "cascade" }),
   startDate: integer("start_date", { mode: "timestamp" }).notNull(),
-  endDate: integer("end_date", { mode: "timestamp" }).notNull(),
+  endDate: integer("end_date", { mode: "timestamp" }), //Add value when internship is completed
   totalOfHoursRequired: integer("total_of_hours_required").notNull(), //Values i.e(450, 600)
-  status: text("status", { enum: INTERNSHIP_STATUS }).notNull(),
+  status: text("status", { enum: INTERNSHIP_STATUS })
+    .notNull()
+    .default("pending"),
 });
 
 export const studentProgress = createTable("student_progress", {

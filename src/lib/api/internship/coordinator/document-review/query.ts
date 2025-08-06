@@ -3,7 +3,6 @@ import { TRPCError } from "@trpc/server";
 import {
   internDocuments as InternDocumentsTable,
   internship as InternshipTable,
-  intern as InternTable,
   company as CompanyTable,
 } from "@/server/db/schema/internship";
 import {
@@ -24,13 +23,10 @@ export const getAllDocumentByDepartment = async ({
         documentUrl: InternDocumentsTable.documentUrl,
         reviewStatus: InternDocumentsTable.reviewStatus,
         submittedAt: InternDocumentsTable.submittedAt,
-
         name: UserTable.name,
         profileKey: UserTable.profileKey,
-
         section: StudentTable.section,
         course: StudentTable.course,
-
         companyName: CompanyTable.name,
       })
       .from(InternDocumentsTable)
