@@ -15,34 +15,28 @@ export const insertStudentProgress = async ({
   logDate: Date;
   hours: number;
 }) => {
-  try {
-    const internship = await db
-      .select({
-        internshipId: InternshipTable.internshipId,
-      })
-      .from(InternshipTable)
-      .where(eq(InternshipTable.userId, userId));
+  const internship = await db
+    .select({
+      internshipId: InternshipTable.internshipId,
+    })
+    .from(InternshipTable)
+    .where(eq(InternshipTable.userId, userId));
 
-    if (!internship.length) {
-      throw new TRPCError({
-        code: "BAD_REQUEST",
-        message: "User must be assigned to a company before logging progress.",
-      });
-    }
-
-    const id = generateUUID();
-    await db.insert(ProgressLogTable).values({
-      progressId: id,
-      internshipId: internship[0]!.internshipId,
-      logDate,
-      hours,
-    });
-  } catch (error) {
+  if (!internship.length) {
     throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: "Failed to insert student progress," + (error as Error).message,
+      code: "BAD_REQUEST",
+      message:
+        "You need to log a company first before you can record your progress.",
     });
   }
+
+  const id = generateUUID();
+  await db.insert(ProgressLogTable).values({
+    progressId: id,
+    internshipId: internship[0]!.internshipId,
+    logDate,
+    hours,
+  });
 };
 
 // //Arrow function

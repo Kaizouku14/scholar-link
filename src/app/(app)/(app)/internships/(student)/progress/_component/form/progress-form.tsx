@@ -17,6 +17,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CalendarIcon, Clock, Plus } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import { api } from "@/trpc/react";
+import { toast } from "sonner";
 
 const ProgressForm = () => {
   const form = useForm<ProgressFormSchema>({
@@ -27,9 +29,23 @@ const ProgressForm = () => {
     },
   });
 
+  const { mutateAsync: logProgress } =
+    api.internships.insertStudentProgress.useMutation();
   const onSubmit = (data: ProgressFormSchema) => {
-    console.log(data);
-    // Add success feedback here
+    toast.promise(
+      logProgress({
+        logDate: data.date,
+        hours: data.hoursCompleted,
+      }),
+      {
+        loading: "Logging progress...",
+        success: "Progress logged successfully",
+        error: (error: unknown) => ({
+          message: (error as Error).message,
+          duration: 5000,
+        }),
+      },
+    );
   };
 
   const isSubmitting = form.formState.isSubmitting;
