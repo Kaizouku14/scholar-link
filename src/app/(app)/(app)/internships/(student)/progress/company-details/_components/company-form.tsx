@@ -45,8 +45,11 @@ const CompanyForm = () => {
         contactNo,
       }),
       {
-        loading: "Creating Company",
-        success: "Company created successfully",
+        loading: "Saving internship company details...",
+        success: () => {
+          form.reset();
+          return "Internship company linked successfully!";
+        },
         error: (error: unknown) => ({
           message: (error as Error).message,
           duration: 5000,

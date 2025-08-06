@@ -39,7 +39,10 @@ const ProgressForm = () => {
       }),
       {
         loading: "Logging progress...",
-        success: "Progress logged successfully",
+        success: () => {
+          form.reset();
+          return "Progress logged successfully";
+        },
         error: (error: unknown) => ({
           message: (error as Error).message,
           duration: 5000,

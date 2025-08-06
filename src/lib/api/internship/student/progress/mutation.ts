@@ -1,4 +1,4 @@
-import { db, eq } from "@/server/db";
+import { db, eq, and } from "@/server/db";
 import { TRPCError } from "@trpc/server";
 import {
   internship as InternshipTable,
@@ -32,10 +32,30 @@ export const insertStudentProgress = async ({
     });
   }
 
-  const id = generateUUID();
+  const internshipId = internship[0]!.internshipId;
+
+  // Check if progress for the same date already exists
+  const existingLog = await db
+    .select()
+    .from(ProgressLogTable)
+    .where(
+      and(
+        eq(ProgressLogTable.internshipId, internshipId),
+        eq(ProgressLogTable.logDate, logDate),
+      ),
+    )
+    .limit(1);
+
+  if (existingLog.length > 0) {
+    throw new TRPCError({
+      code: "CONFLICT",
+      message: "You’ve already logged your progress for this date.",
+    });
+  }
+
   await db.insert(ProgressLogTable).values({
-    progressId: id,
-    internshipId: internship[0]!.internshipId,
+    progressId: generateUUID(),
+    internshipId,
     logDate,
     hours,
   });
@@ -74,7 +94,13 @@ export const createStudentInternship = async ({
     });
   }
 
-  const totalHoursRequired = department === "ITDS" ? 600 : 450;
+  const departmentHoursMap: Record<departmentType, number> = {
+    ITDS: 600,
+    BEED: 450,
+    GATE: 450,
+  };
+
+  const totalHoursRequired = departmentHoursMap[department as departmentType];
 
   await db.transaction(async (tx) => {
     const newCompanyId = generateUUID();
