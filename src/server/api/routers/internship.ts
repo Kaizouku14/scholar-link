@@ -11,9 +11,12 @@ import {
   createStudentInternship,
   insertStudentProgress,
 } from "@/lib/api/internship/student/progress/mutation";
+import type { departmentType } from "@/constants/departments";
 
 export const internshipRouter = createTRPCRouter({
-  //Student Routes
+  /******************************************
+   *           Student API Mutations         *
+   ******************************************/
   createStudentInternship: protectedRoute
     .input(
       z.object({
@@ -25,15 +28,16 @@ export const internshipRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      await createStudentInternship({
+      const studentInternship = {
         userId: ctx.session?.user.id!,
-        department: ctx.session?.user.department!,
+        department: ctx.session?.user.department! as departmentType,
         name: input.name,
         address: input.address,
         contactPerson: input.contactPerson,
         contactEmail: input.contactEmail,
         contactNo: input.contactNo,
-      });
+      };
+      await createStudentInternship(studentInternship);
     }),
   insertStudentDocument: protectedRoute
     .input(
@@ -66,12 +70,16 @@ export const internshipRouter = createTRPCRouter({
         hours: input.hours,
       });
     }),
-
+  /******************************************
+   *           Student API Query             *
+   ******************************************/
   getUserUploadedDocuments: protectedRoute.query(async ({ ctx }) => {
     return await getAllUploadedDocuments({ userId: ctx.session?.user.id! });
   }),
 
-  //global
+  /******************************************
+   *         Global API Mutation/Query       *
+   ******************************************/
   getAllDocuments: protectedRoute.query(async () => {
     return await getAllDocumentsAvailable();
   }),

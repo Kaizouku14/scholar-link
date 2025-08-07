@@ -7,6 +7,7 @@ import {
 } from "@/server/db/schema/internship";
 import { generateUUID } from "@/lib/utils";
 import type { departmentType } from "@/constants/departments";
+import { departmentHoursMap } from "@/constants/hours";
 
 export const insertStudentProgress = async ({
   userId,
@@ -71,7 +72,7 @@ export const createStudentInternship = async ({
   contactNo,
 }: {
   userId: string;
-  department: string;
+  department: departmentType;
   name: string;
   address: string;
   contactPerson: string;
@@ -94,20 +95,14 @@ export const createStudentInternship = async ({
     });
   }
 
-  const departmentHoursMap: Record<departmentType, number> = {
-    ITDS: 600,
-    BEED: 450,
-    GATE: 450,
-  };
-
-  const totalHoursRequired = departmentHoursMap[department as departmentType];
-
   await db.transaction(async (tx) => {
-    const newCompanyId = generateUUID();
-    const newInternshipId = generateUUID();
+    const companyId = generateUUID();
+    const internshipId = generateUUID();
+    const totalHoursRequired = departmentHoursMap[department];
+    const startDate = new Date();
 
     await tx.insert(CompanyTable).values({
-      companyId: newCompanyId,
+      companyId,
       name,
       address,
       contactPerson,
@@ -116,10 +111,10 @@ export const createStudentInternship = async ({
     });
 
     await tx.insert(InternshipTable).values({
-      internshipId: newInternshipId,
+      internshipId,
       userId,
-      companyId: newCompanyId,
-      startDate: new Date(),
+      companyId,
+      startDate,
       totalOfHoursRequired: totalHoursRequired,
     });
   });
