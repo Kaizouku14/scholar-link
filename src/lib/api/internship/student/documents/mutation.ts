@@ -54,7 +54,7 @@ export const insertDocument = async ({
       await db
         .insert(internDocumentsTable)
         .values({
-          documentsId: generateUUID(),
+          documentId: generateUUID(),
           internId: userId,
           documentType,
           documentUrl,

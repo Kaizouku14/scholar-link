@@ -90,8 +90,8 @@ export function DataTable<TData, TValue>({
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header, index) => {
                   const isLastColumn = index === headerGroup.headers.length - 1;
-                  const showTrashIcon =
-                    isLastColumn && table.getSelectedRowModel().rows.length > 1;
+                  const selectedRows = table.getSelectedRowModel().rows ?? [];
+                  const showTrashIcon = isLastColumn && selectedRows.length > 1;
 
                   return (
                     <TableHead

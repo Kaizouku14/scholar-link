@@ -47,7 +47,7 @@ export const document = createTable("document", {
 });
 
 export const internDocuments = createTable("intern_documents", {
-  documentsId: text("documents_id").primaryKey(),
+  documentId: text("documents_id").primaryKey(),
   internId: text("intern_id")
     .notNull()
     .references(() => user.id, {

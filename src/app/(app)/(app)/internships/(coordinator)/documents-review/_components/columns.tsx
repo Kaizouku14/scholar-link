@@ -1,38 +1,47 @@
 "use client";
 
-import type { internDocuments } from "@/server/db/schema/internship";
 import type { ColumnDef } from "@tanstack/react-table";
-import type { InferSelectModel } from "drizzle-orm";
+import { type ColumnSchema } from "./column-schema";
 
-type documentsReview = InferSelectModel<typeof internDocuments>;
-
-//TODO: FIX THE TYPE
-
-export const DocumentReviewColumns: ColumnDef<documentsReview>[] = [
+export const DocumentReviewColumns: ColumnDef<ColumnSchema>[] = [
+  {
+    accessorKey: "id",
+  },
   {
     accessorKey: "documentType",
     header: "Document",
-    enableSorting: false,
-    enableHiding: false,
-    cell: ({ row }) => {
-      return row.original.documentType;
-    },
+    cell: ({ row }) => (
+      <div className="flex flex-col">
+        <span className="font-medium">{row.original.documentType}</span>
+      </div>
+    ),
   },
   {
-    accessorKey: "student",
-    header: "Student",
+    accessorKey: "documentUrl",
   },
   {
-    accessorKey: "company",
-    header: "Company",
+    accessorKey: "reviewStatus",
+    header: "Status",
   },
   {
     accessorKey: "submittedAt",
     header: "Submitted",
   },
   {
-    accessorKey: "reviewStatus",
-    header: "Status",
+    accessorKey: "company",
+    header: "Company",
+  },
+  {
+    accessorKey: "name",
+  },
+  {
+    accessorKey: "profileKey",
+  },
+  {
+    accessorKey: "section",
+  },
+  {
+    accessorKey: "course",
   },
   {
     id: "actions",

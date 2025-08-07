@@ -19,6 +19,7 @@ export const getAllDocumentByDepartment = async ({
   try {
     const response = await db
       .select({
+        id: InternDocumentsTable.documentId,
         documentType: InternDocumentsTable.documentType,
         documentUrl: InternDocumentsTable.documentUrl,
         reviewStatus: InternDocumentsTable.reviewStatus,

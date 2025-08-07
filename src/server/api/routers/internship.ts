@@ -85,8 +85,10 @@ export const internshipRouter = createTRPCRouter({
    *          Coordinator API Query         *
    ******************************************/
   getAllDocumentByDepartment: protectedRoute.query(async ({ ctx }) => {
+    const department = ctx.session?.user.department! as departmentType;
+
     return await getAllDocumentByDepartment({
-      department: ctx.session?.user.department! as departmentType,
+      department: department,
     });
   }),
 

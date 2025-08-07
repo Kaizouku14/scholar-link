@@ -17,7 +17,7 @@ export function DataTableSkeleton() {
         <Skeleton className="h-8 w-[250px]" />
         <Skeleton className="ml-auto h-8 w-[70px]" />
       </div>
-      <div className="rounded-md border">
+      <div className="border-border rounded-xl border">
         <Table>
           <TableHeader>
             <TableRow>

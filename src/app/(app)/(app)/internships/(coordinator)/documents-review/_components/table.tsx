@@ -3,18 +3,23 @@
 import { DataTable } from "@/components/table/data-table";
 import { DocumentReviewColumns } from "./columns";
 import { api } from "@/trpc/react";
+import { DataTableSkeleton } from "@/components/table/table-skeleton";
 
 const ReviewDocumentsTable = () => {
-  const { data } = api.internships.getAllDocumentByDepartment.useQuery();
+  const { data, isLoading } =
+    api.internships.getAllDocumentByDepartment.useQuery();
 
-  console.log(data);
   return (
-    <div>
-      <DataTable
-        columns={DocumentReviewColumns}
-        data={[]}
-        filteredTitle={"documentType"}
-      />
+    <div className="w-full">
+      {!isLoading && data ? (
+        <DataTable
+          columns={DocumentReviewColumns}
+          data={data!}
+          filteredTitle={"documentType"}
+        />
+      ) : (
+        <DataTableSkeleton />
+      )}
     </div>
   );
 };
