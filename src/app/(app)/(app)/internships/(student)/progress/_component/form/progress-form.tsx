@@ -20,7 +20,7 @@ import { cn } from "@/lib/utils";
 import { api } from "@/trpc/react";
 import { toast } from "sonner";
 
-const ProgressForm = () => {
+const ProgressForm = ({ refetch }: { refetch: () => Promise<any> }) => {
   const form = useForm<ProgressFormSchema>({
     resolver: zodResolver(progressFormSchema),
     defaultValues: {
@@ -41,6 +41,7 @@ const ProgressForm = () => {
         loading: "Logging progress...",
         success: () => {
           form.reset();
+          refetch();
           return "Progress logged successfully";
         },
         error: (error: unknown) => ({
@@ -122,7 +123,7 @@ const ProgressForm = () => {
                         <Input
                           type="number"
                           min="0"
-                          max="24"
+                          max="8"
                           step="0.5"
                           placeholder="Enter hours worked"
                           className="h-11 border-gray-200 bg-white pr-12 transition-all duration-200 focus:border-green-500 focus:ring-green-500/20 dark:border-gray-700 dark:bg-gray-800/50"

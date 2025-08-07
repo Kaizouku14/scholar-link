@@ -2,16 +2,17 @@ import { insertDocument } from "@/lib/api/internship/student/documents/mutation"
 import { createTRPCRouter, protectedRoute } from "../trpc";
 import z from "zod";
 import { DOCUMENTS } from "@/constants/documents";
+import type { departmentType } from "@/constants/departments";
 import {
   getAllDocumentsAvailable,
   getAllUpcomingDeadlines,
   getAllUploadedDocuments,
 } from "@/lib/api/internship/student/documents/query";
+import { getStudentLogProgress } from "@/lib/api/internship/student/progress/query";
 import {
   createStudentInternship,
   insertStudentProgress,
 } from "@/lib/api/internship/student/progress/mutation";
-import type { departmentType } from "@/constants/departments";
 
 export const internshipRouter = createTRPCRouter({
   /******************************************
@@ -75,6 +76,9 @@ export const internshipRouter = createTRPCRouter({
    ******************************************/
   getUserUploadedDocuments: protectedRoute.query(async ({ ctx }) => {
     return await getAllUploadedDocuments({ userId: ctx.session?.user.id! });
+  }),
+  getStudentLogProgress: protectedRoute.query(async ({ ctx }) => {
+    return await getStudentLogProgress({ userId: ctx.session?.user.id! });
   }),
 
   /******************************************

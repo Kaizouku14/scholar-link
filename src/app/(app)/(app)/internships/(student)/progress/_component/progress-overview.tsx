@@ -1,20 +1,51 @@
+"use client";
+
 import { Progress } from "@/components/ui/progress";
 import { Card, CardContent } from "@/components/ui/card";
 import { Clock, CheckCircle, CalendarDays, TrendingUp } from "lucide-react";
 import ProgressForm from "./form/progress-form";
+import { api } from "@/trpc/react";
+import { useMemo } from "react";
 
 const ProgressOverview = () => {
-  const TOTAL_HOURS_NEED = 240;
-  const TOTAL_PROGRESS = 120;
-  const TOTAL_PERCENTAGE = 50;
-  const TOTAL_REMAINING = 120;
+  const { data, refetch } = api.internships.getStudentLogProgress.useQuery();
+  const progress = useMemo(() => {
+    if (!data || data.length === 0) return null;
+
+    const required = data[0]?.totalHoursRequired ?? 0;
+    const totalHoursCompleted = data.reduce(
+      (sum, log) => sum + (log.totalHoursCompleted ?? 0),
+      0,
+    );
+
+    const percentage =
+      required > 0
+        ? Number(((totalHoursCompleted / required) * 100).toFixed(1))
+        : 0;
+    const uniqueDays = new Set(
+      data.map((log) => new Date(log.dateLogs).toDateString()),
+    );
+
+    const daysCompleted = uniqueDays.size;
+    const remainingHours = Math.max(required - totalHoursCompleted, 0);
+    const estimatedRemainingDays = Math.ceil(remainingHours / 8); // cap at 8hrs/day
+
+    return {
+      required,
+      totalHoursCompleted,
+      percentage,
+      daysCompleted,
+      remainingHours,
+      estimatedRemainingDays,
+    };
+  }, [data]);
 
   return (
     <div className="mx-auto w-full">
       <Card>
         <CardContent className="md:flex md:space-x-6">
           <div className="mb-6 block md:hidden">
-            <ProgressForm />
+            <ProgressForm refetch={refetch} />
           </div>
           <div className="flex flex-col max-md:justify-center max-md:gap-y-4">
             <div className="mb-4 flex flex-col md:mb-8 md:space-y-4">
@@ -40,24 +71,25 @@ const ProgressOverview = () => {
                     Hours Completed
                   </span>
                   <span className="text-muted-foreground rounded-full bg-gray-100 px-3 py-1 text-xs dark:bg-gray-700">
-                    {TOTAL_PROGRESS} / {TOTAL_HOURS_NEED}
+                    {progress?.totalHoursCompleted ?? 0} /{" "}
+                    {progress?.required ?? 0}
                   </span>
                 </div>
 
                 <div className="space-y-3">
                   <Progress
-                    value={TOTAL_PERCENTAGE}
+                    value={progress?.totalHoursCompleted ?? 0}
                     className="h-3 bg-gray-100 dark:bg-gray-700"
                   />
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <div className="h-2 w-2 rounded-full bg-blue-500"></div>
                       <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                        {TOTAL_PERCENTAGE}% complete
+                        {progress?.percentage ?? 0}% complete
                       </span>
                     </div>
                     <span className="text-muted-foreground text-xs">
-                      {TOTAL_REMAINING} hours remaining
+                      {progress?.remainingHours ?? 0} hours remaining
                     </span>
                   </div>
                 </div>
@@ -73,7 +105,7 @@ const ProgressOverview = () => {
                     </div>
                     <div className="flex flex-col">
                       <span className="text-base font-bold text-blue-700 dark:text-blue-300">
-                        {TOTAL_PROGRESS}
+                        {progress?.totalHoursCompleted ?? 0}
                       </span>
                       <span className="text-xs font-medium tracking-wide text-blue-600/70 uppercase dark:text-blue-400/70">
                         Hours Logged
@@ -91,7 +123,7 @@ const ProgressOverview = () => {
                     </div>
                     <div className="flex flex-col">
                       <span className="text-base font-bold text-green-700 dark:text-green-300">
-                        {"30"}
+                        {progress?.daysCompleted ?? 0}
                       </span>
                       <span className="text-xs font-medium tracking-wide text-green-600/70 uppercase dark:text-green-400/70">
                         Days Completed
@@ -109,7 +141,7 @@ const ProgressOverview = () => {
                     </div>
                     <div className="flex flex-col">
                       <span className="text-base font-bold text-amber-700 dark:text-amber-300">
-                        30
+                        {progress?.estimatedRemainingDays ?? 0}
                       </span>
                       <span className="text-xs font-medium tracking-wide text-amber-600/70 uppercase dark:text-amber-400/70">
                         Days Remaining
@@ -121,7 +153,7 @@ const ProgressOverview = () => {
             </div>
           </div>
           <div className="hidden w-1/2 md:flex">
-            <ProgressForm />
+            <ProgressForm refetch={refetch} />
           </div>
         </CardContent>
       </Card>
