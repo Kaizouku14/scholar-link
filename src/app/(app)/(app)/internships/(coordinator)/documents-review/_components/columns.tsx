@@ -43,7 +43,9 @@ export const DocumentReviewColumns: ColumnDef<ColumnSchema>[] = [
         <div className="flex items-center gap-x-1.5">
           <Avatar className="h-10 w-10">
             <AvatarImage src={profile ?? undefined} />
-            <AvatarFallback className="text-sm">CN</AvatarFallback>
+            <AvatarFallback className="text-sm">
+              {name?.charAt(0)?.toUpperCase()}
+            </AvatarFallback>
           </Avatar>
 
           <div className="flex flex-col">

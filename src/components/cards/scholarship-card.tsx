@@ -84,7 +84,7 @@ const ScholarshipCard = ({
                 alt={`${data.name} logo`}
               />
               <AvatarFallback className="bg-primary/10 text-primary text-sm font-medium">
-                {"NA"}
+                {data.name?.charAt(0)?.toUpperCase()}
               </AvatarFallback>
             </Avatar>
             <div className="min-w-0 flex-1">
