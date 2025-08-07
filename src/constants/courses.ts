@@ -20,4 +20,26 @@ export const COURSES = [
   "BIT Major in Food Processing Technology",
 ] as const;
 
+export const COURSE_LABELS = {
+  "BS in Information Technology": "BSIT",
+  "BS in Data Science": "BSDS",
+  "BS in Hospitality Management": "BSHM",
+  "BS in Tourism Management": "BSTM",
+
+  "Bachelor of Elementary Education": "BEE",
+  "BSEd Major in Filipino": "BSEd-FIL",
+  "BSEd Major in English (Mandarin)": "BSEd-ENG(MAN)",
+  "BSEd Major in Mathematics": "BSEd-MATH",
+  "BSEd Major in Sciences": "BSEd-SCI",
+  "BSEd Major in Social Studies": "BSEd-SS",
+
+  "BS in Business Administration": "BSBA",
+  "BS in Entrepreneurship": "BSE",
+
+  "BIT Major in Drafting Technology": "BIT-DRAFT",
+  "BIT Major in Computer Technology": "BIT-COMP",
+  "BIT Major in Electronics Technology": "BIT-ELEX",
+  "BIT Major in Food Processing Technology": "BIT-FOOD",
+} as const;
+
 export type courseType = (typeof COURSES)[number];

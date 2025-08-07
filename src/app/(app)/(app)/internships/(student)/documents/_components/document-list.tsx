@@ -10,7 +10,12 @@ import {
 } from "lucide-react";
 import { DOCUMENT_LABELS, type documentsType } from "@/constants/documents";
 import { format } from "date-fns";
-import { cn } from "@/lib/utils";
+import {
+  cn,
+  getStatusColor,
+  getStatusIndicatorColor,
+  getStatusVariant,
+} from "@/lib/utils";
 
 export interface DocumentCardProps {
   documentId: string;
@@ -21,45 +26,6 @@ export interface DocumentCardProps {
 }
 
 const DocumentList = ({ documents }: { documents: DocumentCardProps }) => {
-  const getStatusVariant = (status: string) => {
-    switch (status.toLowerCase()) {
-      case "pending":
-        return "outline";
-      case "approved":
-        return "default";
-      case "rejected":
-        return "destructive";
-      default:
-        return "outline";
-    }
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status.toLowerCase()) {
-      case "pending":
-        return "bg-amber-50 text-amber-700 border-amber-200";
-      case "approved":
-        return "bg-emerald-50 text-emerald-700 border-emerald-200";
-      case "rejected":
-        return "bg-red-50 text-red-700 border-red-200";
-      default:
-        return "bg-gray-50 text-gray-700 border-gray-200";
-    }
-  };
-
-  const getStatusIndicatorColor = (status: string) => {
-    switch (status.toLowerCase()) {
-      case "pending":
-        return "bg-amber-400";
-      case "approved":
-        return "bg-emerald-400";
-      case "rejected":
-        return "bg-red-400";
-      default:
-        return "bg-gray-400";
-    }
-  };
-
   return (
     <Card className="group from-card to-card/95 border-border/60 relative w-full max-w-sm overflow-hidden rounded-xl border bg-gradient-to-br">
       <div

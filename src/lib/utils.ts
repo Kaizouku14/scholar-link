@@ -84,3 +84,42 @@ export const calculateDaysLeft = (deadline: Date) => {
   const diffTime = deadline.getTime() - today.getTime();
   return Math.abs(Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
 };
+
+export const getStatusVariant = (status: string) => {
+  switch (status.toLowerCase()) {
+    case "pending":
+      return "outline";
+    case "approved":
+      return "default";
+    case "rejected":
+      return "destructive";
+    default:
+      return "outline";
+  }
+};
+
+export const getStatusColor = (status: string) => {
+  switch (status.toLowerCase()) {
+    case "pending":
+      return "bg-amber-50 text-amber-700 border-amber-200";
+    case "approved":
+      return "bg-emerald-50 text-emerald-700 border-emerald-200";
+    case "rejected":
+      return "bg-red-50 text-red-700 border-red-200";
+    default:
+      return "bg-gray-50 text-gray-700 border-gray-200";
+  }
+};
+
+export const getStatusIndicatorColor = (status: string) => {
+  switch (status.toLowerCase()) {
+    case "pending":
+      return "bg-amber-400";
+    case "approved":
+      return "bg-emerald-400";
+    case "rejected":
+      return "bg-red-400";
+    default:
+      return "bg-gray-400";
+  }
+};

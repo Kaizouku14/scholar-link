@@ -25,9 +25,11 @@ export const getAllDocumentByDepartment = async ({
         reviewStatus: InternDocumentsTable.reviewStatus,
         submittedAt: InternDocumentsTable.submittedAt,
         name: UserTable.name,
-        profileKey: UserTable.profileKey,
+        surname: UserTable.surname,
+        profile: UserTable.profile,
         section: StudentTable.section,
         course: StudentTable.course,
+        yearLevel: StudentTable.yearLevel,
         companyName: CompanyTable.name,
       })
       .from(InternDocumentsTable)
