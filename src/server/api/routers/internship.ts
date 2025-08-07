@@ -13,6 +13,7 @@ import {
   createStudentInternship,
   insertStudentProgress,
 } from "@/lib/api/internship/student/progress/mutation";
+import { getAllDocumentByDepartment } from "@/lib/api/internship/coordinator/document-review/query";
 
 export const internshipRouter = createTRPCRouter({
   /******************************************
@@ -79,6 +80,14 @@ export const internshipRouter = createTRPCRouter({
   }),
   getStudentLogProgress: protectedRoute.query(async ({ ctx }) => {
     return await getStudentLogProgress({ userId: ctx.session?.user.id! });
+  }),
+  /******************************************
+   *          Coordinator API Query         *
+   ******************************************/
+  getAllDocumentByDepartment: protectedRoute.query(async ({ ctx }) => {
+    return await getAllDocumentByDepartment({
+      department: ctx.session?.user.department! as departmentType,
+    });
   }),
 
   /******************************************

@@ -1,32 +1,56 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { DOCUMENT_LABELS } from "@/constants/documents";
 import { calculateDaysLeft, cn, isDeadlineApproaching } from "@/lib/utils";
 import { api } from "@/trpc/react";
-import { Calendar, FileText } from "lucide-react";
+import { Calendar, FileText, RefreshCcw } from "lucide-react";
+import { useState } from "react";
 
-const UpcomingDeadlines = ({}) => {
-  const { data: internshipDocuments } =
-    api.internships.getAllUpcomingDeadlines.useQuery();
+const UpcomingDeadlines = () => {
+  const {
+    data: internshipDocuments,
+    refetch,
+    isLoading,
+  } = api.internships.getAllUpcomingDeadlines.useQuery();
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    await refetch();
+    setIsRefreshing(false);
+  };
 
   return (
     <Card className="w-full max-w-md">
       <CardHeader>
         <CardTitle className="flex items-center gap-1 font-bold tracking-tight">
-          <div className="flex items-center gap-2">
-            <div className="bg-primary/20 flex h-11 w-11 items-center justify-center rounded-full">
-              <Calendar className="text-primary h-5 w-5" />
+          <div className="flex w-full items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="bg-primary/20 flex h-11 w-11 items-center justify-center rounded-full">
+                <Calendar className="text-primary h-5 w-5" />
+              </div>
+              <div className="flex flex-col">
+                <h2 className="text-foreground text-xl leading-tight font-semibold">
+                  Upcoming Deadlines
+                </h2>
+                <p className="text-muted-foreground m-0 p-0 text-sm">
+                  Important dates to remember
+                </p>
+              </div>
             </div>
-            <div className="flex flex-col">
-              <h2 className="text-foreground text-xl leading-tight font-semibold">
-                Upcoming Deadlines
-              </h2>
-              <p className="text-muted-foreground m-0 p-0 text-sm">
-                Important dates to remember
-              </p>
-            </div>
+            <Button
+              size={"icon"}
+              variant={"outline"}
+              className="cursor-pointer"
+              onClick={handleRefresh}
+            >
+              <RefreshCcw
+                className={`${(isLoading || isRefreshing) && "animate-spin"} size-4`}
+              />
+            </Button>
           </div>
         </CardTitle>
       </CardHeader>

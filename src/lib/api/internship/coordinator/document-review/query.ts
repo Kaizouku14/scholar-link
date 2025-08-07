@@ -32,12 +32,8 @@ export const getAllDocumentByDepartment = async ({
       .from(InternDocumentsTable)
       .innerJoin(UserTable, eq(InternDocumentsTable.internId, UserTable.id))
       .innerJoin(StudentTable, eq(UserTable.id, StudentTable.id))
-      .innerJoin(InternTable, eq(UserTable.id, InternTable.userId))
-      .innerJoin(
-        InternshipTable,
-        eq(InternTable.internshipId, InternshipTable.internshipId),
-      )
-      .where(eq(InternshipTable.department, department))
+      .innerJoin(InternshipTable, eq(UserTable.id, InternshipTable.userId))
+      .where(eq(UserTable.department, department))
       .innerJoin(
         CompanyTable,
         eq(InternshipTable.companyId, CompanyTable.companyId),

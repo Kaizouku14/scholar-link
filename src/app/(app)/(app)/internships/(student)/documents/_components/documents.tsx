@@ -2,14 +2,19 @@
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { api } from "@/trpc/react";
-import { useMemo } from "react";
-import DocumentList, { type DocumentCardProps } from "./document-list";
-import { Badge } from "@/components/ui/badge";
+import { useMemo, useState } from "react";
+import DocumentList from "./document-list";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Button } from "@/components/ui/button";
+import { RefreshCcw } from "lucide-react";
 
 const Documents = () => {
-  const { data: uploadedDocuments } =
-    api.internships.getUserUploadedDocuments.useQuery();
+  const {
+    data: uploadedDocuments,
+    refetch,
+    isLoading,
+  } = api.internships.getUserUploadedDocuments.useQuery();
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const transformedDocuments = useMemo(() => {
     if (!uploadedDocuments) return [];
@@ -37,19 +42,37 @@ const Documents = () => {
     };
   }, [transformedDocuments]);
 
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    await refetch();
+    setIsRefreshing(false);
+  };
+
   return (
     <Tabs defaultValue="documents" className="h-96 w-full">
-      <TabsList className="gap-x-2 rounded">
-        <TabsTrigger value="documents" className="rounded">
-          My Documents
-        </TabsTrigger>
-        <TabsTrigger value="pending" className="rounded">
-          Pending ({filteredDocuments.pending.length})
-        </TabsTrigger>
-        <TabsTrigger value="approved" className="rounded">
-          Approved ({filteredDocuments.approved.length})
-        </TabsTrigger>
-      </TabsList>
+      <div className="flex gap-2">
+        <TabsList className="gap-x-2 rounded">
+          <TabsTrigger value="documents" className="rounded">
+            My Documents
+          </TabsTrigger>
+          <TabsTrigger value="pending" className="rounded">
+            Pending ({filteredDocuments.pending.length})
+          </TabsTrigger>
+          <TabsTrigger value="approved" className="rounded">
+            Approved ({filteredDocuments.approved.length})
+          </TabsTrigger>
+        </TabsList>
+        <Button
+          size={"icon"}
+          variant={"outline"}
+          className="cursor-pointer"
+          onClick={handleRefresh}
+        >
+          <RefreshCcw
+            className={`${(isLoading || isRefreshing) && "animate-spin"} size-4`}
+          />
+        </Button>
+      </div>
 
       <TabsContent
         value="documents"
