@@ -20,7 +20,7 @@ export const DocumentReviewColumns: ColumnDef<ColumnSchema>[] = [
     header: "Document",
     cell: ({ row }) => (
       <Button
-        className="m-0 h-fit w-full cursor-pointer border-none p-0"
+        className="m-0 h-fit w-full cursor-pointer border-none p-0 shadow-none"
         variant={"outline"}
         onClick={() => {
           window.open(
@@ -126,15 +126,7 @@ export const DocumentReviewColumns: ColumnDef<ColumnSchema>[] = [
     id: "actions",
     header: "Actions",
     cell: ({ row, table }) => {
-      return (
-        <div className="flex justify-evenly gap-2">
-          <Button variant={"outline"} className="cursor-pointer">
-            <CheckCircle />
-            Approved
-          </Button>
-          <DataTableRowActions row={row} table={table} />
-        </div>
-      );
+      return <DataTableRowActions row={row} table={table} />;
     },
   },
 ];
