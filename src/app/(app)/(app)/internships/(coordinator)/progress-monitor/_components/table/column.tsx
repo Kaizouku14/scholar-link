@@ -1,51 +1,13 @@
-"use client";
-
-import type { ColumnDef } from "@tanstack/react-table";
-import { type ColumnSchema } from "./column-schema";
-import { DOCUMENT_LABELS } from "@/constants/documents";
-import { CheckCircle, Clock, Eye, FileText, XCircle } from "lucide-react";
-import { COURSE_LABELS, type courseType } from "@/constants/courses";
-import { YEAR_LEVEL_LABELS, type YearLevelType } from "@/constants/year-level";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { format } from "date-fns";
-import { cn, getStatusColor, getStatusVariant } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
-import type { statusType } from "@/constants/status";
-import { Button } from "@/components/ui/button";
-import { DataTableRowActions } from "./table-row-actions";
+import { COURSE_LABELS, type courseType } from "@/constants/courses";
+import type { internshipStatusType } from "@/constants/status";
+import { YEAR_LEVEL_LABELS, type YearLevelType } from "@/constants/year-level";
+import { cn, getStatusColor, getStatusVariant } from "@/lib/utils";
+import type { ColumnDef } from "@tanstack/react-table";
+import { CheckCircle, Clock, XCircle } from "lucide-react";
 
 export const DocumentReviewColumns: ColumnDef<ColumnSchema>[] = [
-  {
-    accessorKey: "documentType",
-    header: "Document",
-    cell: ({ row }) => (
-      <Button
-        className="m-0 h-fit w-full cursor-pointer border-none p-0 shadow-none"
-        variant={"outline"}
-        onClick={() => {
-          window.open(
-            row.original.documentUrl!,
-            "_blank",
-            "noopener,noreferrer",
-          );
-        }}
-      >
-        <div className="border-muted bg-muted/20 flex w-full items-start gap-3 rounded-md border p-3 shadow-sm">
-          <div className="bg-primary/10 text-primary flex h-10 w-10 items-center justify-center rounded-md">
-            <FileText className="h-5 w-5" />
-          </div>
-          <div className="flex flex-col justify-center">
-            <span className="text-foreground truncate text-sm font-semibold">
-              {DOCUMENT_LABELS[row.original.documentType]}
-            </span>
-            <span className="text-muted-foreground text-start text-xs">
-              Document
-            </span>
-          </div>
-        </div>
-      </Button>
-    ),
-  },
   {
     accessorKey: "Student",
     header: "Student",
@@ -87,21 +49,12 @@ export const DocumentReviewColumns: ColumnDef<ColumnSchema>[] = [
     ),
   },
   {
-    accessorKey: "submittedAt",
-    header: "Submitted",
-    cell: ({ row }) => (
-      <div className="text-sm">
-        {format(new Date(row.original.submittedAt as Date), "MMM dd, yyyy")}
-      </div>
-    ),
-  },
-  {
-    accessorKey: "reviewStatus",
+    accessorKey: "status",
     header: "Status",
     cell: ({ row }) => {
       const { reviewStatus } = row.original;
-      const color = getStatusColor(reviewStatus as statusType);
-      const variant = getStatusVariant(reviewStatus as statusType);
+      const color = getStatusColor(reviewStatus as internshipStatusType);
+      const variant = getStatusVariant(reviewStatus as internshipStatusType);
 
       return (
         <Badge
@@ -126,8 +79,6 @@ export const DocumentReviewColumns: ColumnDef<ColumnSchema>[] = [
   {
     id: "actions",
     header: "Actions",
-    cell: ({ row, table }) => {
-      return <DataTableRowActions row={row} table={table} />;
-    },
+    cell: ({ row, table }) => {},
   },
 ];

@@ -19,8 +19,9 @@ export const getStudentProgressByDept = async ({
   try {
     const response = await db
       .select({
-        internId: InternshipTable.userId,
-        internName: UserTable.name,
+        id: InternshipTable.internshipId,
+        name: UserTable.name,
+        surname: UserTable.surname,
         profile: UserTable.profile,
         section: StudentTable.section,
         course: StudentTable.course,
