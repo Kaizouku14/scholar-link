@@ -44,7 +44,6 @@ export const getAllDocumentByDepartment = async ({
 
     return response ?? [];
   } catch (error) {
-    console.error("Failed to get documents:", error);
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
       message: "Failed to get documents: " + (error as Error).message,

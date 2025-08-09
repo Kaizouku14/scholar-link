@@ -14,6 +14,7 @@ import {
   insertStudentProgress,
 } from "@/lib/api/internship/student/progress/mutation";
 import { getAllDocumentByDepartment } from "@/lib/api/internship/coordinator/document-review/query";
+import { getStudentProgressByDept } from "@/lib/api/internship/coordinator/progress-monitoring/query";
 
 export const internshipRouter = createTRPCRouter({
   /******************************************
@@ -76,20 +77,25 @@ export const internshipRouter = createTRPCRouter({
    *           Student API Query             *
    ******************************************/
   getUserUploadedDocuments: protectedRoute.query(async ({ ctx }) => {
-    return await getAllUploadedDocuments({ userId: ctx.session?.user.id! });
+    const userId = ctx.session?.user.id!;
+    return await getAllUploadedDocuments({ userId });
   }),
   getStudentLogProgress: protectedRoute.query(async ({ ctx }) => {
-    return await getStudentLogProgress({ userId: ctx.session?.user.id! });
+    const userId = ctx.session?.user.id!;
+    return await getStudentLogProgress({ userId });
   }),
   /******************************************
    *          Coordinator API Query         *
    ******************************************/
   getAllDocumentByDepartment: protectedRoute.query(async ({ ctx }) => {
     const department = ctx.session?.user.department! as departmentType;
-
     return await getAllDocumentByDepartment({
-      department: department,
+      department,
     });
+  }),
+  getAllStudentProgressByDept: protectedRoute.query(async ({ ctx }) => {
+    const department = ctx.session?.user.department! as departmentType;
+    return await getStudentProgressByDept({ department });
   }),
 
   /******************************************
@@ -99,6 +105,7 @@ export const internshipRouter = createTRPCRouter({
     return await getAllDocumentsAvailable();
   }),
   getAllUpcomingDeadlines: protectedRoute.query(async ({ ctx }) => {
-    return await getAllUpcomingDeadlines({ userId: ctx.session?.user.id! });
+    const userId = ctx.session?.user.id!;
+    return await getAllUpcomingDeadlines({ userId });
   }),
 });
