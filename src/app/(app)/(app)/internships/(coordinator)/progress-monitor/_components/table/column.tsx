@@ -1,3 +1,5 @@
+"use client";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { COURSE_LABELS, type courseType } from "@/constants/courses";
@@ -6,10 +8,13 @@ import { YEAR_LEVEL_LABELS, type YearLevelType } from "@/constants/year-level";
 import { cn, getStatusColor, getStatusVariant } from "@/lib/utils";
 import type { ColumnDef } from "@tanstack/react-table";
 import { CheckCircle, Clock, XCircle } from "lucide-react";
+import type { ColumnSchema } from "./column-schema";
+import { Progress } from "@/components/ui/progress";
+import { DataTableRowActions } from "./table-row-actions";
 
-export const DocumentReviewColumns: ColumnDef<ColumnSchema>[] = [
+export const ProgressMonitoringColumns: ColumnDef<ColumnSchema>[] = [
   {
-    accessorKey: "Student",
+    accessorKey: "surname",
     header: "Student",
     cell: ({ row }) => {
       const { name, surname, course, section, yearLevel, profile } =
@@ -49,12 +54,25 @@ export const DocumentReviewColumns: ColumnDef<ColumnSchema>[] = [
     ),
   },
   {
+    accessorKey: "hours",
+    header: "Hours",
+    cell: ({ row }) => {
+      const { progress, totalRequiredHours } = row.original;
+      return (
+        <div className="flex items-center text-sm">
+          <span>{progress}</span>/
+          <span className="text-muted-foreground">{totalRequiredHours}hrs</span>
+        </div>
+      );
+    },
+  },
+  {
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => {
-      const { reviewStatus } = row.original;
-      const color = getStatusColor(reviewStatus as internshipStatusType);
-      const variant = getStatusVariant(reviewStatus as internshipStatusType);
+      const { status } = row.original;
+      const color = getStatusColor(status as internshipStatusType);
+      const variant = getStatusVariant(status as internshipStatusType);
 
       return (
         <Badge
@@ -64,21 +82,43 @@ export const DocumentReviewColumns: ColumnDef<ColumnSchema>[] = [
             color,
           )}
         >
-          {reviewStatus === "pending" ? (
+          {status === "pending" ? (
             <Clock className={cn("h-4 w-4", color)} />
-          ) : reviewStatus === "approved" ? (
+          ) : status === "completed" ? (
             <CheckCircle className={cn("h-4 w-4", color)} />
           ) : (
             <XCircle className={cn("h-4 w-4", color)} />
           )}
-          {reviewStatus}
+          {status}
         </Badge>
       );
     },
   },
   {
-    id: "actions",
+    accessorKey: "progress",
+    header: "Progress",
+    cell: ({ row }) => {
+      const { progress, totalRequiredHours } = row.original;
+      const progressNum = Number(progress) || 0;
+      const totalHoursNum = Number(totalRequiredHours) || 0;
+      const percentage =
+        totalHoursNum > 0
+          ? Number(((progressNum / totalHoursNum) * 100).toFixed(1))
+          : 0;
+
+      return (
+        <div className="flex items-center gap-2">
+          <Progress value={percentage} />
+          <span className="text-muted-foreground">{percentage}%</span>
+        </div>
+      );
+    },
+  },
+  {
+    id: "Actions",
     header: "Actions",
-    cell: ({ row, table }) => {},
+    cell: ({ row, table }) => {
+      return <DataTableRowActions row={row} />;
+    },
   },
 ];

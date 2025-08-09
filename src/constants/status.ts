@@ -16,5 +16,20 @@ export const STATUS_LABELS = [
   },
 ];
 
+export const INTERNSHIP_STATUS_LABELS = [
+  {
+    value: "pending",
+    label: "Pending",
+  },
+  {
+    value: "completed",
+    label: "Completed",
+  },
+  {
+    value: "canceled",
+    label: "Canceled",
+  },
+];
+
 export type statusType = (typeof STATUS)[number];
 export type internshipStatusType = (typeof INTERNSHIP_STATUS)[number];

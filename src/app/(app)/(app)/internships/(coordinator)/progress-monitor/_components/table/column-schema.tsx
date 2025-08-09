@@ -16,7 +16,7 @@ export const columnSchema = z.object({
   companyName: z.string(),
 
   status: z.enum(INTERNSHIP_STATUS).nullish(),
-  progress: z.number().nullish(),
+  progress: z.string().nullish(),
   totalRequiredHours: z.number().nullish(),
 });
 
