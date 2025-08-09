@@ -22,7 +22,7 @@ export function DataTableRowActions<TData>({
   const handleProcessedTransaction = () => {};
 
   return (
-    <div className="flex justify-center gap-2">
+    <div className="flex gap-2">
       <Button variant={"outline"}>
         <PenBox />
         <span className="ml-1">Update</span>

@@ -109,7 +109,7 @@ export const ProgressMonitoringColumns: ColumnDef<ColumnSchema>[] = [
           : 0;
 
       return (
-        <div className="flex items-center gap-2">
+        <div className="flex w-24 items-center gap-2">
           <Progress value={percentage} />
           <span className="text-muted-foreground">{percentage}%</span>
         </div>
@@ -118,6 +118,7 @@ export const ProgressMonitoringColumns: ColumnDef<ColumnSchema>[] = [
   },
   {
     id: "Actions",
+    header: "Actions",
     cell: ({ row, table }) => {
       return <DataTableRowActions row={row} />;
     },

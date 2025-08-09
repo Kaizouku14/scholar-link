@@ -25,8 +25,6 @@ import {
 } from "@tanstack/react-table";
 import { useState } from "react";
 import { DataTableToolbar } from "./table-toolbar";
-import BulkDeleteDialog from "../dialog/bulk-delete-dialog";
-import { api } from "@/trpc/react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -38,7 +36,6 @@ interface DataTableProps<TData, TValue> {
     label: string;
     value: string;
   }[];
-  bulkDeleteMutation?: UseMutateAsyncFunction<any, any, any, any>;
   refetch?: () => Promise<QueryObserverResult<TData[] | undefined, unknown>>;
 }
 
@@ -49,7 +46,6 @@ export function DataTable<TData, TValue>({
   filteredColumn,
   columnVisibility,
   options,
-  bulkDeleteMutation,
   refetch,
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -88,35 +84,18 @@ export function DataTable<TData, TValue>({
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header, index) => {
-                  const isLastColumn = index === headerGroup.headers.length - 1;
-                  const selectedRows = table.getSelectedRowModel().rows ?? [];
-                  const showTrashIcon = isLastColumn && selectedRows.length > 1;
-
+                {headerGroup.headers.map((header) => {
                   return (
                     <TableHead
                       key={header.id}
                       className="border-border border-b"
                     >
-                      {showTrashIcon ? (
-                        <div className="flex items-center justify-between">
-                          {header.isPlaceholder
-                            ? null
-                            : flexRender(
-                                header.column.columnDef.header,
-                                header.getContext(),
-                              )}
-                          <BulkDeleteDialog
-                            table={table}
-                            deleteMutation={bulkDeleteMutation}
-                          />
-                        </div>
-                      ) : header.isPlaceholder ? null : (
-                        flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )
-                      )}
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
                     </TableHead>
                   );
                 })}
@@ -155,12 +134,9 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
       <div className="flex items-center justify-end space-x-2 py-2">
-        {table.getSelectedRowModel().rows.length > 0 && (
-          <div className="text-muted-foreground flex-1 text-sm">
-            {table.getFilteredSelectedRowModel().rows.length} of{" "}
-            {table.getFilteredRowModel().rows.length} row(s) selected.
-          </div>
-        )}
+        <div className="text-muted-foreground flex-1 text-sm">
+          No. of rows: {table.getRowCount()}
+        </div>
         <Button
           variant="outline"
           size="sm"
