@@ -18,47 +18,53 @@ export const insertStudentProgress = async ({
   logDate: Date;
   hours: number;
 }) => {
-  const internship = await db
-    .select({
-      internshipId: InternshipTable.internshipId,
-    })
-    .from(InternshipTable)
-    .where(eq(InternshipTable.userId, userId));
+  await db.transaction(async (tx) => {
+    const internship = await tx
+      .select({
+        internshipId: InternshipTable.internshipId,
+      })
+      .from(InternshipTable)
+      .where(eq(InternshipTable.userId, userId));
 
-  if (!internship.length) {
-    throw new TRPCError({
-      code: "BAD_REQUEST",
-      message:
-        "You need to log a company first before you can record your progress.",
+    if (!internship.length) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message:
+          "You need to log a company first before you can record your progress.",
+      });
+    }
+
+    const internshipId = internship[0]!.internshipId;
+
+    const existingLog = await tx
+      .select()
+      .from(ProgressLogTable)
+      .where(
+        and(
+          eq(ProgressLogTable.internshipId, internshipId),
+          eq(ProgressLogTable.logDate, logDate),
+        ),
+      )
+      .limit(1);
+
+    if (existingLog.length > 0) {
+      throw new TRPCError({
+        code: "CONFLICT",
+        message: "You’ve already logged your progress for this date.",
+      });
+    }
+
+    await tx.insert(ProgressLogTable).values({
+      progressId: generateUUID(),
+      internshipId,
+      logDate,
+      hours,
     });
-  }
 
-  const internshipId = internship[0]!.internshipId;
-
-  // Check if progress for the same date already exists
-  const existingLog = await db
-    .select()
-    .from(ProgressLogTable)
-    .where(
-      and(
-        eq(ProgressLogTable.internshipId, internshipId),
-        eq(ProgressLogTable.logDate, logDate),
-      ),
-    )
-    .limit(1);
-
-  if (existingLog.length > 0) {
-    throw new TRPCError({
-      code: "CONFLICT",
-      message: "You’ve already logged your progress for this date.",
-    });
-  }
-
-  await db.insert(ProgressLogTable).values({
-    progressId: generateUUID(),
-    internshipId,
-    logDate,
-    hours,
+    await tx
+      .update(InternshipTable)
+      .set({ status: "in-progress" })
+      .where(eq(InternshipTable.internshipId, internshipId));
   });
 };
 

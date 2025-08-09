@@ -7,7 +7,7 @@ import type { internshipStatusType } from "@/constants/status";
 import { YEAR_LEVEL_LABELS, type YearLevelType } from "@/constants/year-level";
 import { cn, getStatusColor, getStatusVariant } from "@/lib/utils";
 import type { ColumnDef } from "@tanstack/react-table";
-import { CheckCircle, Clock, XCircle } from "lucide-react";
+import { CheckCircle, Clock, Hourglass, XCircle } from "lucide-react";
 import type { ColumnSchema } from "./column-schema";
 import { Progress } from "@/components/ui/progress";
 import { DataTableRowActions } from "./table-row-actions";
@@ -84,6 +84,8 @@ export const ProgressMonitoringColumns: ColumnDef<ColumnSchema>[] = [
         >
           {status === "pending" ? (
             <Clock className={cn("h-4 w-4", color)} />
+          ) : status === "in-progress" ? (
+            <Hourglass className={cn("h-4 w-4", color)} />
           ) : status === "completed" ? (
             <CheckCircle className={cn("h-4 w-4", color)} />
           ) : (
@@ -116,7 +118,6 @@ export const ProgressMonitoringColumns: ColumnDef<ColumnSchema>[] = [
   },
   {
     id: "Actions",
-    header: "Actions",
     cell: ({ row, table }) => {
       return <DataTableRowActions row={row} />;
     },
