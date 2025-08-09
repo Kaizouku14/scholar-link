@@ -1,9 +1,13 @@
 import type { departmentType } from "@/constants/departments";
-import { db, eq } from "@/server/db";
-import { user as UserTable } from "@/server/db/schema/auth";
+import { db, eq, sum } from "@/server/db";
+import {
+  user as UserTable,
+  student as StudentTable,
+} from "@/server/db/schema/auth";
 import {
   progressLog as ProgressTable,
   internship as InternshipTable,
+  company as CompanyTable,
 } from "@/server/db/schema/internship";
 import { TRPCError } from "@trpc/server";
 
@@ -14,14 +18,31 @@ export const getStudentProgressByDept = async ({
 }) => {
   try {
     const response = await db
-      .select({})
+      .select({
+        internId: InternshipTable.userId,
+        internName: UserTable.name,
+        profile: UserTable.profile,
+        section: StudentTable.section,
+        course: StudentTable.course,
+        yearLevel: StudentTable.yearLevel,
+        companyName: CompanyTable.name,
+        progress: sum(ProgressTable.hours),
+        totalRequiredHours: InternshipTable.totalOfHoursRequired,
+        status: InternshipTable.status,
+      })
       .from(ProgressTable)
       .innerJoin(
         InternshipTable,
         eq(InternshipTable.internshipId, ProgressTable.internshipId),
       )
+      .innerJoin(StudentTable, eq(InternshipTable.userId, StudentTable.id))
+      .innerJoin(
+        CompanyTable,
+        eq(InternshipTable.companyId, CompanyTable.companyId),
+      )
       .innerJoin(UserTable, eq(UserTable.id, InternshipTable.userId))
       .where(eq(UserTable.department, department))
+      .groupBy(StudentTable.section)
       .execute();
 
     return response ?? [];
