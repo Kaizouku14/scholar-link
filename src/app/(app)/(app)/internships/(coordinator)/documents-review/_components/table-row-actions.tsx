@@ -22,11 +22,17 @@ export function DataTableRowActions<TData>({
 
   return (
     <div className="flex gap-2">
-      <Button variant={"outline"} className="cursor-pointer text-green-600">
+      <Button
+        variant={"outline"}
+        className="cursor-pointer text-green-600 hover:text-green-700"
+      >
         <CheckCircle />
         Approved
       </Button>
-      <Button variant={"outline"} className="text-primary cursor-pointer">
+      <Button
+        variant={"outline"}
+        className="text-primary hover:text-primary/80 cursor-pointer"
+      >
         <XCircle />
         Rejected
       </Button>

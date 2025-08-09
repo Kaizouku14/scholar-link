@@ -123,3 +123,13 @@ export const getStatusIndicatorColor = (status: string) => {
       return "bg-gray-400";
   }
 };
+
+export function formatText(text: string) {
+  return text
+    .trim()
+    .replace(/([a-z])([A-Z])/g, "$1 $2") // split camelCase
+    .replace(/_/g, " ") // underscores → spaces
+    .replace(/\s+/g, " ") // collapse multiple spaces
+    .toLowerCase()
+    .replace(/\b\w/g, (c) => c.toUpperCase());
+}

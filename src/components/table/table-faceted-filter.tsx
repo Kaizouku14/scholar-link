@@ -2,7 +2,7 @@ import * as React from "react";
 import { type Column } from "@tanstack/react-table";
 import { Check, PlusCircle } from "lucide-react";
 
-import { cn } from "@/lib/utils";
+import { cn, formatText } from "@/lib/utils";
 import {
   Popover,
   PopoverContent,
@@ -41,9 +41,9 @@ export function DataTableFacetedFilter<TData, TValue>({
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="outline" size="sm" className="h-8 border-dashed">
+        <Button variant="outline" size="lg" className="h-10 border-dashed">
           <PlusCircle />
-          {title}
+          {formatText(title!)}
           {selectedValues?.size > 0 && (
             <>
               <Separator orientation="vertical" className="mx-2 h-4" />

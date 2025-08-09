@@ -17,16 +17,7 @@ interface DataTableToolbarProps<TData> {
   }[];
 }
 import { Search } from "lucide-react";
-
-function formatDocumentType(documentType: string) {
-  return documentType
-    .trim()
-    .replace(/([a-z])([A-Z])/g, "$1 $2") // split camelCase
-    .replace(/_/g, " ") // underscores → spaces
-    .replace(/\s+/g, " ") // collapse multiple spaces
-    .toLowerCase()
-    .replace(/\b\w/g, (c) => c.toUpperCase());
-}
+import { formatText } from "@/lib/utils";
 
 export const DataTableToolbar = <TData,>({
   table,
@@ -38,11 +29,11 @@ export const DataTableToolbar = <TData,>({
 
   return (
     <div className="mb-1.5 flex items-center justify-between gap-x-2">
-      <div className="flex flex-1 items-center space-x-2">
+      <div className="flex items-center space-x-2">
         <div className="relative flex-1">
           <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform text-gray-400" />
           <Input
-            placeholder={`Search ${formatDocumentType(filteredTitle)}...`}
+            placeholder={`Search ${formatText(filteredTitle)}...`}
             value={
               (table.getColumn(filteredTitle)?.getFilterValue() as string) ?? ""
             }
