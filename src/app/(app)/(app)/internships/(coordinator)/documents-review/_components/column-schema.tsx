@@ -8,6 +8,7 @@ import { SECTIONS } from "@/constants/sections";
 export const columnSchema = z.object({
   id: z.string(),
   documentType: z.enum(DOCUMENTS),
+  documentUrl: z.string().nullish(),
   reviewStatus: z.enum(STATUS).nullish(),
   submittedAt: z.date().nullish(),
 

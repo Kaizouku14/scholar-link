@@ -9,14 +9,12 @@ const ReviewDocumentsTable = () => {
   const { data, isLoading } =
     api.internships.getAllDocumentByDepartment.useQuery();
 
-  console.log(data);
-
   return (
     <div className="w-full">
       {!isLoading && data ? (
         <DataTable
           columns={DocumentReviewColumns}
-          data={data!}
+          data={data}
           columnVisibility={{
             id: false,
           }}

@@ -19,17 +19,31 @@ export const DocumentReviewColumns: ColumnDef<ColumnSchema>[] = [
     accessorKey: "documentType",
     header: "Document",
     cell: ({ row }) => (
-      <div className="border-muted bg-muted/20 flex items-start gap-3 rounded-md border p-3 shadow-sm">
-        <div className="bg-primary/10 text-primary flex h-10 w-10 items-center justify-center rounded-md">
-          <FileText className="h-5 w-5" />
+      <Button
+        className="m-0 h-fit w-full cursor-pointer border-none p-0"
+        variant={"outline"}
+        onClick={() => {
+          window.open(
+            row.original.documentUrl!,
+            "_blank",
+            "noopener,noreferrer",
+          );
+        }}
+      >
+        <div className="border-muted bg-muted/20 flex w-full items-start gap-3 rounded-md border p-3 shadow-sm">
+          <div className="bg-primary/10 text-primary flex h-10 w-10 items-center justify-center rounded-md">
+            <FileText className="h-5 w-5" />
+          </div>
+          <div className="flex flex-col justify-center">
+            <span className="text-foreground truncate text-sm font-semibold">
+              {DOCUMENT_LABELS[row.original.documentType]}
+            </span>
+            <span className="text-muted-foreground text-start text-xs">
+              Document
+            </span>
+          </div>
         </div>
-        <div className="flex flex-col justify-center">
-          <span className="text-foreground text-sm font-semibold">
-            {DOCUMENT_LABELS[row.original.documentType]}
-          </span>
-          <span className="text-muted-foreground text-xs">Document</span>
-        </div>
-      </div>
+      </Button>
     ),
   },
   {
@@ -67,7 +81,9 @@ export const DocumentReviewColumns: ColumnDef<ColumnSchema>[] = [
     accessorKey: "companyName",
     header: "Company",
     cell: ({ row }) => (
-      <div className="text-base">{row.original.companyName}</div>
+      <div className="w-20 truncate text-base" title={row.original.companyName}>
+        {row.original.companyName}
+      </div>
     ),
   },
   {
@@ -112,9 +128,9 @@ export const DocumentReviewColumns: ColumnDef<ColumnSchema>[] = [
     cell: ({ row, table }) => {
       return (
         <div className="flex justify-evenly gap-2">
-          <Button variant={"outline"}>
-            <Eye />
-            View
+          <Button variant={"outline"} className="cursor-pointer">
+            <CheckCircle />
+            Approved
           </Button>
           <DataTableRowActions row={row} table={table} />
         </div>

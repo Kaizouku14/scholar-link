@@ -20,9 +20,12 @@ import { Search } from "lucide-react";
 
 function formatDocumentType(documentType: string) {
   return documentType
-    .split("_") // Split by underscores
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize each word
-    .join(" ");
+    .trim()
+    .replace(/([a-z])([A-Z])/g, "$1 $2") // split camelCase
+    .replace(/_/g, " ") // underscores → spaces
+    .replace(/\s+/g, " ") // collapse multiple spaces
+    .toLowerCase()
+    .replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
 export const DataTableToolbar = <TData,>({
