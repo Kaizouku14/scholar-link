@@ -40,8 +40,8 @@ export const getAllDocumentByDepartment = async ({
       .innerJoin(
         CompanyTable,
         eq(InternshipTable.companyId, CompanyTable.companyId),
-      );
-
+      )
+      .orderBy(InternDocumentsTable.submittedAt, StudentTable.section);
     return response ?? [];
   } catch (error) {
     throw new TRPCError({
