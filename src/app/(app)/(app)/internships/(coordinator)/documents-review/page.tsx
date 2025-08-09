@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 const Pages = () => {
   return (
-    <div className="mx-auto space-y-4 px-2">
+    <div className="mx-auto h-auto space-y-4 px-2">
       <PageBreadCrumb currentPage="Document Review" />
       <DocumentsReviewHeader />
       <ReviewDocumentsTable />

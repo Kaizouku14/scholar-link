@@ -74,11 +74,22 @@ export const isDeadlineApproaching = (deadline: Date) => {
   return daysDiff <= 7 && daysDiff > 0;
 };
 
+/**
+ * Check if deadline has passed
+ * @param {Date} deadline - The deadline to check against
+ * @returns {boolean} Whether deadline has passed
+ */
 export const isDeadlinePassed = (deadline: Date) => {
   const today = new Date();
   return deadline < today;
 };
 
+/**
+ * Calculate the number of days left until a given deadline.
+ *
+ * @param {Date} deadline - The deadline to calculate against.
+ * @returns {number} The absolute number of days left until the deadline.
+ */
 export const calculateDaysLeft = (deadline: Date) => {
   const today = new Date();
   const diffTime = deadline.getTime() - today.getTime();
@@ -124,6 +135,18 @@ export const getStatusIndicatorColor = (status: string) => {
   }
 };
 
+/**
+ * Format a string by trimming, normalizing camelCase to spaces, and capitalizing
+ * the first letter of each word.
+ *
+ * @example
+ * formatText("helloWorld") // "Hello World"
+ * formatText("hello_world") // "Hello World"
+ * formatText("hello   world") // "Hello World"
+ * formatText("helloWORLD") // "Hello World"
+ * @param {string} text
+ * @returns {string}
+ */
 export function formatText(text: string) {
   return text
     .trim()
