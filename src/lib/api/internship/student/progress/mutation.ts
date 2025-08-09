@@ -1,4 +1,4 @@
-import { db, eq, and } from "@/server/db";
+import { db, eq, and, sum } from "@/server/db";
 import { TRPCError } from "@trpc/server";
 import {
   internship as InternshipTable,
@@ -22,9 +22,19 @@ export const insertStudentProgress = async ({
     const internship = await tx
       .select({
         internshipId: InternshipTable.internshipId,
+        totalRequiredHours: InternshipTable.totalOfHoursRequired,
+        currentHours: sum(ProgressLogTable.hours).as("currentHours"),
       })
       .from(InternshipTable)
-      .where(eq(InternshipTable.userId, userId));
+      .leftJoin(
+        ProgressLogTable,
+        eq(InternshipTable.internshipId, ProgressLogTable.internshipId),
+      )
+      .where(eq(InternshipTable.userId, userId))
+      .groupBy(
+        InternshipTable.internshipId,
+        InternshipTable.totalOfHoursRequired,
+      );
 
     if (!internship.length) {
       throw new TRPCError({
@@ -34,7 +44,27 @@ export const insertStudentProgress = async ({
       });
     }
 
-    const internshipId = internship[0]!.internshipId;
+    if (!internship[0]) {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Internship data is missing.",
+      });
+    }
+
+    const { internshipId, totalRequiredHours, currentHours } = internship[0];
+    const completedHours = Number(currentHours ?? 0);
+
+    if (completedHours >= totalRequiredHours) {
+      await tx
+        .update(InternshipTable)
+        .set({ status: "completed" })
+        .where(eq(InternshipTable.internshipId, internshipId));
+
+      throw new TRPCError({
+        code: "CONFLICT",
+        message: "You have already completed your required hours.",
+      });
+    }
 
     const existingLog = await tx
       .select()
@@ -61,10 +91,13 @@ export const insertStudentProgress = async ({
       hours,
     });
 
-    await tx
-      .update(InternshipTable)
-      .set({ status: "in-progress" })
-      .where(eq(InternshipTable.internshipId, internshipId));
+    const newTotalHours = completedHours + hours;
+    if (newTotalHours >= totalRequiredHours) {
+      await tx
+        .update(InternshipTable)
+        .set({ status: "completed" })
+        .where(eq(InternshipTable.internshipId, internshipId));
+    }
   });
 };
 
@@ -123,5 +156,10 @@ export const createStudentInternship = async ({
       startDate,
       totalOfHoursRequired: totalHoursRequired,
     });
+
+    await tx
+      .update(InternshipTable)
+      .set({ status: "in-progress" })
+      .where(eq(InternshipTable.internshipId, internshipId));
   });
 };
