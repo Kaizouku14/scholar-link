@@ -13,16 +13,24 @@ const ReviewDocumentsTable = () => {
   return (
     <div className="w-full">
       {!isLoading && data ? (
-        <DataTable
-          columns={DocumentReviewColumns}
-          data={data}
-          columnVisibility={{
-            id: false,
-          }}
-          filteredTitle={"documentType"}
-          filteredColumn="reviewStatus"
-          options={STATUS_LABELS}
-        />
+        <div className="flex flex-col gap-6">
+          <div className="flex flex-col">
+            <span className="text-2xl font-bold"> Intern's Documents</span>
+            <span className="text-muted-foreground text-sm">
+              Documents to review
+            </span>
+          </div>
+          <DataTable
+            columns={DocumentReviewColumns}
+            data={data}
+            columnVisibility={{
+              id: false,
+            }}
+            filteredTitle={"documentType"}
+            filteredColumn="reviewStatus"
+            options={STATUS_LABELS}
+          />
+        </div>
       ) : (
         <DataTableSkeleton />
       )}
