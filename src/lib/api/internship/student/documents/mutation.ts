@@ -35,7 +35,7 @@ export const insertDocument = async ({
     if (documentExist.length > 0) {
       const oldFileKey = documentExist[0]?.documentKey;
       if (oldFileKey && oldFileKey !== documentKey) {
-        oldFileKeyToDelete = oldFileKey; // store for later deletion
+        oldFileKeyToDelete = oldFileKey;
       }
 
       await tx
