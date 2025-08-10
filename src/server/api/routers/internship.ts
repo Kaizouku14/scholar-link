@@ -17,6 +17,7 @@ import { getAllDocumentByDepartment } from "@/lib/api/internship/coordinator/doc
 import { getStudentProgressByDept } from "@/lib/api/internship/coordinator/progress-monitoring/query";
 import { getAllInternByDept } from "@/lib/api/internship/coordinator/interns/query";
 import { getInternshipStats } from "@/lib/api/internship/coordinator/dashboard/query";
+import { createDocument } from "@/lib/api/internship/coordinator/document-review/mutation";
 
 export const internshipRouter = createTRPCRouter({
   /******************************************
@@ -86,6 +87,19 @@ export const internshipRouter = createTRPCRouter({
     const userId = ctx.session?.user.id!;
     return await getStudentLogProgress({ userId });
   }),
+  /******************************************
+   *          Coordinator API Mutation      *
+   ******************************************/
+  createDocument: protectedRoute
+    .input(
+      z.object({
+        documentType: z.enum(DOCUMENTS),
+        deadline: z.date(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      await createDocument(input);
+    }),
   /******************************************
    *          Coordinator API Query         *
    ******************************************/

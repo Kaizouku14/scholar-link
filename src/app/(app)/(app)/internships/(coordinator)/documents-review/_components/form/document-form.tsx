@@ -29,6 +29,8 @@ import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import SubmitButton from "@/components/forms/submit-button";
+import { api } from "@/trpc/react";
+import { toast } from "sonner";
 
 const DocumentForm = () => {
   const form = useForm<FormSchema>({
@@ -39,7 +41,17 @@ const DocumentForm = () => {
     },
   });
 
-  const onSubmit = async (data: FormSchema) => {};
+  const { mutateAsync: createDocument } =
+    api.internships.createDocument.useMutation();
+  const onSubmit = async (data: FormSchema) => {
+    toast.promise(createDocument(data), {
+      loading: "Creating document...",
+      success: "Document created successfully",
+      error: (error: unknown) => {
+        return (error as Error).message;
+      },
+    });
+  };
 
   return (
     <div className="border-border w-full rounded-xl border p-6">
