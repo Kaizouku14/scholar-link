@@ -69,7 +69,7 @@ export const getAllUploadedDocuments = async ({
   try {
     const response = await db
       .select({
-        documentId: InternDocumentsTable.documentsId,
+        documentId: InternDocumentsTable.documentId,
         documentType: InternDocumentsTable.documentType,
         documentUrl: InternDocumentsTable.documentUrl,
         submittedAt: InternDocumentsTable.submittedAt,
@@ -79,7 +79,7 @@ export const getAllUploadedDocuments = async ({
       .where(eq(InternDocumentsTable.internId, userId))
       .execute();
 
-    return response;
+    return response ?? [];
   } catch (error) {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",

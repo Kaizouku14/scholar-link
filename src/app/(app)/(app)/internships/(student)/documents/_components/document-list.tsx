@@ -1,13 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  EyeIcon,
-  MoreHorizontalIcon,
-  FileTextIcon,
-  CalendarIcon,
-  Download,
-} from "lucide-react";
+import { EyeIcon, FileTextIcon, CalendarIcon } from "lucide-react";
 import { DOCUMENT_LABELS, type documentsType } from "@/constants/documents";
 import { format } from "date-fns";
 import {

@@ -36,14 +36,25 @@ export const getStudentProgressByDept = async ({
         InternshipTable,
         eq(InternshipTable.internshipId, ProgressTable.internshipId),
       )
-      .innerJoin(StudentTable, eq(InternshipTable.userId, StudentTable.id))
+      .innerJoin(StudentTable, eq(StudentTable.id, InternshipTable.userId))
       .innerJoin(
         CompanyTable,
-        eq(InternshipTable.companyId, CompanyTable.companyId),
+        eq(CompanyTable.companyId, InternshipTable.companyId),
       )
       .innerJoin(UserTable, eq(UserTable.id, InternshipTable.userId))
       .where(eq(UserTable.department, department))
-      .groupBy(StudentTable.section)
+      .groupBy(
+        InternshipTable.internshipId,
+        UserTable.name,
+        UserTable.surname,
+        UserTable.profile,
+        StudentTable.section,
+        StudentTable.course,
+        StudentTable.yearLevel,
+        CompanyTable.name,
+        InternshipTable.totalOfHoursRequired,
+        InternshipTable.status,
+      )
       .execute();
 
     return response ?? [];

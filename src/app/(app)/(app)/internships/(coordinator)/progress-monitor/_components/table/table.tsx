@@ -10,6 +10,8 @@ const ProgressMonitoringTable = () => {
   const { data, isLoading } =
     api.internships.getAllStudentProgressByDept.useQuery();
 
+  console.log(data);
+
   return (
     <div className="w-full">
       {!isLoading && data ? (

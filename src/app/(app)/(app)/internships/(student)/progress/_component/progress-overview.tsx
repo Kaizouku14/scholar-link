@@ -40,6 +40,8 @@ const ProgressOverview = () => {
     };
   }, [data]);
 
+  console.log(data);
+
   return (
     <div className="mx-auto w-full">
       <Card>
