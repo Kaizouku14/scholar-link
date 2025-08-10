@@ -1,6 +1,7 @@
 "use client";
 
 import { StatCard } from "@/components/cards/status-card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { api } from "@/trpc/react";
 import { CheckCircle, ClipboardList, Clock, Hourglass } from "lucide-react";
 import type { JSX } from "react";
@@ -13,19 +14,26 @@ const iconMap: { [key: string]: JSX.Element } = {
 };
 
 const CoordinatorDashboardStats = () => {
-  const { data } = api.internships.getDashboardStats.useQuery();
+  const { data, isLoading } = api.internships.getDashboardStats.useQuery();
 
   return (
     <div className="grid grid-cols-4 gap-4">
-      {data?.map((stat, idx) => (
-        <StatCard
-          key={idx}
-          title={stat.title}
-          value={stat.value!}
-          subtitle={stat.subtitle}
-          icon={iconMap[stat.icon]}
-        />
-      ))}
+      {!isLoading && data
+        ? data?.map((stat, idx) => (
+            <StatCard
+              key={idx}
+              title={stat.title}
+              value={stat.value!}
+              subtitle={stat.subtitle}
+              icon={iconMap[stat.icon]}
+            />
+          ))
+        : Array.from({ length: 4 }).map((_, index) => (
+            <Skeleton
+              key={index}
+              className="h-34 w-full animate-pulse rounded-md"
+            />
+          ))}
     </div>
   );
 };

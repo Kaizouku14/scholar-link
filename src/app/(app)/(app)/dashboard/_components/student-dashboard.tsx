@@ -1,7 +1,7 @@
-import EventCalendar from "../scholarship/event-calendar";
-import FeaturedScholarship from "../scholarship/featured-scholarship";
-import StudentScholarshipStatus from "../scholarship/student-status";
-import UpcomingDeadline from "../scholarship/upcoming-deadline";
+import EventCalendar from "./scholarship/event-calendar";
+import FeaturedScholarship from "./scholarship/featured-scholarship";
+import StudentScholarshipStatus from "./scholarship/student-status";
+import UpcomingDeadline from "./scholarship/upcoming-deadline";
 
 const StudentDashboard = () => {
   const events = [
