@@ -11,13 +11,8 @@ export const metadata: Metadata = {
 
 const Pages = () => {
   return (
-    <div className="mx-auto h-auto space-y-6 px-2">
+    <div className="mx-auto h-auto px-2">
       <PageBreadCrumb currentPage="Document Review" />
-      <div className="flex gap-2">
-        <UpcomingDeadlines />
-        <DocumentForm />
-      </div>
-      <Separator />
       <ReviewDocumentsTable />
     </div>
   );

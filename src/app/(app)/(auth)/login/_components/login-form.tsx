@@ -90,7 +90,12 @@ const LoginForm = () => {
               <FormItem className="grid gap-2">
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input type="email" placeholder="m@example.com" {...field} />
+                  <Input
+                    type="email"
+                    placeholder="m@example.com"
+                    className="h-10 shadow-none"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -105,7 +110,12 @@ const LoginForm = () => {
                 <FormItem className="grid gap-2">
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <PasswordInput id="password" type="password" {...field} />
+                    <PasswordInput
+                      id="password"
+                      type="password"
+                      className="h-10 shadow-none"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -145,7 +155,7 @@ const LoginForm = () => {
           </div>
 
           <div className="flex flex-col gap-2">
-            <SubmitButton className="w-full" formState={form.formState}>
+            <SubmitButton className="h-10 w-full" formState={form.formState}>
               Login
             </SubmitButton>
             <div className="item-center flex justify-center gap-2">
