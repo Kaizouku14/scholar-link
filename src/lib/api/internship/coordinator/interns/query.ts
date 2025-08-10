@@ -8,6 +8,8 @@ import {
 } from "@/server/db/schema/internship";
 import { TRPCError } from "@trpc/server";
 
+//TODO: TO VERIFY
+
 export const getAllInternByDept = async ({
   department,
 }: {
@@ -34,7 +36,12 @@ export const getAllInternByDept = async ({
         eq(ProgressTable.internshipId, InternshipTable.internshipId),
       )
       .where(eq(UserTable.department, department))
-      .groupBy(CompanyTable.name)
+      .groupBy(
+        CompanyTable.companyId,
+        CompanyTable.name,
+        CompanyTable.contactPerson,
+        CompanyTable.contactEmail,
+      )
       .execute();
 
     return response ?? [];

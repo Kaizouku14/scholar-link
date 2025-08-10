@@ -65,7 +65,6 @@ const ProgressOverview = () => {
                 </div>
               </div>
             </div>
-
             <div>
               <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm dark:border-gray-700/50 dark:bg-gray-800/50">
                 <div className="mb-4 flex items-center justify-between">
