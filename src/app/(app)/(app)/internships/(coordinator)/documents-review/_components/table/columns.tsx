@@ -30,7 +30,7 @@ export const DocumentReviewColumns: ColumnDef<ColumnSchema>[] = [
           );
         }}
       >
-        <div className="border-muted bg-muted/20 flex w-full items-start gap-3 rounded-md border p-3 shadow-sm">
+        <div className="border-border bg-muted/20 flex w-full items-start gap-3 rounded-md border p-3">
           <div className="bg-primary/10 text-primary flex h-10 w-10 items-center justify-center rounded-md">
             <FileText className="h-5 w-5" />
           </div>

@@ -23,7 +23,6 @@ const UpcomingDeadlines = () => {
     refetch,
     isLoading,
   } = api.internships.getAllUpcomingDeadlines.useQuery();
-  const { data: session } = authClient.useSession();
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   const handleRefresh = async () => {
@@ -33,9 +32,9 @@ const UpcomingDeadlines = () => {
   };
 
   return (
-    <Card className="w-full max-w-md">
+    <Card className="w-full max-w-md shadow-none">
       <CardHeader>
-        <CardTitle className="flex items-center gap-1 font-bold tracking-tight">
+        <CardTitle className="flex items-center gap-1">
           <div className="flex w-full items-center justify-between">
             <div className="flex items-center gap-2">
               <div className="bg-primary/20 flex h-11 w-11 items-center justify-center rounded-full">
@@ -53,7 +52,7 @@ const UpcomingDeadlines = () => {
             <Button
               size={"icon"}
               variant={"outline"}
-              className="cursor-pointer"
+              className="cursor-pointer shadow-none"
               onClick={handleRefresh}
             >
               <RefreshCcw
@@ -64,16 +63,17 @@ const UpcomingDeadlines = () => {
         </CardTitle>
       </CardHeader>
 
-      <CardContent className="h-full border">
+      <CardContent className="h-full">
         {!internshipDocuments || internshipDocuments.length === 0 ? (
-          <div className="flex h-full items-center justify-center gap-2">
+          <div className="flex h-40 items-center justify-center gap-2">
             <div className="text-muted-foreground text-sm">
               No Upcoming Deadlines.
             </div>
           </div>
         ) : (
           <ScrollArea className="h-50 p-2">
-            {!isLoading && internshipDocuments ? (
+            {!isLoading &&
+              internshipDocuments &&
               internshipDocuments?.map((doc, index) => {
                 const daysLeft = calculateDaysLeft(doc.deadline);
                 const isApproaching = isDeadlineApproaching(doc.deadline);
@@ -114,21 +114,10 @@ const UpcomingDeadlines = () => {
                     </div>
                   </div>
                 );
-              })
-            ) : (
-              <Skeleton className="h-40 rounded-xl" />
-            )}
+              })}
           </ScrollArea>
         )}
       </CardContent>
-      {session?.user.role !== "internshipStudent" && (
-        <CardFooter className="mx-auto mt-0 w-full pt-0">
-          <Button variant={"outline"} className="flex w-full items-center p-4">
-            <ClipboardList className="h-4 w-4" />
-            Add Deadline
-          </Button>
-        </CardFooter>
-      )}
     </Card>
   );
 };
