@@ -16,8 +16,10 @@ export const insertDocument = async ({
   documentUrl: string;
   documentKey: string;
 }) => {
-  try {
-    const documentExist = await db
+  let oldFileKeyToDelete: string | null = null;
+
+  await db.transaction(async (tx) => {
+    const documentExist = await tx
       .select({
         documentKey: internDocumentsTable.documentKey,
       })
@@ -33,10 +35,10 @@ export const insertDocument = async ({
     if (documentExist.length > 0) {
       const oldFileKey = documentExist[0]?.documentKey;
       if (oldFileKey && oldFileKey !== documentKey) {
-        await deleteFileIfExists(oldFileKey);
+        oldFileKeyToDelete = oldFileKey; // store for later deletion
       }
 
-      await db
+      await tx
         .update(internDocumentsTable)
         .set({
           documentKey,
@@ -51,7 +53,7 @@ export const insertDocument = async ({
         )
         .execute();
     } else {
-      await db
+      await tx
         .insert(internDocumentsTable)
         .values({
           documentId: generateUUID(),
@@ -63,11 +65,16 @@ export const insertDocument = async ({
         })
         .execute();
     }
-  } catch (error) {
-    console.error("Insert error:", error);
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: "Failed to insert document," + (error as Error).message,
-    });
+  });
+
+  if (oldFileKeyToDelete) {
+    try {
+      await deleteFileIfExists(oldFileKeyToDelete);
+    } catch (err) {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Failed to delete old file",
+      });
+    }
   }
 };

@@ -16,9 +16,6 @@ import { DataTableRowActions } from "./table-row-actions";
 
 export const DocumentReviewColumns: ColumnDef<ColumnSchema>[] = [
   {
-    accessorKey: "surname",
-  },
-  {
     accessorKey: "documentType",
     header: "Document",
     cell: ({ row }) => (
@@ -50,7 +47,7 @@ export const DocumentReviewColumns: ColumnDef<ColumnSchema>[] = [
     ),
   },
   {
-    accessorKey: "student",
+    accessorKey: "surname",
     header: "Student",
     cell: ({ row }) => {
       const { name, surname, course, section, yearLevel, profile } =

@@ -19,7 +19,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { DOCUMENT_LABELS, DOCUMENTS } from "@/constants/documents";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, ClockPlus, FileText } from "lucide-react";
 import {
   Popover,
   PopoverContent,
@@ -60,6 +60,7 @@ const DocumentForm = () => {
             render={({ field }) => (
               <FormItem className="flex flex-col">
                 <FormLabel className="text-foreground text-sm font-medium">
+                  <FileText className="h-4 w-4" />
                   Document Type
                 </FormLabel>
                 <Select
@@ -102,7 +103,7 @@ const DocumentForm = () => {
                     <FormControl>
                       <Button
                         variant="outline"
-                        className={`w-full justify-start rounded-lg border px-3 py-2 text-sm font-normal ${
+                        className={`h-10 w-full justify-start rounded-lg border px-3 py-2 text-sm font-normal shadow-none ${
                           !field.value ? "text-muted-foreground" : ""
                         }`}
                       >
