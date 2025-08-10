@@ -1,9 +1,9 @@
 import PageBreadCrumb from "@/components/breadcrumbs/page-header";
-import StudentDashboard from "./_components/internship/student-dashboard";
 import type { Metadata } from "next";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
-import CoordinatorDashboard from "./_components/internship/coordinator-dashboard";
+import CoordinatorDashboard from "./_components/coordinator-dashboard";
+import StudentDashboard from "./_components/student-dashboard";
 
 export const metadata: Metadata = {
   title: "Dashboard",

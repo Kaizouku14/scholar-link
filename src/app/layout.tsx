@@ -6,7 +6,7 @@ import NextTopLoader from "nextjs-toploader";
 import { TRPCReactProvider } from "@/trpc/react";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
-import { siteConfig } from "@/config/site.config";
+import { siteConfig } from "@/types/site.config";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.origin),

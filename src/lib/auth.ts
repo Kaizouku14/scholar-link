@@ -5,8 +5,8 @@ import * as schema from "@/server/db/schema/auth";
 import { admin } from "better-auth/plugins";
 import { ROLES } from "@/constants/roles";
 import { sendEmail } from "@/services/email";
-import { linkVerificationTemplate } from "@/config/verfityOtpEmailTemplate";
-import { siteConfig } from "@/config/site.config";
+import { linkVerificationTemplate } from "@/services/verfityOtpEmailTemplate";
+import { siteConfig } from "@/types/site.config";
 import { env } from "@/env";
 
 export const auth = betterAuth({
