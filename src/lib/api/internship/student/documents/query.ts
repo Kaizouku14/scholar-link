@@ -1,4 +1,4 @@
-import { db, eq, and, isNull, desc } from "@/server/db";
+import { db, eq, and, isNull, desc, gt, sql } from "@/server/db";
 import { TRPCError } from "@trpc/server";
 import {
   document as DocumentsTable,
@@ -28,6 +28,8 @@ export const getAllUpcomingDeadlines = async ({
   userId: string;
 }) => {
   try {
+    const now = Math.floor(Date.now() / 1000);
+
     const response = await db
       .select({
         name: DocumentsTable.documentType,
@@ -41,14 +43,12 @@ export const getAllUpcomingDeadlines = async ({
           eq(InternDocumentsTable.internId, userId),
         ),
       )
-      //  If you only want upcoming documents (i.e., deadline > now):
-      // .where(
-      //   and(
-      //     isNull(InternDocumentsTable.submittedAt),
-      //     gt(DocumentsTable.deadline, Math.floor(Date.now() / 1000))
-      //   )
-      // );
-      .where(isNull(InternDocumentsTable.submittedAt))
+      .where(
+        and(
+          isNull(InternDocumentsTable.submittedAt),
+          gt(DocumentsTable.deadline, sql`${now}`),
+        ),
+      )
       .orderBy(desc(DocumentsTable.deadline));
 
     return response ?? [];
