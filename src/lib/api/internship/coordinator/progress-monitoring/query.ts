@@ -47,12 +47,10 @@ export const getStudentProgressByDept = async ({
         InternshipTable.internshipId,
         UserTable.name,
         UserTable.surname,
-        UserTable.profile,
         StudentTable.section,
         StudentTable.course,
         StudentTable.yearLevel,
         CompanyTable.name,
-        InternshipTable.totalOfHoursRequired,
         InternshipTable.status,
       )
       .execute();

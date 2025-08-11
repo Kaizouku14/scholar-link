@@ -93,7 +93,7 @@ const LoginForm = () => {
                   <Input
                     type="email"
                     placeholder="m@example.com"
-                    className="h-10 shadow-none"
+                    className="shadow-none"
                     {...field}
                   />
                 </FormControl>
@@ -113,7 +113,7 @@ const LoginForm = () => {
                     <PasswordInput
                       id="password"
                       type="password"
-                      className="h-10 shadow-none"
+                      className="shadow-none"
                       {...field}
                     />
                   </FormControl>
@@ -155,7 +155,7 @@ const LoginForm = () => {
           </div>
 
           <div className="flex flex-col gap-2">
-            <SubmitButton className="h-10 w-full" formState={form.formState}>
+            <SubmitButton className="w-full" formState={form.formState}>
               Login
             </SubmitButton>
             <div className="item-center flex justify-center gap-2">

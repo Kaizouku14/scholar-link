@@ -48,7 +48,7 @@ export const ProgressMonitoringColumns: ColumnDef<ColumnSchema>[] = [
     accessorKey: "companyName",
     header: "Company",
     cell: ({ row }) => (
-      <div className="w-20 truncate text-base" title={row.original.companyName}>
+      <div className="w-20 truncate text-sm" title={row.original.companyName}>
         {row.original.companyName}
       </div>
     ),

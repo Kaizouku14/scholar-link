@@ -1,5 +1,5 @@
 import type { departmentType } from "@/constants/departments";
-import { db, eq, countDistinct, sum } from "@/server/db";
+import { db, eq, countDistinct, sum, sql, and } from "@/server/db";
 import { user as UserTable } from "@/server/db/schema/auth";
 import {
   internship as InternshipTable,
@@ -19,29 +19,39 @@ export const getAllInternByDept = async ({
     const response = await db
       .select({
         companyId: CompanyTable.companyId,
-        companyName: CompanyTable.name,
-        supervisor: CompanyTable.contactPerson,
-        supervisorEmail: CompanyTable.contactEmail,
-        studentCount: countDistinct(InternshipTable.userId).as("studentCount"),
-        totalProgressHours: sum(ProgressTable.hours).as("totalProgressHours"),
+        companyName: sql<string>`MAX(${CompanyTable.name})`.as("companyName"),
+        supervisor: sql<string>`MAX(${CompanyTable.contactPerson})`.as(
+          "supervisor",
+        ),
+        supervisorEmail: sql<string>`MAX(${CompanyTable.contactEmail})`.as(
+          "supervisorEmail",
+        ),
+        studentCount: sql<number>`COUNT(DISTINCT ${InternshipTable.userId})`.as(
+          "studentCount",
+        ),
+        totalProgressHours:
+          sql<number>`COALESCE(SUM(${ProgressTable.hours}), 0)`.as(
+            "totalProgressHours",
+          ),
+        department: UserTable.department,
       })
       .from(CompanyTable)
-      .innerJoin(
+      .leftJoin(
         InternshipTable,
-        eq(CompanyTable.companyId, InternshipTable.companyId),
+        eq(InternshipTable.companyId, CompanyTable.companyId),
       )
-      .innerJoin(UserTable, eq(UserTable.id, InternshipTable.userId))
+      .leftJoin(
+        UserTable,
+        and(
+          eq(UserTable.id, InternshipTable.userId),
+          eq(UserTable.department, department),
+        ),
+      )
       .leftJoin(
         ProgressTable,
         eq(ProgressTable.internshipId, InternshipTable.internshipId),
       )
-      .where(eq(UserTable.department, department))
-      .groupBy(
-        CompanyTable.companyId,
-        CompanyTable.name,
-        CompanyTable.contactPerson,
-        CompanyTable.contactEmail,
-      )
+      .groupBy(CompanyTable.name)
       .execute();
 
     return response ?? [];
