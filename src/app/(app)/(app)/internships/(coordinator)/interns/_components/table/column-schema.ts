@@ -1,11 +1,11 @@
 import z from "zod";
 
 export const InternColumnSchema = z.object({
-  companyName: z.string(),
-  supervisor: z.string(),
-  supervisorEmail: z.string(),
+  companyName: z.string().nullish(),
+  supervisor: z.string().nullish(),
+  supervisorEmail: z.string().nullish(),
   studentCount: z.number(),
-  totalProgressHours: z.number(),
+  totalProgressHours: z.string().nullish(),
   department: z.string().nullish(),
 });
 

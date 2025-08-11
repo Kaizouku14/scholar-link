@@ -1,5 +1,5 @@
 import type { departmentType } from "@/constants/departments";
-import { db, eq, countDistinct, sum, sql, and } from "@/server/db";
+import { db, eq, countDistinct, sum, and, max } from "@/server/db";
 import { user as UserTable } from "@/server/db/schema/auth";
 import {
   internship as InternshipTable,
@@ -7,8 +7,6 @@ import {
   progressLog as ProgressTable,
 } from "@/server/db/schema/internship";
 import { TRPCError } from "@trpc/server";
-
-//TODO: TO VERIFY
 
 export const getAllInternByDept = async ({
   department,
@@ -19,20 +17,11 @@ export const getAllInternByDept = async ({
     const response = await db
       .select({
         companyId: CompanyTable.companyId,
-        companyName: sql<string>`MAX(${CompanyTable.name})`.as("companyName"),
-        supervisor: sql<string>`MAX(${CompanyTable.contactPerson})`.as(
-          "supervisor",
-        ),
-        supervisorEmail: sql<string>`MAX(${CompanyTable.contactEmail})`.as(
-          "supervisorEmail",
-        ),
-        studentCount: sql<number>`COUNT(DISTINCT ${InternshipTable.userId})`.as(
-          "studentCount",
-        ),
-        totalProgressHours:
-          sql<number>`COALESCE(SUM(${ProgressTable.hours}), 0)`.as(
-            "totalProgressHours",
-          ),
+        companyName: max(CompanyTable.name),
+        supervisor: max(CompanyTable.contactPerson),
+        supervisorEmail: max(CompanyTable.contactEmail),
+        studentCount: countDistinct(InternshipTable.userId),
+        totalProgressHours: sum(ProgressTable.hours),
         department: UserTable.department,
       })
       .from(CompanyTable)

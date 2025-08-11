@@ -58,10 +58,10 @@ export const InternsColumns: ColumnDef<InternColumn>[] = [
       const { totalProgressHours, studentCount, department } = row.original;
       const hoursRequired = departmentHoursMap[department as departmentType];
       const percentage =
-        totalProgressHours > 0
+        Number(totalProgressHours) > 0
           ? Number(
               (
-                (totalProgressHours / (studentCount * hoursRequired)) *
+                (Number(totalProgressHours) / (studentCount * hoursRequired)) *
                 100
               ).toFixed(1),
             )
@@ -114,10 +114,10 @@ export const InternsColumns: ColumnDef<InternColumn>[] = [
       const { totalProgressHours, studentCount, department } = row.original;
       const hoursRequired = departmentHoursMap[department as departmentType];
       const percentage =
-        totalProgressHours > 0
+        Number(totalProgressHours) > 0
           ? Number(
               (
-                (totalProgressHours / (studentCount * hoursRequired)) *
+                (Number(totalProgressHours) / (studentCount * hoursRequired)) *
                 100
               ).toFixed(1),
             )
