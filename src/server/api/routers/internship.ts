@@ -113,6 +113,7 @@ export const internshipRouter = createTRPCRouter({
       department,
     });
   }),
+  //TODO: TO CONSIDER
   getDashboardStats: protectedRoute.query(async ({ ctx }) => {
     const department = ctx.session?.user.department! as departmentType;
     return await getInternshipStats({ department });

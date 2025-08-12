@@ -7,6 +7,7 @@ import DocumentList from "./document-list";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { RefreshCcw } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const Documents = () => {
   const {
@@ -73,60 +74,69 @@ const Documents = () => {
           />
         </Button>
       </div>
+      {isLoading ? (
+        <Skeleton className="h-96 w-full rounded-xl" />
+      ) : (
+        <>
+          <TabsContent
+            value="documents"
+            className="border-border rounded-xl border p-4"
+          >
+            <h3 className="mb-4 text-lg font-semibold">All Documents</h3>
+            {filteredDocuments.all.length === 0 ? (
+              <div className="flex h-74 items-center justify-center">
+                <p className="text-muted-foreground">
+                  No documents uploaded yet.
+                </p>
+              </div>
+            ) : (
+              <ScrollArea className="flex h-74 gap-2">
+                {filteredDocuments.all.map((doc) => (
+                  <DocumentList key={doc.documentId} documents={doc} />
+                ))}
+              </ScrollArea>
+            )}
+          </TabsContent>
 
-      <TabsContent
-        value="documents"
-        className="border-border rounded-xl border p-4"
-      >
-        <h3 className="mb-4 text-lg font-semibold">All Documents</h3>
-        {filteredDocuments.all.length === 0 ? (
-          <div className="flex h-74 items-center justify-center">
-            <p className="text-muted-foreground">No documents uploaded yet.</p>
-          </div>
-        ) : (
-          <ScrollArea className="flex h-74 gap-2">
-            {filteredDocuments.all.map((doc) => (
-              <DocumentList key={doc.documentId} documents={doc} />
-            ))}
-          </ScrollArea>
-        )}
-      </TabsContent>
+          <TabsContent
+            value="pending"
+            className="border-border rounded-xl border p-4"
+          >
+            <h3 className="mb-4 text-lg font-semibold">Pending Review</h3>
+            {filteredDocuments.pending.length === 0 ? (
+              <div className="flex h-74 items-center justify-center">
+                <p className="text-muted-foreground">No pending documents.</p>
+              </div>
+            ) : (
+              <ScrollArea className="flex h-74 gap-2">
+                {filteredDocuments.pending.map((doc) => (
+                  <DocumentList key={doc.documentId} documents={doc} />
+                ))}
+              </ScrollArea>
+            )}
+          </TabsContent>
 
-      <TabsContent
-        value="pending"
-        className="border-border rounded-xl border p-4"
-      >
-        <h3 className="mb-4 text-lg font-semibold">Pending Review</h3>
-        {filteredDocuments.pending.length === 0 ? (
-          <div className="flex h-74 items-center justify-center">
-            <p className="text-muted-foreground">No pending documents.</p>
-          </div>
-        ) : (
-          <ScrollArea className="flex h-74 gap-2">
-            {filteredDocuments.pending.map((doc) => (
-              <DocumentList key={doc.documentId} documents={doc} />
-            ))}
-          </ScrollArea>
-        )}
-      </TabsContent>
-
-      <TabsContent
-        value="approved"
-        className="border-border rounded-xl border p-4"
-      >
-        <h3 className="mb-4 text-lg font-semibold">Approved Documents</h3>
-        {filteredDocuments.approved.length === 0 ? (
-          <div className="flex h-74 items-center justify-center">
-            <p className="text-muted-foreground">No approved documents yet.</p>
-          </div>
-        ) : (
-          <ScrollArea className="flex h-74 gap-2">
-            {filteredDocuments.approved.map((doc) => (
-              <DocumentList key={doc.documentId} documents={doc} />
-            ))}
-          </ScrollArea>
-        )}
-      </TabsContent>
+          <TabsContent
+            value="approved"
+            className="border-border rounded-xl border p-4"
+          >
+            <h3 className="mb-4 text-lg font-semibold">Approved Documents</h3>
+            {filteredDocuments.approved.length === 0 ? (
+              <div className="flex h-74 items-center justify-center">
+                <p className="text-muted-foreground">
+                  No approved documents yet.
+                </p>
+              </div>
+            ) : (
+              <ScrollArea className="flex h-74 gap-2">
+                {filteredDocuments.approved.map((doc) => (
+                  <DocumentList key={doc.documentId} documents={doc} />
+                ))}
+              </ScrollArea>
+            )}
+          </TabsContent>
+        </>
+      )}
     </Tabs>
   );
 };

@@ -33,7 +33,7 @@ export default function ProgressLogs({
               Session History
             </div>
           </div>
-          <ScrollArea className="h-80">
+          <ScrollArea className="max-h-80">
             <div className="m-0 p-0">
               {logs && logs?.length ? (
                 <div className="divide-border divide-y rounded-xl">
