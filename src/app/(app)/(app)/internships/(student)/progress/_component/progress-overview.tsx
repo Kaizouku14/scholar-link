@@ -6,11 +6,8 @@ import { Clock, CheckCircle, CalendarDays, TrendingUp } from "lucide-react";
 import ProgressForm from "./form/progress-form";
 import { api } from "@/trpc/react";
 import { useMemo } from "react";
-import type { GelLocalDateStringBuilderInitial } from "drizzle-orm/gel-core";
-import { Skeleton } from "@/components/ui/skeleton";
 import { ProgressOverviewSkeleton } from "./progres-overview-skeleton";
 import { Separator } from "@/components/ui/separator";
-import { format } from "date-fns";
 import ProgressLogs from "./progress-logs";
 
 const ProgressOverview = () => {

@@ -31,6 +31,8 @@ export const internshipRouter = createTRPCRouter({
         contactPerson: z.string(),
         contactEmail: z.string(),
         contactNo: z.string(),
+        startDate: z.date(),
+        endDate: z.date(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -42,6 +44,8 @@ export const internshipRouter = createTRPCRouter({
         contactPerson: input.contactPerson,
         contactEmail: input.contactEmail,
         contactNo: input.contactNo,
+        startDate: input.startDate,
+        endDate: input.endDate,
       };
       await createStudentInternship(studentInternship);
     }),
