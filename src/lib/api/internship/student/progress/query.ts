@@ -10,7 +10,6 @@ export const getStudentLogProgress = async ({ userId }: { userId: string }) => {
       totalHoursRequired: InternshipTable.totalOfHoursRequired,
       dateLogs: ProgressLogTable.logDate,
       hoursLog: ProgressLogTable.hours,
-      totalHoursCompleted: sum(ProgressLogTable.hours),
     })
     .from(ProgressLogTable)
     .innerJoin(
