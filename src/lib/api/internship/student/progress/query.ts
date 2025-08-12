@@ -1,4 +1,4 @@
-import { db, eq } from "@/server/db";
+import { db, eq, sum } from "@/server/db";
 import {
   progressLog as ProgressLogTable,
   internship as InternshipTable,
@@ -9,7 +9,8 @@ export const getStudentLogProgress = async ({ userId }: { userId: string }) => {
     .select({
       totalHoursRequired: InternshipTable.totalOfHoursRequired,
       dateLogs: ProgressLogTable.logDate,
-      totalHoursCompleted: ProgressLogTable.hours,
+      hoursLog: ProgressLogTable.hours,
+      totalHoursCompleted: sum(ProgressLogTable.hours),
     })
     .from(ProgressLogTable)
     .innerJoin(
