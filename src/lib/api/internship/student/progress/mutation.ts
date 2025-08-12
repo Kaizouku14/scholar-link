@@ -109,6 +109,8 @@ export const createStudentInternship = async ({
   contactPerson,
   contactEmail,
   contactNo,
+  startDate,
+  endDate,
 }: {
   userId: string;
   department: departmentType;
@@ -117,6 +119,8 @@ export const createStudentInternship = async ({
   contactPerson: string;
   contactEmail: string;
   contactNo: string;
+  startDate: Date;
+  endDate: Date;
 }) => {
   const internship = await db
     .select({
@@ -138,7 +142,6 @@ export const createStudentInternship = async ({
     const companyId = generateUUID();
     const internshipId = generateUUID();
     const totalHoursRequired = departmentHoursMap[department];
-    const startDate = new Date();
 
     await tx.insert(CompanyTable).values({
       companyId,
@@ -154,6 +157,7 @@ export const createStudentInternship = async ({
       userId,
       companyId,
       startDate,
+      endDate,
       totalOfHoursRequired: totalHoursRequired,
     });
 

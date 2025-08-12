@@ -16,6 +16,15 @@ import { Textarea } from "@/components/ui/textarea";
 import { companyformSchema, type CompanyFormSchema } from "./schema";
 import SubmitButton from "@/components/forms/submit-button";
 import { api } from "@/trpc/react";
+import { CalendarIcon } from "lucide-react";
+import { Calendar } from "@/components/ui/calendar";
+import { Button } from "@/components/ui/button";
+import { format } from "date-fns";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 const CompanyForm = () => {
   const form = useForm<CompanyFormSchema>({
@@ -26,13 +35,23 @@ const CompanyForm = () => {
       contactPerson: "",
       contactEmail: "",
       contactNo: "",
+      startDate: undefined,
+      endDate: undefined,
     },
   });
 
   const { mutateAsync: createInternship } =
     api.internships.createStudentInternship.useMutation();
   function onSubmit(values: CompanyFormSchema) {
-    const { name, address, contactPerson, contactEmail, contactNo } = values;
+    const {
+      name,
+      address,
+      contactPerson,
+      contactEmail,
+      contactNo,
+      startDate,
+      endDate,
+    } = values;
     toast.promise(
       createInternship({
         name,
@@ -40,6 +59,8 @@ const CompanyForm = () => {
         contactPerson,
         contactEmail,
         contactNo,
+        startDate,
+        endDate,
       }),
       {
         loading: "Saving internship company details...",
@@ -147,9 +168,99 @@ const CompanyForm = () => {
             />
           </div>
 
+          <div className="grid grid-cols-2 gap-4">
+            <FormField
+              control={form.control}
+              name="startDate"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="flex items-center gap-2">
+                    <CalendarIcon className="h-4 w-4" />
+                    Start Date
+                  </FormLabel>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant="outline"
+                          className={`w-full pl-3 text-left font-normal ${!field.value ? "text-muted-foreground" : ""}`}
+                        >
+                          {field.value ? (
+                            format(field.value, "PPP")
+                          ) : (
+                            <span>Pick a date</span>
+                          )}
+                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="z-100 w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        disabled={(date) => {
+                          const today = new Date();
+                          today.setHours(0, 0, 0, 0); // reset time to midnight
+                          return date < today;
+                        }}
+                        captionLayout="dropdown"
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="endDate"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="flex items-center gap-2">
+                    <CalendarIcon className="h-4 w-4" />
+                    End Date
+                  </FormLabel>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant="outline"
+                          className={`w-full pl-3 text-left font-normal ${!field.value ? "text-muted-foreground" : ""}`}
+                        >
+                          {field.value ? (
+                            format(field.value, "PPP")
+                          ) : (
+                            <span>Pick a date</span>
+                          )}
+                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="z-100 w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        disabled={(date) => {
+                          const today = new Date();
+                          today.setHours(0, 0, 0, 0); // reset time to midnight
+                          return date < today;
+                        }}
+                        captionLayout="dropdown"
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
           <div className="flex justify-end">
             <SubmitButton formState={form.formState} className="mt-4 w-40">
-              Add Company
+              Submit
             </SubmitButton>
           </div>
         </form>

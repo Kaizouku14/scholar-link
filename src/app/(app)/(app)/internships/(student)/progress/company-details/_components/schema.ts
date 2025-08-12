@@ -20,6 +20,12 @@ export const companyformSchema = z.object({
     })
     .min(1, { message: "Contact number is required" })
     .regex(/^09\d{9}$/, { message: "Invalid phone number format" }),
+  startDate: z.date({
+    required_error: "Start date is required.",
+  }),
+  endDate: z.date({
+    required_error: "End date is required.",
+  }),
 });
 
 export type CompanyFormSchema = z.infer<typeof companyformSchema>;
