@@ -89,13 +89,15 @@ const EventCalendar = ({ events = [] }: SimpleCalendarProps) => {
       days.push(
         <div
           key={day}
-          className={`border-border flex h-20 cursor-pointer flex-col items-center justify-start rounded border ${
+          className={`border-border flex h-20 cursor-pointer flex-col items-center justify-start overflow-hidden rounded border p-1 sm:h-20 ${
             dayEvent ? "border-red-600 bg-red-400" : "bg-background"
           }`}
         >
-          <span className="self-end pr-1 text-sm font-medium">{day}</span>
+          <span className="self-end pr-0.5 text-xs font-medium sm:pr-1 sm:text-sm">
+            {day}
+          </span>
           {dayEvent && (
-            <span className="mx-2 mt-1 truncate text-center text-xs leading-tight text-wrap">
+            <span className="mx-1 mt-0.5 line-clamp-2 text-center text-[10px] leading-tight sm:text-xs">
               {dayEvent.name in DOCUMENT_LABELS
                 ? DOCUMENT_LABELS[dayEvent.name as documentsType]
                 : dayEvent.name}
@@ -125,23 +127,25 @@ const EventCalendar = ({ events = [] }: SimpleCalendarProps) => {
   };
 
   return (
-    <div className="border-border mx-auto w-full rounded-xl border p-4">
-      <div className="mb-4 flex items-center justify-between px-2 pt-2">
-        <h2 className="text-2xl font-medium">
+    <div className="border-border mx-auto w-full rounded-xl border p-2 sm:p-4">
+      <div className="mb-4 flex flex-col gap-2 px-1 pt-2 sm:flex-row sm:items-center sm:justify-between sm:px-2">
+        <h2 className="text-lg font-medium sm:text-2xl">
           {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
         </h2>
         <div className="flex space-x-1">
           <Button
             variant="outline"
-            size="sm"
+            size="icon"
             onClick={() => navigateMonth("prev")}
+            className="h-8 w-8 sm:h-9 sm:w-9"
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
           <Button
             variant="outline"
-            size="sm"
+            size="icon"
             onClick={() => navigateMonth("next")}
+            className="h-8 w-8 sm:h-9 sm:w-9"
           >
             <ChevronRight className="h-4 w-4" />
           </Button>
@@ -150,13 +154,18 @@ const EventCalendar = ({ events = [] }: SimpleCalendarProps) => {
 
       <div className="mb-2 grid grid-cols-7">
         {dayNames.map((day) => (
-          <div key={day} className="flex h-8 items-center justify-center">
-            <span className="text-xs font-medium text-gray-500">{day}</span>
+          <div
+            key={day}
+            className="flex h-6 items-center justify-center sm:h-8"
+          >
+            <span className="text-[10px] font-medium text-gray-500 sm:text-xs">
+              {day}
+            </span>
           </div>
         ))}
       </div>
 
-      <div className="grid grid-cols-7 gap-1 px-2">{renderDays()}</div>
+      <div className="grid grid-cols-7 gap-1">{renderDays()}</div>
     </div>
   );
 };

@@ -40,7 +40,7 @@ export const InternsDashboardStats = () => {
   }, [progress]);
 
   return (
-    <div className="grid grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
       <StatCard
         title="Total Hours Required"
         value={statistic.totalHoursRequired}
@@ -61,7 +61,7 @@ export const InternsDashboardStats = () => {
       />
       <StatCard
         title="Latest Session"
-        value={statistic.latestHoursLog}
+        value={statistic.latestHoursLog + "h"}
         subtitle={format(statistic.latestDate!, "MMM dd")}
         icon={<CalendarDays className="text-primary h-4 w-4" />}
       />

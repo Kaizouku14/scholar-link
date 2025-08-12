@@ -24,32 +24,10 @@ export const getInternshipStats = async ({
       .groupBy(InternshipTable.status)
       .execute();
 
-    return [
-      {
-        title: "Assigned Students",
-        value: counts?.studentCount,
-        subtitle: `${department} Department`,
-        icon: "clipboard",
-      },
-      {
-        title: "Pending",
-        value: counts?.pendingCount,
-        subtitle: "Requires your review",
-        icon: "clock",
-      },
-      {
-        title: "In Progress",
-        value: counts?.inProgressCount,
-        subtitle: "Requires your attention",
-        icon: "hourglass",
-      },
-      {
-        title: "Completed",
-        value: counts?.completedCount,
-        subtitle: "Successfully completed",
-        icon: "check-circle",
-      },
-    ];
+    return {
+      counts,
+      department,
+    };
   } catch (error) {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",

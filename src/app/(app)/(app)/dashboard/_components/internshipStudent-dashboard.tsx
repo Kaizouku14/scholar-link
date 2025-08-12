@@ -3,6 +3,7 @@ import { api } from "@/trpc/react";
 import EventCalendar from "./helper/event-calendar";
 import { InternsDashboardStats } from "./internship/student-stats";
 import { Skeleton } from "@/components/ui/skeleton";
+import UpcomingDeadlines from "@/components/cards/upcoming-deadlines";
 
 const InternshipStudentDashboard = () => {
   const { data: deadlines, isLoading } =
@@ -32,7 +33,13 @@ const InternshipStudentDashboard = () => {
             </span>
           </div>
           <InternsDashboardStats />
-          <EventCalendar events={deadlines} />
+          {/* TODO: TO CONSIDER */}
+          <div className="hidden md:flex">
+            <EventCalendar events={deadlines} />
+          </div>
+          <div className="flex md:hidden">
+            <UpcomingDeadlines />
+          </div>
         </>
       )}
     </div>
