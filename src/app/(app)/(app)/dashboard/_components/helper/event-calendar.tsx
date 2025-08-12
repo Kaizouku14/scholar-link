@@ -3,9 +3,14 @@
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  DOCUMENT_LABELS,
+  DOCUMENTS,
+  type documentsType,
+} from "@/constants/documents";
 
 interface SimpleCalendarProps {
-  events?: { date: string; title: string }[];
+  events?: { deadline: Date; name: string | documentsType }[];
 }
 
 const EventCalendar = ({ events = [] }: SimpleCalendarProps) => {
@@ -46,7 +51,12 @@ const EventCalendar = ({ events = [] }: SimpleCalendarProps) => {
 
   const getEventForDay = (day: number) => {
     const dateString = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-    return events?.find((event) => event.date === dateString);
+
+    return events?.find((event) => {
+      const eventDate = new Date(event.deadline);
+      const eventDateString = `${eventDate.getFullYear()}-${String(eventDate.getMonth() + 1).padStart(2, "0")}-${String(eventDate.getDate()).padStart(2, "0")}`;
+      return eventDateString === dateString;
+    });
   };
 
   const renderDays = () => {
@@ -62,20 +72,12 @@ const EventCalendar = ({ events = [] }: SimpleCalendarProps) => {
     );
     const daysInPrevMonth = prevMonth.getDate();
 
-    //  Get next month info
-    // const nextMonth = new Date(
-    //   currentDate.getFullYear(),
-    //   currentDate.getMonth() + 1,
-    //   1,
-    // );
-
-    // Previous month's trailing days (gray)
     for (let i = firstDay - 1; i >= 0; i--) {
       const day = daysInPrevMonth - i;
       days.push(
         <div
           key={`prev-${day}`}
-          className="border-border flex h-18 cursor-pointer flex-col items-center justify-start rounded border p-1"
+          className="border-border flex h-20 cursor-pointer flex-col items-center justify-start rounded border p-1"
         >
           <span className="text-muted-foreground text-sm font-medium">
             {day}
@@ -91,14 +93,16 @@ const EventCalendar = ({ events = [] }: SimpleCalendarProps) => {
       days.push(
         <div
           key={day}
-          className={`border-border flex h-18 cursor-pointer flex-col items-center justify-start rounded border p-1 ${
+          className={`border-border flex h-20 cursor-pointer flex-col items-center justify-start rounded border ${
             dayEvent ? "border-red-600 bg-red-400" : "bg-background"
           }`}
         >
           <span className="self-end pr-1 text-sm font-medium">{day}</span>
           {dayEvent && (
-            <span className="mt-1 text-center text-xs leading-tight">
-              {dayEvent.title}
+            <span className="mx-2 mt-1 truncate text-center text-xs leading-tight text-wrap">
+              {dayEvent.name in DOCUMENT_LABELS
+                ? DOCUMENT_LABELS[dayEvent.name as documentsType]
+                : dayEvent.name}
             </span>
           )}
         </div>,
@@ -112,7 +116,7 @@ const EventCalendar = ({ events = [] }: SimpleCalendarProps) => {
       days.push(
         <div
           key={`next-${day}`}
-          className="border-border flex h-18 cursor-pointer flex-col items-center justify-start rounded border p-1"
+          className="border-border flex h-20 cursor-pointer flex-col items-center justify-start rounded border p-1"
         >
           <span className="text-muted-foreground text-sm font-medium">
             {day}

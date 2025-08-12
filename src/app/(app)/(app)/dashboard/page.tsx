@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import CoordinatorDashboard from "./_components/coordinator-dashboard";
-import StudentDashboard from "./_components/student-dashboard";
+import InternshipStudentDashboard from "./_components/internshipStudent-dashboard";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -22,7 +22,7 @@ const Pages = async () => {
       {role === "internshipCoordinator" ? (
         <CoordinatorDashboard />
       ) : role === "internshipStudent" ? (
-        <StudentDashboard />
+        <InternshipStudentDashboard />
       ) : (
         <div>No Dashboard</div>
       )}
