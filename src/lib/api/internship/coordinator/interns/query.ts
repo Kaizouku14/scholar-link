@@ -1,6 +1,6 @@
 import type { departmentType } from "@/constants/departments";
 import { ROLES } from "@/constants/roles";
-import { db, eq, countDistinct, sum, and, max, ne, isNull } from "@/server/db";
+import { db, eq, countDistinct, sum, and, max, isNull, sql } from "@/server/db";
 import {
   user as UserTable,
   student as StudentTable,
@@ -8,6 +8,7 @@ import {
 import {
   internship as InternshipTable,
   company as CompanyTable,
+  supervisor as SupervisorTable,
   progressLog as ProgressTable,
 } from "@/server/db/schema/internship";
 import { TRPCError } from "@trpc/server";
@@ -23,16 +24,34 @@ export const getAllInternByDept = async ({
         companyId: CompanyTable.companyId,
         companyName: max(CompanyTable.name),
         address: max(CompanyTable.address),
-        supervisor: max(CompanyTable.contactPerson),
-        supervisorEmail: max(CompanyTable.contactEmail),
+        supervisor: max(SupervisorTable.name),
+        supervisorEmail: max(SupervisorTable.email),
         studentCount: countDistinct(InternshipTable.userId),
         totalProgressHours: sum(ProgressTable.hours),
         department: UserTable.department,
+        interns: sql`
+            json_group_array(
+                DISTINCT json_object(
+                'name', ${UserTable.name},
+                'middleName', ${UserTable.middleName},
+                'surname', ${UserTable.surname},
+                'email', ${UserTable.email},
+                'course', ${StudentTable.course},
+                'yearLevel', ${StudentTable.yearLevel},
+                'section', ${StudentTable.section},
+                'studentNo', ${StudentTable.studentNo}
+                )
+            )
+        `.as("interns"),
       })
       .from(CompanyTable)
       .leftJoin(
         InternshipTable,
         eq(InternshipTable.companyId, CompanyTable.companyId),
+      )
+      .leftJoin(
+        SupervisorTable,
+        eq(InternshipTable.supervisorId, SupervisorTable.supervisorId),
       )
       .leftJoin(
         UserTable,
@@ -41,14 +60,19 @@ export const getAllInternByDept = async ({
           eq(UserTable.department, department),
         ),
       )
+      .leftJoin(StudentTable, eq(UserTable.id, StudentTable.id))
       .leftJoin(
         ProgressTable,
         eq(ProgressTable.internshipId, InternshipTable.internshipId),
       )
-      .groupBy(CompanyTable.name)
+      .where(eq(UserTable.id, InternshipTable.userId))
+      .groupBy(CompanyTable.companyId)
       .execute();
 
-    return [];
+    return response.map((row) => ({
+      ...row,
+      interns: row.interns ? JSON.parse(row.interns as string) : [],
+    }));
   } catch (error) {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
