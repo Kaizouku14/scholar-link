@@ -38,7 +38,7 @@ export const insertStudentProgress = async ({
       throw new TRPCError({
         code: "BAD_REQUEST",
         message:
-          "You need to log a company first before you can record your progress.",
+          "You need to contact your coordinator to create an internship.",
       });
     }
 

@@ -49,29 +49,22 @@ const CompanyForm = () => {
 
   const { mutateAsync: createInternship } =
     api.internships.createStudentInternship.useMutation();
-  async function onSubmit(values: CompanyFormSchema) {
-    setIsLoading(true);
+  const onSubmit = async (values: CompanyFormSchema) => {
+    const toastId = toast.loading("Saving internship company details...");
     try {
-      await toast.promise(
-        createInternship({
-          ...values,
-        }),
-        {
-          loading: "Saving internship company details...",
-          success: () => {
-            form.reset();
-            return "Internship company linked successfully!";
-          },
-          error: (error: unknown) => ({
-            message: (error as Error).message,
-            duration: 5000,
-          }),
-        },
-      );
+      await createInternship({
+        ...values,
+      });
+
+      toast.success("Internship company linked successfully!", {
+        id: toastId,
+      });
+    } catch (error) {
+      toast.error((error as Error).message);
     } finally {
-      setIsLoading(false);
+      toast.dismiss(toastId);
     }
-  }
+  };
 
   return (
     <div className="border-border mx-auto w-full space-y-6 rounded-xl border p-8">
@@ -345,13 +338,9 @@ const CompanyForm = () => {
           </div>
 
           <div className="flex justify-end">
-            <Button disabled={isLoading} className="mt-4 w-40">
-              {isLoading ? (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              ) : (
-                "Submit"
-              )}
-            </Button>
+            <SubmitButton formState={form.formState} className="mt-4 w-40">
+              Submit
+            </SubmitButton>
           </div>
         </form>
       </Form>

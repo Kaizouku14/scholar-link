@@ -10,7 +10,7 @@ const FormHeader = () => {
   const router = useRouter();
 
   const handleBackButton = () => {
-    router.push(PageRoutes.INTERNSHIPS_PROGRESS);
+    router.push(PageRoutes.INTERNSHIPS_INTERNS);
   };
 
   return (
@@ -24,7 +24,7 @@ const FormHeader = () => {
         <ChevronLeft className="size-6" />
       </Button>
       <div>
-        <small className="text-muted-foreground">Back to Progress</small>
+        <small className="text-muted-foreground">Back to Internships</small>
 
         <h2 className="text-lg leading-tight font-semibold">Company Details</h2>
       </div>
