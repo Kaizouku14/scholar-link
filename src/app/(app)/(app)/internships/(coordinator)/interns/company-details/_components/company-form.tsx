@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/popover";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { InternsComboBox } from "./interns-cb";
+import { CompanyCombobox } from "./company-cb";
 const CompanyForm = () => {
   const form = useForm<CompanyFormSchema>({
     resolver: zodResolver(companyformSchema),
@@ -117,7 +118,7 @@ const CompanyForm = () => {
                           value="list"
                           className="flex h-full items-center"
                         >
-                          Make changes to your account here.
+                          <CompanyCombobox {...field} />
                         </TabsContent>
                         <TabsContent
                           value="new"

@@ -18,17 +18,15 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { api } from "@/trpc/react";
-import { YEAR_LEVEL_LABELS } from "@/constants/year-level";
-import { COURSE_LABELS } from "@/constants/courses";
 
-type AccountListProps = {
+type CompanyComboboxProps = {
   value: string;
   onChange: (value: string) => void;
 };
 
-export const InternsComboBox = ({ value, onChange }: AccountListProps) => {
+export const CompanyCombobox = ({ value, onChange }: CompanyComboboxProps) => {
   const [open, setOpen] = React.useState(false);
-  const { data } = api.internships.getAllUserAccountByDept.useQuery();
+  const { data: CompanyRecords } = api.internships.getCompanyRecords.useQuery();
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -40,19 +38,19 @@ export const InternsComboBox = ({ value, onChange }: AccountListProps) => {
           className="w-full justify-between"
         >
           {value
-            ? data?.find((detail) => detail.id === value)?.studentNo
-            : "Select student No."}
+            ? CompanyRecords?.find((detail) => detail.id === value)?.name
+            : "Select Company..."}
           <ChevronsUpDown className="opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-80 p-0">
         <Command>
-          <CommandInput placeholder="Search student No." className="h-9" />
+          <CommandInput placeholder="Search Company" className="h-9" />
           <CommandList>
-            <CommandEmpty>No Student No. found.</CommandEmpty>
+            <CommandEmpty>No Company found.</CommandEmpty>
             <CommandGroup>
-              {data &&
-                data?.map((detail) => (
+              {CompanyRecords &&
+                CompanyRecords?.map((detail) => (
                   <CommandItem
                     key={detail.id}
                     value={detail.id}
@@ -61,7 +59,7 @@ export const InternsComboBox = ({ value, onChange }: AccountListProps) => {
                       setOpen(false);
                     }}
                   >
-                    <div>{detail.studentNo}</div>
+                    <div>{detail.name}</div>
                     <Check
                       className={cn(
                         "ml-auto",
