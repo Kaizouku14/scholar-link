@@ -40,7 +40,7 @@ export const InternsComboBox = ({ value, onChange }: AccountListProps) => {
           className="w-full justify-between"
         >
           {value
-            ? data?.find((detail) => detail.id === value)?.studentNo
+            ? data?.find((detail) => detail.userId === value)?.studentNo
             : "Select student No."}
           <ChevronsUpDown className="opacity-50" />
         </Button>
@@ -54,8 +54,8 @@ export const InternsComboBox = ({ value, onChange }: AccountListProps) => {
               {data &&
                 data?.map((detail) => (
                   <CommandItem
-                    key={detail.id}
-                    value={detail.id}
+                    key={detail.userId}
+                    value={detail.userId}
                     onSelect={(currentValue) => {
                       onChange(currentValue);
                       setOpen(false);
@@ -65,7 +65,7 @@ export const InternsComboBox = ({ value, onChange }: AccountListProps) => {
                     <Check
                       className={cn(
                         "ml-auto",
-                        value === detail.id ? "opacity-100" : "opacity-0",
+                        value === detail.userId ? "opacity-100" : "opacity-0",
                       )}
                     />
                   </CommandItem>

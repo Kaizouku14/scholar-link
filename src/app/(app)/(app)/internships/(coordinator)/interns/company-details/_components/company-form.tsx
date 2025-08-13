@@ -17,7 +17,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { companyformSchema, type CompanyFormSchema } from "./schema";
 import SubmitButton from "@/components/forms/submit-button";
 import { api } from "@/trpc/react";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Loader2 } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
@@ -29,11 +29,14 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { InternsComboBox } from "./interns-cb";
 import { CompanyCombobox } from "./company-cb";
+import { useState } from "react";
 const CompanyForm = () => {
+  const [isDisabled, setIsDisabled] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const form = useForm<CompanyFormSchema>({
     resolver: zodResolver(companyformSchema),
     defaultValues: {
-      id: "",
+      userId: "",
       name: "",
       address: "",
       contactPerson: "",
@@ -46,23 +49,28 @@ const CompanyForm = () => {
 
   const { mutateAsync: createInternship } =
     api.internships.createStudentInternship.useMutation();
-  function onSubmit(values: CompanyFormSchema) {
-    toast.promise(
-      createInternship({
-        ...values,
-      }),
-      {
-        loading: "Saving internship company details...",
-        success: () => {
-          form.reset();
-          return "Internship company linked successfully!";
-        },
-        error: (error: unknown) => ({
-          message: (error as Error).message,
-          duration: 5000,
+  async function onSubmit(values: CompanyFormSchema) {
+    setIsLoading(true);
+    try {
+      await toast.promise(
+        createInternship({
+          ...values,
         }),
-      },
-    );
+        {
+          loading: "Saving internship company details...",
+          success: () => {
+            form.reset();
+            return "Internship company linked successfully!";
+          },
+          error: (error: unknown) => ({
+            message: (error as Error).message,
+            duration: 5000,
+          }),
+        },
+      );
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -80,7 +88,7 @@ const CompanyForm = () => {
           <div className="grid-col-1 grid items-start gap-4 md:grid-cols-3">
             <FormField
               control={form.control}
-              name="id"
+              name="userId"
               render={({ field }) => (
                 <FormItem className="w-full md:mt-5.5">
                   <FormLabel>Student No.</FormLabel>
@@ -107,10 +115,22 @@ const CompanyForm = () => {
                     <div className="flex h-full flex-col">
                       <Tabs defaultValue="list" className="flex-1">
                         <TabsList>
-                          <TabsTrigger value="list" className="text-xs">
+                          <TabsTrigger
+                            value="list"
+                            className="text-xs"
+                            onClick={() => setIsDisabled(false)}
+                          >
                             Company Records
                           </TabsTrigger>
-                          <TabsTrigger value="new" className="text-xs">
+                          <TabsTrigger
+                            value="new"
+                            className="text-xs"
+                            onClick={() => {
+                              form.setValue("name", "");
+                              form.setValue("address", "");
+                              setIsDisabled(true);
+                            }}
+                          >
                             Register Company
                           </TabsTrigger>
                         </TabsList>
@@ -118,14 +138,22 @@ const CompanyForm = () => {
                           value="list"
                           className="flex h-full items-center"
                         >
-                          <CompanyCombobox {...field} />
+                          <CompanyCombobox
+                            value={field.value}
+                            onChange={field.onChange}
+                            setAddress={(address) =>
+                              form.setValue("address", address)
+                            }
+                          />
                         </TabsContent>
                         <TabsContent
                           value="new"
                           className="flex h-full items-center"
                         >
                           <FormControl>
-                            <Input placeholder="Company Name" {...field} />
+                            {isDisabled && (
+                              <Input placeholder="Company Name" {...field} />
+                            )}
                           </FormControl>
                         </TabsContent>
                       </Tabs>
@@ -168,6 +196,7 @@ const CompanyForm = () => {
                   <Textarea
                     placeholder="123 Main St, Anytown, USA"
                     className="min-h-[80px]"
+                    disabled={!isDisabled}
                     {...field}
                   />
                 </FormControl>
@@ -316,9 +345,13 @@ const CompanyForm = () => {
           </div>
 
           <div className="flex justify-end">
-            <SubmitButton formState={form.formState} className="mt-4 w-40">
-              Submit
-            </SubmitButton>
+            <Button disabled={isLoading} className="mt-4 w-40">
+              {isLoading ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                "Submit"
+              )}
+            </Button>
           </div>
         </form>
       </Form>

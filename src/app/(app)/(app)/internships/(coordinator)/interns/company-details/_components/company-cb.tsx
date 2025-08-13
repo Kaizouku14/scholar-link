@@ -22,9 +22,14 @@ import { api } from "@/trpc/react";
 type CompanyComboboxProps = {
   value: string;
   onChange: (value: string) => void;
+  setAddress: (value: string) => void;
 };
 
-export const CompanyCombobox = ({ value, onChange }: CompanyComboboxProps) => {
+export const CompanyCombobox = ({
+  value,
+  onChange,
+  setAddress,
+}: CompanyComboboxProps) => {
   const [open, setOpen] = React.useState(false);
   const { data: CompanyRecords } = api.internships.getCompanyRecords.useQuery();
 
@@ -57,6 +62,7 @@ export const CompanyCombobox = ({ value, onChange }: CompanyComboboxProps) => {
                     onSelect={(currentValue) => {
                       onChange(currentValue);
                       setOpen(false);
+                      setAddress(detail.address);
                     }}
                   >
                     <div>{detail.name}</div>

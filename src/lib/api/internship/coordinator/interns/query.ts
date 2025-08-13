@@ -1,6 +1,6 @@
 import type { departmentType } from "@/constants/departments";
 import { ROLES } from "@/constants/roles";
-import { db, eq, countDistinct, sum, and, max, ne } from "@/server/db";
+import { db, eq, countDistinct, sum, and, max, ne, isNull } from "@/server/db";
 import {
   user as UserTable,
   student as StudentTable,
@@ -65,17 +65,20 @@ export const getAllUserAccountByDept = async ({
   try {
     const response = await db
       .select({
-        id: UserTable.id,
+        userId: UserTable.id,
         studentNo: StudentTable.studentNo,
       })
       .from(UserTable)
       .leftJoin(StudentTable, eq(UserTable.id, StudentTable.id))
+      .leftJoin(InternshipTable, eq(UserTable.id, InternshipTable.userId))
       .where(
-        and(eq(UserTable.department, department), eq(UserTable.role, ROLES[0])),
+        and(
+          eq(UserTable.department, department),
+          eq(UserTable.role, ROLES[0]),
+          isNull(InternshipTable.userId),
+        ),
       )
       .execute();
-
-    console.log(response);
 
     return response ?? [];
   } catch (error) {

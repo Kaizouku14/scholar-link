@@ -73,7 +73,7 @@ export const internshipRouter = createTRPCRouter({
   createStudentInternship: protectedRoute
     .input(
       z.object({
-        id: z.string(),
+        userId: z.string(),
         name: z.string(),
         address: z.string(),
         contactPerson: z.string(),
@@ -85,9 +85,8 @@ export const internshipRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const studentInternship = {
-        userId: input.id,
-        department: ctx.session?.user.department! as departmentType,
         ...input,
+        department: ctx.session?.user.department! as departmentType,
       };
       await createStudentInternship(studentInternship);
     }),

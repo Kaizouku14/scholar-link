@@ -1,6 +1,6 @@
 import type { departmentType } from "@/constants/departments";
 import { generateUUID } from "@/lib/utils";
-import { db, eq } from "@/server/db";
+import { db, eq, or } from "@/server/db";
 import { TRPCError } from "@trpc/server";
 import {
   internship as InternshipTable,
@@ -10,7 +10,7 @@ import {
 import { departmentHoursMap } from "@/constants/hours";
 
 export const createStudentInternship = async ({
-  id,
+  userId,
   department,
   name,
   address,
@@ -20,7 +20,7 @@ export const createStudentInternship = async ({
   startDate,
   endDate,
 }: {
-  id: string;
+  userId: string;
   department: departmentType;
   name: string;
   address: string;
@@ -36,7 +36,7 @@ export const createStudentInternship = async ({
       companyId: InternshipTable.companyId,
     })
     .from(InternshipTable)
-    .where(eq(InternshipTable.userId, id))
+    .where(eq(InternshipTable.userId, userId))
     .limit(1);
 
   if (internship.length > 0 && internship[0]!.companyId) {
@@ -47,16 +47,27 @@ export const createStudentInternship = async ({
   }
 
   await db.transaction(async (tx) => {
-    const companyId = generateUUID();
+    let companyId: string;
     const supervisorId = generateUUID();
     const internshipId = generateUUID();
     const totalHoursRequired = departmentHoursMap[department];
 
-    await tx.insert(CompanyTable).values({
-      companyId,
-      name,
-      address,
-    });
+    const [companyExist] = await tx
+      .select({ companyId: CompanyTable.companyId })
+      .from(CompanyTable)
+      .where(or(eq(CompanyTable.name, name), eq(CompanyTable.companyId, name)))
+      .limit(1);
+
+    if (!companyExist) {
+      companyId = generateUUID();
+      await tx.insert(CompanyTable).values({
+        companyId,
+        name,
+        address,
+      });
+    } else {
+      companyId = companyExist.companyId;
+    }
 
     await tx.insert(SupervisorTable).values({
       supervisorId,
@@ -67,7 +78,7 @@ export const createStudentInternship = async ({
 
     await tx.insert(InternshipTable).values({
       internshipId,
-      userId: id,
+      userId,
       companyId,
       supervisorId,
       startDate,
