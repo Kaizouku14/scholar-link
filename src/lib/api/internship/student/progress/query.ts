@@ -1,4 +1,4 @@
-import { db, eq, sum } from "@/server/db";
+import { db, eq } from "@/server/db";
 import {
   progressLog as ProgressLogTable,
   internship as InternshipTable,

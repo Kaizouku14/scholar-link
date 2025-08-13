@@ -2,6 +2,7 @@ import z from "zod";
 
 export const InternColumnSchema = z.object({
   companyName: z.string().nullish(),
+  address: z.string().nullish(),
   supervisor: z.string().nullish(),
   supervisorEmail: z.string().nullish(),
   studentCount: z.number(),

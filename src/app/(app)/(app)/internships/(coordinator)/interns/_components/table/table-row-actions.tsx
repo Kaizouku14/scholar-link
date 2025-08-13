@@ -1,14 +1,17 @@
 "use client";
 
 import type { Row } from "@tanstack/react-table";
-import { Ban, BookOpenCheck, MoreHorizontal } from "lucide-react";
+import { Eye } from "lucide-react";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
 interface DataTableRowActionsProps<TData> {
@@ -18,30 +21,29 @@ interface DataTableRowActionsProps<TData> {
 export function DataTableRowActions<TData>({
   row,
 }: DataTableRowActionsProps<TData>) {
-  const handleProcessedTransaction = () => {};
-
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          className="data-[state=open]:bg-muted flex h-8 w-8 p-0"
-        >
-          <MoreHorizontal />
-          <span className="sr-only">Open menu</span>
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant={"outline"} size={"sm"} className="flex items-center">
+          <Eye className="h-4 w-4" />
+          <span className="text-sm">View</span>
         </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuItem className="flex justify-between">
-          <span>Processed</span>
-          <BookOpenCheck />
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem className="flex justify-between">
-          <span>Canceled</span>
-          <Ban />
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Internship Details</DialogTitle>
+          <DialogDescription>
+            List of intern's in this company.
+          </DialogDescription>
+        </DialogHeader>
+        <div></div>
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button variant="outline">Cancel</Button>
+          </DialogClose>
+          <Button type="submit">Save changes</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

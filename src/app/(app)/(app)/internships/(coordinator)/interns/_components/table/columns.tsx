@@ -31,6 +31,10 @@ export const InternsColumns: ColumnDef<InternColumn>[] = [
     ),
   },
   {
+    accessorKey: "address",
+    header: "Address",
+  },
+  {
     accessorKey: "supervisor",
     header: "Supervisor",
   },

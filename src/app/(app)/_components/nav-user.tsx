@@ -64,11 +64,11 @@ export const NavUser = ({ user }: { user?: UserItem }) => {
               <div className="flex w-full items-center">
                 <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
                   <div className="flex gap-x-1 truncate font-semibold">
-                    <span> {user?.name ?? "John"}</span>
-                    <span> {user?.surname ?? "Doe"}</span>
+                    <span> {user?.name ?? "Unknown"}</span>
+                    <span> {user?.surname}</span>
                   </div>
                   <span className="text-muted-foreground truncate text-xs">
-                    {user?.email ?? "Email"}
+                    {user?.email ?? "Unknown"}
                   </span>
                 </div>
                 <div className="flex size-8 items-center justify-center group-data-[collapsible=icon]:w-full">
@@ -89,11 +89,12 @@ export const NavUser = ({ user }: { user?: UserItem }) => {
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">
-                    {user?.name ?? "User"}
-                  </span>
+                  <div className="flex gap-x-1 truncate font-semibold">
+                    <span> {user?.name ?? "Unknown"}</span>
+                    <span> {user?.surname}</span>
+                  </div>
                   <span className="truncate text-xs">
-                    {user?.email ?? "Email"}
+                    {user?.email ?? "Unknown"}
                   </span>
                 </div>
               </div>

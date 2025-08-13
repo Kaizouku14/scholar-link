@@ -1,5 +1,5 @@
 import type { departmentType } from "@/constants/departments";
-import { db, eq, countDistinct, sum, and, max } from "@/server/db";
+import { db, eq, countDistinct, sum, and, max, sql } from "@/server/db";
 import { user as UserTable } from "@/server/db/schema/auth";
 import {
   internship as InternshipTable,
@@ -18,6 +18,7 @@ export const getAllInternByDept = async ({
       .select({
         companyId: CompanyTable.companyId,
         companyName: max(CompanyTable.name),
+        address: max(CompanyTable.address),
         supervisor: max(CompanyTable.contactPerson),
         supervisorEmail: max(CompanyTable.contactEmail),
         studentCount: countDistinct(InternshipTable.userId),
