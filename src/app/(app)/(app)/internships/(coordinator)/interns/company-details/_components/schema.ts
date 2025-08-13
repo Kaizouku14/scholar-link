@@ -1,7 +1,10 @@
 import z from "zod";
 
 export const companyformSchema = z.object({
-  name: z.string().min(1, {
+  id: z.string().min(1, {
+    message: "Student no is required.",
+  }),
+  companyName: z.string().min(1, {
     message: "Company name is required.",
   }),
   address: z.string().min(1, {

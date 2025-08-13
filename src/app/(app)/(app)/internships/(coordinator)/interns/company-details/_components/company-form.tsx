@@ -25,12 +25,14 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { InternsComboBox } from "./interns-cb";
 
 const CompanyForm = () => {
   const form = useForm<CompanyFormSchema>({
     resolver: zodResolver(companyformSchema),
     defaultValues: {
-      name: "",
+      id: "",
+      companyName: "",
       address: "",
       contactPerson: "",
       contactEmail: "",
@@ -52,28 +54,28 @@ const CompanyForm = () => {
       startDate,
       endDate,
     } = values;
-    toast.promise(
-      createInternship({
-        name,
-        address,
-        contactPerson,
-        contactEmail,
-        contactNo,
-        startDate,
-        endDate,
-      }),
-      {
-        loading: "Saving internship company details...",
-        success: () => {
-          form.reset();
-          return "Internship company linked successfully!";
-        },
-        error: (error: unknown) => ({
-          message: (error as Error).message,
-          duration: 5000,
-        }),
-      },
-    );
+    // toast.promise(
+    //   createInternship({
+    //     name,
+    //     address,
+    //     contactPerson,
+    //     contactEmail,
+    //     contactNo,
+    //     startDate,
+    //     endDate,
+    //   }),
+    //   {
+    //     loading: "Saving internship company details...",
+    //     success: () => {
+    //       form.reset();
+    //       return "Internship company linked successfully!";
+    //     },
+    //     error: (error: unknown) => ({
+    //       message: (error as Error).message,
+    //       duration: 5000,
+    //     }),
+    //   },
+    // );
   }
 
   return (
@@ -86,15 +88,32 @@ const CompanyForm = () => {
       </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-3 gap-4">
             <FormField
               control={form.control}
-              name="name"
+              name="id"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Student No.</FormLabel>
+                  <FormControl>
+                    <InternsComboBox
+                      value={field.value}
+                      onChange={field.onChange}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="companyName"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Company Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="Acme Corp" {...field} />
+                    <Input placeholder="Company Name" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

@@ -1,6 +1,10 @@
 import type { departmentType } from "@/constants/departments";
-import { db, eq, countDistinct, sum, and, max, sql } from "@/server/db";
-import { user as UserTable } from "@/server/db/schema/auth";
+import { ROLES } from "@/constants/roles";
+import { db, eq, countDistinct, sum, and, max, ne } from "@/server/db";
+import {
+  user as UserTable,
+  student as StudentTable,
+} from "@/server/db/schema/auth";
 import {
   internship as InternshipTable,
   company as CompanyTable,
@@ -49,6 +53,35 @@ export const getAllInternByDept = async ({
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
       message: "Failed to get interns," + (error as Error).message,
+    });
+  }
+};
+
+export const getAllUserAccountByDept = async ({
+  department,
+}: {
+  department: departmentType;
+}) => {
+  try {
+    const response = await db
+      .select({
+        id: UserTable.id,
+        studentNo: StudentTable.studentNo,
+      })
+      .from(UserTable)
+      .leftJoin(StudentTable, eq(UserTable.id, StudentTable.id))
+      .where(
+        and(eq(UserTable.department, department), eq(UserTable.role, ROLES[0])),
+      )
+      .execute();
+
+    console.log(response);
+
+    return response ?? [];
+  } catch (error) {
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: (error as Error).message,
     });
   }
 };
