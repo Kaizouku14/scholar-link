@@ -9,10 +9,7 @@ import {
   getAllUploadedDocuments,
 } from "@/lib/api/internship/student/documents/query";
 import { getStudentLogProgress } from "@/lib/api/internship/student/progress/query";
-import {
-  createStudentInternship,
-  insertStudentProgress,
-} from "@/lib/api/internship/student/progress/mutation";
+import { insertStudentProgress } from "@/lib/api/internship/student/progress/mutation";
 import { getAllDocumentByDepartment } from "@/lib/api/internship/coordinator/document-review/query";
 import { getStudentProgressByDept } from "@/lib/api/internship/coordinator/progress-monitoring/query";
 import {
@@ -21,6 +18,7 @@ import {
 } from "@/lib/api/internship/coordinator/interns/query";
 import { getInternshipStats } from "@/lib/api/internship/coordinator/dashboard/query";
 import { createDocument } from "@/lib/api/internship/coordinator/document-review/mutation";
+import { createStudentInternship } from "@/lib/api/internship/coordinator/interns/mutation";
 
 export const internshipRouter = createTRPCRouter({
   /******************************************
@@ -74,6 +72,7 @@ export const internshipRouter = createTRPCRouter({
   createStudentInternship: protectedRoute
     .input(
       z.object({
+        id: z.string(),
         name: z.string(),
         address: z.string(),
         contactPerson: z.string(),
@@ -85,15 +84,9 @@ export const internshipRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const studentInternship = {
-        userId: ctx.session?.user.id!,
+        userId: input.id,
         department: ctx.session?.user.department! as departmentType,
-        name: input.name,
-        address: input.address,
-        contactPerson: input.contactPerson,
-        contactEmail: input.contactEmail,
-        contactNo: input.contactNo,
-        startDate: input.startDate,
-        endDate: input.endDate,
+        ...input,
       };
       await createStudentInternship(studentInternship);
     }),

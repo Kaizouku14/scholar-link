@@ -4,7 +4,7 @@ export const companyformSchema = z.object({
   id: z.string().min(1, {
     message: "Student no is required.",
   }),
-  companyName: z.string().min(1, {
+  name: z.string().min(1, {
     message: "Company name is required.",
   }),
   address: z.string().min(1, {

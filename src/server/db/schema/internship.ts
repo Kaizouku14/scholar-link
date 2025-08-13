@@ -13,8 +13,11 @@ export const internship = createTable("internship", {
   companyId: text("company_id")
     .notNull()
     .references(() => company.companyId, { onDelete: "cascade" }),
+  supervisorId: text("supervisor_id")
+    .notNull()
+    .references(() => supervisor.supervisorId, { onDelete: "cascade" }),
   startDate: integer("start_date", { mode: "timestamp" }).notNull(),
-  endDate: integer("end_date", { mode: "timestamp" }), //Add value when internship is completed
+  endDate: integer("end_date", { mode: "timestamp" }),
   totalOfHoursRequired: integer("total_of_hours_required").notNull(), //Values i.e(450, 600)
   status: text("status", { enum: INTERNSHIP_STATUS })
     .notNull()
@@ -34,8 +37,12 @@ export const company = createTable("company", {
   companyId: text("company_id").primaryKey(),
   name: text("name").notNull(),
   address: text("address").notNull(),
-  contactPerson: text("contact_person").notNull(),
-  contactEmail: text("contact_email"),
+});
+
+export const supervisor = createTable("supervisor", {
+  supervisorId: text("supervisor_id").primaryKey(),
+  name: text("name").notNull(),
+  email: text("email").notNull(),
   contactNo: text("contact_no").notNull(),
 });
 

@@ -32,7 +32,7 @@ const CompanyForm = () => {
     resolver: zodResolver(companyformSchema),
     defaultValues: {
       id: "",
-      companyName: "",
+      name: "",
       address: "",
       contactPerson: "",
       contactEmail: "",
@@ -45,37 +45,22 @@ const CompanyForm = () => {
   const { mutateAsync: createInternship } =
     api.internships.createStudentInternship.useMutation();
   function onSubmit(values: CompanyFormSchema) {
-    const {
-      name,
-      address,
-      contactPerson,
-      contactEmail,
-      contactNo,
-      startDate,
-      endDate,
-    } = values;
-    // toast.promise(
-    //   createInternship({
-    //     name,
-    //     address,
-    //     contactPerson,
-    //     contactEmail,
-    //     contactNo,
-    //     startDate,
-    //     endDate,
-    //   }),
-    //   {
-    //     loading: "Saving internship company details...",
-    //     success: () => {
-    //       form.reset();
-    //       return "Internship company linked successfully!";
-    //     },
-    //     error: (error: unknown) => ({
-    //       message: (error as Error).message,
-    //       duration: 5000,
-    //     }),
-    //   },
-    // );
+    toast.promise(
+      createInternship({
+        ...values,
+      }),
+      {
+        loading: "Saving internship company details...",
+        success: () => {
+          form.reset();
+          return "Internship company linked successfully!";
+        },
+        error: (error: unknown) => ({
+          message: (error as Error).message,
+          duration: 5000,
+        }),
+      },
+    );
   }
 
   return (
@@ -108,7 +93,7 @@ const CompanyForm = () => {
 
             <FormField
               control={form.control}
-              name="companyName"
+              name="name"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Company Name</FormLabel>

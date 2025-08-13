@@ -7,14 +7,14 @@ import { InternsColumns } from "./columns";
 import { INTERNSHIP_STATUS_LABELS } from "@/constants/status";
 
 const InternshipTable = () => {
-  const { data, isLoading } = api.internships.getAllInternByDept.useQuery();
+  //   const { data, isLoading } = api.internships.getAllInternByDept.useQuery();
 
   return (
     <div className="w-full">
-      {!isLoading && data ? (
+      {!false && true ? (
         <DataTable
           columns={InternsColumns}
-          data={data}
+          data={[]}
           filteredTitle={"companyName"}
           filteredColumn="status"
           options={INTERNSHIP_STATUS_LABELS}

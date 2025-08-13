@@ -6,8 +6,6 @@ import {
   company as CompanyTable,
 } from "@/server/db/schema/internship";
 import { generateUUID } from "@/lib/utils";
-import type { departmentType } from "@/constants/departments";
-import { departmentHoursMap } from "@/constants/hours";
 
 export const insertStudentProgress = async ({
   userId,
@@ -98,72 +96,5 @@ export const insertStudentProgress = async ({
         .set({ status: "completed" })
         .where(eq(InternshipTable.internshipId, internshipId));
     }
-  });
-};
-
-export const createStudentInternship = async ({
-  userId,
-  department,
-  name,
-  address,
-  contactPerson,
-  contactEmail,
-  contactNo,
-  startDate,
-  endDate,
-}: {
-  userId: string;
-  department: departmentType;
-  name: string;
-  address: string;
-  contactPerson: string;
-  contactEmail: string;
-  contactNo: string;
-  startDate: Date;
-  endDate: Date;
-}) => {
-  const internship = await db
-    .select({
-      internshipId: InternshipTable.internshipId,
-      companyId: InternshipTable.companyId,
-    })
-    .from(InternshipTable)
-    .where(eq(InternshipTable.userId, userId))
-    .limit(1);
-
-  if (internship.length > 0 && internship[0]!.companyId) {
-    throw new TRPCError({
-      code: "BAD_REQUEST",
-      message: "You already have a company linked to your internship.",
-    });
-  }
-
-  await db.transaction(async (tx) => {
-    const companyId = generateUUID();
-    const internshipId = generateUUID();
-    const totalHoursRequired = departmentHoursMap[department];
-
-    await tx.insert(CompanyTable).values({
-      companyId,
-      name,
-      address,
-      contactPerson,
-      contactEmail,
-      contactNo,
-    });
-
-    await tx.insert(InternshipTable).values({
-      internshipId,
-      userId,
-      companyId,
-      startDate,
-      endDate,
-      totalOfHoursRequired: totalHoursRequired,
-    });
-
-    await tx
-      .update(InternshipTable)
-      .set({ status: "in-progress" })
-      .where(eq(InternshipTable.internshipId, internshipId));
   });
 };
