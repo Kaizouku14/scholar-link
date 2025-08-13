@@ -58,9 +58,9 @@ export const CompanyCombobox = ({
                 CompanyRecords?.map((detail) => (
                   <CommandItem
                     key={detail.id}
-                    value={detail.id}
-                    onSelect={(currentValue) => {
-                      onChange(currentValue);
+                    value={detail.name}
+                    onSelect={() => {
+                      onChange(detail.id);
                       setOpen(false);
                       setAddress(detail.address);
                     }}

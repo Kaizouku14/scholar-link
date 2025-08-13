@@ -55,9 +55,9 @@ export const InternsComboBox = ({ value, onChange }: AccountListProps) => {
                 data?.map((detail) => (
                   <CommandItem
                     key={detail.userId}
-                    value={detail.userId}
-                    onSelect={(currentValue) => {
-                      onChange(currentValue);
+                    value={detail.studentNo!}
+                    onSelect={() => {
+                      onChange(detail.userId);
                       setOpen(false);
                     }}
                   >
