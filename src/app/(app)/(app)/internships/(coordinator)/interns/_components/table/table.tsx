@@ -9,7 +9,6 @@ import { INTERNSHIP_STATUS_LABELS } from "@/constants/status";
 const InternshipTable = () => {
   const { data, isLoading } = api.internships.getAllInternByDept.useQuery();
 
-  console.log(data);
   return (
     <div className="w-full">
       {!isLoading && data ? (

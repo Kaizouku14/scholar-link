@@ -8,6 +8,21 @@ export const InternColumnSchema = z.object({
   studentCount: z.number(),
   totalProgressHours: z.string().nullish(),
   department: z.string().nullish(),
+  interns: z
+    .array(
+      z.object({
+        name: z.string(),
+        middleName: z.string(),
+        surname: z.string(),
+        email: z.string(),
+        course: z.string(),
+        yearLevel: z.string(),
+        section: z.string(),
+        studentNo: z.string(),
+        status: z.string(),
+      }),
+    )
+    .nullish(),
 });
 
 export type InternColumn = z.infer<typeof InternColumnSchema>;

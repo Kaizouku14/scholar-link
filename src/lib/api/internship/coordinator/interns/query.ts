@@ -39,7 +39,8 @@ export const getAllInternByDept = async ({
                 'course', ${StudentTable.course},
                 'yearLevel', ${StudentTable.yearLevel},
                 'section', ${StudentTable.section},
-                'studentNo', ${StudentTable.studentNo}
+                'studentNo', ${StudentTable.studentNo},
+                'status', ${InternshipTable.status}
                 )
             )
         `.as("interns"),
