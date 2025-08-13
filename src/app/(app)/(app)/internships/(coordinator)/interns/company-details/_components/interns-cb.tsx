@@ -41,13 +41,13 @@ export const InternsComboBox = ({ value, onChange }: AccountListProps) => {
         >
           {value
             ? data?.find((detail) => detail.id === value)?.studentNo
-            : "Select Student No."}
+            : "Select student No."}
           <ChevronsUpDown className="opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-full p-0">
+      <PopoverContent className="w-80 p-0">
         <Command>
-          <CommandInput placeholder="Search framework..." className="h-9" />
+          <CommandInput placeholder="Search student No." className="h-9" />
           <CommandList>
             <CommandEmpty>No framework found.</CommandEmpty>
             <CommandGroup>

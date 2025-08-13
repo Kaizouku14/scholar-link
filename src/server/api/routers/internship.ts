@@ -15,6 +15,7 @@ import { getStudentProgressByDept } from "@/lib/api/internship/coordinator/progr
 import {
   getAllInternByDept,
   getAllUserAccountByDept,
+  getCompanyRecords,
 } from "@/lib/api/internship/coordinator/interns/query";
 import { getInternshipStats } from "@/lib/api/internship/coordinator/dashboard/query";
 import { createDocument } from "@/lib/api/internship/coordinator/document-review/mutation";
@@ -125,6 +126,9 @@ export const internshipRouter = createTRPCRouter({
   getAllUserAccountByDept: protectedRoute.query(async ({ ctx }) => {
     const department = ctx.session?.user.department! as departmentType;
     return await getAllUserAccountByDept({ department });
+  }),
+  getCompanyRecords: protectedRoute.query(async () => {
+    return await getCompanyRecords();
   }),
 
   /******************************************

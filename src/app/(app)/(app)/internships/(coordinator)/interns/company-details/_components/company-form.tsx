@@ -10,6 +10,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -25,8 +26,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { InternsComboBox } from "./interns-cb";
-
 const CompanyForm = () => {
   const form = useForm<CompanyFormSchema>({
     resolver: zodResolver(companyformSchema),
@@ -65,20 +66,22 @@ const CompanyForm = () => {
 
   return (
     <div className="border-border mx-auto w-full space-y-6 rounded-xl border p-8">
-      <div className="space-y-2 text-start">
-        <h1 className="text-3xl font-bold">Manage Company Details</h1>
-        <p className="text-muted-foreground">
-          Enter the details of your company.
+      <div className="space-y-1 text-start md:space-y-2">
+        <h1 className="text-center text-2xl font-bold md:text-start md:text-3xl">
+          Manage Company Details
+        </h1>
+        <p className="text-muted-foreground text-center md:text-start">
+          Enter the details of the company.
         </p>
       </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid-col-1 grid items-start gap-4 md:grid-cols-3">
             <FormField
               control={form.control}
               name="id"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="w-full md:mt-5.5">
                   <FormLabel>Student No.</FormLabel>
                   <FormControl>
                     <InternsComboBox
@@ -86,6 +89,9 @@ const CompanyForm = () => {
                       onChange={field.onChange}
                     />
                   </FormControl>
+                  <FormDescription className="text-xs">
+                    Select the student’s assigned ID number.
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -95,11 +101,39 @@ const CompanyForm = () => {
               control={form.control}
               name="name"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Company Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Company Name" {...field} />
-                  </FormControl>
+                <FormItem className="w-full">
+                  <FormItem className="w-full">
+                    <div className="flex h-full flex-col">
+                      <Tabs defaultValue="list" className="flex-1">
+                        <TabsList>
+                          <TabsTrigger value="list" className="text-xs">
+                            Company Records
+                          </TabsTrigger>
+                          <TabsTrigger value="new" className="text-xs">
+                            Register Company
+                          </TabsTrigger>
+                        </TabsList>
+                        <TabsContent
+                          value="list"
+                          className="flex h-full items-center"
+                        >
+                          Make changes to your account here.
+                        </TabsContent>
+                        <TabsContent
+                          value="new"
+                          className="flex h-full items-center"
+                        >
+                          <FormControl>
+                            <Input placeholder="Company Name" {...field} />
+                          </FormControl>
+                        </TabsContent>
+                      </Tabs>
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                  <FormDescription className="text-xs">
+                    Enter the company’s name.
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -109,11 +143,14 @@ const CompanyForm = () => {
               control={form.control}
               name="contactPerson"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="w-full md:mt-5.5">
                   <FormLabel>Contact Person</FormLabel>
                   <FormControl>
                     <Input placeholder="John Doe" {...field} />
                   </FormControl>
+                  <FormDescription className="text-xs">
+                    Enter the company’s supervisor name.
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -133,12 +170,15 @@ const CompanyForm = () => {
                     {...field}
                   />
                 </FormControl>
+                <FormDescription className="text-xs">
+                  Enter the company’s address.
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
           />
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid gap-4 md:grid-cols-2">
             <FormField
               control={form.control}
               name="contactEmail"
@@ -152,6 +192,9 @@ const CompanyForm = () => {
                       {...field}
                     />
                   </FormControl>
+                  <FormDescription className="text-xs">
+                    Enter the company’s supervisor email address.
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -166,6 +209,9 @@ const CompanyForm = () => {
                   <FormControl>
                     <Input placeholder="e.g., 09123456789" {...field} />
                   </FormControl>
+                  <FormDescription className="text-xs">
+                    Enter the company’s supervisor contanct no.
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -212,6 +258,9 @@ const CompanyForm = () => {
                       />
                     </PopoverContent>
                   </Popover>
+                  <FormDescription className="text-xs">
+                    Enter the internship start date.
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -256,6 +305,9 @@ const CompanyForm = () => {
                       />
                     </PopoverContent>
                   </Popover>
+                  <FormDescription className="text-xs">
+                    Enter the internship end date.
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}

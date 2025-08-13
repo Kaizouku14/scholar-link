@@ -48,7 +48,7 @@ export const getAllInternByDept = async ({
       .groupBy(CompanyTable.name)
       .execute();
 
-    return response ?? [];
+    return [];
   } catch (error) {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
@@ -78,6 +78,26 @@ export const getAllUserAccountByDept = async ({
     console.log(response);
 
     return response ?? [];
+  } catch (error) {
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: (error as Error).message,
+    });
+  }
+};
+
+export const getCompanyRecords = async () => {
+  try {
+    const response = await db
+      .select({
+        id: CompanyTable.companyId,
+        name: CompanyTable.name,
+        address: CompanyTable.address,
+      })
+      .from(CompanyTable)
+      .execute();
+
+    return response;
   } catch (error) {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",

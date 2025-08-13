@@ -52,17 +52,18 @@ export const createStudentInternship = async ({
     const internshipId = generateUUID();
     const totalHoursRequired = departmentHoursMap[department];
 
-    (await tx.insert(SupervisorTable).values({
+    await tx.insert(CompanyTable).values({
+      companyId,
+      name,
+      address,
+    });
+
+    await tx.insert(SupervisorTable).values({
       supervisorId,
       name: contactPerson,
       email: contactEmail,
       contactNo,
-    }),
-      await tx.insert(CompanyTable).values({
-        companyId,
-        name,
-        address,
-      }));
+    });
 
     await tx.insert(InternshipTable).values({
       internshipId,
