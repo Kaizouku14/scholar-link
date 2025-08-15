@@ -1,6 +1,11 @@
 import PageBreadCrumb from "@/components/breadcrumbs/page-header";
 import InternshipHeader from "./_components/header";
 import InternshipTable from "./_components/table/table";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Interns",
+};
 
 const Page = () => {
   return (

@@ -4,7 +4,7 @@ import ProgressMonitoringHeader from "./_components/header";
 import ProgressMonitoringTable from "./_components/table/table";
 
 export const metadata: Metadata = {
-  title: "Progress Monitor",
+  title: "Progress Monitoring",
 };
 
 const Page = () => {
