@@ -50,7 +50,8 @@ export const InternsColumns: ColumnDef<InternColumn>[] = [
       const hoursRequired = departmentHoursMap[department];
       return (
         <div className="flex items-center gap-x-1.5">
-          <span>{hoursRequired} hrs</span>
+          <span>{hoursRequired} </span>
+          <span className="text-muted-foreground">hrs</span>
         </div>
       );
     },

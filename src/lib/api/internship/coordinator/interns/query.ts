@@ -91,7 +91,13 @@ export const getAllUserAccountByDept = async ({
     const response = await db
       .select({
         userId: UserTable.id,
+        name: UserTable.name,
+        middleName: UserTable.middleName,
+        surname: UserTable.surname,
         studentNo: StudentTable.studentNo,
+        course: StudentTable.course,
+        section: StudentTable.section,
+        yearLevel: StudentTable.yearLevel,
       })
       .from(UserTable)
       .leftJoin(StudentTable, eq(UserTable.id, StudentTable.id))

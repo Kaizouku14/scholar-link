@@ -18,8 +18,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { api } from "@/trpc/react";
-import { YEAR_LEVEL_LABELS } from "@/constants/year-level";
-import { COURSE_LABELS } from "@/constants/courses";
+import { YEAR_LEVEL_LABELS, type YearLevelType } from "@/constants/year-level";
+import { COURSE_LABELS, type courseType } from "@/constants/courses";
 
 type AccountListProps = {
   value: string;
@@ -61,7 +61,21 @@ export const InternsComboBox = ({ value, onChange }: AccountListProps) => {
                       setOpen(false);
                     }}
                   >
-                    <div>{detail.studentNo}</div>
+                    <div className="flex w-full flex-col text-xs">
+                      <div className="flex gap-1">
+                        <span>{detail.surname},</span>
+                        <span>{detail.name}</span>
+                        <span>{detail.middleName}</span>
+                      </div>
+                      <div className="text-muted-foreground flex gap-1">
+                        {detail.studentNo} -
+                        <div>
+                          {COURSE_LABELS[detail.course as courseType]} ·{" "}
+                          {YEAR_LEVEL_LABELS[detail.yearLevel as YearLevelType]}
+                          {detail.section}
+                        </div>
+                      </div>
+                    </div>
                     <Check
                       className={cn(
                         "ml-auto",
