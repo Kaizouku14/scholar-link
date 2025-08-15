@@ -1,50 +1,48 @@
 "use client";
 
-import { Checkbox } from "@/components/ui/checkbox";
-import { ROLES } from "@/constants/roles";
 import type { ColumnDef } from "@tanstack/react-table";
-import { Ellipsis } from "lucide-react";
-import z from "zod";
+import { CheckCircle2Icon, Ellipsis, XCircle } from "lucide-react";
+import type { AccountSchema } from "./column-schema";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { COURSE_LABELS, type courseType } from "@/constants/courses";
+import { YEAR_LEVEL_LABELS, type YearLevelType } from "@/constants/year-level";
 
-export const AccountTableSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  email: z.string().email(),
-  role: z.string(), //Replace with enum
-});
-
-export type Accounts = z.infer<typeof AccountTableSchema>;
-
-export const AccountColumns: ColumnDef<Accounts>[] = [
+export const AccountColumns: ColumnDef<AccountSchema>[] = [
   {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
+    accessorKey: "surname",
+    header: "Student",
+    cell: ({ row }) => {
+      const { name, middleName, surname, course, section, yearLevel, profile } =
+        row.original;
+
+      return (
+        <div className="flex items-center gap-x-1.5">
+          <Avatar className="h-10 w-10">
+            <AvatarImage src={profile ?? undefined} />
+            <AvatarFallback className="text-sm">
+              {name?.charAt(0)?.toUpperCase()}
+            </AvatarFallback>
+          </Avatar>
+
+          <div className="flex flex-col">
+            <div className="text-foreground text-sm leading-tight font-medium">
+              {surname}, {name} {middleName}
+            </div>
+
+            <div className="text-muted-foreground text-xs">
+              {COURSE_LABELS[course as courseType]} ·{" "}
+              {YEAR_LEVEL_LABELS[yearLevel as YearLevelType]}
+              {section}
+            </div>
+          </div>
+        </div>
+      );
+    },
   },
   {
-    //TODO: Hide ID
-    accessorKey: "id",
-  },
-  {
-    accessorKey: "name",
-    header: "Name",
+    accessorKey: "studentNo",
+    header: "Student No.",
   },
   {
     accessorKey: "email",
@@ -53,9 +51,64 @@ export const AccountColumns: ColumnDef<Accounts>[] = [
   {
     accessorKey: "role",
     header: "Role",
+    cell: ({ row }) => {
+      const { role } = row.original as {
+        role: "internshipStudent" | "internshipCoordinator";
+      };
+      const roleColors = {
+        internshipStudent: "bg-blue-100 text-blue-800",
+        internshipCoordinator: "bg-green-100 text-green-800",
+      };
+
+      return (
+        <Badge
+          className={
+            role ? `${roleColors[role]} px-2 py-1` : "bg-gray-100 text-gray-800"
+          }
+        >
+          {role === "internshipStudent" && "Internship Student"}
+          {role === "internshipCoordinator" && "Internship Coordinator"}
+        </Badge>
+      );
+    },
+  },
+  {
+    accessorKey: "status",
+    header: "Status",
+    cell: ({ row }) => {
+      const { status } = row.original as {
+        status: "verified" | "revoked";
+      };
+      const statusColors = {
+        verified: "bg-green-100 text-green-800 py-1 px-2",
+        revoked: "bg-primary text-white py-1 px-2",
+      };
+
+      return (
+        <Badge
+          className={
+            status ? statusColors[status] : "bg-gray-100 text-gray-800"
+          }
+        >
+          {status === "verified" && (
+            <div className="flex items-center gap-x-1">
+              <CheckCircle2Icon className="h-4 w-4 text-green-800" />
+              <span>Verified</span>
+            </div>
+          )}
+          {status === "revoked" && (
+            <div className="flex items-center gap-x-1">
+              <XCircle className="h-4 w-4 text-white" />
+              <span>Revoked</span>
+            </div>
+          )}
+        </Badge>
+      );
+    },
   },
   {
     id: "actions",
+    header: "Actions",
     cell: ({ row, table }) => <Ellipsis className="ml-1.5 h-4 w-4" />,
   },
 ];

@@ -13,7 +13,7 @@ import { Mail, ShieldCheck } from "lucide-react";
 
 const ActivateEmail = () => {
   return (
-    <Card>
+    <Card className="shadow-none">
       <CardHeader>
         <CardTitle className="text-2xl font-bold">
           Email Authorization
@@ -34,7 +34,7 @@ const ActivateEmail = () => {
                 id="email"
                 type="email"
                 placeholder="Enter email address to authorize"
-                className="pl-10"
+                className="h-10 pl-10 shadow-none"
               />
             </div>
           </div>
