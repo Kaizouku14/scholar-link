@@ -3,12 +3,18 @@
 import { DataTable } from "@/components/table/data-table";
 import { api } from "@/trpc/react";
 import { DataTableSkeleton } from "@/components/table/table-skeleton";
+import { CompaniesColumns } from "./column";
 
-const ProgressMonitoringTable = () => {
+const CompaniesTable = () => {
+  const { data, isLoading } = api.internships.getAllCompany.useQuery();
   return (
     <div className="w-full">
-      {!false && true ? (
-        <DataTable columns={[]} data={[]} filteredTitle={""} />
+      {!isLoading && data ? (
+        <DataTable
+          columns={CompaniesColumns}
+          data={data}
+          filteredTitle={"name"}
+        />
       ) : (
         <DataTableSkeleton />
       )}
@@ -16,4 +22,4 @@ const ProgressMonitoringTable = () => {
   );
 };
 
-export default ProgressMonitoringTable;
+export default CompaniesTable;

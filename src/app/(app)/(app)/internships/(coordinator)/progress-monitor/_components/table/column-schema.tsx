@@ -1,6 +1,5 @@
 import z from "zod";
-import { DOCUMENTS } from "@/constants/documents";
-import { INTERNSHIP_STATUS, STATUS } from "@/constants/status";
+import { INTERNSHIP_STATUS } from "@/constants/status";
 import { YEAR_LEVEL } from "@/constants/year-level";
 import { COURSES } from "@/constants/courses";
 import { SECTIONS } from "@/constants/sections";
