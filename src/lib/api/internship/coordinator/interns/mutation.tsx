@@ -1,4 +1,3 @@
-import type { departmentType } from "@/constants/departments";
 import { generateUUID } from "@/lib/utils";
 import { db, eq, or } from "@/server/db";
 import { TRPCError } from "@trpc/server";
@@ -8,27 +7,12 @@ import {
   supervisor as SupervisorTable,
 } from "@/server/db/schema/internship";
 import { departmentHoursMap } from "@/constants/hours";
+import type { createInternship } from "@/interfaces/internship";
 
 export const createStudentInternship = async ({
-  userId,
-  department,
-  name,
-  address,
-  contactPerson,
-  contactEmail,
-  contactNo,
-  startDate,
-  endDate,
+  data,
 }: {
-  userId: string;
-  department: departmentType;
-  name: string;
-  address: string;
-  contactPerson: string;
-  contactEmail: string;
-  contactNo: string;
-  startDate: Date;
-  endDate: Date;
+  data: createInternship;
 }) => {
   const internship = await db
     .select({
@@ -36,7 +20,7 @@ export const createStudentInternship = async ({
       companyId: InternshipTable.companyId,
     })
     .from(InternshipTable)
-    .where(eq(InternshipTable.userId, userId))
+    .where(eq(InternshipTable.userId, data.userId))
     .limit(1);
 
   if (internship.length > 0 && internship[0]!.companyId) {
@@ -50,20 +34,25 @@ export const createStudentInternship = async ({
     let companyId: string;
     const supervisorId = generateUUID();
     const internshipId = generateUUID();
-    const totalHoursRequired = departmentHoursMap[department];
+    const totalHoursRequired = departmentHoursMap[data.department];
 
     const [companyExist] = await tx
       .select({ companyId: CompanyTable.companyId })
       .from(CompanyTable)
-      .where(or(eq(CompanyTable.name, name), eq(CompanyTable.companyId, name)))
+      .where(
+        or(
+          eq(CompanyTable.name, data.name),
+          eq(CompanyTable.companyId, data.name),
+        ),
+      )
       .limit(1);
 
     if (!companyExist) {
       companyId = generateUUID();
       await tx.insert(CompanyTable).values({
         companyId,
-        name,
-        address,
+        name: data.name,
+        address: data.address,
       });
     } else {
       companyId = companyExist.companyId;
@@ -71,18 +60,18 @@ export const createStudentInternship = async ({
 
     await tx.insert(SupervisorTable).values({
       supervisorId,
-      name: contactPerson,
-      email: contactEmail,
-      contactNo,
+      name: data.contactPerson,
+      email: data.contactEmail,
+      contactNo: data.contactEmail,
     });
 
     await tx.insert(InternshipTable).values({
       internshipId,
-      userId,
+      userId: data.userId,
       companyId,
       supervisorId,
-      startDate,
-      endDate,
+      startDate: data.startDate,
+      endDate: data.endDate,
       totalOfHoursRequired: totalHoursRequired,
     });
 

@@ -20,6 +20,7 @@ import {
 import { getInternshipStats } from "@/lib/api/internship/coordinator/dashboard/query";
 import { createDocument } from "@/lib/api/internship/coordinator/document-review/mutation";
 import { createStudentInternship } from "@/lib/api/internship/coordinator/interns/mutation";
+import type { createInternship } from "@/interfaces/internship";
 
 export const internshipRouter = createTRPCRouter({
   /******************************************
@@ -84,11 +85,11 @@ export const internshipRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const studentInternship = {
+      const data = {
         ...input,
         department: ctx.session?.user.department! as departmentType,
-      };
-      await createStudentInternship(studentInternship);
+      } as createInternship;
+      await createStudentInternship({ data });
     }),
   createDocument: protectedRoute
     .input(

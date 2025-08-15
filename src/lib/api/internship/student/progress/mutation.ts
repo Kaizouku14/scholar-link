@@ -3,7 +3,6 @@ import { TRPCError } from "@trpc/server";
 import {
   internship as InternshipTable,
   progressLog as ProgressLogTable,
-  company as CompanyTable,
 } from "@/server/db/schema/internship";
 import { generateUUID } from "@/lib/utils";
 
