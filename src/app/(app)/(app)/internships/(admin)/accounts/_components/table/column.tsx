@@ -38,7 +38,7 @@ export const AccountColumns: ColumnDef<AccountSchema>[] = [
 
           <div className="flex flex-col">
             <div className="text-foreground text-sm leading-tight font-medium">
-              {surname}, {name} {middleName}
+              {surname}, {name} {middleName?.charAt(0).toUpperCase()}.
             </div>
 
             <div className="text-muted-foreground text-xs">
@@ -58,14 +58,15 @@ export const AccountColumns: ColumnDef<AccountSchema>[] = [
   },
   {
     accessorKey: "role",
-    header: "Role",
+    header: "User Role",
     cell: ({ row }) => {
       const { role } = row.original as {
-        role: "internshipStudent" | "internshipCoordinator";
+        role: "internshipStudent" | "internshipCoordinator" | "internshipAdmin";
       };
       const roleColors = {
         internshipStudent: "bg-blue-100 text-blue-800",
         internshipCoordinator: "bg-green-100 text-green-800",
+        internshipAdmin: "bg-primary text-white",
       };
 
       return (
@@ -74,43 +75,36 @@ export const AccountColumns: ColumnDef<AccountSchema>[] = [
             role ? `${roleColors[role]} px-2 py-1` : "bg-gray-100 text-gray-800"
           }
         >
-          {role === "internshipStudent" && "Internship Student"}
-          {role === "internshipCoordinator" && "Internship Coordinator"}
+          {role === "internshipStudent" && " Student"}
+          {role === "internshipCoordinator" && " Coordinator"}
+          {role === "internshipAdmin" && " Admin"}
         </Badge>
       );
     },
   },
   {
-    accessorKey: "status",
-    header: "Status",
+    accessorKey: "emailVerified",
+    header: "Email Verified",
     cell: ({ row }) => {
       const { status } = row.original as {
         status: "verified" | "revoked";
       };
-      const statusColors = {
-        verified: "bg-green-100 text-green-800 py-1 px-2",
-        revoked: "bg-primary text-white py-1 px-2",
-      };
 
       return (
-        <Badge
-          className={
-            status ? statusColors[status] : "bg-gray-100 text-gray-800"
-          }
+        <div
+          className={`${status === "verified" ? "text-green-600" : "text-primary"} px-2 py-1`}
         >
           {status === "verified" && (
             <div className="flex items-center gap-x-1">
-              <CheckCircle2Icon className="h-4 w-4 text-green-800" />
               <span>Verified</span>
             </div>
           )}
           {status === "revoked" && (
             <div className="flex items-center gap-x-1">
-              <XCircle className="h-4 w-4 text-white" />
-              <span>Revoked</span>
+              <span>Not Verified</span>
             </div>
           )}
-        </Badge>
+        </div>
       );
     },
   },

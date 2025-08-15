@@ -1,10 +1,9 @@
-import { db, or, eq, sql } from "@/server/db";
+import { db, not, eq, sql, like } from "@/server/db";
 import { TRPCError } from "@trpc/server";
 import {
   user as UserTable,
   student as StudentTable,
 } from "@/server/db/schema/auth";
-import { ROLES } from "@/constants/roles";
 
 export const gellAllInternshipAccounts = async () => {
   try {
@@ -27,7 +26,7 @@ export const gellAllInternshipAccounts = async () => {
       })
       .from(UserTable)
       .leftJoin(StudentTable, eq(UserTable.id, StudentTable.id))
-      .where(or(eq(UserTable.role, ROLES[0]), eq(UserTable.role, ROLES[5])))
+      .where(not(like(UserTable.role, "scholarship%")))
       .execute();
 
     return response;
