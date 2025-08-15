@@ -27,6 +27,7 @@ export const getAllCompany = async () => {
         SupervisorTable,
         eq(InternshipTable.supervisorId, SupervisorTable.supervisorId),
       )
+      .where(eq(InternshipTable.status, "in-progress"))
       .execute();
 
     return response ?? [];
@@ -59,6 +60,7 @@ export const getAllSupervisor = async () => {
         CompanyTable,
         eq(InternshipTable.companyId, CompanyTable.companyId),
       )
+      .where(eq(InternshipTable.status, "in-progress"))
       .execute();
 
     return response ?? [];
