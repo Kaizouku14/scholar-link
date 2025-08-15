@@ -4,6 +4,7 @@ import { GENDERS } from "@/constants/genders";
 import z from "zod";
 import { createTRPCRouter, protectedRoute, publicProcedure } from "../trpc";
 import { checkStudentOnBoarded } from "@/lib/api/auth/mutation";
+import { gellAllInternshipAccounts } from "@/lib/api/auth/query";
 
 export const authRouter = createTRPCRouter({
   checkStudendIsOnBoarded: protectedRoute
@@ -38,4 +39,8 @@ export const authRouter = createTRPCRouter({
     .mutation(async ({ input }) => {
       console.log(input);
     }),
+
+  getAllInternshipAccounts: protectedRoute.query(async ({ ctx }) => {
+    return await gellAllInternshipAccounts();
+  }),
 });

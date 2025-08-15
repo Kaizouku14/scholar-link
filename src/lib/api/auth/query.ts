@@ -1,0 +1,29 @@
+import { db, or, eq } from "@/server/db";
+import { TRPCError } from "@trpc/server";
+import { user as UserTable } from "@/server/db/schema/auth";
+import { ROLES } from "@/constants/roles";
+
+export const gellAllInternshipAccounts = async () => {
+  try {
+    const response = await db
+      .select({
+        id: UserTable.id,
+        name: UserTable.name,
+        middleName: UserTable.middleName,
+        surname: UserTable.surname,
+        email: UserTable.email,
+        role: UserTable.role,
+      })
+      .from(UserTable)
+      .where(or(eq(UserTable.role, ROLES[0]), eq(UserTable.role, ROLES[5])))
+      .execute();
+
+    return response;
+  } catch (error) {
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message:
+        "Failed to get all internship accounts," + (error as Error).message,
+    });
+  }
+};
