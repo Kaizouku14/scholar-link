@@ -30,9 +30,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { InternsComboBox } from "./interns-cb";
 import { CompanyCombobox } from "./company-cb";
 import { useState } from "react";
-const CompanyForm = () => {
+const InternshipForm = () => {
   const [isDisabled, setIsDisabled] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const form = useForm<CompanyFormSchema>({
     resolver: zodResolver(companyformSchema),
     defaultValues: {
@@ -70,10 +69,10 @@ const CompanyForm = () => {
     <div className="border-border mx-auto w-full space-y-6 rounded-xl border p-8">
       <div className="space-y-1 text-start md:space-y-2">
         <h1 className="text-center text-2xl font-bold md:text-start md:text-3xl">
-          Manage Company Details
+          Manage Internship Details
         </h1>
         <p className="text-muted-foreground text-center md:text-start">
-          Enter the details of the company.
+          Enter the details of the internship.
         </p>
       </div>
       <Form {...form}>
@@ -348,4 +347,4 @@ const CompanyForm = () => {
   );
 };
 
-export default CompanyForm;
+export default InternshipForm;

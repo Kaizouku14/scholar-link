@@ -1,5 +1,5 @@
 import PageBreadCrumb from "@/components/breadcrumbs/page-header";
-import CompanyForm from "./_components/company-form";
+import InternshipForm from "./_components/internship-form";
 import FormHeader from "./_components/form-header";
 
 const Page = () => {
@@ -8,7 +8,7 @@ const Page = () => {
       <PageBreadCrumb currentPage="Progress" subPage="Company Details" />
       <div className="mt-2 flex flex-col gap-2">
         <FormHeader />
-        <CompanyForm />
+        <InternshipForm />
       </div>
     </div>
   );

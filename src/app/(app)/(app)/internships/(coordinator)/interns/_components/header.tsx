@@ -16,11 +16,11 @@ const InternshipHeader = () => {
         </div>
 
         <Link
-          href={PageRoutes.INTERNSHIP_COMPANY_DETAILS}
+          href={PageRoutes.INTERNSHIP_INTERNS_CREATE}
           className="mt-2 flex w-auto items-center rounded-lg bg-white px-4 py-2 text-sm text-black hover:bg-white/90 md:mt-0 hover:dark:text-black"
         >
           <Building className="mr-1.5 h-4 w-4" />
-          Company Details
+          Add Internship
         </Link>
       </div>
     </div>
