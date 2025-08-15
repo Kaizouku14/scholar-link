@@ -21,9 +21,11 @@ import { useRouter } from "next/navigation";
 import { PageRoutes } from "@/constants/page-routes";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { formatText } from "@/lib/utils";
 
 export interface UserItem {
   name?: string;
+  middleName?: string;
   surname?: string;
   email?: string;
   role?: string;
@@ -34,7 +36,9 @@ export const NavUser = ({ user }: { user?: UserItem }) => {
   const router = useRouter();
 
   const handleLogout = async () => {
-    const toastId = toast.loading("Signing out...", { position: "top-center" });
+    const toastId = toast.loading("Signing out, please wait...", {
+      position: "top-center",
+    });
     try {
       const response = await authClient.signOut();
       if (response.error) throw new Error(response.error.message);
@@ -63,9 +67,12 @@ export const NavUser = ({ user }: { user?: UserItem }) => {
             >
               <div className="flex w-full items-center">
                 <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
-                  <div className="flex gap-x-1 truncate font-semibold">
-                    <span> {user?.name ?? "Unknown"}</span>
-                    <span> {user?.surname}</span>
+                  <div className="flex items-center gap-x-1 truncate font-semibold">
+                    <span> {user && formatText(user?.name!)}</span>
+                    <span>
+                      {user && user?.middleName?.charAt(0).toUpperCase()}.
+                    </span>
+                    <span> {user && formatText(user?.surname!)}</span>
                   </div>
                   <span className="text-muted-foreground truncate text-xs">
                     {user?.email ?? "Unknown"}
@@ -89,9 +96,12 @@ export const NavUser = ({ user }: { user?: UserItem }) => {
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <div className="flex gap-x-1 truncate font-semibold">
-                    <span> {user?.name ?? "Unknown"}</span>
-                    <span> {user?.surname}</span>
+                  <div className="flex items-center gap-x-1 truncate font-semibold">
+                    <span>{user && formatText(user?.name!)}</span>
+                    <span>
+                      {user && user?.middleName?.charAt(0).toUpperCase()}.
+                    </span>
+                    <span> {user && formatText(user?.surname!)}</span>
                   </div>
                   <span className="truncate text-xs">
                     {user?.email ?? "Unknown"}

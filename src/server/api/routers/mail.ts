@@ -29,6 +29,7 @@ export const mailRouter = createTRPCRouter({
         message: "User is not authenticated",
       });
     }
+
     const { id } = ctx.session.user;
     return await getAllUnReadMails({ userId: id });
   }),

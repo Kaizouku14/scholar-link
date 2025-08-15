@@ -20,7 +20,7 @@ const AccountsTable = () => {
           <DataTable
             columns={AccountColumns}
             data={data}
-            filteredTitle={"surname"}
+            filteredTitle={"studentNo"}
             refetch={refetch}
           />
         </>

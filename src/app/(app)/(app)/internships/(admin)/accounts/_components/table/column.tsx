@@ -1,7 +1,7 @@
 "use client";
 
 import type { ColumnDef } from "@tanstack/react-table";
-import { CheckCircle2Icon, Ellipsis, XCircle } from "lucide-react";
+import { CheckCircle2Icon, Ellipsis, IdCard, XCircle } from "lucide-react";
 import type { AccountSchema } from "./column-schema";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -10,6 +10,16 @@ import { YEAR_LEVEL_LABELS, type YearLevelType } from "@/constants/year-level";
 import { DataTableRowActions } from "./table-row-actions";
 
 export const AccountColumns: ColumnDef<AccountSchema>[] = [
+  {
+    accessorKey: "studentNo",
+    header: "Student No.",
+    cell: ({ row }) => (
+      <div className="flex items-center gap-2">
+        <IdCard className="text-muted-foreground" />
+        {row.original.studentNo}
+      </div>
+    ),
+  },
   {
     accessorKey: "surname",
     header: "Student",
@@ -41,10 +51,7 @@ export const AccountColumns: ColumnDef<AccountSchema>[] = [
       );
     },
   },
-  {
-    accessorKey: "studentNo",
-    header: "Student No.",
-  },
+
   {
     accessorKey: "email",
     header: "Email",
