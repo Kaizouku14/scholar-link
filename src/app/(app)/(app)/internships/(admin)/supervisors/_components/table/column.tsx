@@ -1,31 +1,31 @@
 import type { ColumnDef } from "@tanstack/react-table";
-import type { CompanySchema } from "./column-schema";
+import type { SupervisorSchema } from "./column-schema";
 import { User2 } from "lucide-react";
 
-export const CompaniesColumns: ColumnDef<CompanySchema>[] = [
+export const SupervisorColumns: ColumnDef<SupervisorSchema>[] = [
+  {
+    accessorKey: "supervisorName",
+    header: "Supervisor Name",
+  },
+  {
+    accessorKey: "supervisorEmail",
+    header: "Email",
+  },
+  {
+    accessorKey: "supervisorContactNo",
+    header: "Contact No.",
+  },
   {
     accessorKey: "companyName",
     header: "Company Name",
   },
   {
-    accessorKey: "address",
+    accessorKey: "companyAddress",
     header: "Address",
   },
   {
-    accessorKey: "contactPerson",
-    header: "Contact Person",
-  },
-  {
-    accessorKey: "contactPersonEmail",
-    header: "Contact Email",
-  },
-  {
-    accessorKey: "contactPersonNo",
-    header: "Contact No.",
-  },
-  {
     accessorKey: "internCount",
-    header: "Active Interns",
+    header: "Interns",
     cell: ({ row }) => {
       return (
         <div className="flex items-center">

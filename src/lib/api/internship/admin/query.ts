@@ -11,7 +11,7 @@ export const getAllCompany = async () => {
     const response = await db
       .select({
         companyId: CompanyTable.companyId,
-        name: CompanyTable.name,
+        companyName: CompanyTable.name,
         address: CompanyTable.address,
         contactPerson: SupervisorTable.name,
         contactPersonEmail: SupervisorTable.email,

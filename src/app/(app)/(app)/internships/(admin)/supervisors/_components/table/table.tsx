@@ -3,17 +3,17 @@
 import { DataTable } from "@/components/table/data-table";
 import { api } from "@/trpc/react";
 import { DataTableSkeleton } from "@/components/table/table-skeleton";
-import { CompaniesColumns } from "./column";
+import { SupervisorColumns } from "./column";
 
-const CompaniesTable = () => {
-  const { data, isLoading } = api.internships.getAllCompany.useQuery();
+const SupervisorTable = () => {
+  const { data, isLoading } = api.internships.getAllSupervisor.useQuery();
   return (
     <div className="w-full">
       {!isLoading && data ? (
         <DataTable
-          columns={CompaniesColumns}
+          columns={SupervisorColumns}
           data={data}
-          filteredTitle={"companyName"}
+          filteredTitle={"supervisorName"}
         />
       ) : (
         <DataTableSkeleton />
@@ -22,4 +22,4 @@ const CompaniesTable = () => {
   );
 };
 
-export default CompaniesTable;
+export default SupervisorTable;
