@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -9,9 +11,31 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Mail, ShieldCheck } from "lucide-react";
+import { api } from "@/trpc/react";
+import { Loader2, Mail, ShieldCheck } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 
 const ActivateEmail = () => {
+  const [email, setEmail] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { mutateAsync: authorizeEmail } = api.auth.authorizeEmail.useMutation();
+
+  const handleAuthorize = async () => {
+    if (!email.trim()) return;
+
+    setIsLoading(true);
+    try {
+      await authorizeEmail({ email });
+      toast.success("Email authorized successfully");
+      setEmail("");
+    } catch (error) {
+      toast.error((error as Error).message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <Card className="shadow-none">
       <CardHeader>
@@ -33,6 +57,8 @@ const ActivateEmail = () => {
               <Input
                 id="email"
                 type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter email address to authorize"
                 className="h-10 pl-10 shadow-none"
               />
@@ -41,9 +67,18 @@ const ActivateEmail = () => {
         </div>
       </CardContent>
       <CardFooter>
-        <Button variant={"default"}>
-          <ShieldCheck className="h-6 w-6" />
-          Authorize Email
+        <Button onClick={handleAuthorize} disabled={isLoading}>
+          {isLoading ? (
+            <div className="flex items-center">
+              <Loader2 className="mr-2 animate-spin" />
+              Authorizing
+            </div>
+          ) : (
+            <div className="flex items-center gap-1">
+              <ShieldCheck className="h-6 w-6" />
+              Authorize Email
+            </div>
+          )}
         </Button>
       </CardFooter>
     </Card>

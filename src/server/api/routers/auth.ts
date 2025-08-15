@@ -3,10 +3,30 @@ import { DEPARTMENTS } from "@/constants/departments";
 import { GENDERS } from "@/constants/genders";
 import z from "zod";
 import { createTRPCRouter, protectedRoute, publicProcedure } from "../trpc";
-import { checkStudentOnBoarded } from "@/lib/api/auth/mutation";
+import {
+  authorizeEmail,
+  checkStudentOnBoarded,
+  isEmailAuthorized,
+  revokeAuthorizedEmail,
+} from "@/lib/api/auth/mutation";
 import { gellAllInternshipAccounts } from "@/lib/api/auth/query";
 
 export const authRouter = createTRPCRouter({
+  isEmailAuthorized: publicProcedure
+    .input(z.object({ email: z.string() }))
+    .mutation(async ({ input }) => {
+      return await isEmailAuthorized(input);
+    }),
+  authorizeEmail: publicProcedure
+    .input(z.object({ email: z.string() }))
+    .mutation(async ({ input }) => {
+      return await authorizeEmail(input);
+    }),
+  revokeAuthorizedEmail: publicProcedure
+    .input(z.object({ email: z.string() }))
+    .mutation(async ({ input }) => {
+      return await revokeAuthorizedEmail(input);
+    }),
   checkStudendIsOnBoarded: protectedRoute
     .input(
       z.object({

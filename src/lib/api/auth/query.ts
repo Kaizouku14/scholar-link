@@ -3,7 +3,6 @@ import { TRPCError } from "@trpc/server";
 import {
   user as UserTable,
   student as StudentTable,
-  authorizedEmail as AuthorizedEmailTable,
 } from "@/server/db/schema/auth";
 import { ROLES } from "@/constants/roles";
 

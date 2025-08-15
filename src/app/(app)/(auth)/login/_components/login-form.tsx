@@ -21,7 +21,6 @@ import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { api } from "@/trpc/react";
-import { Hand } from "lucide-react";
 
 const LoginForm = () => {
   const router = useRouter();
@@ -36,6 +35,8 @@ const LoginForm = () => {
 
   const { mutateAsync: onBoardedMutation } =
     api.auth.checkStudendIsOnBoarded.useMutation();
+  const { mutateAsync: checkIfEmailIsAuthorized } =
+    api.auth.isEmailAuthorized.useMutation();
   const onSubmit = async (values: LoginSchema) => {
     const { email, password, rememberMe } = values;
     const toastId = toast.loading("Processing sign-in request...", {
@@ -43,6 +44,13 @@ const LoginForm = () => {
     });
 
     try {
+      const isEmailAuthorized = await checkIfEmailIsAuthorized({ email });
+      if (!isEmailAuthorized) {
+        throw new Error(
+          "Your account isn’t authorized to sign in. Please reach out to the administrator for access.",
+        );
+      }
+
       const { data, error } = await authClient.signIn.email({
         email,
         password,
