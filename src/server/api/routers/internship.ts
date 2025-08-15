@@ -21,6 +21,10 @@ import { getInternshipStats } from "@/lib/api/internship/coordinator/dashboard/q
 import { createDocument } from "@/lib/api/internship/coordinator/document-review/mutation";
 import { createStudentInternship } from "@/lib/api/internship/coordinator/interns/mutation";
 import type { createInternship } from "@/interfaces/internship";
+import {
+  getAllCompany,
+  getAllSupervisor,
+} from "@/lib/api/internship/admin/query";
 
 export const internshipRouter = createTRPCRouter({
   /******************************************
@@ -110,7 +114,6 @@ export const internshipRouter = createTRPCRouter({
       department,
     });
   }),
-  //TODO: TO CONSIDER
   getDashboardStats: protectedRoute.query(async ({ ctx }) => {
     const department = ctx.session?.user.department! as departmentType;
     return await getInternshipStats({ department });
@@ -130,7 +133,15 @@ export const internshipRouter = createTRPCRouter({
   getCompanyRecords: protectedRoute.query(async () => {
     return await getCompanyRecords();
   }),
-
+  /******************************************
+   *          Coordinator API Query         *
+   ******************************************/
+  getAllCompany: protectedRoute.query(async () => {
+    return await getAllCompany();
+  }),
+  getAllSupervisor: protectedRoute.query(async () => {
+    return await getAllSupervisor();
+  }),
   /******************************************
    *         Global API Mutation/Query       *
    ******************************************/
