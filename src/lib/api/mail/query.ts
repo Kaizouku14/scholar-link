@@ -1,4 +1,4 @@
-import { db, eq, or, desc, and } from "@/server/db";
+import { db, eq, or, desc, and, count } from "@/server/db";
 import { user } from "@/server/db/schema/auth";
 import { mailTable } from "@/server/db/schema/mail";
 import { TRPCError } from "@trpc/server";
@@ -15,10 +15,14 @@ const baseMailQuery = () =>
       parentId: mailTable.parentId,
       sender: mailTable.sender,
       senderName: sender.name,
+      middleName: sender.middleName,
+      senderSurname: sender.surname,
       senderEmail: sender.email,
       senderProfile: sender.profile,
       receiver: mailTable.receiver,
       receiverName: receiver.name,
+      receiverMiddleName: receiver.middleName,
+      receiverSurname: receiver.surname,
       receiverEmail: receiver.email,
       receiverProfile: receiver.profile,
       subject: mailTable.subject,
@@ -43,6 +47,28 @@ export const getAllMails = async ({ userId }: { userId: string }) => {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
       message: "Failed to get all mails, " + (error as Error).message,
+    });
+  }
+};
+
+export const getAllUnReadMails = async ({ userId }: { userId: string }) => {
+  try {
+    const [response] = await db
+      .select({
+        unReadCount: count(),
+      })
+      .from(mailTable)
+      .leftJoin(receiver, eq(mailTable.receiver, receiver.id))
+      .leftJoin(sender, eq(mailTable.sender, sender.id))
+      .where(and(eq(mailTable.receiver, userId), eq(mailTable.isRead, false)))
+      .orderBy(desc(mailTable.createdAt))
+      .execute();
+
+    return response;
+  } catch (error) {
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "Failed to get all unread mails, " + (error as Error).message,
     });
   }
 };

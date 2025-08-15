@@ -7,6 +7,7 @@ import { NAVIGATION_DATA } from "@/data/navigation-data";
 import type { roleType } from "@/constants/roles";
 import type { NavGroup } from "@/interfaces/navigation";
 import NavItemsSkeleton from "./nav-main-skeleton";
+import { api } from "@/trpc/react";
 
 interface NavMainProps {
   userRole: roleType;
@@ -24,6 +25,7 @@ export function NavMain({ userRole, isPending }: NavMainProps) {
     navigation.secondary && navigation.secondary.length > 0;
   const hasManagementNav =
     navigation.management && navigation.management.length > 0;
+  const { data, isLoading } = api.mail.getUnReadCount.useQuery();
 
   return (
     <div>
@@ -51,7 +53,7 @@ export function NavMain({ userRole, isPending }: NavMainProps) {
                   key={`secondary-${index}`}
                   group={group}
                   notificationCounts={{
-                    messages: 100,
+                    messages: isLoading ? 0 : data?.unReadCount,
                   }}
                 />
               ))}

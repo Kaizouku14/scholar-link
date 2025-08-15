@@ -31,11 +31,15 @@ const EmailList = ({
     const otherParticipant = isFromCurrentUser
       ? {
           name: lastMessage?.receiverName,
+          middleName: lastMessage?.receiverMiddleName,
+          surname: lastMessage?.receiverSurname,
           email: lastMessage?.receiverEmail,
           avatar: lastMessage?.receiverProfile,
         }
       : {
           name: lastMessage?.senderName,
+          middleName: lastMessage?.senderMiddleName,
+          surname: lastMessage?.senderSurname,
           email: lastMessage?.senderEmail,
           avatar: lastMessage?.senderProfile,
         };
@@ -109,9 +113,18 @@ const EmailList = ({
                             : "text-foreground/80 font-medium",
                         )}
                       >
-                        {isFromCurrentUser
-                          ? `To: ${otherParticipant.name}`
-                          : otherParticipant.name}
+                        {isFromCurrentUser ? (
+                          <div className="flex flex-col">
+                            <span className="flex gap-1">
+                              {`To: ${otherParticipant.name} ${otherParticipant.middleName?.charAt(0).toUpperCase()}. ${otherParticipant.surname}`}
+                            </span>
+                            <span className="text-muted-foreground text-xs">
+                              {otherParticipant.email}
+                            </span>
+                          </div>
+                        ) : (
+                          otherParticipant.name
+                        )}
                       </p>
                       <div className="flex items-center space-x-2">
                         {thread.length > 1 && (

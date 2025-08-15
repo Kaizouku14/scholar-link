@@ -26,6 +26,7 @@ const Mail = () => {
     isLoading: FetchingMails,
     refetch: refetchMails,
   } = api.mail.getAllUserMail.useQuery();
+  const { refetch: refetchUnreadCount } = api.mail.getUnReadCount.useQuery();
 
   const { mutateAsync: markThreadAsRead } =
     api.mail.markMailAsRead.useMutation();
@@ -99,6 +100,7 @@ const Mail = () => {
         ids: unreadMails.map((email) => email.id),
       });
       await refetchMails();
+      await refetchUnreadCount();
     } catch (error) {
       setSelectedThread(thread);
     } finally {
