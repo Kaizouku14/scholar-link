@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { COURSE_LABELS, type courseType } from "@/constants/courses";
 import { YEAR_LEVEL_LABELS, type YearLevelType } from "@/constants/year-level";
+import { DataTableRowActions } from "./table-row-actions";
 
 export const AccountColumns: ColumnDef<AccountSchema>[] = [
   {
@@ -109,6 +110,6 @@ export const AccountColumns: ColumnDef<AccountSchema>[] = [
   {
     id: "actions",
     header: "Actions",
-    cell: ({ row, table }) => <Ellipsis className="ml-1.5 h-4 w-4" />,
+    cell: ({ row, table }) => <DataTableRowActions row={row} table={table} />,
   },
 ];

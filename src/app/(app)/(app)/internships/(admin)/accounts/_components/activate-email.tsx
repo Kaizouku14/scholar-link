@@ -16,7 +16,7 @@ import { Loader2, Mail, ShieldCheck } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
-const ActivateEmail = () => {
+const ActivateEmail = ({ refetch }: { refetch: () => Promise<any> }) => {
   const [email, setEmail] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { mutateAsync: authorizeEmail } = api.auth.authorizeEmail.useMutation();
@@ -25,10 +25,12 @@ const ActivateEmail = () => {
     if (!email.trim()) return;
 
     setIsLoading(true);
+    const toastId = toast.loading("Authorizing email...");
     try {
       await authorizeEmail({ email });
-      toast.success("Email authorized successfully");
+      toast.success("Email authorized successfully", { id: toastId });
       setEmail("");
+      refetch();
     } catch (error) {
       toast.error((error as Error).message);
     } finally {
