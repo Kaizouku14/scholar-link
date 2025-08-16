@@ -1,7 +1,7 @@
 "use client";
 import { api } from "@/trpc/react";
-import EventCalendar from "./helper/event-calendar";
-import { InternsDashboardStats } from "./internship/student-stats";
+import EventCalendar from "../_components/helper/event-calendar";
+import { InternsDashboardStats } from "./_components/cards/student-stats";
 import { Skeleton } from "@/components/ui/skeleton";
 import UpcomingDeadlines from "@/components/cards/upcoming-deadlines";
 

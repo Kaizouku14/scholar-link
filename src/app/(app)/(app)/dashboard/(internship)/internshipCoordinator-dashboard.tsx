@@ -1,5 +1,5 @@
 import UpcomingDeadlines from "@/components/cards/upcoming-deadlines";
-import CoordinatorDashboardStats from "./internship/coordinator-stats";
+import CoordinatorDashboardStats from "./_components/cards/coordinator-stats";
 
 const CoordinatorDashboard = () => {
   return (
