@@ -26,7 +26,7 @@ const FormHeader = () => {
       <div>
         <small className="text-muted-foreground">Back to Accounts</small>
 
-        <h2 className="text-lg leading-tight font-semibold">Create Account</h2>
+        <h2 className="text-lg leading-tight font-semibold">Add Account</h2>
       </div>
     </div>
   );

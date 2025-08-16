@@ -1,6 +1,6 @@
 import { genUploader } from "uploadthing/client";
 import type { OurFileRouter } from "@/app/api/uploadthing/core";
-import { toast } from "sonner";
+import { toast } from "react-hot-toast";
 
 const { uploadFiles } = genUploader<OurFileRouter>();
 

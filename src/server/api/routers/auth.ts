@@ -1,15 +1,19 @@
-import { COURSES } from "@/constants/courses";
-import { DEPARTMENTS } from "@/constants/departments";
-import { GENDERS } from "@/constants/genders";
 import z from "zod";
 import { createTRPCRouter, protectedRoute, publicProcedure } from "../trpc";
 import {
   authorizeEmail,
   checkStudentOnBoarded,
+  createUserAccount,
   isEmailAuthorized,
   revokeAuthorizedEmail,
 } from "@/lib/api/auth/mutation";
 import { gellAllInternshipAccounts } from "@/lib/api/auth/query";
+import { COURSES } from "@/constants/courses";
+import { DEPARTMENTS } from "@/constants/departments";
+import { GENDERS } from "@/constants/genders";
+import { ROLES } from "@/constants/roles";
+import { SECTIONS } from "@/constants/sections";
+import { YEAR_LEVEL } from "@/constants/year-level";
 
 export const authRouter = createTRPCRouter({
   isEmailAuthorized: publicProcedure
@@ -37,27 +41,29 @@ export const authRouter = createTRPCRouter({
       return await checkStudentOnBoarded(input);
     }),
 
-  register: publicProcedure
+  register: protectedRoute
     .input(
       z.object({
-        name: z.string(),
-        email: z.string().email(),
-        password: z.string(),
-        confirmPassword: z.string(),
-        contact_no: z.string(),
-        address: z.string(),
+        name: z.string().min(1, "Name is required"),
+        surname: z.string().min(1, "Surname is required"),
+        middleName: z.string().min(1, "Middle name is required"),
+        email: z.string().email("Invalid email address"),
+        profile: z.string().optional(),
+        profileKey: z.string().optional(),
+        contact: z.string().min(1, "Contact is required"),
+        address: z.string().min(1, "Address is required"),
+        dateOfBirth: z.date({ required_error: "Date of birth is required" }),
         gender: z.enum(GENDERS),
         department: z.enum(DEPARTMENTS),
-
-        //Students
-        studentNumber: z.string().optional(),
+        role: z.enum(ROLES),
+        studentNo: z.string().optional(),
         course: z.enum(COURSES).optional(),
-        yearLevel: z.string().optional(),
-        profilePicture: z.string().optional(),
+        section: z.enum(SECTIONS).optional(),
+        yearLevel: z.enum(YEAR_LEVEL).optional(),
       }),
     )
     .mutation(async ({ input }) => {
-      console.log(input);
+      return await createUserAccount({ data: input });
     }),
 
   getAllInternshipAccounts: protectedRoute.query(async ({ ctx }) => {

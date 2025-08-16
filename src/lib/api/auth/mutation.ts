@@ -1,3 +1,5 @@
+import { ROLE } from "@/constants/roles";
+import type { UserAccount } from "@/interfaces/user";
 import { generateUUID } from "@/lib/utils";
 import { db, eq } from "@/server/db";
 import {
@@ -9,7 +11,7 @@ import { TRPCError } from "@trpc/server";
 
 export const checkStudentOnBoarded = async ({ id }: { id: string }) => {
   try {
-    const allowedRoles = ["internshipStudent"];
+    const allowedRoles = ROLE.INTERNSHIP_STUDENT;
     const [studentOnBoarded] = await db
       .select({
         onboarded: studentTable.onboarded,
@@ -60,4 +62,43 @@ export const authorizeEmail = async ({ email }: { email: string }) => {
       email,
     })
     .execute();
+};
+
+export const createUserAccount = async ({ data }: { data: UserAccount }) => {
+  await db.transaction(async (tx) => {
+    const generatedID = generateUUID();
+
+    await tx
+      .insert(userTable)
+      .values({
+        id: generatedID,
+        name: data.name,
+        surname: data.surname,
+        middleName: data.middleName,
+        email: data.email,
+        profile: data.profile,
+        profileKey: data.profileKey,
+        contact: data.contact,
+        address: data.address,
+        dateOfBirth: data.dateOfBirth,
+        gender: data.gender,
+        department: data.department,
+        role: data.role,
+      })
+      .execute();
+
+    if (data.role === ROLE.INTERNSHIP_STUDENT) {
+      await tx
+        .insert(studentTable)
+        .values({
+          id: generatedID,
+          studentNo: data.studentNo!,
+          course: data.course!,
+          section: data.section!,
+          yearLevel: data.yearLevel!,
+          onboarded: true,
+        })
+        .execute();
+    }
+  });
 };

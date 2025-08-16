@@ -14,3 +14,12 @@ export type UserInfo = {
   email: string;
   profile?: string;
 };
+
+export const ROLE = {
+  INTERNSHIP_STUDENT: ROLES[0],
+  SCHOLARSHIP_STUDENT: ROLES[1],
+  SCHOLARSHIP_ADMIN: ROLES[2],
+  INTERNSHIP_ADMIN: ROLES[3],
+  SCHOLARSHIP_COORDINATOR: ROLES[4],
+  INTERNSHIP_COORDINATOR: ROLES[5],
+} as const;

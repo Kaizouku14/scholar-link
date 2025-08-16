@@ -25,7 +25,7 @@ import { Input } from "@/components/ui/input";
 import { COURSES } from "@/constants/courses";
 import { DEPARTMENTS } from "@/constants/departments";
 import { GENDERS } from "@/constants/genders";
-import { ROLES } from "@/constants/roles";
+import { ROLE, ROLES } from "@/constants/roles";
 import { SECTIONS } from "@/constants/sections";
 import { YEAR_LEVEL } from "@/constants/year-level";
 import { useState } from "react";
@@ -37,13 +37,15 @@ import {
 } from "@/components/ui/popover";
 import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
-import { Separator } from "@/components/ui/separator";
 import { Avatar } from "@radix-ui/react-avatar";
 import { AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatText } from "@/lib/utils";
+import { uploadSingleFile } from "@/lib/uploadthing";
+import toast from "react-hot-toast";
+import { api } from "@/trpc/react";
 
 const CreateAccountForm = () => {
-  const [profilePreview, setProfilePreview] = useState<string | null>(null);
+  const [profilePreview, setProfilePreview] = useState<string>("");
 
   const form = useForm<Accounts>({
     resolver: zodResolver(accountFormSchema),
@@ -52,33 +54,49 @@ const CreateAccountForm = () => {
       surname: "",
       middleName: "",
       email: "",
-      profile: "",
+      profile: undefined,
       contact: "",
       address: "",
-      role: "internshipStudent",
+      role: "internshipAdmin",
+      studentNo: "",
     },
   });
 
   const watchedRole = form.watch("role");
-  const isStudent = watchedRole === "internshipStudent";
+  const isStudent = watchedRole === ROLE.INTERNSHIP_STUDENT;
 
   const handleProfilePictureChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const file = event.target.files?.[0];
     if (file) {
+      form.setValue("profile", file);
+
       const reader = new FileReader();
       reader.onloadend = () => {
-        const result = reader.result as string;
-        setProfilePreview(result);
-        form.setValue("profile", result);
+        setProfilePreview(reader.result as string);
       };
       reader.readAsDataURL(file);
     }
   };
 
-  const onSubmit = (values: Accounts) => {
-    console.log("Form submitted with values:", values);
+  const { mutateAsync: createUser } = api.auth.register.useMutation();
+  const onSubmit = async (values: Accounts) => {
+    const toastId = toast.loading("Creating user...");
+    try {
+      const uploadedImage = await uploadSingleFile(values.profile);
+      if (!uploadedImage?.url || !uploadedImage?.key) {
+        toast.error("Failed to upload image. Please try again.");
+        return;
+      }
+
+      await createUser({ ...values, profile: uploadedImage.url });
+      toast.success("User created successfully!", { id: toastId });
+    } catch (error) {
+      toast.error((error as Error).message);
+    } finally {
+      toast.dismiss(toastId);
+    }
   };
 
   return (
@@ -425,10 +443,10 @@ const CreateAccountForm = () => {
                       <FormItem>
                         <FormLabel>Student Number *</FormLabel>
                         <FormControl>
-                          <Input placeholder="2025-0001" {...field} />
+                          <Input placeholder="2022500330" {...field} />
                         </FormControl>
                         <FormDescription>
-                          Use the official format (e.g. 2025-0001).
+                          Use the official format (e.g. 202500330).
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -533,9 +551,18 @@ const CreateAccountForm = () => {
               </section>
             )}
 
-            <Button type="submit" className="w-full text-base font-medium">
-              Register User
-            </Button>
+            <div className="flex w-full justify-end gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => form.reset()}
+              >
+                Discard
+              </Button>
+              <Button type="submit" className="font-medium">
+                Register User
+              </Button>
+            </div>
           </form>
         </Form>
       </CardContent>
