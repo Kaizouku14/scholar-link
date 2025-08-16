@@ -5,7 +5,7 @@ import { internship as InternshipTable } from "@/server/db/schema/internship";
 import { TRPCError } from "@trpc/server";
 
 //TODO: TO CONSIDER
-export const getInternshipStats = async ({
+export const getCoordinatorDashboardStats = async ({
   department,
 }: {
   department: departmentType;

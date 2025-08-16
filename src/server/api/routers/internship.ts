@@ -17,14 +17,13 @@ import {
   getAllUserAccountByDept,
   getCompanyRecords,
 } from "@/lib/api/internship/coordinator/interns/query";
-import { getInternshipStats } from "@/lib/api/internship/coordinator/dashboard/query";
+import { getCoordinatorDashboardStats } from "@/lib/api/internship/coordinator/dashboard/query";
 import { createDocument } from "@/lib/api/internship/coordinator/document-review/mutation";
 import { createStudentInternship } from "@/lib/api/internship/coordinator/interns/mutation";
 import type { createInternship } from "@/interfaces/internship";
-import {
-  getAllCompany,
-  getAllSupervisor,
-} from "@/lib/api/internship/admin/query";
+import { getAdminDashboardStats } from "@/lib/api/internship/admin/dashboard/query";
+import { getAllCompany } from "@/lib/api/internship/admin/company/query";
+import { getAllSupervisor } from "@/lib/api/internship/admin/supervisor/query";
 
 export const internshipRouter = createTRPCRouter({
   /******************************************
@@ -114,9 +113,9 @@ export const internshipRouter = createTRPCRouter({
       department,
     });
   }),
-  getDashboardStats: protectedRoute.query(async ({ ctx }) => {
+  getCoordinatorDashboardStats: protectedRoute.query(async ({ ctx }) => {
     const department = ctx.session?.user.department! as departmentType;
-    return await getInternshipStats({ department });
+    return await getCoordinatorDashboardStats({ department });
   }),
   getAllStudentProgressByDept: protectedRoute.query(async ({ ctx }) => {
     const department = ctx.session?.user.department! as departmentType;
@@ -134,8 +133,11 @@ export const internshipRouter = createTRPCRouter({
     return await getCompanyRecords();
   }),
   /******************************************
-   *          Coordinator API Query         *
+   *             Admin API Query            *
    ******************************************/
+  getAdminDashboardStats: protectedRoute.query(async () => {
+    return await getAdminDashboardStats();
+  }),
   getAllCompany: protectedRoute.query(async () => {
     return await getAllCompany();
   }),

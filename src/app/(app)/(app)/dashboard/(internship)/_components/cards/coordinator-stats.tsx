@@ -6,7 +6,8 @@ import { api } from "@/trpc/react";
 import { CheckCircle, Clipboard, Clock, Hourglass } from "lucide-react";
 
 const CoordinatorDashboardStats = () => {
-  const { data, isLoading } = api.internships.getDashboardStats.useQuery();
+  const { data, isLoading } =
+    api.internships.getCoordinatorDashboardStats.useQuery();
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
       {!isLoading && data ? (
