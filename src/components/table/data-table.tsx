@@ -25,6 +25,7 @@ import {
 } from "@tanstack/react-table";
 import { useState } from "react";
 import { DataTableToolbar } from "./table-toolbar";
+import { DataTablePagination } from "./table-pagination";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -84,18 +85,32 @@ export function DataTable<TData, TValue>({
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
+                {headerGroup.headers.map((header, index) => {
+                  const isLastColumn = index === headerGroup.headers.length - 1;
+                  const selectedRows = table.getSelectedRowModel().rows ?? [];
+                  const showOptions = isLastColumn && selectedRows.length > 1;
+
                   return (
                     <TableHead
                       key={header.id}
                       className="border-border border-b"
                     >
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
+                      {showOptions ? (
+                        <div className="flex items-center justify-between">
+                          {header.isPlaceholder
+                            ? null
+                            : flexRender(
+                                header.column.columnDef.header,
+                                header.getContext(),
+                              )}
+                          //TODO: Add column options
+                        </div>
+                      ) : header.isPlaceholder ? null : (
+                        flexRender(
+                          header.column.columnDef.header,
+                          header.getContext(),
+                        )
+                      )}
                     </TableHead>
                   );
                 })}
@@ -133,26 +148,8 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-end space-x-2 py-2">
-        <div className="text-muted-foreground flex-1 text-sm">
-          No. of rows: {table.getRowCount()}
-        </div>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          Previous
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          Next
-        </Button>
+      <div className="w-full py-1">
+        <DataTablePagination table={table} />
       </div>
     </div>
   );
