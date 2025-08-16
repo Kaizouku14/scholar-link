@@ -7,6 +7,7 @@ export const InternColumnSchema = z.object({
   supervisorEmail: z.string().nullish(),
   studentCount: z.number(),
   totalProgressHours: z.string().nullish(),
+  status: z.string().nullish(),
   department: z.string().nullish(),
   interns: z
     .array(

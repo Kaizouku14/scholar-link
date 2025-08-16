@@ -76,6 +76,8 @@ const LoginForm = () => {
     } catch (error) {
       toast.error((error as Error).message, {
         position: "top-center",
+        className: "text-sm",
+        duration: 5000,
       });
     } finally {
       toast.dismiss(toastId);

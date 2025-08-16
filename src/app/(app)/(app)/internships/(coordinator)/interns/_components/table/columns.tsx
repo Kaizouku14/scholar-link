@@ -49,8 +49,8 @@ export const InternsColumns: ColumnDef<InternColumn>[] = [
       const department = row.original.department as departmentType;
       const hoursRequired = departmentHoursMap[department];
       return (
-        <div className="flex items-center gap-x-1.5">
-          <span>{hoursRequired} </span>
+        <div className="flex items-center">
+          <span>{hoursRequired}</span>
           <span className="text-muted-foreground">hrs</span>
         </div>
       );
@@ -59,6 +59,26 @@ export const InternsColumns: ColumnDef<InternColumn>[] = [
   {
     accessorKey: "status",
     header: "Status",
+    accessorFn: (row) => {
+      const hoursRequired =
+        departmentHoursMap[row.department as departmentType];
+      const percentage =
+        Number(row.totalProgressHours) > 0
+          ? Number(
+              (
+                (Number(row.totalProgressHours) /
+                  (row.studentCount * hoursRequired)) *
+                100
+              ).toFixed(1),
+            )
+          : 0;
+
+      return percentage === 0
+        ? "pending"
+        : percentage >= 100
+          ? "completed"
+          : "in-progress";
+    },
     cell: ({ row }) => {
       const { totalProgressHours, studentCount, department } = row.original;
       const hoursRequired = departmentHoursMap[department as departmentType];

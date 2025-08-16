@@ -27,8 +27,11 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
   const [searchTerm, setSearchTerm] = useState("");
 
   const filteredInterns = useMemo(() => {
-    return internsInfo?.filter((intern) =>
-      intern.surname?.toLowerCase().includes(searchTerm.toLowerCase()),
+    return internsInfo?.filter(
+      (intern) =>
+        intern.surname?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        intern.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        intern.studentNo?.toLowerCase().includes(searchTerm.toLowerCase()),
     );
   }, [internsInfo, searchTerm]);
 
@@ -51,7 +54,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
 
         <Input
           type="text"
-          placeholder="Search by surname"
+          placeholder="Search Intern..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />

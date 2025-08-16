@@ -5,6 +5,7 @@ import {
 } from "@/server/db/schema/internship";
 import { TRPCError } from "@trpc/server";
 
+//TODO: TO REVIEW (ACTIVE INTERNS)
 export const getAdminDashboardStats = async () => {
   try {
     const [response] = await db
