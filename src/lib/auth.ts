@@ -5,7 +5,7 @@ import * as schema from "@/server/db/schema/auth";
 import { admin } from "better-auth/plugins";
 import { ROLES } from "@/constants/roles";
 import { sendEmail } from "@/services/email";
-import { linkVerificationTemplate } from "@/services/verfityOtpEmailTemplate";
+import { linkVerificationTemplate } from "@/services/verfityEmailTemplate";
 import { siteConfig } from "@/types/site.config";
 import { env } from "@/env";
 
@@ -31,9 +31,20 @@ export const auth = betterAuth({
       await sendEmail({
         to: user.email,
         subject: "Reset Password ",
-        html: linkVerificationTemplate({ url }),
+        html: linkVerificationTemplate({ title: "Reset Password", url }),
       });
     },
+  },
+  emailVerification: {
+    sendVerificationEmail: async ({ user, url }) => {
+      await sendEmail({
+        to: user.email,
+        subject: "Email Verification",
+        html: linkVerificationTemplate({ title: "Email Verification", url }),
+      });
+    },
+    sendOnSignUp: true,
+    expiresIn: 10 * 60 * 1000, //10 minutes
   },
   user: {
     additionalFields: {

@@ -1,4 +1,10 @@
-export const linkVerificationTemplate = ({ url }: { url: string }) => {
+export const linkVerificationTemplate = ({
+  title,
+  url,
+}: {
+  title: string;
+  url: string;
+}) => {
   return `
     <div style="margin: 0; padding: 0; font-family: 'Poppins', sans-serif; background-color: hsl(0, 0%, 96.1%);">
       <table width="100%" cellpadding="0" cellspacing="0" style="padding: 40px 0;">
@@ -20,7 +26,7 @@ export const linkVerificationTemplate = ({ url }: { url: string }) => {
               <!-- Title -->
               <tr>
                 <td align="center" style="padding-bottom: 16px;">
-                  <h2 style="color: hsl(240, 6%, 10%); font-size: 22px; margin: 0;">Reset Your Password</h2>
+                  <h2 style="color: hsl(240, 6%, 10%); font-size: 22px; margin: 0;">${title}</h2>
                 </td>
               </tr>
 
@@ -28,7 +34,7 @@ export const linkVerificationTemplate = ({ url }: { url: string }) => {
               <tr>
                 <td align="center" style="padding-bottom: 24px;">
                   <p style="color: hsl(0, 0%, 45.1%); font-size: 16px; margin: 0;">
-                    Click the button below to reset your password. This link will expire in 10 minutes.
+                    Click the button below to ${title === "Reset Password" ? "reset your password" : "verify your email"}. This link will expire in 10 minutes.
                   </p>
                 </td>
               </tr>
@@ -46,7 +52,7 @@ export const linkVerificationTemplate = ({ url }: { url: string }) => {
                     border-radius: 6px;
                     text-decoration: none;
                   ">
-                    Reset Password
+                    ${title === "Reset Password" ? "Reset Password" : "Verify Email"}
                   </a>
                 </td>
               </tr>
