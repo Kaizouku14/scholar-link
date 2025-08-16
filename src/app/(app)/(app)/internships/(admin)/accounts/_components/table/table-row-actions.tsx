@@ -1,7 +1,7 @@
 "use client";
 
 import type { Row, Table } from "@tanstack/react-table";
-import { Ban, MoreHorizontal, XCircle } from "lucide-react";
+import { MoreHorizontal, XCircle } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
+import { toast } from "react-hot-toast";
 import { useState } from "react";
 import { api } from "@/trpc/react";
 import type { AccountSchema } from "./column-schema";

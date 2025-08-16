@@ -6,6 +6,7 @@ import NextTopLoader from "nextjs-toploader";
 import { TRPCReactProvider } from "@/trpc/react";
 import { siteConfig } from "@/types/site.config";
 import { Toaster } from "react-hot-toast";
+import { ThemeProvider } from "@/components/theme/theme-provider";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.origin),
@@ -53,9 +54,16 @@ export default function RootLayout({
   return (
     <html lang="en" className={poppins.variable} suppressHydrationWarning>
       <body>
-        <NextTopLoader color="#e8304f" showSpinner={true} />
-        <TRPCReactProvider>{children}</TRPCReactProvider>
-        <Toaster />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <NextTopLoader color="#e8304f" showSpinner={true} />
+          <TRPCReactProvider>{children}</TRPCReactProvider>
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );

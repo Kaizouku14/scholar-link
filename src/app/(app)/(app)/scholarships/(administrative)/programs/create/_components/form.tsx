@@ -56,7 +56,7 @@ export default function ScholarshipForm() {
         return;
       }
 
-      toast.info("Processing data, please wait...");
+      toast.loading("Processing data, please wait...");
 
       toast.promise(
         createProgramMutation({
