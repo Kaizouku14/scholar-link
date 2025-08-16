@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 const Page = () => {
   return (
-    <div className="mx-auto h-auto w-full space-y-4 px-2">
+    <div className="mx-auto h-auto w-full space-y-4">
       <PageBreadCrumb currentPage="Interns" />
       <InternshipHeader />
       <InternshipTable />

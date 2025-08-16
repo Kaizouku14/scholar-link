@@ -16,11 +16,16 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { cn, getStatusColor, getStatusVariant } from "@/lib/utils";
 import { DataTableRowActions } from "./table-row-actions";
+import { DataTableColumnHeader } from "@/components/table/table-column-header";
 
 export const InternsColumns: ColumnDef<InternColumn>[] = [
   {
     accessorKey: "companyName",
-    header: "Company",
+    header: ({ column }) => (
+      <div className="text-right">
+        <DataTableColumnHeader column={column} title="Company" />
+      </div>
+    ),
     cell: ({ row }) => (
       <div className="flex items-center overflow-hidden whitespace-nowrap">
         <Building2 className="text-muted-foreground mr-1.5 h-4 w-4 flex-shrink-0" />
