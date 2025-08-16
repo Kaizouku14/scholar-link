@@ -12,7 +12,7 @@ import { api } from "@/trpc/react";
 import { authClient } from "@/lib/auth-client";
 import { filterAndSortMails, type SortOrder } from "./helper/email-utils";
 import EmailActions from "./email-actions";
-import { toast } from "sonner";
+import { toast } from "react-hot-toast";
 
 const Mail = () => {
   const [searchQuery, setSearchQuery] = useState("");

@@ -14,7 +14,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
-import { toast } from "sonner";
+import { toast } from "react-hot-toast";
 
 interface ReplyFormProps {
   thread: Email[];
