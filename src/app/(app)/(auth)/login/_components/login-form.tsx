@@ -17,7 +17,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
 import { PageRoutes } from "@/constants/page-routes";
-import { toast } from "sonner";
+import { toast } from "react-hot-toast";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { api } from "@/trpc/react";

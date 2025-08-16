@@ -14,7 +14,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { toast } from "sonner";
+import { toast } from "react-hot-toast";
 import { LoaderCircle, Send } from "lucide-react";
 import { formSchema, type FormSchema } from "./schema";
 import EmailComboBox from "./email-cb";

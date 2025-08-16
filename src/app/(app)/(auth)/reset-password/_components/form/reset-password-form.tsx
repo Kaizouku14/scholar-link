@@ -1,6 +1,6 @@
 "use client";
 
-import { toast } from "sonner";
+import { toast } from "react-hot-toast";
 import { authClient } from "@/lib/auth-client";
 
 import { zodResolver } from "@hookform/resolvers/zod";

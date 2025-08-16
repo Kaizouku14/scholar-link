@@ -18,7 +18,7 @@ import { CalendarIcon, Clock, Plus } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { api } from "@/trpc/react";
-import { toast } from "sonner";
+import { toast } from "react-hot-toast";
 
 const ProgressForm = ({ refetch }: { refetch: () => Promise<any> }) => {
   const form = useForm<ProgressFormSchema>({

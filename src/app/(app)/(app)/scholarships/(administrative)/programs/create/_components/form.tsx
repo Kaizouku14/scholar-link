@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
 import { useState } from "react";
-import { toast } from "sonner";
+import { toast } from "react-hot-toast";
 import { ScholarshipFormSchema, type ScholarshipFormData } from "./schema";
 import { useFormState } from "@/hooks/use-form-state";
 import SubmitButton from "@/components/forms/submit-button";

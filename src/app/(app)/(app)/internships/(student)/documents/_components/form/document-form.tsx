@@ -22,10 +22,10 @@ import { Button } from "@/components/ui/button";
 import { FileTextIcon, Upload, XIcon } from "lucide-react";
 import { useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { DOCUMENT_LABELS, DOCUMENTS } from "@/constants/documents";
+import { DOCUMENT_LABELS } from "@/constants/documents";
 import SubmitButton from "@/components/forms/submit-button";
 import { api } from "@/trpc/react";
-import { toast } from "sonner";
+import { toast } from "react-hot-toast";
 import { uploadSingleFile } from "@/lib/uploadthing";
 
 const DocumentForm = () => {

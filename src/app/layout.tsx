@@ -4,9 +4,8 @@ import { type Metadata } from "next";
 import { Poppins } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
 import { TRPCReactProvider } from "@/trpc/react";
-import { ThemeProvider } from "@/components/theme/theme-provider";
-import { Toaster } from "@/components/ui/sonner";
 import { siteConfig } from "@/types/site.config";
+import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.origin),
@@ -54,16 +53,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={poppins.variable} suppressHydrationWarning>
       <body>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <NextTopLoader color="#e8304f" showSpinner={true} />
-          <TRPCReactProvider>{children}</TRPCReactProvider>
-          <Toaster richColors style={{}} />
-        </ThemeProvider>
+        <NextTopLoader color="#e8304f" showSpinner={true} />
+        <TRPCReactProvider>{children}</TRPCReactProvider>
+        <Toaster />
       </body>
     </html>
   );

@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type CombinedSetupSchema, combinedSetupSchema } from "./schema";
 import { useState } from "react";
-import { toast } from "sonner";
+import { toast } from "react-hot-toast";
 import ProfileSetupForm from "./profile-setup";
 import StudentSetupForm from "./student-setup";
 import { Form } from "@/components/ui/form";

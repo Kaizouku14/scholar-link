@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/form";
 import Link from "next/link";
 import { PageRoutes } from "@/constants/page-routes";
-import { toast } from "sonner";
+import { toast } from "react-hot-toast";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { api } from "@/trpc/react";

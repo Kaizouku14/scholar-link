@@ -19,7 +19,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { DOCUMENT_LABELS, DOCUMENTS } from "@/constants/documents";
-import { CalendarIcon, ClockPlus, FileText } from "lucide-react";
+import { CalendarIcon, FileText } from "lucide-react";
 import {
   Popover,
   PopoverContent,
@@ -30,7 +30,7 @@ import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import SubmitButton from "@/components/forms/submit-button";
 import { api } from "@/trpc/react";
-import { toast } from "sonner";
+import { toast } from "react-hot-toast";
 
 const DocumentForm = () => {
   const form = useForm<FormSchema>({

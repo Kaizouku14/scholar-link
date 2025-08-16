@@ -14,7 +14,7 @@ import { Label } from "@/components/ui/label";
 import { api } from "@/trpc/react";
 import { Loader2, Mail, ShieldCheck } from "lucide-react";
 import { useState } from "react";
-import { toast } from "sonner";
+import { toast } from "react-hot-toast";
 
 const ActivateEmail = ({ refetch }: { refetch: () => Promise<any> }) => {
   const [email, setEmail] = useState<string>("");
