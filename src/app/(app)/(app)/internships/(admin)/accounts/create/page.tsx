@@ -1,6 +1,7 @@
 import PageBreadCrumb from "@/components/breadcrumbs/page-header";
 import type { Metadata } from "next";
 import FormHeader from "./_components/form/form-header";
+import CreateAccountForm from "./_components/form/create-account-form";
 
 export const metadata: Metadata = {
   title: "Create Account",
@@ -11,6 +12,7 @@ const Page = () => {
     <div className="mx-auto w-full space-y-4 px-2">
       <PageBreadCrumb currentPage="Accounts" subPage="Create Account" />
       <FormHeader />
+      <CreateAccountForm />
     </div>
   );
 };
