@@ -28,6 +28,7 @@ export const getAllCompany = async () => {
         eq(InternshipTable.supervisorId, SupervisorTable.supervisorId),
       )
       .where(eq(InternshipTable.status, "in-progress"))
+      .groupBy(CompanyTable.companyId)
       .execute();
 
     return response ?? [];
@@ -61,6 +62,7 @@ export const getAllSupervisor = async () => {
         eq(InternshipTable.companyId, CompanyTable.companyId),
       )
       .where(eq(InternshipTable.status, "in-progress"))
+      .groupBy(SupervisorTable.supervisorId)
       .execute();
 
     return response ?? [];

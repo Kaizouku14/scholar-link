@@ -43,6 +43,7 @@ import { formatText } from "@/lib/utils";
 import { uploadSingleFile } from "@/lib/uploadthing";
 import toast from "react-hot-toast";
 import { api } from "@/trpc/react";
+import SubmitButton from "@/components/forms/submit-button";
 
 const CreateAccountForm = () => {
   const [profilePreview, setProfilePreview] = useState<string>("");
@@ -92,10 +93,9 @@ const CreateAccountForm = () => {
 
       await createUser({ ...values, profile: uploadedImage.url });
       toast.success("User created successfully!", { id: toastId });
+      form.reset();
     } catch (error) {
       toast.error((error as Error).message);
-    } finally {
-      toast.dismiss(toastId);
     }
   };
 
@@ -559,9 +559,12 @@ const CreateAccountForm = () => {
               >
                 Discard
               </Button>
-              <Button type="submit" className="font-medium">
+              <SubmitButton
+                formState={form.formState}
+                className="w-40 font-medium"
+              >
                 Register User
-              </Button>
+              </SubmitButton>
             </div>
           </form>
         </Form>

@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import CoordinatorDashboard from "./_components/coordinator-dashboard";
 import InternshipStudentDashboard from "./_components/internshipStudent-dashboard";
+import { DashboardSkeleton } from "./_components/helper/dashboard-skeleton";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -24,7 +25,7 @@ const Pages = async () => {
       ) : role === "internshipStudent" ? (
         <InternshipStudentDashboard />
       ) : (
-        <div>No Dashboard</div>
+        <DashboardSkeleton />
       )}
     </div>
   );

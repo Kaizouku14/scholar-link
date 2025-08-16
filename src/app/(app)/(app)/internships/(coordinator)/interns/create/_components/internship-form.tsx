@@ -60,8 +60,6 @@ const InternshipForm = () => {
       });
     } catch (error) {
       toast.error((error as Error).message);
-    } finally {
-      toast.dismiss(toastId);
     }
   };
 
