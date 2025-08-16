@@ -41,6 +41,7 @@ interface DataTableProps<TData, TValue> {
     value: string;
   }[];
   refetch?: () => Promise<QueryObserverResult<TData[] | undefined, unknown>>;
+  onImport?: () => void;
 }
 
 export function DataTable<TData, TValue>({
@@ -51,6 +52,7 @@ export function DataTable<TData, TValue>({
   columnVisibility,
   options,
   refetch,
+  onImport,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
 
@@ -95,6 +97,7 @@ export function DataTable<TData, TValue>({
         filteredTitle={filteredTitle}
         filteredColumn={filteredColumn}
         options={options}
+        onImport={onImport}
       />
       <div className="border-border rounded-xl border">
         <Table>

@@ -3,10 +3,11 @@
 import { type Table } from "@tanstack/react-table";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
+import { Import, X } from "lucide-react";
 import { DataTableFacetedFilter } from "./table-faceted-filter";
 import { DataTableViewOptions } from "./table-view-options";
-
+import { Search } from "lucide-react";
+import { formatText } from "@/lib/utils";
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
   filteredTitle: string;
@@ -15,15 +16,15 @@ interface DataTableToolbarProps<TData> {
     label: string;
     value: string;
   }[];
+  onImport?: () => void;
 }
-import { Search } from "lucide-react";
-import { formatText } from "@/lib/utils";
 
 export const DataTableToolbar = <TData,>({
   table,
   filteredTitle,
   filteredColumn,
   options,
+  onImport,
 }: DataTableToolbarProps<TData>) => {
   const isFiltered = table.getState().columnFilters.length > 0;
 
@@ -61,6 +62,12 @@ export const DataTableToolbar = <TData,>({
           </Button>
         )}
       </div>
+      {onImport && (
+        <Button variant={"outline"} size={"sm"} onClick={onImport}>
+          <Import className="size-4" />
+          Import
+        </Button>
+      )}
       <DataTableViewOptions table={table} />
     </div>
   );

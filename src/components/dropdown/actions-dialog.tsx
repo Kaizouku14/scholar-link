@@ -19,8 +19,6 @@ interface DataTableRowActionsProps<TData> {
 export function ActionDialog<TData>({
   table,
 }: DataTableRowActionsProps<TData>) {
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false);
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
