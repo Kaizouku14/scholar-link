@@ -68,6 +68,7 @@ const LoginForm = () => {
       toast.success("You're signed in! Redirecting shortly...", {
         id: toastId,
         position: "top-center",
+        className: "w-full ",
       });
 
       const onboarded = await onBoardedMutation({ id: data.user.id });
