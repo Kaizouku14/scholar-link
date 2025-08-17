@@ -13,18 +13,19 @@ import { insertStudentProgress } from "@/lib/api/internship/student/progress/mut
 import { getAllDocumentByDepartment } from "@/lib/api/internship/coordinator/document-review/query";
 import { getStudentProgressByDept } from "@/lib/api/internship/coordinator/progress-monitoring/query";
 import {
-  getAllInternByDept,
+  getAllInternships,
   getAllUserAccountByDept,
   getCompanyRecords,
-} from "@/lib/api/internship/coordinator/interns/query";
+  getAllInternsDocuments,
+} from "@/lib/api/internship/query";
 import { getCoordinatorDashboardStats } from "@/lib/api/internship/coordinator/dashboard/query";
 import { createDocument } from "@/lib/api/internship/coordinator/document-review/mutation";
-import { createStudentInternship } from "@/lib/api/internship/coordinator/interns/mutation";
+import { createStudentInternship } from "@/lib/api/internship/mutation";
 import type { createInternship } from "@/interfaces/internship";
 import { getAdminDashboardStats } from "@/lib/api/internship/admin/dashboard/query";
 import { getAllCompany } from "@/lib/api/internship/admin/company/query";
 import { getAllSupervisor } from "@/lib/api/internship/admin/supervisor/query";
-import { getAllInternsDocumentsByDept } from "@/lib/api/internship/coordinator/document-list/query";
+import type { roleType } from "@/constants/roles";
 
 export const internshipRouter = createTRPCRouter({
   /******************************************
@@ -75,6 +76,61 @@ export const internshipRouter = createTRPCRouter({
   /******************************************
    *          Coordinator API Mutation      *
    ******************************************/
+  createDocument: protectedRoute
+    .input(
+      z.object({
+        documentType: z.enum(DOCUMENTS),
+        deadline: z.date(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      await createDocument(input);
+    }),
+  /******************************************
+   *          Coordinator API Query         *
+   ******************************************/
+  getAllDocumentByDepartment: protectedRoute.query(async ({ ctx }) => {
+    const department = ctx.session?.user.department! as departmentType;
+    return await getAllDocumentByDepartment({
+      department,
+    });
+  }),
+  getCoordinatorDashboardStats: protectedRoute.query(async ({ ctx }) => {
+    const department = ctx.session?.user.department! as departmentType;
+    return await getCoordinatorDashboardStats({ department });
+  }),
+  getAllStudentProgressByDept: protectedRoute.query(async ({ ctx }) => {
+    const department = ctx.session?.user.department! as departmentType;
+    return await getStudentProgressByDept({ department });
+  }),
+  getAllUserAccountByDept: protectedRoute.query(async ({ ctx }) => {
+    const department = ctx.session?.user.department! as departmentType;
+    return await getAllUserAccountByDept({ department });
+  }),
+  getCompanyRecords: protectedRoute.query(async () => {
+    return await getCompanyRecords();
+  }),
+  /******************************************
+   *             Admin API Query            *
+   ******************************************/
+  getAdminDashboardStats: protectedRoute.query(async () => {
+    return await getAdminDashboardStats();
+  }),
+  getAllCompany: protectedRoute.query(async () => {
+    return await getAllCompany();
+  }),
+  getAllSupervisor: protectedRoute.query(async () => {
+    return await getAllSupervisor();
+  }),
+
+  /******************************************
+   *   Admin/Coordinator API Mutation/Query *
+   ******************************************/
+  getAllInternships: protectedRoute.query(async ({ ctx }) => {
+    const role = ctx.session?.user.role! as roleType;
+    const department = ctx.session?.user.department! as departmentType;
+    return await getAllInternships({ role, department });
+  }),
   createStudentInternship: protectedRoute
     .input(
       z.object({
@@ -95,59 +151,10 @@ export const internshipRouter = createTRPCRouter({
       } as createInternship;
       await createStudentInternship({ data });
     }),
-  createDocument: protectedRoute
-    .input(
-      z.object({
-        documentType: z.enum(DOCUMENTS),
-        deadline: z.date(),
-      }),
-    )
-    .mutation(async ({ input }) => {
-      await createDocument(input);
-    }),
-  /******************************************
-   *          Coordinator API Query         *
-   ******************************************/
-  getAllInternsDocumentsByDept: protectedRoute.query(async ({ ctx }) => {
+  getAllInternsDocuments: protectedRoute.query(async ({ ctx }) => {
+    const role = ctx.session?.user.role! as roleType;
     const department = ctx.session?.user.department! as departmentType;
-    return await getAllInternsDocumentsByDept({ department });
-  }),
-  getAllDocumentByDepartment: protectedRoute.query(async ({ ctx }) => {
-    const department = ctx.session?.user.department! as departmentType;
-    return await getAllDocumentByDepartment({
-      department,
-    });
-  }),
-  getCoordinatorDashboardStats: protectedRoute.query(async ({ ctx }) => {
-    const department = ctx.session?.user.department! as departmentType;
-    return await getCoordinatorDashboardStats({ department });
-  }),
-  getAllStudentProgressByDept: protectedRoute.query(async ({ ctx }) => {
-    const department = ctx.session?.user.department! as departmentType;
-    return await getStudentProgressByDept({ department });
-  }),
-  getAllInternByDept: protectedRoute.query(async ({ ctx }) => {
-    const department = ctx.session?.user.department! as departmentType;
-    return await getAllInternByDept({ department });
-  }),
-  getAllUserAccountByDept: protectedRoute.query(async ({ ctx }) => {
-    const department = ctx.session?.user.department! as departmentType;
-    return await getAllUserAccountByDept({ department });
-  }),
-  getCompanyRecords: protectedRoute.query(async () => {
-    return await getCompanyRecords();
-  }),
-  /******************************************
-   *             Admin API Query            *
-   ******************************************/
-  getAdminDashboardStats: protectedRoute.query(async () => {
-    return await getAdminDashboardStats();
-  }),
-  getAllCompany: protectedRoute.query(async () => {
-    return await getAllCompany();
-  }),
-  getAllSupervisor: protectedRoute.query(async () => {
-    return await getAllSupervisor();
+    return await getAllInternsDocuments({ role, department });
   }),
   /******************************************
    *         Global API Mutation/Query       *

@@ -7,7 +7,7 @@ import { InternsColumns } from "./columns";
 import { INTERNSHIP_STATUS_LABELS } from "@/constants/status";
 
 const InternshipTable = () => {
-  const { data, isLoading } = api.internships.getAllInternByDept.useQuery();
+  const { data, isLoading } = api.internships.getAllInternships.useQuery();
 
   return (
     <div className="w-full">

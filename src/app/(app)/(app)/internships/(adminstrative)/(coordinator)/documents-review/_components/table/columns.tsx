@@ -3,7 +3,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { type ColumnSchema } from "./column-schema";
 import { DOCUMENT_LABELS } from "@/constants/documents";
-import { CheckCircle, Clock, Eye, FileText, XCircle } from "lucide-react";
+import { CheckCircle, Clock, FileText, XCircle } from "lucide-react";
 import { COURSE_LABELS, type courseType } from "@/constants/courses";
 import { YEAR_LEVEL_LABELS, type YearLevelType } from "@/constants/year-level";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";

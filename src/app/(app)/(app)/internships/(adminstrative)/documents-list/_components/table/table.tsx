@@ -6,8 +6,7 @@ import { DataTableSkeleton } from "@/components/table/table-skeleton";
 import { DocumentListColumns } from "./column";
 
 const DocumentListTable = () => {
-  const { data, isLoading } =
-    api.internships.getAllInternsDocumentsByDept.useQuery();
+  const { data, isLoading } = api.internships.getAllInternsDocuments.useQuery();
 
   return (
     <div className="mx-auto mt-4 w-full">

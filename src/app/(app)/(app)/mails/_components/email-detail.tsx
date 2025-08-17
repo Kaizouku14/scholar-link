@@ -220,23 +220,13 @@ const EmailDetail = ({
                               : "Start of conversation"}
                           </div>
                           <div className="flex items-center space-x-2">
-                            {email.isRead && isSenderCurrentUser && (
-                              <Badge
-                                variant="secondary"
-                                className="px-2 py-0 text-xs"
-                              >
-                                Read
-                              </Badge>
-                            )}
-                            {!isSenderCurrentUser && (
-                              <Button
-                                onClick={handleReplyClick}
-                                className="flex cursor-pointer items-center space-x-2 shadow-sm"
-                              >
-                                <Reply className="h-4 w-4" />
-                                Reply
-                              </Button>
-                            )}
+                            <Button
+                              onClick={handleReplyClick}
+                              className="flex cursor-pointer items-center space-x-2 shadow-sm"
+                            >
+                              <Reply className="h-4 w-4" />
+                              Reply
+                            </Button>
                           </div>
                         </div>
                       </CardContent>

@@ -43,6 +43,12 @@ export const NAVIGATION_DATA: NavigationData = {
             description: "Manage all internships",
           },
           {
+            title: "Documents",
+            url: PageRoutes.INTERNSHIP_INTERNS_DOCUMENTS,
+            icon: FileUser,
+            description: "View interns documents",
+          },
+          {
             title: "Companies",
             url: PageRoutes.INTERNSHIPS_COMPANIES,
             icon: Building2,
@@ -120,7 +126,7 @@ export const NAVIGATION_DATA: NavigationData = {
         items: [
           {
             title: "Internships",
-            url: PageRoutes.INTERNSHIPS_INTERNS,
+            url: PageRoutes.INTERNSHIP_MANAGE_INTERNSHIPS,
             icon: NotepadText,
             description: "Internships under supervision",
           },
