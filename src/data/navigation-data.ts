@@ -14,6 +14,7 @@ import {
   Award,
   Users,
   FileText,
+  FileUser,
 } from "lucide-react";
 import { PageRoutes } from "../constants/page-routes";
 import type { NavigationData } from "@/interfaces/navigation";
@@ -124,10 +125,15 @@ export const NAVIGATION_DATA: NavigationData = {
             description: "Internships under supervision",
           },
           {
+            title: "Documents",
+            url: PageRoutes.INTERNSHIP_INTERNS_DOCUMENTS,
+            icon: FileUser,
+            description: "View interns documents",
+          },
+          {
             title: "Document Review",
             url: PageRoutes.INTERNSHIPS_DOCUMENTS_REVIEW,
             icon: FileCheck,
-            badgeType: "documents",
             description: "Pending document reviews",
           },
           {
@@ -261,7 +267,6 @@ export const NAVIGATION_DATA: NavigationData = {
             title: "Applications",
             url: PageRoutes.SCHOLARSHIPS_APPLICATIONS,
             icon: FileText,
-            badgeType: "applications",
             description: "Review applications",
           },
           {
@@ -326,7 +331,6 @@ export const NAVIGATION_DATA: NavigationData = {
             title: "Applications",
             url: PageRoutes.SCHOLARSHIPS_APPLICATIONS,
             icon: FileText,
-            badgeType: "applications",
             description: "Review applications",
           },
           {

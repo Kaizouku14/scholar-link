@@ -68,6 +68,7 @@ export enum PageRoutes {
   // Coordinators only
   INTERNSHIPS_INTERNS = `${INTERNSHIPS}/interns`,
   INTERNSHIP_INTERNS_CREATE = `${INTERNSHIPS_INTERNS}/create`,
+  INTERNSHIP_INTERNS_DOCUMENTS = `${INTERNSHIPS}/documents-list`,
   INTERNSHIPS_DOCUMENTS_REVIEW = `${INTERNSHIPS}/documents-review`,
   INTERNSHIPS_PROGRESS_MONITOR = `${INTERNSHIPS}/progress-monitor`,
 }
