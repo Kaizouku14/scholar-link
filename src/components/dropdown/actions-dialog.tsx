@@ -8,7 +8,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type { Row, Table } from "@tanstack/react-table";
+import type { Table } from "@tanstack/react-table";
 import { CircleX, MoreHorizontal, Trash2 } from "lucide-react";
 import { useState } from "react";
 
