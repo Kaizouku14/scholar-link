@@ -24,6 +24,7 @@ import type { createInternship } from "@/interfaces/internship";
 import { getAdminDashboardStats } from "@/lib/api/internship/admin/dashboard/query";
 import { getAllCompany } from "@/lib/api/internship/admin/company/query";
 import { getAllSupervisor } from "@/lib/api/internship/admin/supervisor/query";
+import { getAllInternsDocumentsByDept } from "@/lib/api/internship/coordinator/document-list/query";
 
 export const internshipRouter = createTRPCRouter({
   /******************************************
@@ -107,6 +108,10 @@ export const internshipRouter = createTRPCRouter({
   /******************************************
    *          Coordinator API Query         *
    ******************************************/
+  getAllInternsDocumentsByDept: protectedRoute.query(async ({ ctx }) => {
+    const department = ctx.session?.user.department! as departmentType;
+    return await getAllInternsDocumentsByDept({ department });
+  }),
   getAllDocumentByDepartment: protectedRoute.query(async ({ ctx }) => {
     const department = ctx.session?.user.department! as departmentType;
     return await getAllDocumentByDepartment({
