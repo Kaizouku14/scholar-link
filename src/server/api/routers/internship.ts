@@ -26,6 +26,7 @@ import { getAdminDashboardStats } from "@/lib/api/internship/admin/dashboard/que
 import { getAllCompany } from "@/lib/api/internship/admin/company/query";
 import { getAllSupervisor } from "@/lib/api/internship/admin/supervisor/query";
 import type { roleType } from "@/constants/roles";
+import { getAllInternshipDeparments } from "@/lib/api/internship/admin/deparments/query";
 
 export const internshipRouter = createTRPCRouter({
   /******************************************
@@ -117,6 +118,9 @@ export const internshipRouter = createTRPCRouter({
   }),
   getAllSupervisor: protectedRoute.query(async () => {
     return await getAllSupervisor();
+  }),
+  getAllInternshipDeparments: protectedRoute.query(async () => {
+    return await getAllInternshipDeparments();
   }),
 
   /******************************************
