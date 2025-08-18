@@ -48,6 +48,7 @@ export const getAllInternships = async ({
               'name', ${UserTable.name},
               'middleName', ${UserTable.middleName},
               'surname', ${UserTable.surname},
+              'profile', ${UserTable.profile},
               'email', ${UserTable.email},
               'course', ${StudentTable.course},
               'yearLevel', ${StudentTable.yearLevel},

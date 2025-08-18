@@ -15,6 +15,7 @@ export const InternColumnSchema = z.object({
         name: z.string(),
         middleName: z.string(),
         surname: z.string(),
+        profile: z.string(),
         email: z.string(),
         course: z.string(),
         yearLevel: z.string(),

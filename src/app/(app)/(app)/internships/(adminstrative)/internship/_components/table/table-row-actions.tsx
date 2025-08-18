@@ -17,6 +17,7 @@ import type { InternColumn } from "./column-schema";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
 import { useState, useMemo } from "react";
+import { InternCard } from "@/components/cards/intern-cards";
 
 interface DataTableRowActionsProps {
   row: Row<InternColumn>;
@@ -61,72 +62,12 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
 
         <ScrollArea className="h-76 max-h-76 space-y-3">
           <div className="space-y-3">
-            {internsInfo?.length ? (
+            {filteredInterns?.length ? (
               filteredInterns?.map((intern, index) => (
-                <div
-                  key={index}
-                  className="border-border hover:bg-muted/50 rounded-md border p-3 transition-colors"
-                >
-                  <div className="space-y-2">
-                    <div>
-                      <div className="flex items-center justify-between">
-                        <h3 className="text-card-foreground text-sm font-medium">
-                          {intern.name} {intern.middleName} {intern.surname}
-                        </h3>
-                        <span
-                          className={`rounded-full px-2 py-1 text-xs font-medium ${
-                            intern.status === "in-progress"
-                              ? "bg-green-100 text-green-700"
-                              : intern.status === "completed"
-                                ? "bg-blue-100 text-blue-700"
-                                : "bg-yellow-100 text-yellow-700"
-                          }`}
-                        >
-                          {intern.status}
-                        </span>
-                      </div>
-                      <p className="text-muted-foreground text-xs">
-                        {intern.email}
-                      </p>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-1 text-xs">
-                      <div>
-                        <span className="text-card-foreground font-medium">
-                          Course:
-                        </span>
-                        <p className="text-muted-foreground">{intern.course}</p>
-                      </div>
-                      <div>
-                        <span className="text-card-foreground font-medium">
-                          Year:
-                        </span>
-                        <p className="text-muted-foreground">
-                          {intern.yearLevel}
-                        </p>
-                      </div>
-                      <div>
-                        <span className="text-card-foreground font-medium">
-                          Section:
-                        </span>
-                        <p className="text-muted-foreground">
-                          {intern.section}
-                        </p>
-                      </div>
-                      <div>
-                        <span className="text-card-foreground font-medium">
-                          Student No:
-                        </span>
-                        <p className="text-muted-foreground">
-                          {intern.studentNo}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <InternCard intern={intern} key={index} />
               ))
             ) : (
-              <div className="py-6 text-center">
+              <div className="flex h-76 items-center justify-center py-6">
                 <p className="text-muted-foreground text-sm">
                   No interns found.
                 </p>

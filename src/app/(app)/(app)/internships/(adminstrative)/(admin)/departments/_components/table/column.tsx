@@ -11,9 +11,8 @@ import {
 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import type { departmentType } from "@/constants/departments";
-import type { departmentHoursMap } from "@/constants/hours";
 import { getStatusColor, getStatusVariant, cn } from "@/lib/utils";
+import { DataTableRowActions } from "./table-row-actions";
 
 export const departmentsColumn: ColumnDef<DepartmentColumn>[] = [
   {
@@ -25,6 +24,7 @@ export const departmentsColumn: ColumnDef<DepartmentColumn>[] = [
           <Building className="text-muted-foreground h-4 w-4" />
         </div>
         {row.original.deparment}
+        {/* {DEPARMENTS_LABELS[row.original.deparment]} */}
       </div>
     ),
   },
@@ -152,5 +152,6 @@ export const departmentsColumn: ColumnDef<DepartmentColumn>[] = [
   {
     accessorKey: "Actions",
     header: "Actions",
+    cell: ({ row }) => <DataTableRowActions row={row} />,
   },
 ];
