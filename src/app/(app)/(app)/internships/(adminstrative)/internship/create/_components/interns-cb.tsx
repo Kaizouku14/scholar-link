@@ -28,7 +28,7 @@ type AccountListProps = {
 
 export const InternsComboBox = ({ value, onChange }: AccountListProps) => {
   const [open, setOpen] = React.useState(false);
-  const { data } = api.internships.getAllUserAccountByDept.useQuery();
+  const { data } = api.internships.getAllUserAccount.useQuery();
 
   return (
     <Popover open={open} onOpenChange={setOpen}>

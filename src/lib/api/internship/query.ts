@@ -73,7 +73,7 @@ export const getAllInternships = async ({
         ProgressTable,
         eq(ProgressTable.internshipId, InternshipTable.internshipId),
       )
-      .groupBy(CompanyTable.companyId, UserTable.department);
+      .groupBy(CompanyTable.companyId);
 
     let query;
     if (role === ROLE.INTERNSHIP_COORDINATOR) {
@@ -177,12 +177,23 @@ export const getAllInternsDocuments = async ({
   }
 };
 
-export const getAllUserAccountByDept = async ({
+export const getAllUserAccount = async ({
+  role,
   department,
 }: {
+  role: roleType;
   department: departmentType;
 }) => {
   try {
+    const conditions = [
+      eq(UserTable.role, ROLE.INTERNSHIP_STUDENT),
+      isNull(InternshipTable.userId),
+    ];
+
+    if (role === ROLE.INTERNSHIP_COORDINATOR) {
+      conditions.push(eq(UserTable.department, department));
+    }
+
     const response = await db
       .select({
         userId: UserTable.id,
@@ -197,16 +208,10 @@ export const getAllUserAccountByDept = async ({
       .from(UserTable)
       .leftJoin(StudentTable, eq(UserTable.id, StudentTable.id))
       .leftJoin(InternshipTable, eq(UserTable.id, InternshipTable.userId))
-      .where(
-        and(
-          eq(UserTable.department, department),
-          eq(UserTable.role, ROLES[0]),
-          isNull(InternshipTable.userId),
-        ),
-      )
+      .where(and(...conditions))
       .execute();
 
-    return response ?? [];
+    return response;
   } catch (error) {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",

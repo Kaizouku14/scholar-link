@@ -17,7 +17,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { companyformSchema, type CompanyFormSchema } from "./schema";
 import SubmitButton from "@/components/forms/submit-button";
 import { api } from "@/trpc/react";
-import { CalendarIcon, Loader2 } from "lucide-react";
+import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
@@ -30,8 +30,22 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { InternsComboBox } from "./interns-cb";
 import { CompanyCombobox } from "./company-cb";
 import { useState } from "react";
+import { authClient } from "@/lib/auth-client";
+import { ROLE } from "@/constants/roles";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { DEPARTMENTS, type departmentType } from "@/constants/departments";
+
 const InternshipForm = () => {
   const [isDisabled, setIsDisabled] = useState<boolean>(false);
+  const { data } = authClient.useSession();
+  const role = data?.user.role;
+
   const form = useForm<CompanyFormSchema>({
     resolver: zodResolver(companyformSchema),
     defaultValues: {
@@ -43,12 +57,17 @@ const InternshipForm = () => {
       contactNo: "",
       startDate: undefined,
       endDate: undefined,
+      department: undefined,
     },
   });
 
   const { mutateAsync: createInternship } =
     api.internships.createStudentInternship.useMutation();
   const onSubmit = async (values: CompanyFormSchema) => {
+    const coordinatoDepartment = data?.user.department;
+    if (role === ROLE.INTERNSHIP_COORDINATOR) {
+      values.department = coordinatoDepartment as departmentType;
+    }
     const toastId = toast.loading("Saving internship company details...");
     try {
       await createInternship({
@@ -158,22 +177,52 @@ const InternshipForm = () => {
               )}
             />
 
-            <FormField
-              control={form.control}
-              name="contactPerson"
-              render={({ field }) => (
-                <FormItem className="w-full md:mt-5.5">
-                  <FormLabel>Contact Person</FormLabel>
-                  <FormControl>
-                    <Input placeholder="John Doe" {...field} />
-                  </FormControl>
-                  <FormDescription className="text-xs">
-                    Enter the company’s supervisor name.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {role === ROLE.INTERNSHIP_ADMIN ? (
+              <FormField
+                control={form.control}
+                name="department"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col md:mt-5.5">
+                    <FormLabel>Department</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Select department" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {DEPARTMENTS.map((type) => (
+                          <SelectItem key={type} value={type}>
+                            {type}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            ) : (
+              <FormField
+                control={form.control}
+                name="contactPerson"
+                render={({ field }) => (
+                  <FormItem className="w-full md:mt-5.5">
+                    <FormLabel>Contact Person</FormLabel>
+                    <FormControl>
+                      <Input placeholder="John Doe" {...field} />
+                    </FormControl>
+                    <FormDescription className="text-xs">
+                      Enter the company’s supervisor name.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
           </div>
 
           <FormField
@@ -198,7 +247,27 @@ const InternshipForm = () => {
             )}
           />
 
-          <div className="grid gap-4 md:grid-cols-2">
+          <div
+            className={`grid gap-4 ${role === ROLE.INTERNSHIP_ADMIN ? "md:grid-cols-3" : "md:grid-cols-2"}`}
+          >
+            {role === ROLE.INTERNSHIP_ADMIN && (
+              <FormField
+                control={form.control}
+                name="contactPerson"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel>Contact Person</FormLabel>
+                    <FormControl>
+                      <Input placeholder="John Doe" {...field} />
+                    </FormControl>
+                    <FormDescription className="text-xs">
+                      Enter the company’s supervisor name.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
             <FormField
               control={form.control}
               name="contactEmail"

@@ -2,7 +2,7 @@ import { insertDocument } from "@/lib/api/internship/student/documents/mutation"
 import { createTRPCRouter, protectedRoute } from "../trpc";
 import z from "zod";
 import { DOCUMENTS } from "@/constants/documents";
-import type { departmentType } from "@/constants/departments";
+import { DEPARTMENTS, type departmentType } from "@/constants/departments";
 import {
   getAllDocumentsAvailable,
   getAllUpcomingDeadlines,
@@ -14,7 +14,7 @@ import { getAllDocumentByDepartment } from "@/lib/api/internship/coordinator/doc
 import { getStudentProgressByDept } from "@/lib/api/internship/coordinator/progress-monitoring/query";
 import {
   getAllInternships,
-  getAllUserAccountByDept,
+  getAllUserAccount,
   getCompanyRecords,
   getAllInternsDocuments,
 } from "@/lib/api/internship/query";
@@ -103,10 +103,6 @@ export const internshipRouter = createTRPCRouter({
     const department = ctx.session?.user.department! as departmentType;
     return await getStudentProgressByDept({ department });
   }),
-  getAllUserAccountByDept: protectedRoute.query(async ({ ctx }) => {
-    const department = ctx.session?.user.department! as departmentType;
-    return await getAllUserAccountByDept({ department });
-  }),
   getCompanyRecords: protectedRoute.query(async () => {
     return await getCompanyRecords();
   }),
@@ -126,11 +122,6 @@ export const internshipRouter = createTRPCRouter({
   /******************************************
    *   Admin/Coordinator API Mutation/Query *
    ******************************************/
-  getAllInternships: protectedRoute.query(async ({ ctx }) => {
-    const role = ctx.session?.user.role! as roleType;
-    const department = ctx.session?.user.department! as departmentType;
-    return await getAllInternships({ role, department });
-  }),
   createStudentInternship: protectedRoute
     .input(
       z.object({
@@ -142,19 +133,29 @@ export const internshipRouter = createTRPCRouter({
         contactNo: z.string(),
         startDate: z.date(),
         endDate: z.date(),
+        department: z.enum(DEPARTMENTS),
       }),
     )
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ input }) => {
       const data = {
         ...input,
-        department: ctx.session?.user.department! as departmentType,
       } as createInternship;
       await createStudentInternship({ data });
     }),
+  getAllInternships: protectedRoute.query(async ({ ctx }) => {
+    const role = ctx.session?.user.role! as roleType;
+    const department = ctx.session?.user.department! as departmentType;
+    return await getAllInternships({ role, department });
+  }),
   getAllInternsDocuments: protectedRoute.query(async ({ ctx }) => {
     const role = ctx.session?.user.role! as roleType;
     const department = ctx.session?.user.department! as departmentType;
     return await getAllInternsDocuments({ role, department });
+  }),
+  getAllUserAccount: protectedRoute.query(async ({ ctx }) => {
+    const role = ctx.session?.user.role! as roleType;
+    const department = ctx.session?.user.department! as departmentType;
+    return await getAllUserAccount({ role, department });
   }),
   /******************************************
    *         Global API Mutation/Query       *

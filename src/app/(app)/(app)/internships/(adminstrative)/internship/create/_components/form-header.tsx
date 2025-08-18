@@ -10,7 +10,7 @@ const FormHeader = () => {
   const router = useRouter();
 
   const handleBackButton = () => {
-    router.push(PageRoutes.INTERNSHIPS_INTERNS);
+    router.push(PageRoutes.INTERNSHIP_MANAGE_INTERNSHIPS);
   };
 
   return (
@@ -26,7 +26,7 @@ const FormHeader = () => {
       <div>
         <small className="text-muted-foreground">Back to Internships</small>
 
-        <h2 className="text-lg leading-tight font-semibold">Company Details</h2>
+        <h2 className="text-lg leading-tight font-semibold">Add Internship</h2>
       </div>
     </div>
   );

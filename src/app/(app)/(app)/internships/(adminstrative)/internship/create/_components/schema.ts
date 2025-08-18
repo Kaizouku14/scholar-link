@@ -1,3 +1,4 @@
+import { DEPARTMENTS } from "@/constants/departments";
 import z from "zod";
 
 export const companyformSchema = z.object({
@@ -29,6 +30,7 @@ export const companyformSchema = z.object({
   endDate: z.date({
     required_error: "End date is required.",
   }),
+  department: z.enum(DEPARTMENTS),
 });
 
 export type CompanyFormSchema = z.infer<typeof companyformSchema>;
