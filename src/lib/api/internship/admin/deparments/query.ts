@@ -26,9 +26,9 @@ export const getAllInternshipDeparments = async () => {
     const response = await db
       .select({
         deparment: UserTable.department,
-        coordinatorCount: sql<number>`COUNT(DISTINCT ${UserTable.id}) FILTER (WHERE ${UserTable.role} = ${ROLE.INTERNSHIP_COORDINATOR})`,
-        internCount: countDistinct(InternshipTable.userId),
-        requiredHours: sum(InternshipTable.totalOfHoursRequired),
+        coordinators: sql<number>`COUNT(DISTINCT ${UserTable.id}) FILTER (WHERE ${UserTable.role} = ${ROLE.INTERNSHIP_COORDINATOR})`,
+        interns: countDistinct(InternshipTable.userId),
+        requiredHours: max(InternshipTable.totalOfHoursRequired),
         totalProgressHours: sum(ProgressTable.hours),
         users: sql`
             json_group_array(
@@ -36,6 +36,7 @@ export const getAllInternshipDeparments = async () => {
                 'name', ${UserTable.name},
                 'middleName', ${UserTable.middleName},
                 'surname', ${UserTable.surname},
+                'profile', ${UserTable.profile},
                 'role', ${UserTable.role},
                 'email', ${UserTable.email},
                 'course', ${StudentTable.course},
