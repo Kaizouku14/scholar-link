@@ -14,7 +14,7 @@ const DocumentListTable = () => {
         <DataTable
           columns={DocumentListColumns}
           data={data}
-          filteredTitle={"surname"}
+          filteredTitle={"studentNo"}
           filteredColumn="status"
           options={[
             {
