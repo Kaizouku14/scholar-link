@@ -44,27 +44,25 @@ const DocumentForm = () => {
     api.internships.insertStudentDocument.useMutation();
   const onSubmit = async (data: DocumentSchema) => {
     const toastId = toast.loading("Uploading document...");
-    const uploadedDocument = await uploadSingleFile(data.documentFile);
-    if (!uploadedDocument?.url || !uploadedDocument?.key) {
-      toast.error("Failed to upload document. Please try again.");
-      return;
-    }
+    try {
+      const uploadedDocument = await uploadSingleFile(data.documentFile);
+      if (!uploadedDocument?.url || !uploadedDocument?.key) {
+        toast.error("Failed to upload document. Please try again.");
+        return;
+      }
 
-    toast.promise(
-      uploadDocument({
+      await uploadDocument({
         documentType: data.documentType,
         documentUrl: uploadedDocument.url,
         documentKey: uploadedDocument.key,
-      }),
-      {
-        success: "Document uploaded successfully!",
-        error: (error: unknown) => {
-          return (error as Error).message;
-        },
-      },
-    );
+      });
 
-    toast.dismiss(toastId);
+      toast.success("Document uploaded successfully!", { id: toastId });
+    } catch (error) {
+      toast.error((error as Error).message);
+    } finally {
+      toast.dismiss(toastId);
+    }
   };
 
   return (

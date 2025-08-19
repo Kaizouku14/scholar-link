@@ -90,10 +90,12 @@ const Documents = () => {
                 </p>
               </div>
             ) : (
-              <ScrollArea className="flex h-74 gap-2">
-                {filteredDocuments.all.map((doc) => (
-                  <DocumentList key={doc.documentId} documents={doc} />
-                ))}
+              <ScrollArea className="h-74">
+                <div className="grid grid-cols-3 gap-2">
+                  {filteredDocuments.pending.map((doc) => (
+                    <DocumentList key={doc.documentId} documents={doc} />
+                  ))}
+                </div>
               </ScrollArea>
             )}
           </TabsContent>
@@ -108,10 +110,12 @@ const Documents = () => {
                 <p className="text-muted-foreground">No pending documents.</p>
               </div>
             ) : (
-              <ScrollArea className="flex h-74 gap-2">
-                {filteredDocuments.pending.map((doc) => (
-                  <DocumentList key={doc.documentId} documents={doc} />
-                ))}
+              <ScrollArea className="h-74">
+                <div className="grid grid-cols-3 gap-2">
+                  {filteredDocuments.pending.map((doc) => (
+                    <DocumentList key={doc.documentId} documents={doc} />
+                  ))}
+                </div>
               </ScrollArea>
             )}
           </TabsContent>
@@ -128,10 +132,12 @@ const Documents = () => {
                 </p>
               </div>
             ) : (
-              <ScrollArea className="flex h-74 gap-2">
-                {filteredDocuments.approved.map((doc) => (
-                  <DocumentList key={doc.documentId} documents={doc} />
-                ))}
+              <ScrollArea className="h-74">
+                <div className="grid grid-cols-3 gap-2">
+                  {filteredDocuments.pending.map((doc) => (
+                    <DocumentList key={doc.documentId} documents={doc} />
+                  ))}
+                </div>
               </ScrollArea>
             )}
           </TabsContent>
