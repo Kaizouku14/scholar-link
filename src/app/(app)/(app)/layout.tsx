@@ -1,5 +1,5 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { SideBar } from "../_components/sidebar";
+import { SideBar } from "@/components/sidebar/sidebar";
 import { type PropsWithChildren } from "react";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
