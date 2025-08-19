@@ -1,4 +1,4 @@
-import { db, eq, and, sum } from "@/server/db";
+import { db, eq, and, sum, gte, lte } from "@/server/db";
 import { TRPCError } from "@trpc/server";
 import {
   internship as InternshipTable,
@@ -63,13 +63,23 @@ export const insertStudentProgress = async ({
       });
     }
 
+    // compare date ranges
+    const inputDate = new Date(logDate);
+
+    // Get start and end of the day for the input date
+    const startOfDay = new Date(inputDate);
+    startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date(inputDate);
+    endOfDay.setHours(23, 59, 59, 999);
+
     const existingLog = await tx
       .select()
       .from(ProgressLogTable)
       .where(
         and(
           eq(ProgressLogTable.internshipId, internshipId),
-          eq(ProgressLogTable.logDate, logDate),
+          gte(ProgressLogTable.logDate, startOfDay),
+          lte(ProgressLogTable.logDate, endOfDay),
         ),
       )
       .limit(1);

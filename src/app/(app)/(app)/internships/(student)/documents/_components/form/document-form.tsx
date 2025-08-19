@@ -57,7 +57,7 @@ const DocumentForm = () => {
         documentKey: uploadedDocument.key,
       });
 
-      toast.success("Document uploaded successfully!", { id: toastId });
+      toast.success("Document uploaded successfully!");
     } catch (error) {
       toast.error((error as Error).message);
     } finally {

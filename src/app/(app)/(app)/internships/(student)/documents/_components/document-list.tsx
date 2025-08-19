@@ -63,7 +63,7 @@ const DocumentList = ({ documents }: { documents: DocumentCardProps }) => {
 
               <div className="text-muted-foreground flex items-center text-xs">
                 <CalendarIcon className="mr-1.5 h-3 w-3" />
-                {format(documents.submittedAt, "dd/MM/yyyy")}
+                {format(documents.submittedAt, "MM/dd/yyyy")}
               </div>
             </div>
           </div>
