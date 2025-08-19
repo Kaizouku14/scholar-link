@@ -84,7 +84,7 @@ const ProgressOverview = () => {
 
                     <div className="space-y-3">
                       <Progress
-                        value={progress?.completed ?? 0}
+                        value={progress?.percentage ?? 0}
                         className="h-3 bg-gray-100 dark:bg-gray-700"
                       />
                       <div className="flex items-center justify-between">

@@ -25,9 +25,7 @@ export function NavMain({ userRole, isPending }: NavMainProps) {
     navigation.secondary && navigation.secondary.length > 0;
   const hasManagementNav =
     navigation.management && navigation.management.length > 0;
-  const { data, isLoading } = api.mail.getUnReadCount.useQuery(undefined, {
-    staleTime: 1000 * 60,
-  });
+  const { data, isLoading } = api.mail.getUnReadCount.useQuery();
 
   return (
     <div>

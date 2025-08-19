@@ -44,10 +44,10 @@ const ProgressForm = ({ refetch }: { refetch: () => Promise<any> }) => {
           refetch();
           return "Progress logged successfully";
         },
-        error: (error: unknown) => ({
-          message: (error as Error).message,
-          duration: 5000,
-        }),
+        error: (error: Error) => error.message,
+      },
+      {
+        duration: 5000,
       },
     );
   };
