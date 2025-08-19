@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -168,6 +169,9 @@ const DocumentForm = () => {
                       {errors.documentFile?.message}
                     </FormMessage>
                   )}
+                  <FormDescription>
+                    Upload a PDF file (up to 5 MB).
+                  </FormDescription>
                 </FormItem>
               )}
             />

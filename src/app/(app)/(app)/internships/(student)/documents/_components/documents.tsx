@@ -28,7 +28,8 @@ const Documents = () => {
         documentUrl: doc.documentUrl!,
         submittedAt: doc.submittedAt!,
         status: doc.status!,
-      }));
+      }))
+      .sort((a, b) => a.submittedAt.getTime() - b.submittedAt.getTime());
   }, [uploadedDocuments]);
 
   const filteredDocuments = useMemo(() => {

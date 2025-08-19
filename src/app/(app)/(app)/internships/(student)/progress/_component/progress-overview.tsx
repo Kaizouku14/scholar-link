@@ -19,10 +19,16 @@ const ProgressOverview = () => {
     const required = data[0]?.totalHoursRequired ?? 0;
     const completed = data.reduce((sum, log) => sum + log.hoursLog, 0);
     const logs =
-      data?.map((log) => ({
-        hoursLog: log.hoursLog,
-        dateLogs: log.dateLogs,
-      })) ?? [];
+      data
+        ?.map((log) => ({
+          hoursLog: log.hoursLog,
+          dateLogs: log.dateLogs,
+        }))
+        .sort((a, b) => {
+          return (
+            new Date(b.dateLogs).getTime() - new Date(a.dateLogs).getTime()
+          );
+        }) ?? [];
     const percentage =
       required > 0 ? Number(((completed / required) * 100).toFixed(1)) : 0;
     const uniqueDays = new Set(
