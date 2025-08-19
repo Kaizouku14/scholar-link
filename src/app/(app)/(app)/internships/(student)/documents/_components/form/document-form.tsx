@@ -93,12 +93,11 @@ const DocumentForm = () => {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent className="bg-popover text-popover-foreground">
-                      {data &&
-                        data?.map((type, index) => (
-                          <SelectItem key={index} value={type.documentType}>
-                            {DOCUMENT_LABELS[type.documentType]}
-                          </SelectItem>
-                        ))}
+                      {data?.map((type, index) => (
+                        <SelectItem key={index} value={type.documentType}>
+                          {DOCUMENT_LABELS[type.documentType]}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                   <FormMessage className="text-destructive" />
@@ -119,7 +118,7 @@ const DocumentForm = () => {
                   </FormLabel>
                   <FormControl>
                     <div className="border-input bg-background hover:bg-accent relative flex h-10 cursor-pointer items-center gap-2 rounded-md border px-3 py-2 transition-colors">
-                      <Upload className="text-muted-foreground h-4 w-4" />
+                      <Upload className="text-muted-foregroun d h-4 w-4" />
                       <span className="text-muted-foreground text-sm">
                         Choose file
                       </span>
@@ -129,7 +128,7 @@ const DocumentForm = () => {
                         accept="application/pdf"
                         {...rest}
                         onChange={(e) => {
-                          onChange(e.target.files?.[0] || null);
+                          onChange(e.target.files?.[0] ?? null);
                         }}
                         ref={(e) => {
                           rest.ref?.(e);
