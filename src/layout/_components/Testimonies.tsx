@@ -1,6 +1,6 @@
 import { Marquee } from "@/components/magicui/marquee";
 import { reviews } from "@/data/reviews";
-import ReviewCard from "../cards/review-card";
+import ReviewCard from "@/components/cards/scholarship/review-card";
 
 const Testimonies = () => {
   const firstRow = reviews.slice(0, reviews.length / 2);

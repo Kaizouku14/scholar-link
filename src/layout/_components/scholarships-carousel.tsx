@@ -8,10 +8,10 @@ import {
   CarouselPrevious,
   CarouselNext,
   type CarouselApi,
-} from "../ui/carousel";
-import FeaturedCard from "../cards/featured-card";
+} from "../../components/ui/carousel";
+import FeaturedCard from "../../components/cards/scholarship/featured-card";
 import { api } from "@/trpc/react";
-import { Skeleton } from "../ui/skeleton";
+import { Skeleton } from "../../components/ui/skeleton";
 
 const ScholarshipsCarousel = () => {
   const [carouselApi, setCarouselApi] = React.useState<CarouselApi>();

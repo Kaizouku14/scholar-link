@@ -4,14 +4,14 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "../ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Button } from "../ui/button";
-import { Badge } from "../ui/badge";
+} from "../../ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
+import { Button } from "../../ui/button";
+import { Badge } from "../../ui/badge";
 import { CalendarDays, UsersRound, MapPin, FileText } from "lucide-react";
 import { PageRoutes } from "@/constants/page-routes";
 import Link from "next/link";
-import { ShareButton } from "../dropdown/share-button";
+import { ShareButton } from "../../dropdown/share-button";
 import { slugify } from "@/lib/utils";
 import { format } from "date-fns";
 

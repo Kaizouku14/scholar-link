@@ -1,6 +1,6 @@
 import PageBreadCrumb from "@/components/breadcrumbs/page-header";
 import { type Metadata } from "next";
-import UpcomingDeadlines from "@/components/cards/upcoming-deadlines";
+import UpcomingDeadlines from "@/components/cards/internship/upcoming-deadlines";
 import Documents from "./_components/documents";
 import DocumentForm from "./_components/form/document-form";
 

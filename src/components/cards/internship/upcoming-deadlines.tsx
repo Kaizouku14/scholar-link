@@ -8,7 +8,7 @@ import { calculateDaysLeft, cn, isDeadlineApproaching } from "@/lib/utils";
 import { api } from "@/trpc/react";
 import { Calendar, FileText, RefreshCcw } from "lucide-react";
 import { useState } from "react";
-import { Skeleton } from "../ui/skeleton";
+import { Skeleton } from "../../ui/skeleton";
 
 const UpcomingDeadlines = () => {
   const {

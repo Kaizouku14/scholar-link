@@ -3,7 +3,7 @@ import { api } from "@/trpc/react";
 import EventCalendar from "../_components/helper/event-calendar";
 import { InternsDashboardStats } from "./_components/cards/student-stats";
 import { Skeleton } from "@/components/ui/skeleton";
-import UpcomingDeadlines from "@/components/cards/upcoming-deadlines";
+import UpcomingDeadlines from "@/components/cards/internship/upcoming-deadlines";
 
 const InternshipStudentDashboard = () => {
   const { data: deadlines, isLoading } =

@@ -1,4 +1,4 @@
-import type { Review } from "@/components/cards/review-card";
+import type { Review } from "@/components/cards/scholarship/review-card";
 
 export const reviews: Review[] = [
   {

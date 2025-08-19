@@ -1,7 +1,7 @@
 import { getStatusVariant, getStatusColor, cn } from "@/lib/utils";
 import { Clock, Hourglass, CheckCircle, XCircle } from "lucide-react";
-import { Badge } from "../ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Badge } from "../../ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
 
 export const InternCard = ({
   intern,

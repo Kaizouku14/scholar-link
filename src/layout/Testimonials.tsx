@@ -1,4 +1,4 @@
-import Testimonies from "@/components/landing-page/Testimonies";
+import Testimonies from "./_components/Testimonies";
 import React from "react";
 
 const Testimonials = () => {

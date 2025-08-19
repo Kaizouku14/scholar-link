@@ -17,7 +17,7 @@ import type { InternColumn } from "./column-schema";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
 import { useState, useMemo } from "react";
-import { InternCard } from "@/components/cards/intern-cards";
+import { InternCard } from "@/components/cards/internship/intern-cards";
 
 interface DataTableRowActionsProps {
   row: Row<InternColumn>;

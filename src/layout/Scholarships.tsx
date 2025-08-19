@@ -1,11 +1,11 @@
-import ScholarshipsCarousel from "@/components/landing-page/scholarships-carousel";
+import ScholarshipsCarousel from "./_components/scholarships-carousel";
+import ScholarshipHero from "./_components/hero-banner";
 import { Button } from "@/components/ui/button";
 import { MENU_ITEMS } from "@/constants/header-menu";
 import { PageRoutes } from "@/constants/page-routes";
 import Link from "next/link";
 import React from "react";
 import Testimonials from "./Testimonials";
-import ScholarshipHero from "@/components/landing-page/hero-banner";
 import FAQ from "./FAQ";
 
 const Scholarships = () => {

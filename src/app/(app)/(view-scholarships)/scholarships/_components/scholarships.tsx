@@ -1,6 +1,6 @@
 "use client";
 
-import FeaturedCard from "@/components/cards/featured-card";
+import FeaturedCard from "@/components/cards/scholarship/featured-card";
 import PagePagination from "@/components/pagination/page-pagination";
 import { api } from "@/trpc/react";
 import { useState } from "react";

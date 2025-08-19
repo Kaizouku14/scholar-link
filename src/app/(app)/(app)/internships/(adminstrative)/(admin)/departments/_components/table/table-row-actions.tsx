@@ -19,7 +19,7 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { ROLE } from "@/constants/roles";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { InternCard } from "@/components/cards/intern-cards";
+import { InternCard } from "@/components/cards/internship/intern-cards";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface DataTableRowActionsProps {
