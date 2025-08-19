@@ -27,6 +27,7 @@ import { getAllCompany } from "@/lib/api/internship/admin/company/query";
 import { getAllSupervisor } from "@/lib/api/internship/admin/supervisor/query";
 import type { roleType } from "@/constants/roles";
 import { getAllInternshipDeparments } from "@/lib/api/internship/admin/deparments/query";
+import { cacheData } from "@/lib/redis";
 
 export const internshipRouter = createTRPCRouter({
   /******************************************
@@ -90,19 +91,26 @@ export const internshipRouter = createTRPCRouter({
   /******************************************
    *          Coordinator API Query         *
    ******************************************/
-  getAllDocumentByDepartment: protectedRoute.query(async ({ ctx }) => {
+  getAllDocumentByDepartment: protectedRoute.query(({ ctx }) => {
     const department = ctx.session?.user.department! as departmentType;
-    return await getAllDocumentByDepartment({
-      department,
-    });
+    return cacheData(
+      `${department}-documents`,
+      async () =>
+        await getAllDocumentByDepartment({
+          department,
+        }),
+    );
   }),
   getCoordinatorDashboardStats: protectedRoute.query(async ({ ctx }) => {
     const department = ctx.session?.user.department! as departmentType;
     return await getCoordinatorDashboardStats({ department });
   }),
-  getAllStudentProgressByDept: protectedRoute.query(async ({ ctx }) => {
+  getAllStudentProgressByDept: protectedRoute.query(({ ctx }) => {
     const department = ctx.session?.user.department! as departmentType;
-    return await getStudentProgressByDept({ department });
+    return cacheData(
+      `${department}-progress`,
+      async () => await getStudentProgressByDept({ department }),
+    );
   }),
   getCompanyRecords: protectedRoute.query(async () => {
     return await getCompanyRecords();
@@ -110,19 +118,18 @@ export const internshipRouter = createTRPCRouter({
   /******************************************
    *             Admin API Query            *
    ******************************************/
-  getAdminDashboardStats: protectedRoute.query(async () => {
-    return await getAdminDashboardStats();
+  getAdminDashboardStats: protectedRoute.query(() => {
+    return cacheData("admin-dashboard", getAdminDashboardStats);
   }),
   getAllCompany: protectedRoute.query(async () => {
-    return await getAllCompany();
+    return await cacheData("company", getAllCompany);
   }),
   getAllSupervisor: protectedRoute.query(async () => {
-    return await getAllSupervisor();
+    return await cacheData("supervisor", getAllSupervisor);
   }),
   getAllInternshipDeparments: protectedRoute.query(async () => {
-    return await getAllInternshipDeparments();
+    return await cacheData("departments", getAllInternshipDeparments);
   }),
-
   /******************************************
    *   Admin/Coordinator API Mutation/Query *
    ******************************************/
@@ -146,15 +153,21 @@ export const internshipRouter = createTRPCRouter({
       } as createInternship;
       await createStudentInternship({ data });
     }),
-  getAllInternships: protectedRoute.query(async ({ ctx }) => {
+  getAllInternships: protectedRoute.query(({ ctx }) => {
     const role = ctx.session?.user.role! as roleType;
     const department = ctx.session?.user.department! as departmentType;
-    return await getAllInternships({ role, department });
+
+    return cacheData(`${role}-${department}-internships`, async () => {
+      return await getAllInternships({ role, department });
+    });
   }),
-  getAllInternsDocuments: protectedRoute.query(async ({ ctx }) => {
+  getAllInternsDocuments: protectedRoute.query(({ ctx }) => {
     const role = ctx.session?.user.role! as roleType;
     const department = ctx.session?.user.department! as departmentType;
-    return await getAllInternsDocuments({ role, department });
+
+    return cacheData(`${role}-${department}-documents`, async () => {
+      return await getAllInternsDocuments({ role, department });
+    });
   }),
   getAllUserAccount: protectedRoute.query(async ({ ctx }) => {
     const role = ctx.session?.user.role! as roleType;

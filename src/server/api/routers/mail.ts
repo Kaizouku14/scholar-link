@@ -9,9 +9,10 @@ import {
 import { TRPCError } from "@trpc/server";
 import { generateUUID } from "@/lib/utils";
 import { getAllMails, getAllUnReadMails } from "@/lib/api/mail/query";
+import { cacheData } from "@/lib/redis";
 
 export const mailRouter = createTRPCRouter({
-  getAllUserMail: protectedRoute.query(async ({ ctx }) => {
+  getAllUserMail: protectedRoute.query(({ ctx }) => {
     if (!ctx.session) {
       throw new TRPCError({
         code: "UNAUTHORIZED",
@@ -20,9 +21,12 @@ export const mailRouter = createTRPCRouter({
     }
 
     const { id } = ctx.session.user;
-    return await getAllMails({ userId: id });
+    return cacheData(
+      `mails-${id}`,
+      async () => await getAllMails({ userId: id }),
+    );
   }),
-  getUnReadCount: protectedRoute.query(async ({ ctx }) => {
+  getUnReadCount: protectedRoute.query(({ ctx }) => {
     if (!ctx.session) {
       throw new TRPCError({
         code: "UNAUTHORIZED",
@@ -31,7 +35,10 @@ export const mailRouter = createTRPCRouter({
     }
 
     const { id } = ctx.session.user;
-    return await getAllUnReadMails({ userId: id });
+    return cacheData(
+      `unread-${id}`,
+      async () => await getAllUnReadMails({ userId: id }),
+    );
   }),
   markMailAsRead: protectedRoute
     .input(z.object({ ids: z.array(z.string()) }))
