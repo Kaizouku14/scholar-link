@@ -2,7 +2,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { EyeIcon, FileTextIcon, CalendarIcon } from "lucide-react";
-import { DOCUMENT_LABELS, type documentsType } from "@/constants/documents";
+import {
+  DOCUMENT_LABELS,
+  type documentsType,
+} from "@/constants/internship/documents";
 import { format } from "date-fns";
 import {
   cn,
@@ -10,14 +13,7 @@ import {
   getStatusIndicatorColor,
   getStatusVariant,
 } from "@/lib/utils";
-
-export interface DocumentCardProps {
-  documentId: string;
-  documentType: documentsType;
-  documentUrl: string;
-  submittedAt: Date;
-  status: string;
-}
+import type { DocumentCardProps } from "@/interfaces/internship/document";
 
 const DocumentList = ({ documents }: { documents: DocumentCardProps }) => {
   return (

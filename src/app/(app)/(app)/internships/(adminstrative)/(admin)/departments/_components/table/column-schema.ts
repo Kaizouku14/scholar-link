@@ -1,9 +1,9 @@
-import { COURSES } from "@/constants/courses";
-import { DEPARTMENTS } from "@/constants/departments";
-import { ROLES } from "@/constants/roles";
-import { SECTIONS } from "@/constants/sections";
-import { INTERNSHIP_STATUS } from "@/constants/status";
-import { YEAR_LEVEL } from "@/constants/year-level";
+import { COURSES } from "@/constants/users/courses";
+import { DEPARTMENTS } from "@/constants/users/departments";
+import { ROLES } from "@/constants/users/roles";
+import { SECTIONS } from "@/constants/users/sections";
+import { INTERNSHIP_STATUS } from "@/constants/users/status";
+import { YEAR_LEVEL } from "@/constants/users/year-level";
 import z from "zod";
 
 export const deparmentColumnSchema = z.object({

@@ -5,7 +5,7 @@ import { headers } from "next/headers";
 import { DashboardSkeleton } from "./_components/helper/dashboard-skeleton";
 import CoordinatorDashboard from "./(internship)/internshipCoordinator-dashboard";
 import InternshipStudentDashboard from "./(internship)/internshipStudent-dashboard";
-import { ROLE, type roleType } from "@/constants/roles";
+import { ROLE, type roleType } from "@/constants/users/roles";
 import AdminDashboard from "./(internship)/internshipAdmin-dashboard";
 
 export const metadata: Metadata = {

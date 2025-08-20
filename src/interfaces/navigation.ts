@@ -1,4 +1,4 @@
-import type { roleType } from "@/constants/roles";
+import type { roleType } from "@/constants/users/roles";
 import type { LucideIcon } from "lucide-react";
 
 export interface NavItem {

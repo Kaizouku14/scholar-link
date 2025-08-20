@@ -38,7 +38,7 @@ import { cn } from "@/lib/utils";
 import {
   SUBMISSION_TYPE,
   type submissionType,
-} from "@/constants/submittion-type";
+} from "@/constants/scholarship/submittion-type";
 import {
   Select,
   SelectContent,

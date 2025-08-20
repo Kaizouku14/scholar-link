@@ -8,7 +8,7 @@ import Process from "@/components/scholarship-details/tabs/process";
 import type {
   AdditionalInfo,
   ScholarshipFormData,
-} from "@/interfaces/scholarship-form";
+} from "@/interfaces/scholarship/scholarship-form";
 import ScholarshipHeader from "./scholarship-header";
 import { api } from "@/trpc/react";
 import ScholarshipProgramNotFound from "./not-found";

@@ -10,7 +10,7 @@ import {
   User2,
   XCircle,
 } from "lucide-react";
-import type { departmentType } from "@/constants/departments";
+import type { departmentType } from "@/constants/users/departments";
 import { departmentHoursMap } from "@/constants/hours";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";

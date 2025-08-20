@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import type { ManagementCardProps } from "@/interfaces/management";
+import type { ManagementCardProps } from "@/interfaces/internship/management";
 import Link from "next/link";
 
 export function ManagementCard({

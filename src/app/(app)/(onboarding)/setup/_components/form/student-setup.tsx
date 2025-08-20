@@ -8,7 +8,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { COURSES } from "@/constants/courses";
+import { COURSES } from "@/constants/users/courses";
 import {
   Select,
   SelectContent,
@@ -16,8 +16,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { SECTIONS } from "@/constants/sections";
-import { YEAR_LEVEL } from "@/constants/year-level";
+import { SECTIONS } from "@/constants/users/sections";
+import { YEAR_LEVEL } from "@/constants/users/year-level";
 import SubmitButton from "@/components/forms/submit-button";
 import type { CombinedSetupSchema } from "./schema";
 import { Button } from "@/components/ui/button";

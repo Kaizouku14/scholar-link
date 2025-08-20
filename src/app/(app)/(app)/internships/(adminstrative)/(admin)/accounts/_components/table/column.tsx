@@ -5,8 +5,11 @@ import { CheckCircle2Icon, Ellipsis, IdCard, XCircle } from "lucide-react";
 import type { AccountSchema } from "./column-schema";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { COURSE_LABELS, type courseType } from "@/constants/courses";
-import { YEAR_LEVEL_LABELS, type YearLevelType } from "@/constants/year-level";
+import { COURSE_LABELS, type courseType } from "@/constants/users/courses";
+import {
+  YEAR_LEVEL_LABELS,
+  type YearLevelType,
+} from "@/constants/users/year-level";
 import { DataTableRowActions } from "./table-row-actions";
 
 export const AccountColumns: ColumnDef<AccountSchema>[] = [

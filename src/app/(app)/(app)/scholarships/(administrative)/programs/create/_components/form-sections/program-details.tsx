@@ -16,7 +16,7 @@ import { Plus, Trash2 } from "lucide-react";
 import type {
   AdditionalInfo,
   BenefitItem,
-} from "@/interfaces/scholarship-form";
+} from "@/interfaces/scholarship/scholarship-form";
 
 interface ProgramDetailsProps {
   additionalInfo: AdditionalInfo;

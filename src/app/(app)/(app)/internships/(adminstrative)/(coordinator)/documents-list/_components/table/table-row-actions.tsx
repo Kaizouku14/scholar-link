@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import type { DocumentListColumn } from "./column-schema";
-import { DOCUMENTS } from "@/constants/documents";
+import { DOCUMENTS } from "@/constants/internship/documents";
 import { Badge } from "@/components/ui/badge";
 import { cn, getStatusColor, getStatusVariant } from "@/lib/utils";
 

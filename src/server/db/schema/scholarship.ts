@@ -1,9 +1,9 @@
 import { text, integer } from "drizzle-orm/sqlite-core";
 import { user } from "./auth";
 import { createTable } from "../schema";
-import { SUBMISSION_TYPE } from "@/constants/submittion-type";
-import { SCHOLARSHIP_TYPES } from "@/constants/scholarship-types";
-import { STATUS } from "@/constants/status";
+import { SUBMISSION_TYPE } from "@/constants/scholarship/submittion-type";
+import { SCHOLARSHIP_TYPES } from "@/constants/scholarship/scholarship-types";
+import { STATUS } from "@/constants/users/status";
 
 export const scholarshipProgram = createTable("programs", {
   programId: text("program_id").primaryKey(),

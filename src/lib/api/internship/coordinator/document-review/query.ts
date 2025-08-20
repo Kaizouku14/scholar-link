@@ -9,7 +9,7 @@ import {
   user as UserTable,
   student as StudentTable,
 } from "@/server/db/schema/auth";
-import type { departmentType } from "@/constants/departments";
+import type { departmentType } from "@/constants/users/departments";
 
 export const getAllDocumentByDepartment = async ({
   department,

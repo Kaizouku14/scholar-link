@@ -1,8 +1,8 @@
 import { adminRoute, createTRPCRouter, publicProcedure } from "../trpc";
 import z from "zod";
-import { SUBMISSION_TYPE } from "@/constants/submittion-type";
-import { SCHOLARSHIP_TYPES } from "@/constants/scholarship-types";
-import { FIELD_TYPES } from "@/constants/field-type";
+import { SUBMISSION_TYPE } from "@/constants/scholarship/submittion-type";
+import { SCHOLARSHIP_TYPES } from "@/constants/scholarship/scholarship-types";
+import { FIELD_TYPES } from "@/constants/scholarship/field-type";
 import {
   createScholarshipProgram,
   disableScholarshipProgram,

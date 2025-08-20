@@ -1,5 +1,5 @@
-import { COURSES } from "@/constants/courses";
-import { DEPARTMENTS } from "@/constants/departments";
+import { COURSES } from "@/constants/users/courses";
+import { DEPARTMENTS } from "@/constants/users/departments";
 import { strongPasswordSchema } from "@/lib/utils";
 import z from "zod";
 

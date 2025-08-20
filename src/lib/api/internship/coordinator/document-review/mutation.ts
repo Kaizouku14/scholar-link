@@ -1,4 +1,4 @@
-import type { documentsType } from "@/constants/documents";
+import type { documentsType } from "@/constants/internship/documents";
 import { db, eq } from "@/server/db";
 import { document as DocumentTable } from "@/server/db/schema/internship";
 

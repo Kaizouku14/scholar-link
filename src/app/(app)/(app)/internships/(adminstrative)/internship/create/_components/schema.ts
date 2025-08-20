@@ -1,4 +1,4 @@
-import { DEPARTMENTS } from "@/constants/departments";
+import { DEPARTMENTS } from "@/constants/users/departments";
 import z from "zod";
 
 export const companyformSchema = z.object({

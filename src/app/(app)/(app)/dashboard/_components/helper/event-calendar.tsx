@@ -3,7 +3,10 @@
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { DOCUMENT_LABELS, type documentsType } from "@/constants/documents";
+import {
+  DOCUMENT_LABELS,
+  type documentsType,
+} from "@/constants/internship/documents";
 
 interface SimpleCalendarProps {
   events?: { deadline: Date; name: string | documentsType }[];

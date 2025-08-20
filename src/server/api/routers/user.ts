@@ -7,10 +7,10 @@ import {
   createdStudentNo,
   insertStudentProfile,
 } from "@/lib/api/user/mutation";
-import { COURSES } from "@/constants/courses";
-import { GENDERS } from "@/constants/genders";
-import { SECTIONS } from "@/constants/sections";
-import { YEAR_LEVEL } from "@/constants/year-level";
+import { COURSES } from "@/constants/users/courses";
+import { GENDERS } from "@/constants/users/genders";
+import { SECTIONS } from "@/constants/users/sections";
+import { YEAR_LEVEL } from "@/constants/users/year-level";
 
 export const userRouter = createTRPCRouter({
   createStudentNo: protectedRoute
@@ -52,16 +52,4 @@ export const userRouter = createTRPCRouter({
     .mutation(async ({ input }) => {
       return await insertStudentProfile({ data: input });
     }),
-
-  getAllUserEmail: publicProcedure.query(async ({ ctx }) => {
-    if (!ctx.session) {
-      throw new TRPCError({
-        code: "UNAUTHORIZED",
-        message: "User is not authenticated",
-      });
-    }
-    const { email } = ctx.session.user;
-
-    return await getAllUserEmail({ email });
-  }),
 });

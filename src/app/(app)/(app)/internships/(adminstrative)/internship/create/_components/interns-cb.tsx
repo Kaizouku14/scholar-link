@@ -18,8 +18,11 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { api } from "@/trpc/react";
-import { YEAR_LEVEL_LABELS, type YearLevelType } from "@/constants/year-level";
-import { COURSE_LABELS, type courseType } from "@/constants/courses";
+import {
+  YEAR_LEVEL_LABELS,
+  type YearLevelType,
+} from "@/constants/users/year-level";
+import { COURSE_LABELS, type courseType } from "@/constants/users/courses";
 
 type AccountListProps = {
   value: string;

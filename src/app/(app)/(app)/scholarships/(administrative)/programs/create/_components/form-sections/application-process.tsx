@@ -25,7 +25,7 @@ import type {
   AdditionalInfo,
   ImportantDate,
   EvaluationCriteria,
-} from "@/interfaces/scholarship-form";
+} from "@/interfaces/scholarship/scholarship-form";
 
 interface ApplicationProcessProps {
   additionalInfo: AdditionalInfo;

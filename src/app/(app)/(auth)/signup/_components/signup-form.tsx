@@ -27,8 +27,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { COURSES } from "@/constants/courses";
-import { DEPARTMENTS } from "@/constants/departments";
+import { COURSES } from "@/constants/users/courses";
+import { DEPARTMENTS } from "@/constants/users/departments";
 
 const SignUpForm = () => {
   const router = useRouter();

@@ -33,8 +33,8 @@ import { Calendar } from "@/components/ui/calendar";
 import { CalendarIcon, X } from "lucide-react";
 import { format } from "date-fns";
 import type { Control } from "react-hook-form";
-import { SCHOLARSHIP_TYPES } from "@/constants/scholarship-types";
-import { SUBMISSION_TYPE } from "@/constants/submittion-type";
+import { SCHOLARSHIP_TYPES } from "@/constants/scholarship/scholarship-types";
+import { SUBMISSION_TYPE } from "@/constants/scholarship/submittion-type";
 import { Textarea } from "@/components/ui/textarea";
 
 interface BasicInformationProps {

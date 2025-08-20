@@ -2,9 +2,12 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { COURSE_LABELS, type courseType } from "@/constants/courses";
-import type { internshipStatusType } from "@/constants/status";
-import { YEAR_LEVEL_LABELS, type YearLevelType } from "@/constants/year-level";
+import { COURSE_LABELS, type courseType } from "@/constants/users/courses";
+import type { internshipStatusType } from "@/constants/users/status";
+import {
+  YEAR_LEVEL_LABELS,
+  type YearLevelType,
+} from "@/constants/users/year-level";
 import { cn, getStatusColor, getStatusVariant } from "@/lib/utils";
 import type { ColumnDef } from "@tanstack/react-table";
 import { CheckCircle, Clock, Hourglass, XCircle } from "lucide-react";

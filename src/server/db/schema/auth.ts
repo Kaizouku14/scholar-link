@@ -1,12 +1,12 @@
 import { createTable } from "../schema";
 import { text, integer } from "drizzle-orm/sqlite-core";
 import { sql } from "drizzle-orm";
-import { ROLES } from "@/constants/roles";
-import { COURSES } from "@/constants/courses";
-import { DEPARTMENTS } from "@/constants/departments";
-import { SECTIONS } from "@/constants/sections";
-import { YEAR_LEVEL } from "@/constants/year-level";
-import { GENDERS } from "@/constants/genders";
+import { ROLES } from "@/constants/users/roles";
+import { COURSES } from "@/constants/users/courses";
+import { DEPARTMENTS } from "@/constants/users/departments";
+import { SECTIONS } from "@/constants/users/sections";
+import { YEAR_LEVEL } from "@/constants/users/year-level";
+import { GENDERS } from "@/constants/users/genders";
 
 export const user = createTable("user", {
   id: text("id").primaryKey(),

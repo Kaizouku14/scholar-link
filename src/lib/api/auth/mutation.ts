@@ -1,4 +1,4 @@
-import { ROLE } from "@/constants/roles";
+import { ROLE } from "@/constants/users/roles";
 import type { UserAccount } from "@/interfaces/user";
 import { generateUUID } from "@/lib/utils";
 import { db, eq } from "@/server/db";

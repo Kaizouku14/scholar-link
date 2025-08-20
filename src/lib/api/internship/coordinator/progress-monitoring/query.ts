@@ -1,4 +1,4 @@
-import type { departmentType } from "@/constants/departments";
+import type { departmentType } from "@/constants/users/departments";
 import { db, eq, sum } from "@/server/db";
 import {
   user as UserTable,

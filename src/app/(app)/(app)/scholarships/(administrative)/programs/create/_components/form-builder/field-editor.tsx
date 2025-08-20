@@ -20,8 +20,8 @@ import {
 } from "@/components/ui/tooltip";
 import { Copy, Trash2 } from "lucide-react";
 import { FieldPreview } from "./field-preview";
-import type { FormFieldProps } from "@/interfaces/scholarship-form";
-import type { FieldType } from "@/constants/field-type";
+import type { FormFieldProps } from "@/interfaces/scholarship/scholarship-form";
+import type { FieldType } from "@/constants/scholarship/field-type";
 
 interface FieldEditorProps {
   field: FormFieldProps;

@@ -1,4 +1,4 @@
-import { DOCUMENTS } from "@/constants/documents";
+import { DOCUMENTS } from "@/constants/internship/documents";
 import { z } from "zod";
 
 export const documentSchema = z.object({

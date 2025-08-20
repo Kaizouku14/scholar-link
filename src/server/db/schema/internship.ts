@@ -1,8 +1,8 @@
 import { integer, text } from "drizzle-orm/sqlite-core";
 import { user } from "./auth";
 import { createTable } from "../schema";
-import { STATUS, INTERNSHIP_STATUS } from "@/constants/status";
-import { DOCUMENTS } from "@/constants/documents";
+import { STATUS, INTERNSHIP_STATUS } from "@/constants/users/status";
+import { DOCUMENTS } from "@/constants/internship/documents";
 import { sql } from "drizzle-orm";
 
 export const internship = createTable("internship", {

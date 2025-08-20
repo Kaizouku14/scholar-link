@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import type { AdditionalInfo } from "@/interfaces/scholarship-form";
+import type { AdditionalInfo } from "@/interfaces/scholarship/scholarship-form";
 import { Plus, Trash2 } from "lucide-react";
 
 interface ArrayFieldProps {

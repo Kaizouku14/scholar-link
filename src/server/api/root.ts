@@ -3,7 +3,10 @@ import { userRouter } from "./routers/user";
 import { scholarshipRouter } from "./routers/scholarship";
 import { mailRouter } from "./routers/mail";
 import { authRouter } from "./routers/auth";
-import { internshipRouter } from "./routers/internship";
+import { internshipRouter } from "./routers/internship/internships";
+import { internshipStudentRouter } from "./routers/internship/student";
+import { internshipCoordinatorRouter } from "./routers/internship/coordinator";
+import { internshipAdminRouter } from "./routers/internship/admin";
 
 /**
  * This is the primary router for your server.
@@ -14,8 +17,13 @@ export const appRouter = createTRPCRouter({
   auth: authRouter,
   user: userRouter,
   mail: mailRouter,
+
   scholarships: scholarshipRouter,
-  internships: internshipRouter,
+
+  internshipStudent: internshipStudentRouter,
+  internshipCoordinator: internshipCoordinatorRouter,
+  internshipAdmin: internshipAdminRouter,
+  internshipUsers: internshipRouter,
 });
 
 // export type definition of API

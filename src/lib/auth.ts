@@ -3,7 +3,7 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import * as schema from "@/server/db/schema/auth";
 import { admin } from "better-auth/plugins";
-import { ROLES } from "@/constants/roles";
+import { ROLES } from "@/constants/users/roles";
 import { sendEmail } from "@/services/email";
 import { linkVerificationTemplate } from "@/services/verfityEmailTemplate";
 import { siteConfig } from "@/types/site.config";

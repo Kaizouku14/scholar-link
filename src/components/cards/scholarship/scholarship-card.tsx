@@ -23,7 +23,7 @@ import { toast } from "sonner";
 import type { QueryObserverResult } from "@tanstack/react-query";
 import { format } from "date-fns";
 import ActivateProgram from "../../dialog/activate-program";
-import type { submissionType } from "@/constants/submittion-type";
+import type { submissionType } from "@/constants/scholarship/submittion-type";
 import { isDeadlineApproaching, isDeadlinePassed } from "@/lib/utils";
 
 interface ScholarshipCardProps {

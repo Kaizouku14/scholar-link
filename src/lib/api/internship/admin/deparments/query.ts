@@ -1,4 +1,4 @@
-import { ROLE } from "@/constants/roles";
+import { ROLE } from "@/constants/users/roles";
 import {
   countDistinct,
   db,

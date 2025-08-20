@@ -1,7 +1,7 @@
-import { COURSES } from "@/constants/courses";
-import { GENDERS } from "@/constants/genders";
-import { SECTIONS } from "@/constants/sections";
-import { YEAR_LEVEL } from "@/constants/year-level";
+import { COURSES } from "@/constants/users/courses";
+import { GENDERS } from "@/constants/users/genders";
+import { SECTIONS } from "@/constants/users/sections";
+import { YEAR_LEVEL } from "@/constants/users/year-level";
 import z from "zod";
 
 export const profileSetupSchema = z.object({

@@ -31,7 +31,7 @@ import { InternsComboBox } from "./interns-cb";
 import { CompanyCombobox } from "./company-cb";
 import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
-import { ROLE } from "@/constants/roles";
+import { ROLE } from "@/constants/users/roles";
 import {
   Select,
   SelectContent,
@@ -39,7 +39,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { DEPARTMENTS, type departmentType } from "@/constants/departments";
+import {
+  DEPARTMENTS,
+  type departmentType,
+} from "@/constants/users/departments";
 
 const InternshipForm = () => {
   const [isDisabled, setIsDisabled] = useState<boolean>(false);

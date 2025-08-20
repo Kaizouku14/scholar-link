@@ -1,9 +1,9 @@
-import type { courseType } from "@/constants/courses";
-import type { departmentType } from "@/constants/departments";
-import type { GenderType } from "@/constants/genders";
-import type { roleType } from "@/constants/roles";
-import type { SectionType } from "@/constants/sections";
-import type { YearLevelType } from "@/constants/year-level";
+import type { courseType } from "@/constants/users/courses";
+import type { departmentType } from "@/constants/users/departments";
+import type { GenderType } from "@/constants/users/genders";
+import type { roleType } from "@/constants/users/roles";
+import type { SectionType } from "@/constants/users/sections";
+import type { YearLevelType } from "@/constants/users/year-level";
 
 export interface UserAccount {
   name: string;

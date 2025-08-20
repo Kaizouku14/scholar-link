@@ -1,8 +1,8 @@
 import z from "zod";
-import { INTERNSHIP_STATUS } from "@/constants/status";
-import { YEAR_LEVEL } from "@/constants/year-level";
-import { COURSES } from "@/constants/courses";
-import { SECTIONS } from "@/constants/sections";
+import { INTERNSHIP_STATUS } from "@/constants/users/status";
+import { YEAR_LEVEL } from "@/constants/users/year-level";
+import { COURSES } from "@/constants/users/courses";
+import { SECTIONS } from "@/constants/users/sections";
 
 export const columnSchema = z.object({
   id: z.string(),

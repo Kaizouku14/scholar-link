@@ -12,7 +12,7 @@ import { NavMain } from "./nav-main";
 import NavHeader from "./nav-header";
 import { NavUser } from "./nav-user";
 import ModeToggle from "@/components/theme/mode-toggler";
-import type { roleType, UserInfo } from "@/constants/roles";
+import type { roleType, UserInfo } from "@/constants/users/roles";
 import { authClient } from "@/lib/auth-client";
 import NavUserSkeleton from "./nav-user-skeleton";
 

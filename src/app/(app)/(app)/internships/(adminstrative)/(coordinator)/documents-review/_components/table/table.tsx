@@ -4,7 +4,7 @@ import { DataTable } from "@/components/table/data-table";
 import { DocumentReviewColumns } from "./columns";
 import { api } from "@/trpc/react";
 import { DataTableSkeleton } from "@/components/table/table-skeleton";
-import { STATUS_LABELS } from "@/constants/status";
+import { STATUS_LABELS } from "@/constants/users/status";
 import UpcomingDeadlines from "@/components/cards/internship/upcoming-deadlines";
 import DocumentForm from "../form/document-form";
 import { Separator } from "@/components/ui/separator";

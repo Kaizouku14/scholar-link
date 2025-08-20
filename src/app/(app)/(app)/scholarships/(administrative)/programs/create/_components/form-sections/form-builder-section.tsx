@@ -4,7 +4,7 @@ import { lazy, Suspense } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import type { FormFieldProps } from "@/interfaces/scholarship-form";
+import type { FormFieldProps } from "@/interfaces/scholarship/scholarship-form";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const FieldEditor = lazy(() => import("../form-builder/field-editor"));

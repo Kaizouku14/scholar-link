@@ -1,4 +1,4 @@
-import type { courseType } from "@/constants/courses";
+import type { courseType } from "@/constants/users/courses";
 import type { StudentProfileType } from "@/interfaces/student-profile";
 import { db, eq } from "@/server/db";
 import {

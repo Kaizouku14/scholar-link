@@ -22,12 +22,12 @@ import {
   FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { COURSES } from "@/constants/courses";
-import { DEPARTMENTS } from "@/constants/departments";
-import { GENDERS } from "@/constants/genders";
-import { ROLE, ROLES } from "@/constants/roles";
-import { SECTIONS } from "@/constants/sections";
-import { YEAR_LEVEL } from "@/constants/year-level";
+import { COURSES } from "@/constants/users/courses";
+import { DEPARTMENTS } from "@/constants/users/departments";
+import { GENDERS } from "@/constants/users/genders";
+import { ROLE, ROLES } from "@/constants/users/roles";
+import { SECTIONS } from "@/constants/users/sections";
+import { YEAR_LEVEL } from "@/constants/users/year-level";
 import { useState } from "react";
 import { CalendarIcon } from "lucide-react";
 import {

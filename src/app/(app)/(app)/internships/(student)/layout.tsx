@@ -1,5 +1,5 @@
 import { PageRoutes } from "@/constants/page-routes";
-import { ROLE } from "@/constants/roles";
+import { ROLE } from "@/constants/users/roles";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";

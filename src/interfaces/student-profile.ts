@@ -1,7 +1,7 @@
-import type { courseType } from "@/constants/courses";
-import type { GenderType } from "@/constants/genders";
-import type { SectionType } from "@/constants/sections";
-import type { YearLevelType } from "@/constants/year-level";
+import type { courseType } from "@/constants/users/courses";
+import type { GenderType } from "@/constants/users/genders";
+import type { SectionType } from "@/constants/users/sections";
+import type { YearLevelType } from "@/constants/users/year-level";
 
 export interface StudentProfileType {
   id: string;

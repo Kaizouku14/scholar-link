@@ -17,7 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { GENDERS } from "@/constants/genders";
+import { GENDERS } from "@/constants/users/genders";
 import { CalendarIcon, MapPin, Phone, User } from "lucide-react";
 import {
   Popover,

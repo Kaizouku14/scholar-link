@@ -1,4 +1,4 @@
-import type { departmentType } from "@/constants/departments";
+import type { departmentType } from "@/constants/users/departments";
 
 export interface createInternship {
   userId: string;

@@ -1,4 +1,4 @@
-import { db, eq, or, desc, and, count } from "@/server/db";
+import { db, eq, or, desc, and, count, ne } from "@/server/db";
 import { user } from "@/server/db/schema/auth";
 import { mailTable } from "@/server/db/schema/mail";
 import { TRPCError } from "@trpc/server";
@@ -69,6 +69,33 @@ export const getAllUnReadMails = async ({ userId }: { userId: string }) => {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
       message: "Failed to get all unread mails, " + (error as Error).message,
+    });
+  }
+};
+
+export const getAllUserEmail = async ({ email }: { email: string }) => {
+  try {
+    const response = await db
+      .select({
+        id: user.id,
+        email: user.email,
+      })
+      .from(user)
+      .where(ne(user.email, email))
+      .execute();
+
+    if (!response) {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Failed to get all user email",
+      });
+    }
+
+    return response;
+  } catch (error) {
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "Failed to get all user email," + (error as Error).message,
     });
   }
 };

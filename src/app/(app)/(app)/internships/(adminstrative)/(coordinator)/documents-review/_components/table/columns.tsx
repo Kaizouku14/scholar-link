@@ -2,15 +2,18 @@
 
 import type { ColumnDef } from "@tanstack/react-table";
 import { type ColumnSchema } from "./column-schema";
-import { DOCUMENT_LABELS } from "@/constants/documents";
+import { DOCUMENT_LABELS } from "@/constants/internship/documents";
 import { CheckCircle, Clock, FileText, XCircle } from "lucide-react";
-import { COURSE_LABELS, type courseType } from "@/constants/courses";
-import { YEAR_LEVEL_LABELS, type YearLevelType } from "@/constants/year-level";
+import { COURSE_LABELS, type courseType } from "@/constants/users/courses";
+import {
+  YEAR_LEVEL_LABELS,
+  type YearLevelType,
+} from "@/constants/users/year-level";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { format } from "date-fns";
 import { cn, getStatusColor, getStatusVariant } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
-import type { statusType } from "@/constants/status";
+import type { statusType } from "@/constants/users/status";
 import { Button } from "@/components/ui/button";
 import { DataTableRowActions } from "./table-row-actions";
 

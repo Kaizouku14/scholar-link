@@ -1,4 +1,4 @@
-import type { departmentType } from "@/constants/departments";
+import type { departmentType } from "@/constants/users/departments";
 import { countDistinct, db, eq, sql } from "@/server/db";
 import { user as UserTable } from "@/server/db/schema/auth";
 import { internship as InternshipTable } from "@/server/db/schema/internship";

@@ -17,7 +17,7 @@ import type { DepartmentColumn } from "./column-schema";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import { ROLE } from "@/constants/roles";
+import { ROLE } from "@/constants/users/roles";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { InternCard } from "@/components/cards/internship/intern-cards";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";

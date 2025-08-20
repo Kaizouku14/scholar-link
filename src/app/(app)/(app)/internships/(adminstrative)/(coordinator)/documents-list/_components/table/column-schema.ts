@@ -1,7 +1,7 @@
-import { COURSES } from "@/constants/courses";
-import { DOCUMENTS } from "@/constants/documents";
-import { SECTIONS } from "@/constants/sections";
-import { YEAR_LEVEL } from "@/constants/year-level";
+import { COURSES } from "@/constants/users/courses";
+import { DOCUMENTS } from "@/constants/internship/documents";
+import { SECTIONS } from "@/constants/users/sections";
+import { YEAR_LEVEL } from "@/constants/users/year-level";
 import z from "zod";
 
 export const documentListColumnSchema = z.object({

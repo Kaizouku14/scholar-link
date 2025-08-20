@@ -16,7 +16,7 @@ import ArrayField from "../form-builder/array-field";
 import type {
   AdditionalInfo,
   DocumentCategory,
-} from "@/interfaces/scholarship-form";
+} from "@/interfaces/scholarship/scholarship-form";
 
 interface RequirementsSectionProps {
   additionalInfo: AdditionalInfo;

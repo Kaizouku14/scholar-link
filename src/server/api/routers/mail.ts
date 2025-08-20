@@ -1,5 +1,5 @@
 import z from "zod";
-import { createTRPCRouter, protectedRoute } from "../trpc";
+import { createTRPCRouter, protectedRoute, publicProcedure } from "../trpc";
 import {
   deleteMail,
   markAllAsRead,
@@ -8,10 +8,20 @@ import {
 } from "@/lib/api/mail/mutation";
 import { TRPCError } from "@trpc/server";
 import { generateUUID } from "@/lib/utils";
-import { getAllMails, getAllUnReadMails } from "@/lib/api/mail/query";
+import {
+  getAllMails,
+  getAllUnReadMails,
+  getAllUserEmail,
+} from "@/lib/api/mail/query";
 import { cacheData } from "@/lib/redis";
 
 export const mailRouter = createTRPCRouter({
+  getAllUserEmail: publicProcedure.query(async ({ ctx }) => {
+    const session = ctx.session!;
+    const { email } = session.user;
+
+    return await getAllUserEmail({ email });
+  }),
   getAllUserMail: protectedRoute.query(({ ctx }) => {
     if (!ctx.session) {
       throw new TRPCError({

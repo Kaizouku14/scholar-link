@@ -1,11 +1,11 @@
-import type { submissionType } from "@/constants/submittion-type";
+import type { submissionType } from "@/constants/scholarship/submittion-type";
 import { generateUUID } from "@/lib/utils";
 import { db, eq } from "@/server/db";
 import { scholarshipProgram } from "@/server/db/schema/scholarship";
 import type {
   FormFieldProps,
   ScholarshipFormData,
-} from "@/interfaces/scholarship-form";
+} from "@/interfaces/scholarship/scholarship-form";
 import { TRPCError } from "@trpc/server";
 
 export const createScholarshipProgram = async ({

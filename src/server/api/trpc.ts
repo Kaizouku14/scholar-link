@@ -101,7 +101,7 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
 });
 
 const isAuthenticated = t.middleware(async ({ ctx, next }) => {
-  if (!ctx) {
+  if (!ctx.session?.user) {
     throw new TRPCError({
       code: "UNAUTHORIZED",
       message: "User is not authenticated",

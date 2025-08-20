@@ -1,5 +1,5 @@
-import { SCHOLARSHIP_TYPES } from "@/constants/scholarship-types";
-import { SUBMISSION_TYPE } from "@/constants/submittion-type";
+import { SCHOLARSHIP_TYPES } from "@/constants/scholarship/scholarship-types";
+import { SUBMISSION_TYPE } from "@/constants/scholarship/submittion-type";
 import z from "zod";
 
 export const ScholarshipFormSchema = z.object({

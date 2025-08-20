@@ -8,12 +8,12 @@ import {
   revokeAuthorizedEmail,
 } from "@/lib/api/auth/mutation";
 import { gellAllInternshipAccounts } from "@/lib/api/auth/query";
-import { COURSES } from "@/constants/courses";
-import { DEPARTMENTS } from "@/constants/departments";
-import { GENDERS } from "@/constants/genders";
-import { ROLES } from "@/constants/roles";
-import { SECTIONS } from "@/constants/sections";
-import { YEAR_LEVEL } from "@/constants/year-level";
+import { COURSES } from "@/constants/users/courses";
+import { DEPARTMENTS } from "@/constants/users/departments";
+import { GENDERS } from "@/constants/users/genders";
+import { ROLES } from "@/constants/users/roles";
+import { SECTIONS } from "@/constants/users/sections";
+import { YEAR_LEVEL } from "@/constants/users/year-level";
 
 export const authRouter = createTRPCRouter({
   isEmailAuthorized: publicProcedure

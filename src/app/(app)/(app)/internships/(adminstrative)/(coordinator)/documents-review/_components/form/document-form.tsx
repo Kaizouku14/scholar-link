@@ -18,7 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { DOCUMENT_LABELS, DOCUMENTS } from "@/constants/documents";
+import { DOCUMENT_LABELS, DOCUMENTS } from "@/constants/internship/documents";
 import { CalendarIcon, FileText } from "lucide-react";
 import {
   Popover,

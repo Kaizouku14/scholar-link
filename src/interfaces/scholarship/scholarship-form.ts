@@ -1,6 +1,6 @@
-import type { FieldType } from "@/constants/field-type";
-import type { submissionType } from "@/constants/submittion-type";
-import type { ScholarshipType } from "@/constants/scholarship-types";
+import type { FieldType } from "@/constants/scholarship/field-type";
+import type { submissionType } from "@/constants/scholarship/submittion-type";
+import type { ScholarshipType } from "@/constants/scholarship/scholarship-types";
 export interface ScholarshipFormData {
   name: string;
   description: string;

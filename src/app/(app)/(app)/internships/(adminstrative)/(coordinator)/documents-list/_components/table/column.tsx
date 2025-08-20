@@ -1,10 +1,10 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { COURSE_LABELS } from "@/constants/courses";
-import { YEAR_LEVEL_LABELS } from "@/constants/year-level";
+import { COURSE_LABELS } from "@/constants/users/courses";
+import { YEAR_LEVEL_LABELS } from "@/constants/users/year-level";
 import type { ColumnDef } from "@tanstack/react-table";
 import type { DocumentListColumn } from "./column-schema";
 import { CheckCircle, Clock, IdCard } from "lucide-react";
-import { DOCUMENTS } from "@/constants/documents";
+import { DOCUMENTS } from "@/constants/internship/documents";
 import { Badge } from "@/components/ui/badge";
 import { DataTableRowActions } from "./table-row-actions";
 

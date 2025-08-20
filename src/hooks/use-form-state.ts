@@ -4,7 +4,7 @@ import { useState } from "react";
 import type {
   AdditionalInfo,
   FormFieldProps,
-} from "@/interfaces/scholarship-form";
+} from "@/interfaces/scholarship/scholarship-form";
 
 /**
  * Custom hook to manage form state and operations
