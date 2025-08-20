@@ -41,7 +41,7 @@ const Mail = () => {
 
     const grouped = filtered.reduce(
       (acc, email) => {
-        if (!acc[email.threadId]) acc[email.threadId] = [];
+        acc[email.threadId] ??= [];
         acc[email.threadId]?.push(email);
         return acc;
       },
@@ -90,7 +90,7 @@ const Mail = () => {
       unreadMails.some((unread) => unread.id === email.id)
         ? { ...email, isRead: true }
         : email,
-    ) as Email[];
+    );
 
     setSelectedThread(updatedThread);
     setIsMarkingRead(true);
@@ -101,7 +101,7 @@ const Mail = () => {
       });
       await refetchMails();
       await refetchUnreadCount();
-    } catch (error) {
+    } catch {
       setSelectedThread(thread);
     } finally {
       setIsMarkingRead(false);
@@ -113,8 +113,8 @@ const Mail = () => {
 
     try {
       await markAllAsRead();
-      refetchMails();
-    } catch (error) {
+      void refetchMails();
+    } catch {
       toast.error("Unexpected error occurred. Please try again.", {
         position: "top-center",
       });
@@ -130,7 +130,7 @@ const Mail = () => {
       await refetchMails();
       await new Promise((resolve) => setTimeout(resolve, 500));
       setSelectedThread(undefined);
-    } catch (error) {
+    } catch {
       toast.error("Unexpected error occurred. Please try again.", {
         position: "top-center",
       });

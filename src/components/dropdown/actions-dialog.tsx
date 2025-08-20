@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import type { Table } from "@tanstack/react-table";
 import { CircleX, MoreHorizontal, Trash2 } from "lucide-react";
-import { useState } from "react";
 
 interface DataTableRowActionsProps<TData> {
   table: Table<TData>;
@@ -19,6 +18,7 @@ interface DataTableRowActionsProps<TData> {
 export function ActionDialog<TData>({
   table,
 }: DataTableRowActionsProps<TData>) {
+  console.log(table);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

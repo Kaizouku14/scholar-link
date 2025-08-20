@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, type UseFormReturn } from "react-hook-form";
 import * as z from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -44,7 +44,7 @@ export type Field = {
   description?: string;
   required?: boolean;
   options?: { value: string; label: string }[];
-  validation?: any;
+  validation?: (schema: z.ZodSchema) => z.ZodSchema;
   show?: boolean;
   colSpan?: 1 | 2;
 };
@@ -56,7 +56,7 @@ export type FormConfig = {
   submitButtonText?: string;
 };
 
-export type FormValues = Record<string, any>;
+export type FormValues = Record<string, unknown>;
 
 interface FlexibleApplicationFormProps {
   config: FormConfig;
@@ -140,7 +140,7 @@ export function FlexibleApplicationForm({
               Processing...
             </>
           ) : (
-            config.submitButtonText || "Submit"
+            (config.submitButtonText ?? "Submit")
           )}
         </Button>
       </form>
@@ -149,8 +149,10 @@ export function FlexibleApplicationForm({
 }
 
 // Helper function to build the Zod schema based on the form configuration
-function buildFormSchema(config: FormConfig): z.ZodObject<any> {
-  const schemaMap: Record<string, any> = {};
+function buildFormSchema(
+  config: FormConfig,
+): z.ZodObject<Record<string, z.ZodSchema>> {
+  const schemaMap: Record<string, z.ZodSchema> = {};
 
   // Process all fields from all sections
   config.sections.forEach((section) => {
@@ -168,7 +170,7 @@ function buildFormSchema(config: FormConfig): z.ZodObject<any> {
 
 // Helper function to build schema for a single field
 function buildFieldSchema(field: Field) {
-  let schema: any;
+  let schema: z.ZodSchema;
 
   switch (field.type) {
     case "tel":
@@ -186,11 +188,16 @@ function buildFieldSchema(field: Field) {
 
   if (field.required) {
     if (field.type !== "file") {
-      schema = schema.min(1, { message: "This field is required" });
+      if (schema instanceof z.ZodString || schema instanceof z.ZodNumber) {
+        schema = schema.min(1, { message: "This field is required" });
+      } else {
+        // Handle the case where schema is not a string or number
+        // For example, you can throw an error or return a default value
+      }
     }
   }
   // Add custom validation if provided
-  if (field.validation) {
+  if (field.validation instanceof Function) {
     schema = field.validation(schema);
   }
 
@@ -198,7 +205,7 @@ function buildFieldSchema(field: Field) {
 }
 
 // Helper function to render the appropriate form field based on type
-function renderFormField(form: any, field: Field) {
+function renderFormField(form: UseFormReturn<FormValues>, field: Field) {
   return (
     <FormField
       control={form.control}
@@ -220,13 +227,19 @@ function renderFormField(form: any, field: Field) {
 }
 
 // Helper function to render the appropriate form control based on field type
-function renderFormControl(field: Field, formField: any) {
+function renderFormControl(
+  field: Field,
+  formField: {
+    onChange: (value: unknown) => void;
+    value: unknown;
+  },
+) {
   switch (field.type) {
     case "select":
       return (
         <Select
-          onValueChange={formField.onChange}
-          defaultValue={formField.value}
+          onValueChange={formField?.onChange}
+          defaultValue={formField?.value as string}
         >
           <SelectTrigger>
             <SelectValue placeholder={field.placeholder} />
@@ -245,6 +258,7 @@ function renderFormControl(field: Field, formField: any) {
         <Textarea
           {...formField}
           placeholder={field.placeholder}
+          value={formField.value as string}
           className="min-h-[150px]"
         />
       );
@@ -264,6 +278,7 @@ function renderFormControl(field: Field, formField: any) {
         <Input
           {...formField}
           type={field.type}
+          value={formField.value as string}
           placeholder={field.placeholder}
         />
       );

@@ -34,7 +34,7 @@ const FeaturedCard = ({ data }: { data: FeaturedCardProps }) => {
       <CardHeader className="flex flex-row items-start gap-x-3 pb-3">
         <Avatar className="border-background size-12 border-2">
           <AvatarImage
-            src={data.imageUrl || "https://github.com/shadcn.png"}
+            src={data.imageUrl ?? "https://github.com/shadcn.png"}
             alt="scholarship-logo"
           />
           <AvatarFallback className="bg-primary text-primary-foreground">

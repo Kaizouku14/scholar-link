@@ -23,7 +23,7 @@ import { useState } from "react";
 
 interface ComposeFormProps {
   onSuccess?: () => void;
-  refetch: () => Promise<any>;
+  refetch: () => Promise<unknown>;
 }
 const ComposeForm = ({ onSuccess, refetch }: ComposeFormProps) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -53,7 +53,7 @@ const ComposeForm = ({ onSuccess, refetch }: ComposeFormProps) => {
           success: () => {
             form.reset();
             setIsLoading(false);
-            refetch();
+            void refetch();
 
             return "Email sent successfully";
           },
@@ -62,7 +62,7 @@ const ComposeForm = ({ onSuccess, refetch }: ComposeFormProps) => {
           },
         },
       );
-    } catch (error) {
+    } catch {
       toast.error("Failed to send email. Please try again.");
     }
   };

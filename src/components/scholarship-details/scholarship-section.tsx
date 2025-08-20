@@ -5,10 +5,7 @@ import About from "@/components/scholarship-details/tabs/about";
 import Eligibility from "@/components/scholarship-details/tabs/eligibility";
 import Requirements from "@/components/scholarship-details/tabs/requirement";
 import Process from "@/components/scholarship-details/tabs/process";
-import type {
-  AdditionalInfo,
-  ScholarshipFormData,
-} from "@/interfaces/scholarship/scholarship-form";
+import type { AdditionalInfo } from "@/interfaces/scholarship/scholarship-form";
 import ScholarshipHeader from "./scholarship-header";
 import { api } from "@/trpc/react";
 import ScholarshipProgramNotFound from "./not-found";
@@ -48,22 +45,24 @@ const Section = ({ id }: { id: string }) => {
               <About
                 name={data.name}
                 description={data.description}
-                data={data.additionalInfo as AdditionalInfo}
+                data={data.additionalInfo as unknown as AdditionalInfo}
               />
             </TabsContent>
             <TabsContent value="eligibility" className="mx-1.5 space-y-6 pt-6">
               <Eligibility
                 name={data.name}
-                data={data.additionalInfo as AdditionalInfo}
+                data={data.additionalInfo as unknown as AdditionalInfo}
               />
             </TabsContent>
             <TabsContent value="requirements" className="mx-1.5 space-y-6 pt-6">
-              <Requirements data={data.additionalInfo as AdditionalInfo} />
+              <Requirements
+                data={data.additionalInfo as unknown as AdditionalInfo}
+              />
             </TabsContent>
             <TabsContent value="process" className="mx-1.5 space-y-6 pt-6">
               <Process
                 name={data.name}
-                data={data.additionalInfo as AdditionalInfo}
+                data={data.additionalInfo as unknown as AdditionalInfo}
               />
             </TabsContent>
             {/* { TODO: Announcement } */}

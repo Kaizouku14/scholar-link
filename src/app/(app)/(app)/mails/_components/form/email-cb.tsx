@@ -27,7 +27,7 @@ type EmailListProps = {
 
 const EmailComboBox = ({ value, onChange }: EmailListProps) => {
   const [open, setOpen] = React.useState(false);
-  const { data } = api.user.getAllUserEmail.useQuery();
+  const { data } = api.mail.getAllUserEmail.useQuery();
 
   return (
     <Popover open={open} onOpenChange={setOpen}>

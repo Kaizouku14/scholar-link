@@ -66,6 +66,7 @@ export const getAllInternshipDeparments = async () => {
 
     return response.map((row) => ({
       ...row,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       users: row.users ? JSON.parse(row.users as string) : [],
     }));
   } catch (error) {

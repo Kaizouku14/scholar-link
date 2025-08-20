@@ -7,7 +7,7 @@ export const getEmailDisplayInfo = (email?: Email, currentUserId?: string) => {
 
   if (isSender) {
     return {
-      name: email?.receiverName || email?.receiverEmail,
+      name: email?.receiverName ?? email?.receiverEmail,
       email: email?.receiverEmail,
       profile: email?.receiverProfile,
       prefix: "To: ",
@@ -17,7 +17,7 @@ export const getEmailDisplayInfo = (email?: Email, currentUserId?: string) => {
     };
   } else {
     return {
-      name: email?.senderName || email?.senderEmail,
+      name: email?.senderName ?? email?.senderEmail,
       email: email?.senderEmail,
       profile: email?.senderProfile,
       prefix: "",
@@ -42,11 +42,11 @@ export const searchMails = (mails: Email[], searchQuery: string): Email[] => {
   if (!normalizedQuery) return mails;
 
   return mails.filter((mail) => {
-    const senderName = mail.senderName?.toLowerCase() || "";
-    const senderEmail = mail.senderEmail?.toLowerCase() || "";
-    const receiverName = mail.receiverName?.toLowerCase() || "";
-    const receiverEmail = mail.receiverEmail?.toLowerCase() || "";
-    const subject = mail.subject?.toLowerCase() || "";
+    const senderName = mail.senderName?.toLowerCase() ?? "";
+    const senderEmail = mail.senderEmail?.toLowerCase() ?? "";
+    const receiverName = mail.receiverName?.toLowerCase() ?? "";
+    const receiverEmail = mail.receiverEmail?.toLowerCase() ?? "";
+    const subject = mail.subject?.toLowerCase() ?? "";
 
     return (
       senderName.includes(normalizedQuery) ||

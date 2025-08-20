@@ -39,9 +39,9 @@ export function useFormState() {
   const updateArray = (
     key: keyof AdditionalInfo,
     index: number,
-    value: any,
+    value: unknown,
   ) => {
-    const newArray = [...(additionalInfo[key] as any[])];
+    const newArray = [...(additionalInfo[key] as unknown[])];
     newArray[index] = value;
     updateDetails({ [key]: newArray });
   };
@@ -49,8 +49,8 @@ export function useFormState() {
   /**
    * Adds an item to an array field
    */
-  const addToArray = (key: keyof AdditionalInfo, value: any) => {
-    const newArray = [...(additionalInfo[key] as any[]), value];
+  const addToArray = (key: keyof AdditionalInfo, value: unknown) => {
+    const newArray = [...(additionalInfo[key] as unknown[]), value];
     updateDetails({ [key]: newArray });
   };
 
@@ -58,7 +58,7 @@ export function useFormState() {
    * Removes an item from an array field
    */
   const removeFromArray = (key: keyof AdditionalInfo, index: number) => {
-    const currentArray = additionalInfo[key] as any[];
+    const currentArray = additionalInfo[key] as unknown[];
     if (currentArray.length > 1) {
       const newArray = currentArray.filter((_, i) => i !== index);
       updateDetails({ [key]: newArray });

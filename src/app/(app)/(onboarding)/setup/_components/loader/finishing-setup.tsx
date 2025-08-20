@@ -27,7 +27,7 @@ const FinishingSetup = () => {
           </div>
 
           <p className="text-muted-foreground/70 text-sm font-medium">
-            This won't take long
+            This won&apos;t take long
           </p>
         </div>
       </div>

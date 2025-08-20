@@ -16,7 +16,7 @@ export const getAllInternsDocuments = async ({
   department: departmentType;
 }) => {
   try {
-    let baseQuery = db
+    const baseQuery = db
       .select({
         documentId: InternDocumentsTable.documentId,
         documentType: InternDocumentsTable.documentType,
@@ -45,6 +45,7 @@ export const getAllInternsDocuments = async ({
     }
 
     const response = await query.execute();
+    console.log(response);
 
     return [];
 

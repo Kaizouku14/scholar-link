@@ -18,16 +18,16 @@ const ScholarshipProgramNotFound = () => {
           </div>
           <div className="mb-2 text-2xl font-bold">Scholarship Not Found</div>
           <p className="text-muted-foreground mx-auto max-w-md">
-            The scholarship program you're looking for doesn't exist or may have
-            been removed.
+            The scholarship program you&apos;re looking for doesn&apos;t exist
+            or may have been removed.
           </p>
         </div>
 
         <div className="space-y-6">
           <div className="space-y-4 text-center">
             <p className="text-muted-foreground">
-              But don't give up! There are many other scholarship opportunities
-              available.
+              But don&apos;t give up! There are many other scholarship
+              opportunities available.
             </p>
 
             <Button asChild>

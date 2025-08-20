@@ -1,11 +1,10 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { api } from "@/trpc/react";
-import { Upload } from "lucide-react";
+// import { Button } from "@/components/ui/button";
+// import { api } from "@/trpc/react";
+// import { Upload } from "lucide-react";
 import { useState } from "react";
-import toast from "react-hot-toast";
+// import toast from "react-hot-toast";
 import { FileDropArea } from "./file-drop-area";
 
 interface CSVImportProps {
@@ -16,28 +15,30 @@ export function CSVImport({ onImportCompleteAction }: CSVImportProps) {
   const [file, setFile] = useState<File | null>(null);
   //   const importMutation = api.product.uploadCSV.useMutation();
 
+  console.log(file);
+  console.log(onImportCompleteAction);
   const handleFileSelect = (selectedFile: File) => {
     setFile(selectedFile);
   };
 
-  const handleImport = async () => {
-    if (!file) return;
+  //   const handleImport = async () => {
+  //     if (!file) return;
 
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
+  //     try {
+  //       const formData = new FormData();
+  //       formData.append("file", file);
 
-      //   await importMutation.mutateAsync(formData);
-      toast.success("CSV imported successfully!");
-      setFile(null);
-      onImportCompleteAction();
-    } catch (error) {
-      if (error instanceof Error) {
-        console.error("Error importing CSV:", error);
-        toast.error("Failed to import CSV");
-      }
-    }
-  };
+  //       //   await importMutation.mutateAsync(formData);
+  //       toast.success("CSV imported successfully!");
+  //       setFile(null);
+  //       onImportCompleteAction();
+  //     } catch (error) {
+  //       if (error instanceof Error) {
+  //         console.error("Error importing CSV:", error);
+  //         toast.error("Failed to import CSV");
+  //       }
+  //     }
+  //   };
 
   return (
     <div className="space-y-4">

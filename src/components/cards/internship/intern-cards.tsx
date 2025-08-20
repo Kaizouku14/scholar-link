@@ -20,8 +20,8 @@ export const InternCard = ({
   };
 }) => {
   const { status } = intern;
-  const variant = status && getStatusVariant(status);
-  const color = status && getStatusColor(status);
+  const variant = getStatusVariant(status ?? "");
+  const color = getStatusColor(status ?? "");
 
   return (
     <div className="border-border hover:bg-muted/50 rounded-md border p-3 transition-colors">
@@ -48,10 +48,10 @@ export const InternCard = ({
             </div>
 
             <Badge
-              variant={variant ? variant : "outline"}
+              variant={variant ?? "outline"}
               className={cn(
                 "rounded-full border px-3 py-1 text-xs font-medium capitalize transition-all duration-200",
-                color ? color : "border-gray-200 bg-gray-50 text-gray-700",
+                color ?? "border-gray-200 bg-gray-50 text-gray-700",
               )}
             >
               {status === "pending" ? (

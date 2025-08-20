@@ -1,6 +1,7 @@
 import { PageRoutes } from "@/constants/page-routes";
 import { ManagementCard } from "./_components/cards/admin-management";
 import AdminDashboardStats from "./_components/cards/admin-stats";
+import { Briefcase, Building2 } from "lucide-react";
 
 const AdminDashboard = () => {
   return (
@@ -19,7 +20,7 @@ const AdminDashboard = () => {
           total={35}
           totalLabel="Manage Companies"
           growth={3}
-          icon={require("lucide-react").Building2}
+          icon={Building2}
           items={[
             { name: "TechCorp", count: 12, label: "Interns" },
             { name: "InnoSoft Inc.", count: 8, label: "Interns" },
@@ -35,7 +36,7 @@ const AdminDashboard = () => {
           total={120}
           totalLabel="Active Internships"
           growth={5}
-          icon={require("lucide-react").Briefcase}
+          icon={Briefcase}
           items={[
             { name: "TechCorp", count: 20, label: "Interns" },
             { name: "InnoSoft Inc.", count: 15, label: "Interns" },

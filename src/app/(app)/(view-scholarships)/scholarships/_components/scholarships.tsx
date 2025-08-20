@@ -12,7 +12,7 @@ const AvailableScholarships = () => {
   const { data, isLoading } = api.scholarships.getAllActivePrograms.useQuery();
 
   const itemsPerPage = 6;
-  const totalPages = Math.ceil((data?.length || 0) / itemsPerPage);
+  const totalPages = Math.ceil((data?.length ?? 0) / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentScholarships = data?.slice(startIndex, endIndex);

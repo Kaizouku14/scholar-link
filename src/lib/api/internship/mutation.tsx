@@ -6,7 +6,7 @@ import {
   company as CompanyTable,
   supervisor as SupervisorTable,
 } from "@/server/db/schema/internship";
-import { departmentHoursMap } from "@/constants/hours";
+import { departmentHoursMap } from "@/constants/internship/hours";
 import type { createInternship } from "@/interfaces/internship/internship";
 
 export const createStudentInternship = async ({

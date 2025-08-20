@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  ArrowLeft,
-  RotateCw,
-  Reply,
-  Mail,
-  Clock,
-  CircleCheck,
-} from "lucide-react";
+import { ArrowLeft, RotateCw, Reply, Mail, Clock } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
@@ -34,7 +27,7 @@ interface EmailDetailProps {
   refresh: () => void;
   showBackButton?: boolean;
   onBack?: () => void;
-  refetch?: () => Promise<any>;
+  refetch?: () => Promise<unknown>;
 }
 
 const EmailDetail = ({
@@ -127,7 +120,7 @@ const EmailDetail = ({
                 })
                 .map((email, idx) => {
                   const isSenderCurrentUser = email.sender === currentUserId;
-                  const senderName = email.senderName || "Unknown User";
+                  const senderName = email.senderName ?? "Unknown User";
                   const senderEmail = email.senderEmail;
                   const senderProfile = email.senderProfile;
                   const isLastMessage = idx === thread.length - 1;

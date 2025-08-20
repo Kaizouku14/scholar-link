@@ -8,7 +8,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { COURSES } from "@/constants/users/courses";
 import {
   Select,
   SelectContent,
@@ -81,7 +80,7 @@ const StudentSetupForm = ({
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {SECTIONS.map((section, index) => (
+                  {SECTIONS.map((section) => (
                     <SelectItem key={section} value={section}>
                       {section}
                     </SelectItem>

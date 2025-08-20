@@ -46,7 +46,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { toast } from "sonner";
+import { toast } from "react-hot-toast";
 import { api } from "@/trpc/react";
 import type { QueryObserverResult } from "@tanstack/react-query";
 
@@ -89,8 +89,8 @@ const ActivateProgram = ({
   const { mutateAsync: activateProgram } =
     api.scholarships.updateProgramAvailability.useMutation();
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    toast.promise(
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    await toast.promise(
       activateProgram({
         programId: data.programId,
         ...values,
@@ -98,7 +98,7 @@ const ActivateProgram = ({
       {
         loading: "activating scholarship program status...",
         success: () => {
-          refetch();
+          void refetch();
           return "Scholarship program status activated successfully!";
         },
         error: (error: unknown) => {

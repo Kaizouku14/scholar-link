@@ -1,6 +1,4 @@
 "use client";
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";

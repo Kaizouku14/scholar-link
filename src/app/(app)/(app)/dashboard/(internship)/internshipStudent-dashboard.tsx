@@ -7,7 +7,7 @@ import UpcomingDeadlines from "@/components/cards/internship/upcoming-deadlines"
 
 const InternshipStudentDashboard = () => {
   const { data: deadlines, isLoading } =
-    api.internships.getAllUpcomingDeadlines.useQuery();
+    api.internshipUsers.getAllUpcomingDeadlines.useQuery();
 
   return (
     <div className="flex w-full flex-col space-y-4">

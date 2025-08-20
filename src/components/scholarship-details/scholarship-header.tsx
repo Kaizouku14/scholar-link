@@ -3,7 +3,6 @@
 import { ShareButton } from "@/components/dropdown/share-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { PageRoutes } from "@/constants/page-routes";
 import { format } from "date-fns";
 import {
   Calendar,
@@ -200,7 +199,7 @@ const ScholarshipHeader = ({ data }: { data: ScholarshipHeaderProps }) => {
             <div className="bg-background relative overflow-hidden rounded-xl border shadow-lg">
               {/* {TODO: Replace this with actual image placeholder} */}
               <Image
-                src={data.imageUrl || "/placeholder.svg?height=320&width=400"}
+                src={data.imageUrl ?? "/placeholder.svg?height=320&width=400"}
                 alt={`${data.name} scholarship program`}
                 width={400}
                 height={320}

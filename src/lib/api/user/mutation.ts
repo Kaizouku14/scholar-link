@@ -20,7 +20,7 @@ export const checkStudentNoAvailability = async ({
       .limit(1);
 
     return !!studentNoAvailability;
-  } catch (error) {
+  } catch {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
       message: "Failed to check student no availability,",
@@ -56,7 +56,7 @@ export const createdStudentNo = async ({
       studentNo,
       course,
     });
-  } catch (error) {
+  } catch {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
       message: "Failed to create student no",

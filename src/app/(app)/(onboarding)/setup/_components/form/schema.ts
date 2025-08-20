@@ -1,4 +1,3 @@
-import { COURSES } from "@/constants/users/courses";
 import { GENDERS } from "@/constants/users/genders";
 import { SECTIONS } from "@/constants/users/sections";
 import { YEAR_LEVEL } from "@/constants/users/year-level";

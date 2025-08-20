@@ -16,7 +16,7 @@ const Pages = async () => {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
-  const user = session?.user;
+  //   const user = session?.user;
   const role = session?.user.role as roleType;
 
   return (

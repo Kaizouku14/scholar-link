@@ -27,7 +27,7 @@ export enum PageRoutes {
    *           SCHOLARSHIP ROUTES           *
    ******************************************/
 
-  SCHOLARSHIPS = "/scholarships",
+  SCHOLARSHIPS = "/scholarship",
 
   // Students only
   SCHOLARSHIPS_BROWSE = `${SCHOLARSHIPS}/browse`,
@@ -49,7 +49,7 @@ export enum PageRoutes {
    *            INTERNSHIP ROUTES           *
    ******************************************/
 
-  INTERNSHIPS = "/internships",
+  INTERNSHIPS = "/internship",
 
   // Admin only
   INTERNSHIPS_COMPANIES = `${INTERNSHIPS}/companies`,

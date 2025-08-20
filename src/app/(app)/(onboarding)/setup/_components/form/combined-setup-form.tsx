@@ -10,7 +10,7 @@ import StudentSetupForm from "./student-setup";
 import { Form } from "@/components/ui/form";
 import { authClient } from "@/lib/auth-client";
 import { api } from "@/trpc/react";
-import { uploadSingleFile } from "@/lib/uploadthing";
+import { uploadFile } from "@/lib/uploadthing";
 import { useRouter } from "next/navigation";
 import { PageRoutes } from "@/constants/page-routes";
 
@@ -80,7 +80,7 @@ const CombinedSetupForm = ({
       if (!userId) throw new Error("User not found");
 
       setIsLoading(true);
-      const uploadedImage = await uploadSingleFile(values.profile);
+      const uploadedImage = await uploadFile(values.profile);
       if (!uploadedImage?.url || !uploadedImage?.key) {
         toast.error("Failed to upload image. Please try again.");
         return;
@@ -94,7 +94,7 @@ const CombinedSetupForm = ({
       });
 
       router.push(PageRoutes.DASHBOARD);
-    } catch (error) {
+    } catch {
       toast.error("Failed to save data. Please try again.");
     } finally {
       setIsLoading(false);

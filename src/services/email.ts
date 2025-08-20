@@ -39,7 +39,8 @@ export const sendEmail = async ({
   text,
   html,
 }: Email): Promise<SentMessageInfo> => {
-  const info: SentMessageInfo = await transporter.sendMail({
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const info = await transporter.sendMail({
     // TODO: Replace with the name of the web application
     from: `"ScholarLink" <${env.EMAIL_USER}>`,
     to,

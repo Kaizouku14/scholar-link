@@ -23,7 +23,7 @@ interface ReplyFormProps {
   currentUserId: string;
   isOpen: boolean;
   onClose: () => void;
-  refetch?: () => Promise<any>;
+  refetch?: () => Promise<unknown>;
 }
 
 const ReplyForm = ({
@@ -61,10 +61,10 @@ const ReplyForm = ({
         content: replyContent,
       });
 
-      refetch?.();
+      void refetch?.();
       setReplyContent("");
       handleClose?.();
-    } catch (error) {
+    } catch {
       toast.error("Failed to send reply. Please try again.");
     } finally {
       setIsSending(false);
@@ -85,7 +85,7 @@ const ReplyForm = ({
           <DialogTitle className="flex items-center gap-2">
             <span>Reply to :</span>
             <span className="font-medium">
-              {recipientName || recipientEmail}
+              {recipientName ?? recipientEmail}
             </span>
           </DialogTitle>
         </DialogHeader>
@@ -110,7 +110,7 @@ const ReplyForm = ({
             <Textarea
               value={replyContent}
               onChange={(e) => setReplyContent(e.target.value)}
-              placeholder={`Write your reply to ${recipientName || recipientEmail}...`}
+              placeholder={`Write your reply to ${recipientName ?? recipientEmail}...`}
               className="min-h-[200px] resize-none"
               disabled={isSending}
               autoFocus

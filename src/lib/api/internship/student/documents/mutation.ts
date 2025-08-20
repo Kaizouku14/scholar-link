@@ -2,7 +2,7 @@ import type { documentsType } from "@/constants/internship/documents";
 import { generateUUID } from "@/lib/utils";
 import { db, eq, and } from "@/server/db";
 import { internDocuments as internDocumentsTable } from "@/server/db/schema/internship";
-import { deleteFileIfExists } from "@/server/uploadthing";
+import { deleteFileIfExists } from "@/lib/uploadthing";
 import { TRPCError } from "@trpc/server";
 
 export const insertDocument = async ({
@@ -70,10 +70,10 @@ export const insertDocument = async ({
   if (oldFileKeyToDelete) {
     try {
       await deleteFileIfExists(oldFileKeyToDelete);
-    } catch (err) {
+    } catch (error) {
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
-        message: "Failed to delete old file",
+        message: "Failed to delete old file" + (error as Error).message,
       });
     }
   }

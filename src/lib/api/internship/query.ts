@@ -1,5 +1,5 @@
 import type { departmentType } from "@/constants/users/departments";
-import { ROLE, ROLES, type roleType } from "@/constants/users/roles";
+import { ROLE, type roleType } from "@/constants/users/roles";
 import {
   db,
   eq,
@@ -20,7 +20,6 @@ import {
   company as CompanyTable,
   supervisor as SupervisorTable,
   progressLog as ProgressTable,
-  internDocuments as InternDocumentsTable,
 } from "@/server/db/schema/internship";
 import { TRPCError } from "@trpc/server";
 
@@ -32,7 +31,7 @@ export const getAllInternships = async ({
   department: departmentType;
 }) => {
   try {
-    let baseQuery = db
+    const baseQuery = db
       .select({
         companyId: CompanyTable.companyId,
         companyName: max(CompanyTable.name),
@@ -91,6 +90,7 @@ export const getAllInternships = async ({
     const response = await query.execute();
     return response.map((row) => ({
       ...row,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       interns: row.interns ? JSON.parse(row.interns as string) : [],
     }));
   } catch (error) {

@@ -10,7 +10,7 @@ import { siteConfig } from "@/types/site.config";
 import { env } from "@/env";
 
 export const auth = betterAuth({
-  trustedOrigins: [env.NEXT_PUBLIC_BETTER_AUTH_URL!],
+  trustedOrigins: [env.NEXT_PUBLIC_BETTER_AUTH_URL],
   appName: siteConfig.title,
   database: drizzleAdapter(db, {
     provider: "sqlite",

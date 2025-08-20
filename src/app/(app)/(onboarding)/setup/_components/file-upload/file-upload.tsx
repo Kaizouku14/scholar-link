@@ -39,6 +39,7 @@ export function FileUpload({
           )}
         >
           {preview ? (
+            // eslint-disable-next-line @next/next/no-img-element
             <img
               src={preview || "/placeholder.svg"}
               alt="Profile preview"

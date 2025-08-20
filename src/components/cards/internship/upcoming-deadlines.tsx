@@ -15,7 +15,7 @@ const UpcomingDeadlines = () => {
     data: internshipDocuments,
     refetch,
     isLoading,
-  } = api.internships.getAllUpcomingDeadlines.useQuery();
+  } = api.internshipUsers.getAllUpcomingDeadlines.useQuery();
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   const handleRefresh = async () => {
@@ -70,48 +70,47 @@ const UpcomingDeadlines = () => {
             ) : (
               <ScrollArea className="h-50 p-2">
                 <div className="flex flex-col gap-2">
-                  {internshipDocuments &&
-                    internshipDocuments?.map((doc, index) => {
-                      const daysLeft = calculateDaysLeft(doc.deadline);
-                      const isApproaching = isDeadlineApproaching(doc.deadline);
+                  {internshipDocuments?.map((doc, index) => {
+                    const daysLeft = calculateDaysLeft(doc.deadline);
+                    const isApproaching = isDeadlineApproaching(doc.deadline);
 
-                      return (
-                        <div
-                          key={index}
-                          className="group border-border dark:bg-muted flex items-center gap-3 rounded-xl border bg-white p-2"
-                        >
-                          <div className="flex h-11 w-11 items-center justify-center rounded-full bg-green-100 transition group-hover:scale-105 dark:bg-green-900/40">
-                            <FileText className="h-5 w-5 text-green-700 dark:text-green-300" />
-                          </div>
-
-                          <div className="flex flex-col">
-                            <span className="text-foreground text-sm font-semibold">
-                              {DOCUMENT_LABELS[doc.name]}
-                            </span>
-
-                            <span className="text-muted-foreground text-xs">
-                              {doc.deadline.toLocaleDateString("en-US", {
-                                month: "short",
-                                day: "numeric",
-                                year: "numeric",
-                              })}{" "}
-                              •{" "}
-                              <span
-                                className={cn(
-                                  "font-semibold",
-                                  isApproaching
-                                    ? "text-primary"
-                                    : "text-muted-foreground",
-                                )}
-                              >
-                                {Math.abs(daysLeft)} day
-                                {Math.abs(daysLeft) !== 1 ? "s" : ""} left
-                              </span>
-                            </span>
-                          </div>
+                    return (
+                      <div
+                        key={index}
+                        className="group border-border dark:bg-muted flex items-center gap-3 rounded-xl border bg-white p-2"
+                      >
+                        <div className="flex h-11 w-11 items-center justify-center rounded-full bg-green-100 transition group-hover:scale-105 dark:bg-green-900/40">
+                          <FileText className="h-5 w-5 text-green-700 dark:text-green-300" />
                         </div>
-                      );
-                    })}
+
+                        <div className="flex flex-col">
+                          <span className="text-foreground text-sm font-semibold">
+                            {DOCUMENT_LABELS[doc.name]}
+                          </span>
+
+                          <span className="text-muted-foreground text-xs">
+                            {doc.deadline.toLocaleDateString("en-US", {
+                              month: "short",
+                              day: "numeric",
+                              year: "numeric",
+                            })}{" "}
+                            •{" "}
+                            <span
+                              className={cn(
+                                "font-semibold",
+                                isApproaching
+                                  ? "text-primary"
+                                  : "text-muted-foreground",
+                              )}
+                            >
+                              {Math.abs(daysLeft)} day
+                              {Math.abs(daysLeft) !== 1 ? "s" : ""} left
+                            </span>
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </ScrollArea>
             )}

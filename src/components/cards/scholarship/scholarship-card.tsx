@@ -10,7 +10,6 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import {
-  ShieldCheck,
   ShieldX,
   MapPin,
   Calendar,
@@ -19,25 +18,12 @@ import {
   FolderMinus,
 } from "lucide-react";
 import { api } from "@/trpc/react";
-import { toast } from "sonner";
+import { toast } from "react-hot-toast";
 import type { QueryObserverResult } from "@tanstack/react-query";
 import { format } from "date-fns";
 import ActivateProgram from "../../dialog/activate-program";
-import type { submissionType } from "@/constants/scholarship/submittion-type";
 import { isDeadlineApproaching, isDeadlinePassed } from "@/lib/utils";
-
-interface ScholarshipCardProps {
-  programId: string;
-  name: string;
-  imageUrl: string | null;
-  slots: number;
-  deadline: Date;
-  isActive: boolean;
-  location: string;
-  type: string;
-  description: string;
-  submissionType: submissionType;
-}
+import type { ScholarshipCardProps } from "@/interfaces/scholarship/scholarship-card";
 
 const ScholarshipCard = ({
   data,
@@ -51,15 +37,15 @@ const ScholarshipCard = ({
   const { mutateAsync: disableProgram } =
     api.scholarships.disableScholarshipProgram.useMutation();
 
-  const handleDisableProgram = () => {
-    toast.promise(
+  const handleDisableProgram = async () => {
+    await toast.promise(
       disableProgram({
         programId: data.programId,
       }),
       {
         loading: "disabling scholarship program status...",
         success: () => {
-          refetch();
+          void refetch();
           return "Scholarship program status disabled successfully!";
         },
         error: (error: unknown) => {
@@ -80,7 +66,7 @@ const ScholarshipCard = ({
           <div className="flex flex-1 items-center space-x-3">
             <Avatar className="border-background h-12 w-12 border-2 shadow-sm">
               <AvatarImage
-                src={data.imageUrl || undefined}
+                src={data.imageUrl ?? undefined}
                 alt={`${data.name} logo`}
               />
               <AvatarFallback className="bg-primary/10 text-primary text-sm font-medium">

@@ -1,7 +1,5 @@
 import { z } from "zod";
-import { createTRPCRouter, protectedRoute, publicProcedure } from "../trpc";
-import { getAllUserEmail } from "@/lib/api/user/query";
-import { TRPCError } from "@trpc/server";
+import { createTRPCRouter, protectedRoute } from "../trpc";
 import {
   checkStudentNoAvailability,
   createdStudentNo,

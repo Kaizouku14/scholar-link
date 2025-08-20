@@ -25,7 +25,7 @@ export default function NotFound() {
             Page Not Found
           </div>
           <p className="mx-auto max-w-md text-lg text-gray-600 dark:text-gray-400">
-            Oops! The page you're looking for seems to have gone on a
+            Oops! The page you&apos;re looking for seems to have gone on a
             scholarship hunt of its own.
           </p>
         </div>
@@ -33,8 +33,8 @@ export default function NotFound() {
         <div className="space-y-6">
           <div className="space-y-4 text-center">
             <p className="text-gray-600 dark:text-gray-400">
-              Don't worry, we've got plenty of other opportunities waiting for
-              you!
+              Don&apos;t worry, we&apos;ve got plenty of other opportunities
+              waiting for you!
             </p>
 
             <div className="flex flex-col justify-center gap-3 sm:flex-row">

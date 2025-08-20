@@ -48,7 +48,7 @@ const ProfileSetupForm = ({
       <FormField
         control={control}
         name="profile"
-        render={({ field }) => (
+        render={() => (
           <FormItem>
             <FormLabel className="text-base font-semibold">
               Profile Picture

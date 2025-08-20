@@ -7,8 +7,8 @@ const ForgetPassword = () => {
         <div className="space-y-2 text-center">
           <h1 className="text-2xl font-bold">Forgot Password</h1>
           <p className="text-muted-foreground text-sm">
-            Enter your email address and we'll send you a verification code to
-            reset your password.
+            Enter your email address and we&apos;ll send you a verification code
+            to reset your password.
           </p>
         </div>
         <EmailStep />

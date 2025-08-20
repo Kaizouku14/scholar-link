@@ -1,6 +1,6 @@
 "use client";
 
-import { CircleUser, Cog, LogOut } from "lucide-react";
+import { Cog, LogOut } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -68,11 +68,9 @@ export const NavUser = ({ user }: { user?: UserItem }) => {
               <div className="flex w-full items-center">
                 <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
                   <div className="flex items-center gap-x-1 truncate font-semibold">
-                    <span> {user && formatText(user?.name!)}</span>
-                    <span>
-                      {user && user?.middleName?.charAt(0).toUpperCase()}.
-                    </span>
-                    <span> {user && formatText(user?.surname!)}</span>
+                    <span> {formatText(user?.name ?? "")}</span>
+                    <span>{user?.middleName?.charAt(0).toUpperCase()}.</span>
+                    <span> {formatText(user?.name ?? "")}</span>
                   </div>
                   <span className="text-muted-foreground truncate text-xs">
                     {user?.email ?? "Unknown"}
@@ -97,11 +95,9 @@ export const NavUser = ({ user }: { user?: UserItem }) => {
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <div className="flex items-center gap-x-1 truncate font-semibold">
-                    <span>{user && formatText(user?.name!)}</span>
-                    <span>
-                      {user && user?.middleName?.charAt(0).toUpperCase()}.
-                    </span>
-                    <span> {user && formatText(user?.surname!)}</span>
+                    <span>{formatText(user?.name ?? "")}</span>
+                    <span>{user?.middleName?.charAt(0).toUpperCase()}.</span>
+                    <span> {formatText(user?.surname ?? "")}</span>
                   </div>
                   <span className="truncate text-xs">
                     {user?.email ?? "Unknown"}

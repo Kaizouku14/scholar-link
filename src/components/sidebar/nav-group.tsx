@@ -32,7 +32,7 @@ export function NavGroups({ group, notificationCounts }: NavGroupProps) {
 
   const getBadgeCount = (badgeType?: string): number => {
     if (!badgeType || !notificationCounts) return 0;
-    return notificationCounts[badgeType as keyof NotificationCounts] || 0;
+    return notificationCounts[badgeType as keyof NotificationCounts] ?? 0;
   };
 
   const content = (
@@ -40,14 +40,14 @@ export function NavGroups({ group, notificationCounts }: NavGroupProps) {
       <SidebarMenu>
         {group.items.map((item) => {
           const badgeCount = getBadgeCount(item.badgeType);
-          const showBadge = item.badge || (item.badgeType && badgeCount > 0);
+          const showBadge = item.badge ?? (item.badgeType && badgeCount > 0);
 
           return (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton
                 asChild
                 isActive={isActiveRoute(item.url)}
-                tooltip={item.description || item.title}
+                tooltip={item.description ?? item.title}
                 className="group relative"
               >
                 <Link href={item.url} className="flex items-center gap-2">
