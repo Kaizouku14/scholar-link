@@ -8,8 +8,10 @@ import {
   type documentsType,
 } from "@/constants/internship/documents";
 
+// eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
+type NameType = documentsType | string;
 interface SimpleCalendarProps {
-  events?: { deadline: Date; name: string | documentsType }[];
+  events?: { deadline: Date; name: NameType }[];
 }
 
 const EventCalendar = ({ events = [] }: SimpleCalendarProps) => {

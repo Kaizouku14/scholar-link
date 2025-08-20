@@ -7,7 +7,8 @@ import { CheckCircle, Clock, GraduationCap, UserCheck } from "lucide-react";
 import { useMemo } from "react";
 
 const AdminDashboardStats = () => {
-  const { data, isLoading } = api.internships.getAdminDashboardStats.useQuery();
+  const { data, isLoading } =
+    api.internshipAdmin.getAdminDashboardStats.useQuery();
 
   const monthlyChange = useMemo(() => {
     if (!data) return "N/A";
@@ -27,25 +28,25 @@ const AdminDashboardStats = () => {
         <>
           <StatCard
             title="Total Internships"
-            value={data.totalInternship || 0}
+            value={data.totalInternship ?? 0}
             subtitle="Across All Departments"
             icon={<GraduationCap className="text-primary h-4 w-4" />}
           />
           <StatCard
             title="Active Internships"
-            value={data.totalActiveInterns || 0}
+            value={data.totalActiveInterns ?? 0}
             subtitle="Currently in Internships"
             icon={<UserCheck className="text-primary h-4 w-4" />}
           />
           <StatCard
             title="Hours Logged (Month)"
-            value={data.monthlyLogs || 0}
+            value={data.monthlyLogs ?? 0}
             subtitle={monthlyChange}
             icon={<Clock className="text-primary h-4 w-4" />}
           />
           <StatCard
             title="Completed"
-            value={data.totalCompletedInterns || 0}
+            value={data.totalCompletedInterns ?? 0}
             subtitle="Successfully completed"
             icon={<CheckCircle className="text-primary h-4 w-4" />}
           />

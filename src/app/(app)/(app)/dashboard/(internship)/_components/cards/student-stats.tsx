@@ -7,14 +7,14 @@ import { CalendarDays, ChartColumn, Clock, Hourglass } from "lucide-react";
 import { useMemo } from "react";
 
 export const InternsDashboardStats = () => {
-  const { data: progress } = api.internships.getStudentLogProgress.useQuery();
+  const { data: progress } =
+    api.internshipStudent.getStudentLogProgress.useQuery();
 
   const statistic = useMemo(() => {
     const noProgress = progress?.length;
-    const totalHoursRequired =
-      (progress && progress[0]?.totalHoursRequired) || 0;
+    const totalHoursRequired = progress?.[0]?.totalHoursRequired ?? 0;
     const totalHoursLog =
-      progress?.reduce((acc, curr) => acc + curr.hoursLog, 0) || 0;
+      progress?.reduce((acc, curr) => acc + curr.hoursLog, 0) ?? 0;
     const averageHours = progress?.length
       ? (totalHoursLog / progress.length).toFixed(1)
       : 0;
