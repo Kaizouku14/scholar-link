@@ -24,13 +24,13 @@ export const EditLog = ({
   refetch,
 }: {
   data: {
-    id: string;
+    progressId: string;
     hoursLog: number;
     description: string;
   };
   refetch: () => Promise<unknown>;
 }) => {
-  const { id, hoursLog, description } = data;
+  const { progressId, hoursLog, description } = data;
   const [newHours, setNewHours] = useState(Math.round(hoursLog));
   const [newDescription, setNewDescription] = useState(description);
   const [isLoading, setIsLoading] = useState(false);
@@ -42,7 +42,7 @@ export const EditLog = ({
     setIsLoading(true);
     try {
       await updateLogs({
-        id,
+        id: progressId,
         hoursLog: newHours,
         description: newDescription,
       });

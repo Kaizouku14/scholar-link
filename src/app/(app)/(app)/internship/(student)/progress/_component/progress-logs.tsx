@@ -10,7 +10,7 @@ export default function ProgressLogs({
 }: {
   logs:
     | {
-        id: string;
+        progressId: string;
         hoursLog: number;
         dateLogs: Date;
         description: string;

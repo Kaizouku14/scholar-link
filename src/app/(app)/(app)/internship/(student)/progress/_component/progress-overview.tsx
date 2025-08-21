@@ -2,7 +2,14 @@
 
 import { Progress } from "@/components/ui/progress";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Clock, CheckCircle, CalendarDays, TrendingUp } from "lucide-react";
+import {
+  Clock,
+  CheckCircle,
+  CalendarDays,
+  TrendingUp,
+  Building2,
+  MapPin,
+} from "lucide-react";
 import ProgressForm from "./form/progress-form";
 import { api } from "@/trpc/react";
 import { useMemo } from "react";
@@ -25,10 +32,7 @@ const ProgressOverview = () => {
     const completed = data?.reduce((sum, log) => sum + log.hoursLog, 0) ?? 0;
     const logs =
       data?.map((log) => ({
-        id: log.progressId,
-        hoursLog: log.hoursLog,
-        dateLogs: log.dateLogs,
-        description: log.description,
+        ...log,
       })) ?? [];
     const percentage =
       required > 0
@@ -61,7 +65,7 @@ const ProgressOverview = () => {
             <ProgressForm refetch={refetch} />
           </div>
           <div className="flex flex-col max-md:justify-center max-md:gap-y-4">
-            <div className="mb-4 flex flex-col md:mb-8 md:space-y-4">
+            <div className="mb-2 flex flex-col md:space-y-4">
               <div className="flex items-center justify-center gap-3 md:justify-start">
                 <div className="hidden rounded-lg bg-blue-100 p-2 md:block dark:bg-blue-900/30">
                   <TrendingUp className="text-primary h-6 w-6" />
@@ -80,6 +84,28 @@ const ProgressOverview = () => {
               <ProgressOverviewSkeleton />
             ) : (
               <div className="space-y-4">
+                <div className="my-4">
+                  {progress.logs.map((log, index) => (
+                    <div key={index} className="flex flex-col gap-1">
+                      <div className="flex items-center gap-2">
+                        <Building2 className="text-muted-foreground h-4 w-4" />
+                        <h3 className="text-card-foreground font-medium">
+                          {log.companyName ?? "Company Name Not Provided"}
+                        </h3>
+                      </div>
+
+                      {log.companyAddress && (
+                        <div className="flex items-start gap-2">
+                          <MapPin className="text-muted-foreground mt-0.5 h-4 w-4" />
+                          <p className="text-muted-foreground text-sm">
+                            {log.companyAddress}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+
                 <div>
                   <div className="border-border rounded-2xl border bg-white p-6 dark:border-gray-700/50 dark:bg-gray-800/50">
                     <div className="mb-4 flex items-center justify-between">
@@ -113,12 +139,12 @@ const ProgressOverview = () => {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:mt-8 lg:grid-cols-3">
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:mt-4 lg:grid-cols-3">
                   <Card className="group border-0 bg-gradient-to-br from-blue-50 to-blue-100/50 shadow-none dark:from-blue-950/50 dark:to-blue-900/30">
                     <CardContent>
-                      <div className="flex h-18 items-center justify-center gap-2.5">
+                      <div className="flex items-center gap-2.5">
                         <div className="rounded-xl bg-blue-500/10 p-3 transition-colors group-hover:bg-blue-500/20 dark:bg-blue-400/10">
-                          <Clock className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                          <Clock className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                         </div>
                         <div className="flex flex-col">
                           <span className="text-base font-bold text-blue-700 dark:text-blue-300">
@@ -134,9 +160,9 @@ const ProgressOverview = () => {
 
                   <Card className="group border-0 bg-gradient-to-br from-green-50 to-green-100/50 shadow-none dark:from-green-950/50 dark:to-green-900/30">
                     <CardContent>
-                      <div className="flex h-18 items-center gap-2.5">
+                      <div className="flex items-center gap-2.5">
                         <div className="rounded-xl bg-green-500/10 p-3 transition-colors group-hover:bg-green-500/20 dark:bg-green-400/10">
-                          <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400" />
+                          <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400" />
                         </div>
                         <div className="flex flex-col">
                           <span className="text-base font-bold text-green-700 dark:text-green-300">
@@ -152,9 +178,9 @@ const ProgressOverview = () => {
 
                   <Card className="group border-0 bg-gradient-to-br from-amber-50 to-amber-100/50 shadow-none dark:from-amber-950/50 dark:to-amber-900/30">
                     <CardContent>
-                      <div className="flex h-18 items-center gap-2.5">
+                      <div className="flex items-center gap-2.5">
                         <div className="rounded-xl bg-amber-500/10 p-3 transition-colors group-hover:bg-amber-500/20 dark:bg-amber-400/10">
-                          <CalendarDays className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+                          <CalendarDays className="h-4 w-4 text-amber-600 dark:text-amber-400" />
                         </div>
                         <div className="flex flex-col">
                           <span className="text-base font-bold text-amber-700 dark:text-amber-300">
