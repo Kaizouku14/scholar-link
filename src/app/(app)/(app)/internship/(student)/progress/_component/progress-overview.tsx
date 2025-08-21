@@ -27,9 +27,12 @@ const ProgressOverview = () => {
       data?.map((log) => ({
         hoursLog: log.hoursLog,
         dateLogs: log.dateLogs,
+        description: log.description,
       })) ?? [];
     const percentage =
-      required > 0 ? Number(((completed / required) * 100).toFixed(1)) : 0;
+      required > 0
+        ? Math.min(100, Math.round((completed / required) * 100))
+        : 0;
     const uniqueDays = new Set(
       data?.map((log) => new Date(log.dateLogs).toDateString()),
     );
@@ -52,7 +55,10 @@ const ProgressOverview = () => {
   return (
     <div className="mx-auto w-full">
       <Card className="shadow-none">
-        <CardContent className="flex space-x-6">
+        <CardContent className="md:flex md:space-x-6">
+          <div className="mb-6 block md:hidden">
+            <ProgressForm refetch={refetch} />
+          </div>
           <div className="flex flex-col max-md:justify-center max-md:gap-y-4">
             <div className="mb-4 flex flex-col md:mb-8 md:space-y-4">
               <div className="flex items-center justify-center gap-3 md:justify-start">
@@ -80,7 +86,8 @@ const ProgressOverview = () => {
                         Hours Completed
                       </span>
                       <span className="text-muted-foreground rounded-full bg-gray-100 px-3 py-1 text-xs dark:bg-gray-700">
-                        {progress?.completed ?? 0} / {progress?.required ?? 0}
+                        {Math.round(progress?.completed) ?? 0} /{" "}
+                        {progress?.required ?? 0}
                       </span>
                     </div>
 
@@ -97,7 +104,8 @@ const ProgressOverview = () => {
                           </span>
                         </div>
                         <span className="text-muted-foreground text-xs">
-                          {progress?.remainingHours ?? 0} hours remaining
+                          {Math.round(progress?.remainingHours) ?? 0} hours
+                          remaining
                         </span>
                       </div>
                     </div>
@@ -113,7 +121,7 @@ const ProgressOverview = () => {
                         </div>
                         <div className="flex flex-col">
                           <span className="text-base font-bold text-blue-700 dark:text-blue-300">
-                            {progress?.completed ?? 0}
+                            {Math.round(progress?.completed) ?? 0}
                           </span>
                           <span className="text-xs font-medium tracking-wide text-blue-600/70 uppercase dark:text-blue-400/70">
                             Hours Logged

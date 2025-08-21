@@ -70,7 +70,7 @@ export const NavUser = ({ user }: { user?: UserItem }) => {
                   <div className="flex items-center gap-x-1 truncate font-semibold">
                     <span> {formatText(user?.name ?? "")}</span>
                     <span>{user?.middleName?.charAt(0).toUpperCase()}.</span>
-                    <span> {formatText(user?.name ?? "")}</span>
+                    <span> {formatText(user?.surname ?? "")}</span>
                   </div>
                   <span className="text-muted-foreground truncate text-xs">
                     {user?.email ?? "Unknown"}

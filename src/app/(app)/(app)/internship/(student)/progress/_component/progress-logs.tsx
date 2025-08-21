@@ -1,7 +1,8 @@
-import { format } from "date-fns";
-import { CalendarDays, Clock, BarChart3 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { CalendarDays, BarChart3, FileText, Pencil } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Card } from "@/components/ui/card";
+import { format } from "date-fns";
+import { Button } from "@/components/ui/button";
 
 export default function ProgressLogs({
   logs,
@@ -10,6 +11,7 @@ export default function ProgressLogs({
     | {
         hoursLog: number;
         dateLogs: Date;
+        description: string;
       }[]
     | undefined;
 }) {
@@ -36,36 +38,50 @@ export default function ProgressLogs({
           <ScrollArea className="h-80 max-h-80">
             <div className="m-0 p-0">
               {logs?.length ? (
-                <div className="divide-border divide-y rounded-xl">
+                <div className="divide-border divide-y rounded-xl p-2">
                   {logs.map((log, index) => (
-                    <div
+                    <Card
                       key={index}
-                      className="hover:bg-muted/50 flex items-center justify-between p-4"
+                      className="bg-card rounded-2xl border p-5 shadow-sm transition-shadow hover:shadow-md"
                     >
-                      <div className="flex items-center gap-6">
-                        <div className="bg-primary/10 flex h-8 w-8 items-center justify-center rounded-full md:h-12 md:w-12">
-                          <CalendarDays className="text-primary h-4 w-4 md:h-5 md:w-5" />
-                        </div>
+                      <div className="flex items-start justify-between">
+                        {/* Left Section */}
                         <div className="space-y-1">
-                          <div className="text-foreground text-sm font-semibold md:text-base">
-                            {format(log.dateLogs, "EEEE, MMMM dd")}
-                          </div>
-                          <div className="text-muted-foreground text-xs">
-                            {format(log.dateLogs, "yyyy")}
+                          <h3 className="text-foreground text-sm font-semibold">
+                            {format(log.dateLogs, "EEE, MMM d")}
+                          </h3>
+                          <p className="text-muted-foreground text-sm">
+                            {log.description}
+                          </p>
+                        </div>
+
+                        {/* Right Section */}
+                        <div className="flex flex-col items-end gap-2">
+                          {/* Hours badge */}
+                          <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-600 dark:bg-blue-900/40 dark:text-blue-300">
+                            {Math.round(log.hoursLog)} hrs
+                          </span>
+
+                          {/* Action buttons */}
+                          <div className="flex items-center gap-1">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="hover:bg-muted h-8 w-8"
+                            >
+                              <Pencil className="text-muted-foreground h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="hover:bg-muted h-8 w-8"
+                            >
+                              <FileText className="text-muted-foreground h-4 w-4" />
+                            </Button>
                           </div>
                         </div>
                       </div>
-
-                      <div className="flex items-center gap-3">
-                        <Badge
-                          variant="secondary"
-                          className="bg-primary/10 text-primary border-primary/20 px-3 py-1.5 font-semibold"
-                        >
-                          <Clock className="mr-1.5 h-3 w-3" />
-                          {log.hoursLog} {log.hoursLog === 1 ? "hour" : "hours"}
-                        </Badge>
-                      </div>
-                    </div>
+                    </Card>
                   ))}
                 </div>
               ) : (

@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 };
 const Pages = () => {
   return (
-    <div className="mx-auto space-y-4 px-2">
+    <div className="mx-auto space-y-4 md:px-2">
       <PageBreadCrumb currentPage="Progress" />
       <ProgressOverview />
     </div>

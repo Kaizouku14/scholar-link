@@ -47,7 +47,7 @@ const ProgressForm = ({ refetch }: { refetch: () => Promise<unknown> }) => {
         description: data.description,
       });
 
-      toast.success("Progress logged successfully.");
+      toast.success("Progress logged successfully.", { id: toastId });
       form.reset();
       await refetch();
     } catch (error) {
@@ -167,7 +167,7 @@ const ProgressForm = ({ refetch }: { refetch: () => Promise<unknown> }) => {
                     <FormControl>
                       <Textarea
                         {...field}
-                        className="h-12 max-h-12"
+                        className="max-h-20"
                         placeholder="Describe what you worked on during this day"
                       />
                     </FormControl>
