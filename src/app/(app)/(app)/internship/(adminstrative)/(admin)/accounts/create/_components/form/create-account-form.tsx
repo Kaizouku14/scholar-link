@@ -94,10 +94,12 @@ const CreateAccountForm = () => {
       }
 
       await createUser({ ...values, profile: uploadedImage.url });
-      toast.success("User created successfully!", { id: toastId });
+      toast.success("User created successfully!");
       form.reset();
     } catch (error) {
       toast.error((error as Error).message);
+    } finally {
+      toast.dismiss(toastId);
     }
   };
 

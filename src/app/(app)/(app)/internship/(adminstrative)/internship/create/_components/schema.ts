@@ -30,7 +30,7 @@ export const companyformSchema = z.object({
   endDate: z.date({
     required_error: "End date is required.",
   }),
-  department: z.enum(DEPARTMENTS),
+  department: z.enum(DEPARTMENTS).optional(),
 });
 
 export type CompanyFormSchema = z.infer<typeof companyformSchema>;

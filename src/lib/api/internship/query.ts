@@ -21,6 +21,7 @@ import {
   internship as InternshipTable,
   company as CompanyTable,
   progressLog as ProgressTable,
+  supervisor as SupervisorTable,
 } from "@/server/db/schema/internship";
 import { TRPCError } from "@trpc/server";
 
@@ -31,19 +32,24 @@ export const getAllInternships = async ({
   role: roleType;
   userId: string;
 }) => {
-  try {
-    return await db.transaction(async (tx) => {
+  return await db
+    .transaction(async (tx) => {
       let coordinatorSections: SectionType[] = [];
+      let coordinatorDeparment: departmentType | null = null;
 
       // If coordinator → get their sections first
       if (role === ROLE.INTERNSHIP_COORDINATOR) {
         const [coordinator] = await tx
-          .select({ section: UserTable.section })
+          .select({
+            section: UserTable.section,
+            department: UserTable.department,
+          })
           .from(UserTable)
           .where(eq(UserTable.id, userId))
           .limit(1);
 
         coordinatorSections = coordinator?.section ?? [];
+        coordinatorDeparment = coordinator!.department;
       }
 
       const baseQuery = tx
@@ -51,8 +57,9 @@ export const getAllInternships = async ({
           companyId: CompanyTable.companyId,
           companyName: max(CompanyTable.name),
           address: max(CompanyTable.address),
-          supervisor: max(CompanyTable.contactPerson),
-          supervisorEmail: max(CompanyTable.email),
+          supervisor: max(SupervisorTable.name),
+          supervisorEmail: max(SupervisorTable.email),
+          //   supervisorNo: max(SupervisorTable.contactNo),
           studentCount: countDistinct(InternshipTable.userId),
           totalProgressHours: sum(ProgressTable.hours),
           department: UserTable.department,
@@ -75,6 +82,10 @@ export const getAllInternships = async ({
           InternshipTable,
           eq(InternshipTable.companyId, CompanyTable.companyId),
         )
+        .leftJoin(
+          SupervisorTable,
+          eq(InternshipTable.supervisorId, SupervisorTable.supervisorId),
+        )
         .leftJoin(UserTable, eq(UserTable.id, InternshipTable.userId))
         .leftJoin(StudentTable, eq(UserTable.id, StudentTable.id))
         .leftJoin(
@@ -93,10 +104,11 @@ export const getAllInternships = async ({
           and(
             isNotNull(InternshipTable.userId),
             sql`EXISTS (
-                SELECT 1
-                FROM json_each(${UserTable.section})
-                WHERE value IN ${coordinatorSections}
-            )`,
+                        SELECT 1
+                        FROM json_each(${UserTable.section})
+                        WHERE value IN (${sql.join(coordinatorSections, sql`,`)})
+                    )`,
+            eq(UserTable.department, coordinatorDeparment!),
           ),
         );
       } else {
@@ -108,13 +120,14 @@ export const getAllInternships = async ({
         ...row,
         interns: row.interns ? (JSON.parse(row.interns) as Interns[]) : [],
       }));
+    })
+    .catch((error) => {
+      console.log(error);
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Failed to get interns: " + (error as Error).message,
+      });
     });
-  } catch (error) {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: "Failed to get interns: " + (error as Error).message,
-    });
-  }
 };
 
 export const getAllUserAccount = async ({

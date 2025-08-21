@@ -67,7 +67,7 @@ export const NavUser = ({ user }: { user?: UserItem }) => {
             >
               <div className="flex w-full items-center">
                 <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
-                  <div className="flex items-center gap-x-1 truncate font-semibold">
+                  <div className="flex max-w-[8rem] items-center gap-x-1 truncate font-semibold">
                     <span> {formatText(user?.name ?? "")}</span>
                     <span>{user?.middleName?.charAt(0).toUpperCase()}.</span>
                     <span> {formatText(user?.surname ?? "")}</span>

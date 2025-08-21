@@ -75,6 +75,7 @@ const InternshipForm = () => {
     try {
       await createInternship({
         ...values,
+        department: values.department!,
       });
 
       toast.success("Internship company linked successfully!", {

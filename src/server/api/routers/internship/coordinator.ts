@@ -1,5 +1,5 @@
 import { createTRPCRouter, protectedRoute } from "../../trpc";
-import { getAllDocumentByDepartment } from "@/lib/api/internship/coordinator/document-review/query";
+import { getAllDocumentBySection } from "@/lib/api/internship/coordinator/document-review/query";
 import { getStudentProgressByDept } from "@/lib/api/internship/coordinator/progress-monitoring/query";
 import { getCoordinatorDashboardStats } from "@/lib/api/internship/coordinator/dashboard/query";
 import { createDocument } from "@/lib/api/internship/coordinator/document-review/mutation";
@@ -26,13 +26,13 @@ export const internshipCoordinatorRouter = createTRPCRouter({
   /******************************************
    *          Coordinator API Query         *
    ******************************************/
-  getAllDocumentByDepartment: protectedRoute.query(({ ctx }) => {
-    const department = ctx.session!.user.department as departmentType;
+  getAllDocumentBySections: protectedRoute.query(({ ctx }) => {
+    const id = ctx.session!.user.id;
     return cacheData(
-      `${department}-documents`,
+      `${id}-documents`,
       async () =>
-        await getAllDocumentByDepartment({
-          department,
+        await getAllDocumentBySection({
+          id,
         }),
     );
   }),

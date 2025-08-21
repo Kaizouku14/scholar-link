@@ -12,7 +12,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 const ReviewDocumentsTable = () => {
   const { data, isLoading } =
-    api.internshipCoordinator.getAllDocumentByDepartment.useQuery();
+    api.internshipCoordinator.getAllDocumentBySections.useQuery();
 
   return (
     <div className="mx-auto mt-4 w-full">

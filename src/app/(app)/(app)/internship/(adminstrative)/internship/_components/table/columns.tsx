@@ -38,6 +38,11 @@ export const InternsColumns: ColumnDef<InternColumn>[] = [
   {
     accessorKey: "address",
     header: "Address",
+    cell: ({ row }) => (
+      <div className="max-w-[10rem] truncate" title={row.original.address!}>
+        {row.original.address}
+      </div>
+    ),
   },
   {
     accessorKey: "supervisor",
@@ -82,7 +87,7 @@ export const InternsColumns: ColumnDef<InternColumn>[] = [
         ? "pending"
         : percentage >= 100
           ? "completed"
-          : "in-progress";
+          : "on-going";
     },
     cell: ({ row }) => {
       const { totalProgressHours, studentCount, department } = row.original;
@@ -102,7 +107,7 @@ export const InternsColumns: ColumnDef<InternColumn>[] = [
           ? "pending"
           : percentage >= 100
             ? "completed"
-            : "in-progress";
+            : "on-going";
       const color = getStatusColor(status);
       const variant = getStatusVariant(status);
       return (
@@ -115,7 +120,7 @@ export const InternsColumns: ColumnDef<InternColumn>[] = [
         >
           {status === "pending" ? (
             <Clock className={cn("h-4 w-4", color)} />
-          ) : status === "in-progress" ? (
+          ) : status === "on-going" ? (
             <Hourglass className={cn("h-4 w-4", color)} />
           ) : status === "completed" ? (
             <CheckCircle className={cn("h-4 w-4", color)} />

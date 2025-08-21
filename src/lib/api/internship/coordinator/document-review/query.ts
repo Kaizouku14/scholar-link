@@ -1,4 +1,4 @@
-import { db, eq } from "@/server/db";
+import { and, db, eq, sql } from "@/server/db";
 import { TRPCError } from "@trpc/server";
 import {
   internDocuments as InternDocumentsTable,
@@ -9,44 +9,64 @@ import {
   user as UserTable,
   student as StudentTable,
 } from "@/server/db/schema/auth";
-import type { departmentType } from "@/constants/users/departments";
+import type { SectionType } from "@/constants/users/sections";
 
-export const getAllDocumentByDepartment = async ({
-  department,
-}: {
-  department: departmentType;
-}) => {
-  try {
-    const response = await db
-      .select({
-        id: InternDocumentsTable.documentId,
-        documentType: InternDocumentsTable.documentType,
-        documentUrl: InternDocumentsTable.documentUrl,
-        reviewStatus: InternDocumentsTable.reviewStatus,
-        submittedAt: InternDocumentsTable.submittedAt,
-        name: UserTable.name,
-        surname: UserTable.surname,
-        profile: UserTable.profile,
-        section: StudentTable.section,
-        course: StudentTable.course,
-        yearLevel: StudentTable.yearLevel,
-        companyName: CompanyTable.name,
-      })
-      .from(InternDocumentsTable)
-      .innerJoin(UserTable, eq(InternDocumentsTable.internId, UserTable.id))
-      .innerJoin(StudentTable, eq(UserTable.id, StudentTable.id))
-      .innerJoin(InternshipTable, eq(UserTable.id, InternshipTable.userId))
-      .where(eq(UserTable.department, department))
-      .innerJoin(
-        CompanyTable,
-        eq(InternshipTable.companyId, CompanyTable.companyId),
-      )
-      .orderBy(InternDocumentsTable.submittedAt, StudentTable.section);
-    return response ?? [];
-  } catch (error) {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: "Failed to get documents: " + (error as Error).message,
+export const getAllDocumentBySection = async ({ id }: { id: string }) => {
+  return await db
+    .transaction(async (tx) => {
+      const [coordinator] = await tx
+        .select({
+          section: UserTable.section,
+          department: UserTable.department,
+        })
+        .from(UserTable)
+        .where(eq(UserTable.id, id))
+        .limit(1);
+
+      const coordinatorSections: SectionType[] = coordinator?.section ?? [];
+      const coordinatorDeparment = coordinator?.department;
+
+      const documents = await tx
+        .select({
+          id: InternDocumentsTable.documentId,
+          documentType: InternDocumentsTable.documentType,
+          documentUrl: InternDocumentsTable.documentUrl,
+          reviewStatus: InternDocumentsTable.reviewStatus,
+          submittedAt: InternDocumentsTable.submittedAt,
+          name: UserTable.name,
+          surname: UserTable.surname,
+          profile: UserTable.profile,
+          section: UserTable.section,
+          course: StudentTable.course,
+          yearLevel: StudentTable.yearLevel,
+          companyName: CompanyTable.name,
+        })
+        .from(InternDocumentsTable)
+        .innerJoin(UserTable, eq(InternDocumentsTable.internId, UserTable.id))
+        .innerJoin(StudentTable, eq(UserTable.id, StudentTable.id))
+        .innerJoin(InternshipTable, eq(UserTable.id, InternshipTable.userId))
+        .where(
+          and(
+            eq(UserTable.department, coordinatorDeparment!),
+            sql`EXISTS (
+                        SELECT 1
+                        FROM json_each(${UserTable.section})
+                        WHERE value IN (${sql.join(coordinatorSections, sql`,`)})
+                    )`,
+          ),
+        )
+        .innerJoin(
+          CompanyTable,
+          eq(InternshipTable.companyId, CompanyTable.companyId),
+        )
+        .orderBy(InternDocumentsTable.submittedAt, UserTable.section);
+
+      return documents;
+    })
+    .catch((error) => {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Failed to get documents: " + (error as Error).message,
+      });
     });
-  }
 };

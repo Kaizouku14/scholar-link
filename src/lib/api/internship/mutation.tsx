@@ -4,6 +4,7 @@ import { TRPCError } from "@trpc/server";
 import {
   internship as InternshipTable,
   company as CompanyTable,
+  supervisor as SupervisorTable,
 } from "@/server/db/schema/internship";
 import { departmentHoursMap } from "@/constants/internship/hours";
 import type { createInternship } from "@/interfaces/internship/internship";
@@ -32,6 +33,7 @@ export const createStudentInternship = async ({
   await db.transaction(async (tx) => {
     let companyId: string;
     const internshipId = generateUUID();
+    const supervisorId = generateUUID();
     const totalHoursRequired = departmentHoursMap[data.department];
 
     const [companyExist] = await tx
@@ -51,17 +53,22 @@ export const createStudentInternship = async ({
         companyId,
         name: data.name,
         address: data.address,
-        contactPerson: data.contactPerson,
-        contactNo: data.contactNo,
-        email: data.contactEmail,
       });
     } else {
       companyId = companyExist.companyId;
     }
 
+    await tx.insert(SupervisorTable).values({
+      supervisorId,
+      name: data.contactPerson,
+      contactNo: data.contactNo,
+      email: data.contactEmail,
+    });
+
     await tx.insert(InternshipTable).values({
       internshipId,
       userId: data.userId,
+      supervisorId,
       companyId,
       startDate: data.startDate,
       endDate: data.endDate,
@@ -70,7 +77,7 @@ export const createStudentInternship = async ({
 
     await tx
       .update(InternshipTable)
-      .set({ status: "in-progress" })
+      .set({ status: "on-going" })
       .where(eq(InternshipTable.internshipId, internshipId));
   });
 };

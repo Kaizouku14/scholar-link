@@ -88,6 +88,11 @@ export const createUserAccount = async ({ data }: { data: UserAccount }) => {
       })
       .execute();
 
+    await tx.insert(authorizedEmailTable).values({
+      id: generateUUID(),
+      email: data.email,
+    });
+
     if (data.role === ROLE.INTERNSHIP_STUDENT) {
       await tx
         .insert(studentTable)

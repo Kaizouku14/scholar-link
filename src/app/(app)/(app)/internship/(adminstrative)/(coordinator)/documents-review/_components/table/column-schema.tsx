@@ -15,7 +15,7 @@ export const columnSchema = z.object({
   name: z.string().nullish(),
   surname: z.string().nullish(),
   profile: z.string().nullish(),
-  section: z.enum(SECTIONS).nullish(),
+  section: z.array(z.enum(SECTIONS)).nullish(),
   course: z.enum(COURSES).nullish(),
   yearLevel: z.enum(YEAR_LEVEL).nullish(),
   companyName: z.string(),
