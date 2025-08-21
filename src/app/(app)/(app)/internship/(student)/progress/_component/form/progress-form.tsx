@@ -19,43 +19,47 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { api } from "@/trpc/react";
 import { toast } from "react-hot-toast";
+import TimePicker from "./time-picker";
+import { Textarea } from "@/components/ui/textarea";
 
 const ProgressForm = ({ refetch }: { refetch: () => Promise<unknown> }) => {
   const form = useForm<ProgressFormSchema>({
     resolver: zodResolver(progressFormSchema),
     defaultValues: {
       date: new Date(),
-      hoursCompleted: 0,
+      timeIn: undefined,
+      timeOut: undefined,
+      description: "",
     },
   });
 
   const { mutateAsync: logProgress } =
     api.internshipStudent.insertStudentProgress.useMutation();
   const onSubmit = async (data: ProgressFormSchema) => {
-    await toast.promise(
-      logProgress({
-        logDate: data.date,
-        hours: data.hoursCompleted,
-      }),
-      {
-        loading: "Logging progress...",
-        success: () => {
-          form.reset();
-          void refetch();
-          return "Progress logged successfully";
-        },
-        error: (error: Error) => error.message,
-      },
-      {
-        duration: 5000,
-      },
-    );
+    // await toast.promise(
+    //   logProgress({
+    //     logDate: data.date,
+    //     hours: data.hoursCompleted,
+    //   }),
+    //   {
+    //     loading: "Logging progress...",
+    //     success: () => {
+    //       form.reset();
+    //       void refetch();
+    //       return "Progress logged successfully";
+    //     },
+    //     error: (error: Error) => error.message,
+    //   },
+    //   {
+    //     duration: 5000,
+    //   },
+    // );
   };
 
   const isSubmitting = form.formState.isSubmitting;
 
   return (
-    <Card className="border-border mx-auto w-full max-w-md border">
+    <Card className="border-border mx-auto w-full max-w-lg border">
       <CardHeader className="pb-4">
         <div className="flex items-center gap-3">
           <div className="rounded-lg bg-gradient-to-br from-blue-100 to-purple-100 p-2 dark:from-blue-900/30 dark:to-purple-900/30">
@@ -109,30 +113,64 @@ const ProgressForm = ({ refetch }: { refetch: () => Promise<unknown> }) => {
                 )}
               />
 
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="timeIn"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
+                        <Clock className="h-4 w-4 text-green-500" />
+                        Time In
+                      </FormLabel>
+                      <FormControl>
+                        <TimePicker
+                          date={field.value}
+                          setDate={field.onChange}
+                          placeholder="Select time in"
+                        />
+                      </FormControl>
+                      <FormMessage className="text-xs" />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="timeOut"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
+                        <Clock className="h-4 w-4 text-green-500" />
+                        Time Out
+                      </FormLabel>
+                      <FormControl>
+                        <TimePicker
+                          date={field.value}
+                          setDate={field.onChange}
+                          placeholder="Select time out"
+                        />
+                      </FormControl>
+                      <FormMessage className="text-xs" />
+                    </FormItem>
+                  )}
+                />
+              </div>
               <FormField
                 control={form.control}
-                name="hoursCompleted"
+                name="description"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
                       <Clock className="h-4 w-4 text-green-500" />
-                      Hours Completed
+                      Desciption of Activities
                     </FormLabel>
                     <FormControl>
-                      <div className="relative">
-                        <Input
-                          type="number"
-                          min="0"
-                          max="8"
-                          step="0.5"
-                          placeholder="Enter hours worked"
-                          className="h-11 border-gray-200 bg-white pr-12 transition-all duration-200 focus:border-green-500 focus:ring-green-500/20 dark:border-gray-700 dark:bg-gray-800/50"
-                          {...field}
-                        />
-                        <div className="text-muted-foreground absolute top-1/2 right-3 -translate-y-1/2 text-xs font-medium">
-                          hrs
-                        </div>
-                      </div>
+                      <Textarea
+                        {...field}
+                        className="h-30 max-h-30"
+                        placeholder="Describe what you worked on during this day."
+                      />
                     </FormControl>
                     <FormMessage className="text-xs" />
                   </FormItem>

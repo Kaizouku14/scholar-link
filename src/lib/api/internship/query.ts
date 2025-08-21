@@ -18,7 +18,6 @@ import {
 import {
   internship as InternshipTable,
   company as CompanyTable,
-  supervisor as SupervisorTable,
   progressLog as ProgressTable,
 } from "@/server/db/schema/internship";
 import { TRPCError } from "@trpc/server";
@@ -36,8 +35,8 @@ export const getAllInternships = async ({
         companyId: CompanyTable.companyId,
         companyName: max(CompanyTable.name),
         address: max(CompanyTable.address),
-        supervisor: max(SupervisorTable.name),
-        supervisorEmail: max(SupervisorTable.email),
+        supervisor: max(CompanyTable.contactPerson),
+        supervisorEmail: max(CompanyTable.email),
         studentCount: countDistinct(InternshipTable.userId),
         totalProgressHours: sum(ProgressTable.hours),
         department: UserTable.department,
@@ -62,10 +61,6 @@ export const getAllInternships = async ({
       .leftJoin(
         InternshipTable,
         eq(InternshipTable.companyId, CompanyTable.companyId),
-      )
-      .leftJoin(
-        SupervisorTable,
-        eq(InternshipTable.supervisorId, SupervisorTable.supervisorId),
       )
       .leftJoin(UserTable, eq(UserTable.id, InternshipTable.userId))
       .leftJoin(StudentTable, eq(UserTable.id, StudentTable.id))

@@ -2,7 +2,6 @@ import { countDistinct, db, eq } from "@/server/db";
 import { TRPCError } from "@trpc/server";
 import {
   company as CompanyTable,
-  supervisor as SupervisorTable,
   internship as InternshipTable,
 } from "@/server/db/schema/internship";
 
@@ -13,19 +12,15 @@ export const getAllCompany = async () => {
         companyId: CompanyTable.companyId,
         companyName: CompanyTable.name,
         address: CompanyTable.address,
-        contactPerson: SupervisorTable.name,
-        contactPersonEmail: SupervisorTable.email,
-        contactPersonNo: SupervisorTable.contactNo,
+        contactPerson: CompanyTable.contactPerson,
+        contactPersonEmail: CompanyTable.email,
+        contactPersonNo: CompanyTable.contactNo,
         internCount: countDistinct(InternshipTable.userId),
       })
       .from(CompanyTable)
       .leftJoin(
         InternshipTable,
         eq(CompanyTable.companyId, InternshipTable.companyId),
-      )
-      .leftJoin(
-        SupervisorTable,
-        eq(InternshipTable.supervisorId, SupervisorTable.supervisorId),
       )
       .where(eq(InternshipTable.status, "in-progress"))
       .groupBy(CompanyTable.companyId)

@@ -43,7 +43,7 @@ export const InternsDashboardStats = () => {
         icon={<Hourglass className="text-primary h-4 w-4" />}
       />
       <StatCard
-        title="Total Hours"
+        title="Hours Logged"
         value={statistic.totalHoursLog}
         subtitle={`Across ${statistic.noProgress} sessions Logged`}
         icon={<ChartColumn className="text-primary h-4 w-4" />}
