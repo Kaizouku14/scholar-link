@@ -11,16 +11,17 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CalendarIcon, Clock, Plus } from "lucide-react";
+import { CalendarIcon, Clock, FileText, Plus } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { api } from "@/trpc/react";
 import { toast } from "react-hot-toast";
 import TimePicker from "./time-picker";
 import { Textarea } from "@/components/ui/textarea";
+import SubmitButton from "@/components/forms/submit-button";
+import { validateAndCalculateHours } from "./validate-progress";
 
 const ProgressForm = ({ refetch }: { refetch: () => Promise<unknown> }) => {
   const form = useForm<ProgressFormSchema>({
@@ -36,31 +37,29 @@ const ProgressForm = ({ refetch }: { refetch: () => Promise<unknown> }) => {
   const { mutateAsync: logProgress } =
     api.internshipStudent.insertStudentProgress.useMutation();
   const onSubmit = async (data: ProgressFormSchema) => {
-    // await toast.promise(
-    //   logProgress({
-    //     logDate: data.date,
-    //     hours: data.hoursCompleted,
-    //   }),
-    //   {
-    //     loading: "Logging progress...",
-    //     success: () => {
-    //       form.reset();
-    //       void refetch();
-    //       return "Progress logged successfully";
-    //     },
-    //     error: (error: Error) => error.message,
-    //   },
-    //   {
-    //     duration: 5000,
-    //   },
-    // );
+    const toastId = toast.loading("Logging progress...");
+    try {
+      const hoursLogged = validateAndCalculateHours(data.timeIn, data.timeOut);
+
+      await logProgress({
+        logDate: data.date,
+        hours: hoursLogged,
+        description: data.description,
+      });
+
+      toast.success("Progress logged successfully.");
+      form.reset();
+      await refetch();
+    } catch (error) {
+      toast.error((error as Error).message);
+    } finally {
+      toast.dismiss(toastId);
+    }
   };
 
-  const isSubmitting = form.formState.isSubmitting;
-
   return (
-    <Card className="border-border mx-auto w-full max-w-lg border">
-      <CardHeader className="pb-4">
+    <Card className="mx-auto w-full max-w-lg shadow-none md:w-[480px]">
+      <CardHeader>
         <div className="flex items-center gap-3">
           <div className="rounded-lg bg-gradient-to-br from-blue-100 to-purple-100 p-2 dark:from-blue-900/30 dark:to-purple-900/30">
             <Plus className="text-primary h-5 w-5" />
@@ -162,14 +161,14 @@ const ProgressForm = ({ refetch }: { refetch: () => Promise<unknown> }) => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
-                      <Clock className="h-4 w-4 text-green-500" />
+                      <FileText className="h-4 w-4 text-green-500" />
                       Desciption of Activities
                     </FormLabel>
                     <FormControl>
                       <Textarea
                         {...field}
-                        className="h-30 max-h-30"
-                        placeholder="Describe what you worked on during this day."
+                        className="h-12 max-h-12"
+                        placeholder="Describe what you worked on during this day"
                       />
                     </FormControl>
                     <FormMessage className="text-xs" />
@@ -178,25 +177,13 @@ const ProgressForm = ({ refetch }: { refetch: () => Promise<unknown> }) => {
               />
             </div>
 
-            <div className="pt-2">
-              <Button
-                type="submit"
-                disabled={isSubmitting}
-                className="h-11 w-full cursor-pointer font-semibold text-white hover:shadow-xl disabled:opacity-50"
-              >
-                {isSubmitting ? (
-                  <div className="flex items-center gap-2">
-                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white"></div>
-                    <span>Saving...</span>
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-2">
-                    <Clock className="h-4 w-4" />
-                    <span>Log Progress</span>
-                  </div>
-                )}
-              </Button>
-            </div>
+            <SubmitButton
+              formState={form.formState}
+              className="flex h-11 w-full cursor-pointer items-center gap-2 font-semibold text-white hover:shadow-xl disabled:opacity-50"
+            >
+              <Clock className="h-4 w-4" />
+              <span>Log Progress</span>
+            </SubmitButton>
           </form>
         </Form>
       </CardContent>

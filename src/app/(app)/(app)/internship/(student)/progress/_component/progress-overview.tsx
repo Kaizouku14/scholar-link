@@ -9,30 +9,29 @@ import { useMemo } from "react";
 import { ProgressOverviewSkeleton } from "./progres-overview-skeleton";
 import { Separator } from "@/components/ui/separator";
 import ProgressLogs from "./progress-logs";
+import { authClient } from "@/lib/auth-client";
+import { departmentHoursMap } from "@/constants/internship/hours";
+import type { departmentType } from "@/constants/users/departments";
 
 const ProgressOverview = () => {
   const { data, refetch, isLoading } =
     api.internshipStudent.getStudentLogProgress.useQuery();
-  const progress = useMemo(() => {
-    if (!data || data.length === 0) return null;
+  const { data: session } = authClient.useSession();
 
-    const required = data[0]?.totalHoursRequired ?? 0;
-    const completed = data.reduce((sum, log) => sum + log.hoursLog, 0);
+  const progress = useMemo(() => {
+    const deparment = session?.user.department as departmentType;
+
+    const required = departmentHoursMap[deparment];
+    const completed = data?.reduce((sum, log) => sum + log.hoursLog, 0) ?? 0;
     const logs =
-      data
-        ?.map((log) => ({
-          hoursLog: log.hoursLog,
-          dateLogs: log.dateLogs,
-        }))
-        .sort((a, b) => {
-          return (
-            new Date(b.dateLogs).getTime() - new Date(a.dateLogs).getTime()
-          );
-        }) ?? [];
+      data?.map((log) => ({
+        hoursLog: log.hoursLog,
+        dateLogs: log.dateLogs,
+      })) ?? [];
     const percentage =
       required > 0 ? Number(((completed / required) * 100).toFixed(1)) : 0;
     const uniqueDays = new Set(
-      data.map((log) => new Date(log.dateLogs).toDateString()),
+      data?.map((log) => new Date(log.dateLogs).toDateString()),
     );
 
     const daysCompleted = uniqueDays.size;
@@ -48,15 +47,12 @@ const ProgressOverview = () => {
       remainingHours,
       estimatedRemainingDays,
     };
-  }, [data]);
+  }, [data, session]);
 
   return (
     <div className="mx-auto w-full">
-      <Card>
-        <CardContent className="md:flex md:space-x-6">
-          <div className="mb-6 block md:hidden">
-            <ProgressForm refetch={refetch} />
-          </div>
+      <Card className="shadow-none">
+        <CardContent className="flex space-x-6">
           <div className="flex flex-col max-md:justify-center max-md:gap-y-4">
             <div className="mb-4 flex flex-col md:mb-8 md:space-y-4">
               <div className="flex items-center justify-center gap-3 md:justify-start">
@@ -76,7 +72,7 @@ const ProgressOverview = () => {
             {isLoading ? (
               <ProgressOverviewSkeleton />
             ) : (
-              <>
+              <div className="space-y-4">
                 <div>
                   <div className="border-border rounded-2xl border bg-white p-6 dark:border-gray-700/50 dark:bg-gray-800/50">
                     <div className="mb-4 flex items-center justify-between">
@@ -109,11 +105,11 @@ const ProgressOverview = () => {
                 </div>
 
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:mt-8 lg:grid-cols-3">
-                  <Card className="group border-0 bg-gradient-to-br from-blue-50 to-blue-100/50 dark:from-blue-950/50 dark:to-blue-900/30">
+                  <Card className="group border-0 bg-gradient-to-br from-blue-50 to-blue-100/50 shadow-none dark:from-blue-950/50 dark:to-blue-900/30">
                     <CardContent>
-                      <div className="flex items-center gap-2.5">
+                      <div className="flex h-18 items-center justify-center gap-2.5">
                         <div className="rounded-xl bg-blue-500/10 p-3 transition-colors group-hover:bg-blue-500/20 dark:bg-blue-400/10">
-                          <Clock className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                          <Clock className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                         </div>
                         <div className="flex flex-col">
                           <span className="text-base font-bold text-blue-700 dark:text-blue-300">
@@ -127,11 +123,11 @@ const ProgressOverview = () => {
                     </CardContent>
                   </Card>
 
-                  <Card className="group border-0 bg-gradient-to-br from-green-50 to-green-100/50 dark:from-green-950/50 dark:to-green-900/30">
+                  <Card className="group border-0 bg-gradient-to-br from-green-50 to-green-100/50 shadow-none dark:from-green-950/50 dark:to-green-900/30">
                     <CardContent>
-                      <div className="flex items-center gap-2.5">
+                      <div className="flex h-18 items-center gap-2.5">
                         <div className="rounded-xl bg-green-500/10 p-3 transition-colors group-hover:bg-green-500/20 dark:bg-green-400/10">
-                          <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400" />
+                          <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400" />
                         </div>
                         <div className="flex flex-col">
                           <span className="text-base font-bold text-green-700 dark:text-green-300">
@@ -145,11 +141,11 @@ const ProgressOverview = () => {
                     </CardContent>
                   </Card>
 
-                  <Card className="group border-0 bg-gradient-to-br from-amber-50 to-amber-100/50 dark:from-amber-950/50 dark:to-amber-900/30">
+                  <Card className="group border-0 bg-gradient-to-br from-amber-50 to-amber-100/50 shadow-none dark:from-amber-950/50 dark:to-amber-900/30">
                     <CardContent>
-                      <div className="flex items-center gap-2.5">
+                      <div className="flex h-18 items-center gap-2.5">
                         <div className="rounded-xl bg-amber-500/10 p-3 transition-colors group-hover:bg-amber-500/20 dark:bg-amber-400/10">
-                          <CalendarDays className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+                          <CalendarDays className="h-5 w-5 text-amber-600 dark:text-amber-400" />
                         </div>
                         <div className="flex flex-col">
                           <span className="text-base font-bold text-amber-700 dark:text-amber-300">
@@ -163,7 +159,7 @@ const ProgressOverview = () => {
                     </CardContent>
                   </Card>
                 </div>
-              </>
+              </div>
             )}
           </div>
 

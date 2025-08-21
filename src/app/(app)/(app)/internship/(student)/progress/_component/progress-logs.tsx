@@ -30,7 +30,7 @@ export default function ProgressLogs({
               <div className="bg-primary/10 rounded-lg p-2">
                 <CalendarDays className="text-primary h-5 w-5" />
               </div>
-              Session History
+              Activity History
             </div>
           </div>
           <ScrollArea className="h-80 max-h-80">

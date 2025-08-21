@@ -1,7 +1,7 @@
 import type { departmentType } from "../users/departments";
 
 export const departmentHoursMap: Record<departmentType, number> = {
-  ITDS: 600,
+  ITDS: 486,
   BEED: 450,
-  GATE: 450,
+  GATE: 360,
 };

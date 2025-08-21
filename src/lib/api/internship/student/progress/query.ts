@@ -1,4 +1,4 @@
-import { db, eq } from "@/server/db";
+import { db, eq, desc } from "@/server/db";
 import {
   progressLog as ProgressLogTable,
   internship as InternshipTable,
@@ -7,9 +7,9 @@ import {
 export const getStudentLogProgress = async ({ userId }: { userId: string }) => {
   const response = await db
     .select({
-      totalHoursRequired: InternshipTable.totalOfHoursRequired,
       dateLogs: ProgressLogTable.logDate,
       hoursLog: ProgressLogTable.hours,
+      description: ProgressLogTable.description,
       startDate: InternshipTable.startDate,
       endDate: InternshipTable.endDate,
     })
@@ -19,6 +19,7 @@ export const getStudentLogProgress = async ({ userId }: { userId: string }) => {
       eq(ProgressLogTable.internshipId, InternshipTable.internshipId),
     )
     .where(eq(InternshipTable.userId, userId))
+    .orderBy(desc(ProgressLogTable.logDate))
     .execute();
 
   return response;

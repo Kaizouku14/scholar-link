@@ -26,7 +26,6 @@ export const progressLog = createTable("student_progress", {
   internshipId: text("internship_id")
     .notNull()
     .references(() => internship.internshipId, { onDelete: "cascade" }),
-  activityDescription: text("activity_description").notNull(),
   description: text("description").notNull(),
   logDate: integer("log_date", { mode: "timestamp" }).notNull(),
   hours: integer("hours").notNull().default(0),

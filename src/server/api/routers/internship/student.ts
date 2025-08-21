@@ -32,13 +32,13 @@ export const internshipStudentRouter = createTRPCRouter({
       z.object({
         logDate: z.date(),
         hours: z.number(),
+        description: z.string(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
       return await insertStudentProgress({
         userId: ctx.session!.user.id,
-        logDate: input.logDate,
-        hours: input.hours,
+        ...input,
       });
     }),
   /******************************************
