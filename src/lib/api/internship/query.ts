@@ -1,5 +1,7 @@
 import type { departmentType } from "@/constants/users/departments";
 import { ROLE, type roleType } from "@/constants/users/roles";
+import type { SectionType } from "@/constants/users/sections";
+import type { Interns } from "@/interfaces/internship/interns";
 import {
   db,
   eq,
@@ -24,70 +26,89 @@ import { TRPCError } from "@trpc/server";
 
 export const getAllInternships = async ({
   role,
-  department,
+  userId,
 }: {
   role: roleType;
-  department: departmentType;
+  userId: string;
 }) => {
   try {
-    const baseQuery = db
-      .select({
-        companyId: CompanyTable.companyId,
-        companyName: max(CompanyTable.name),
-        address: max(CompanyTable.address),
-        supervisor: max(CompanyTable.contactPerson),
-        supervisorEmail: max(CompanyTable.email),
-        studentCount: countDistinct(InternshipTable.userId),
-        totalProgressHours: sum(ProgressTable.hours),
-        department: UserTable.department,
-        interns: sql`
-          json_group_array(
-            DISTINCT json_object(
-              'name', ${UserTable.name},
-              'middleName', ${UserTable.middleName},
-              'surname', ${UserTable.surname},
-              'profile', ${UserTable.profile},
-              'email', ${UserTable.email},
-              'course', ${StudentTable.course},
-              'yearLevel', ${StudentTable.yearLevel},
-              'section', ${StudentTable.section},
-              'studentNo', ${StudentTable.studentNo},
-              'status', ${InternshipTable.status}
+    return await db.transaction(async (tx) => {
+      let coordinatorSections: SectionType[] = [];
+
+      // If coordinator → get their sections first
+      if (role === ROLE.INTERNSHIP_COORDINATOR) {
+        const [coordinator] = await tx
+          .select({ section: UserTable.section })
+          .from(UserTable)
+          .where(eq(UserTable.id, userId))
+          .limit(1);
+
+        coordinatorSections = coordinator?.section ?? [];
+      }
+
+      const baseQuery = tx
+        .select({
+          companyId: CompanyTable.companyId,
+          companyName: max(CompanyTable.name),
+          address: max(CompanyTable.address),
+          supervisor: max(CompanyTable.contactPerson),
+          supervisorEmail: max(CompanyTable.email),
+          studentCount: countDistinct(InternshipTable.userId),
+          totalProgressHours: sum(ProgressTable.hours),
+          department: UserTable.department,
+          interns: sql<string>`
+            json_group_array(
+              DISTINCT json_object(
+                'name', ${UserTable.name},
+                'middleName', ${UserTable.middleName},
+                'surname', ${UserTable.surname},
+                'profile', ${UserTable.profile},
+                'email', ${UserTable.email},
+                'section', ${UserTable.section},
+                'status', ${InternshipTable.status}
+              )
             )
-          )
-        `.as("interns"),
-      })
-      .from(CompanyTable)
-      .leftJoin(
-        InternshipTable,
-        eq(InternshipTable.companyId, CompanyTable.companyId),
-      )
-      .leftJoin(UserTable, eq(UserTable.id, InternshipTable.userId))
-      .leftJoin(StudentTable, eq(UserTable.id, StudentTable.id))
-      .leftJoin(
-        ProgressTable,
-        eq(ProgressTable.internshipId, InternshipTable.internshipId),
-      )
-      .groupBy(CompanyTable.companyId);
+          `.as("interns"),
+        })
+        .from(CompanyTable)
+        .innerJoin(
+          InternshipTable,
+          eq(InternshipTable.companyId, CompanyTable.companyId),
+        )
+        .leftJoin(UserTable, eq(UserTable.id, InternshipTable.userId))
+        .leftJoin(StudentTable, eq(UserTable.id, StudentTable.id))
+        .leftJoin(
+          ProgressTable,
+          eq(ProgressTable.internshipId, InternshipTable.internshipId),
+        )
+        .groupBy(CompanyTable.companyId);
 
-    let query;
-    if (role === ROLE.INTERNSHIP_COORDINATOR) {
-      query = baseQuery.where(
-        and(
-          isNotNull(InternshipTable.userId), // Only companies with interns
-          eq(UserTable.department, department),
-        ),
-      );
-    } else {
-      query = baseQuery.where(isNotNull(InternshipTable.userId));
-    }
+      // If coordinator has sections
+      let query;
+      if (
+        role === ROLE.INTERNSHIP_COORDINATOR &&
+        coordinatorSections.length > 0
+      ) {
+        query = baseQuery.where(
+          and(
+            isNotNull(InternshipTable.userId),
+            sql`EXISTS (
+                SELECT 1
+                FROM json_each(${UserTable.section})
+                WHERE value IN ${coordinatorSections}
+            )`,
+          ),
+        );
+      } else {
+        query = baseQuery;
+      }
 
-    const response = await query.execute();
-    return response.map((row) => ({
-      ...row,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      interns: row.interns ? JSON.parse(row.interns as string) : [],
-    }));
+      const response = await query.execute();
+      return response.map((row) => ({
+        ...row,
+        interns: row.interns ? (JSON.parse(row.interns) as Interns[]) : [],
+      }));
+    });
   } catch (error) {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
@@ -121,7 +142,7 @@ export const getAllUserAccount = async ({
         surname: UserTable.surname,
         studentNo: StudentTable.studentNo,
         course: StudentTable.course,
-        section: StudentTable.section,
+        section: UserTable.section,
         yearLevel: StudentTable.yearLevel,
       })
       .from(UserTable)

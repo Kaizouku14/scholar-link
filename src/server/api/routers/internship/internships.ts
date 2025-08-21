@@ -53,11 +53,11 @@ export const internshipRouter = createTRPCRouter({
       await createStudentInternship({ data });
     }),
   getAllInternships: protectedRoute.query(({ ctx }) => {
+    const userId = ctx.session!.user.id;
     const role = ctx.session!.user.role as roleType;
-    const department = ctx.session!.user.department as departmentType;
 
-    return cacheData(`${role}-${department}-internships`, async () => {
-      return await getAllInternships({ role, department });
+    return cacheData(`${role}-internships`, async () => {
+      return await getAllInternships({ role, userId });
     });
   }),
   getAllInternsDocuments: protectedRoute.query(({ ctx }) => {
