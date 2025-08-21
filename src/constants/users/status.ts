@@ -1,7 +1,7 @@
 export const STATUS = ["pending", "approved", "rejected"] as const;
 export const INTERNSHIP_STATUS = [
   "pending",
-  "in-progress",
+  "on-going",
   "completed",
   "canceled",
 ] as const;
@@ -27,8 +27,8 @@ export const INTERNSHIP_STATUS_LABELS = [
     label: "Pending",
   },
   {
-    value: "in-progress",
-    label: "In Progress",
+    value: "on-going",
+    label: "On going",
   },
   {
     value: "completed",

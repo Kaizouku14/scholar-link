@@ -82,7 +82,7 @@ export const ProgressMonitoringColumns: ColumnDef<ColumnSchema>[] = [
         >
           {status === "pending" ? (
             <Clock className={cn("h-4 w-4", color)} />
-          ) : status === "in-progress" ? (
+          ) : status === "on-going" ? (
             <Hourglass className={cn("h-4 w-4", color)} />
           ) : status === "completed" ? (
             <CheckCircle className={cn("h-4 w-4", color)} />

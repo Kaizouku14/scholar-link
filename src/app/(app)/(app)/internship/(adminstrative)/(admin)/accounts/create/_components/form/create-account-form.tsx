@@ -29,7 +29,7 @@ import { ROLE, ROLES } from "@/constants/users/roles";
 import { SECTIONS } from "@/constants/users/sections";
 import { YEAR_LEVEL } from "@/constants/users/year-level";
 import { useState } from "react";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, ChevronsUpDown } from "lucide-react";
 import {
   Popover,
   PopoverContent,
@@ -44,6 +44,7 @@ import { uploadFile } from "@/lib/uploadthing";
 import toast from "react-hot-toast";
 import { api } from "@/trpc/react";
 import SubmitButton from "@/components/forms/submit-button";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const CreateAccountForm = () => {
   const [profilePreview, setProfilePreview] = useState<string>("");
@@ -65,6 +66,7 @@ const CreateAccountForm = () => {
 
   const watchedRole = form.watch("role");
   const isStudent = watchedRole === ROLE.INTERNSHIP_STUDENT;
+  const isCoordinator = watchedRole === ROLE.INTERNSHIP_COORDINATOR;
 
   const handleProfilePictureChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -423,6 +425,69 @@ const CreateAccountForm = () => {
                     </FormItem>
                   )}
                 />
+
+                {isCoordinator && (
+                  <FormField
+                    control={form.control}
+                    name="section"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Assigned Section *</FormLabel>
+
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant="outline"
+                              role="combobox"
+                              className="w-full justify-between"
+                            >
+                              {field.value?.length > 0
+                                ? field.value.join(", ")
+                                : "Select sections"}
+                              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-[220px] space-y-2 p-2">
+                            <div className="text-muted-foreground text-xs">
+                              Select sections
+                            </div>
+                            {SECTIONS.map((section) => {
+                              const checked = field.value?.includes(section);
+                              return (
+                                <div
+                                  key={section}
+                                  className="hover:bg-muted flex cursor-pointer items-center space-x-2 rounded-md px-2 py-1"
+                                  onClick={() => {
+                                    if (checked) {
+                                      field.onChange(
+                                        field.value.filter(
+                                          (s: string) => s !== section,
+                                        ),
+                                      );
+                                    } else {
+                                      field.onChange([
+                                        ...(field.value || []),
+                                        section,
+                                      ]);
+                                    }
+                                  }}
+                                >
+                                  <Checkbox checked={checked} />
+                                  <span>Section: {section}</span>
+                                </div>
+                              );
+                            })}
+                          </PopoverContent>
+                        </Popover>
+
+                        <FormDescription>
+                          Assign the coordinator to one or more sections.
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )}
               </div>
             </section>
 
@@ -494,7 +559,7 @@ const CreateAccountForm = () => {
                         <FormLabel>Section *</FormLabel>
                         <Select
                           onValueChange={field.onChange}
-                          defaultValue={field.value}
+                          defaultValue={field.value[0]}
                         >
                           <FormControl>
                             <SelectTrigger className="w-full">

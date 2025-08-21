@@ -14,6 +14,9 @@ export const accountFormSchema = z
     email: z.string().email("Invalid email address"),
     profile: z.instanceof(File).optional(),
     contact: z.string().min(1, "Contact is required"),
+    section: z.array(z.enum(SECTIONS), {
+      required_error: "Section is required",
+    }),
     address: z.string().min(1, "Address is required"),
     dateOfBirth: z.date({ required_error: "Date of birth is required" }),
     gender: z.enum(GENDERS, { required_error: "Gender is required" }),
@@ -32,7 +35,6 @@ export const accountFormSchema = z
     ),
     studentNo: z.string().optional(),
     course: z.enum(COURSES).optional(),
-    section: z.enum(SECTIONS).optional(),
     yearLevel: z.enum(YEAR_LEVEL).optional(),
   })
   .refine(

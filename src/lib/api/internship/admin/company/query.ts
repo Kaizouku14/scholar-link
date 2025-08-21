@@ -22,7 +22,7 @@ export const getAllCompany = async () => {
         InternshipTable,
         eq(CompanyTable.companyId, InternshipTable.companyId),
       )
-      .where(eq(InternshipTable.status, "in-progress"))
+      //   .where(eq(InternshipTable.status, "on-going"))
       .groupBy(CompanyTable.companyId)
       .execute();
 

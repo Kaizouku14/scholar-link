@@ -37,11 +37,11 @@ export const getAllInternshipDeparments = async () => {
                 'middleName', ${UserTable.middleName},
                 'surname', ${UserTable.surname},
                 'profile', ${UserTable.profile},
+                'section', ${UserTable.section},
                 'role', ${UserTable.role},
                 'email', ${UserTable.email},
                 'course', ${StudentTable.course},
                 'yearLevel', ${StudentTable.yearLevel},
-                'section', ${StudentTable.section},
                 'studentNo', ${StudentTable.studentNo},
                 'status', ${InternshipTable.status}
                 )

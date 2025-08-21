@@ -7,6 +7,8 @@ import { CompaniesColumns } from "./column";
 
 const CompaniesTable = () => {
   const { data, isLoading } = api.internshipAdmin.getAllCompany.useQuery();
+
+  console.log(data);
   return (
     <div className="w-full">
       {!isLoading && data ? (

@@ -58,7 +58,7 @@ export const authRouter = createTRPCRouter({
         role: z.enum(ROLES),
         studentNo: z.string().optional(),
         course: z.enum(COURSES).optional(),
-        section: z.enum(SECTIONS).optional(),
+        section: z.array(z.enum(SECTIONS)),
         yearLevel: z.enum(YEAR_LEVEL).optional(),
       }),
     )

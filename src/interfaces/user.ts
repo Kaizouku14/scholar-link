@@ -9,6 +9,7 @@ export interface UserAccount {
   name: string;
   middleName: string;
   surname: string;
+  section?: SectionType[];
   email: string;
   profile?: string;
   profileKey?: string;
@@ -20,6 +21,5 @@ export interface UserAccount {
   role: roleType;
   studentNo?: string;
   course?: courseType;
-  section?: SectionType;
   yearLevel?: YearLevelType;
 }

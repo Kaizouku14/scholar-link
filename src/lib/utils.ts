@@ -100,8 +100,6 @@ export const getStatusVariant = (status: string) => {
   switch (status.toLowerCase()) {
     case "pending":
       return "outline";
-    case "approved":
-      return "default";
     case "rejected":
       return "destructive";
     default:
@@ -112,11 +110,14 @@ export const getStatusVariant = (status: string) => {
 export const getStatusColor = (status: string) => {
   switch (status.toLowerCase()) {
     case "pending":
+    case "on-going":
       return "bg-amber-50 text-amber-700 border-amber-200";
     case "approved":
-      return "bg-emerald-50 text-emerald-700 border-emerald-200";
+    case "completed":
+      return "bg-green-100 text-green-800 border-green-200";
     case "rejected":
-      return "bg-red-50 text-red-700 border-red-200";
+    case "canceled":
+      return "bg-primary text-white";
     default:
       return "bg-gray-50 text-gray-700 border-gray-200";
   }
@@ -125,11 +126,13 @@ export const getStatusColor = (status: string) => {
 export const getStatusIndicatorColor = (status: string) => {
   switch (status.toLowerCase()) {
     case "pending":
+    case "on-going":
       return "bg-amber-400";
     case "approved":
-      return "bg-emerald-400";
+    case "completed":
+      return "bg-green-100";
     case "rejected":
-      return "bg-red-400";
+      return "bg-primary";
     default:
       return "bg-gray-400";
   }

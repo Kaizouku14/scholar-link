@@ -76,6 +76,7 @@ export const createUserAccount = async ({ data }: { data: UserAccount }) => {
         surname: data.surname,
         middleName: data.middleName,
         email: data.email,
+        section: data.section,
         profile: data.profile,
         profileKey: data.profileKey,
         contact: data.contact,
@@ -94,7 +95,6 @@ export const createUserAccount = async ({ data }: { data: UserAccount }) => {
           id: generatedID,
           studentNo: data.studentNo!,
           course: data.course!,
-          section: data.section!,
           yearLevel: data.yearLevel!,
           onboarded: true,
         })

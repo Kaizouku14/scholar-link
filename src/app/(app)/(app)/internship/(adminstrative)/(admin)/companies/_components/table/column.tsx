@@ -40,6 +40,11 @@ export const CompaniesColumns: ColumnDef<CompanySchema>[] = [
   {
     accessorKey: "address",
     header: "Address",
+    cell: ({ row }) => (
+      <div className="max-w-[15rem] truncate" title={row.original.address!}>
+        {row.original.address}
+      </div>
+    ),
   },
   {
     accessorKey: "contactPerson",
