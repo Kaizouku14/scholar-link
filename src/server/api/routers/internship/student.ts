@@ -1,6 +1,9 @@
 import { createTRPCRouter, protectedRoute } from "../../trpc";
 import { getStudentLogProgress } from "@/lib/api/internship/student/progress/query";
-import { insertStudentProgress } from "@/lib/api/internship/student/progress/mutation";
+import {
+  insertStudentProgress,
+  updateStudentLogProgress,
+} from "@/lib/api/internship/student/progress/mutation";
 import { insertDocument } from "@/lib/api/internship/student/documents/mutation";
 import { DOCUMENTS } from "@/constants/internship/documents";
 import { getAllUploadedDocuments } from "@/lib/api/internship/student/documents/query";
@@ -40,6 +43,17 @@ export const internshipStudentRouter = createTRPCRouter({
         userId: ctx.session!.user.id,
         ...input,
       });
+    }),
+  updateStudentLogProgress: protectedRoute
+    .input(
+      z.object({
+        id: z.string(),
+        hoursLog: z.number(),
+        description: z.string(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      return await updateStudentLogProgress({ ...input });
     }),
   /******************************************
    *           Student API Query             *

@@ -110,3 +110,29 @@ export const insertStudentProgress = async ({
     }
   });
 };
+
+export const updateStudentLogProgress = async ({
+  id,
+  hoursLog,
+  description,
+}: {
+  id: string;
+  hoursLog: number;
+  description: string;
+}) => {
+  try {
+    await db
+      .update(ProgressLogTable)
+      .set({
+        hours: hoursLog,
+        description,
+      })
+      .where(eq(ProgressLogTable.progressId, id))
+      .execute();
+  } catch (error) {
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "Failed to update progress log," + (error as Error).message,
+    });
+  }
+};

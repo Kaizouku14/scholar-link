@@ -25,6 +25,7 @@ const ProgressOverview = () => {
     const completed = data?.reduce((sum, log) => sum + log.hoursLog, 0) ?? 0;
     const logs =
       data?.map((log) => ({
+        id: log.progressId,
         hoursLog: log.hoursLog,
         dateLogs: log.dateLogs,
         description: log.description,
@@ -177,7 +178,7 @@ const ProgressOverview = () => {
         </CardContent>
         <CardFooter className="flex w-full flex-col space-y-4">
           <Separator />
-          <ProgressLogs logs={progress?.logs} />
+          <ProgressLogs logs={progress?.logs} refetch={refetch} />
         </CardFooter>
       </Card>
     </div>
