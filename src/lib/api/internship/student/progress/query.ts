@@ -15,15 +15,15 @@ export const getStudentLogProgress = async ({ userId }: { userId: string }) => {
 
       companyName: CompanyTable.name,
       companyAddress: CompanyTable.address,
-      startDate: InternshipTable.startDate,
-      endDate: InternshipTable.endDate,
+      //   startDate: InternshipTable.startDate,
+      //   endDate: InternshipTable.endDate,
     })
     .from(ProgressLogTable)
     .innerJoin(
       InternshipTable,
       eq(ProgressLogTable.internshipId, InternshipTable.internshipId),
     )
-    .leftJoin(
+    .innerJoin(
       CompanyTable,
       eq(CompanyTable.companyId, InternshipTable.companyId),
     )

@@ -2,7 +2,7 @@ import type { documentsType } from "@/constants/internship/documents";
 import { generateUUID } from "@/lib/utils";
 import { db, eq, and } from "@/server/db";
 import { internDocuments as internDocumentsTable } from "@/server/db/schema/internship";
-import { deleteFileIfExists } from "@/lib/uploadthing";
+import { deleteFileIfExists } from "@/server/api/uploadthing";
 import { TRPCError } from "@trpc/server";
 
 export const insertDocument = async ({

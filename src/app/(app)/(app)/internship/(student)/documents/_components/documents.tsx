@@ -41,6 +41,9 @@ const Documents = () => {
       approved: transformedDocuments.filter(
         (doc) => doc.status && doc.status.toLowerCase() === "approved",
       ),
+      rejected: transformedDocuments.filter(
+        (doc) => doc.status && doc.status.toLowerCase() === "rejected",
+      ),
     };
   }, [transformedDocuments]);
 
@@ -62,6 +65,9 @@ const Documents = () => {
           </TabsTrigger>
           <TabsTrigger value="approved" className="rounded">
             Approved ({filteredDocuments.approved.length})
+          </TabsTrigger>
+          <TabsTrigger value="rejected" className="rounded">
+            Rejected ({filteredDocuments.rejected.length})
           </TabsTrigger>
         </TabsList>
         <Button
@@ -136,6 +142,26 @@ const Documents = () => {
               <ScrollArea className="h-74">
                 <div className="grid grid-cols-3 gap-2">
                   {filteredDocuments.pending.map((doc) => (
+                    <DocumentList key={doc.documentId} documents={doc} />
+                  ))}
+                </div>
+              </ScrollArea>
+            )}
+          </TabsContent>
+
+          <TabsContent
+            value="rejected"
+            className="border-border rounded-xl border p-4"
+          >
+            <h3 className="mb-4 text-lg font-semibold">Rejected Documents</h3>
+            {filteredDocuments.rejected.length === 0 ? (
+              <div className="flex h-74 items-center justify-center">
+                <p className="text-muted-foreground">No Rejected documents.</p>
+              </div>
+            ) : (
+              <ScrollArea className="h-74">
+                <div className="grid grid-cols-3 gap-2">
+                  {filteredDocuments.rejected.map((doc) => (
                     <DocumentList key={doc.documentId} documents={doc} />
                   ))}
                 </div>
