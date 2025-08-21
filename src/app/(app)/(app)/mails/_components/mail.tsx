@@ -188,6 +188,7 @@ const Mail = () => {
       <div className="hidden flex-1 flex-col md:flex">
         <EmailDetail
           thread={selectedThread}
+          setSelectedThread={setSelectedThread}
           currentUserId={currentUserId}
           isfetching={FetchingMails || isRefreshing}
           refresh={handleRefresh}
@@ -200,6 +201,7 @@ const Mail = () => {
         <div className="bg-background fixed inset-0 z-50 flex flex-col md:hidden">
           <EmailDetail
             thread={selectedThread}
+            setSelectedThread={setSelectedThread}
             showBackButton
             onBack={() => setSelectedThread(undefined)}
             currentUserId={currentUserId}

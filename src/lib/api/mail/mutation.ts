@@ -80,11 +80,11 @@ export const markAllAsRead = async () => {
   }
 };
 
-export const deleteMail = async ({ id }: { id: string }) => {
+export const deleteMail = async ({ ids }: { ids: string[] }) => {
   try {
     const response = await db
       .delete(mailTable)
-      .where(eq(mailTable.id, id))
+      .where(inArray(mailTable.id, ids))
       .execute();
 
     if (!response) {

@@ -19,19 +19,22 @@ import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import EmptyState from "./helper/no-selected";
+import { DeleteMail } from "./helper/delete-dialog";
 
 interface EmailDetailProps {
   thread?: Email[];
+  setSelectedThread: (thread: Email[]) => void;
   currentUserId?: string;
   isfetching?: boolean;
   refresh: () => void;
   showBackButton?: boolean;
   onBack?: () => void;
-  refetch?: () => Promise<unknown>;
+  refetch: () => Promise<unknown>;
 }
 
 const EmailDetail = ({
   thread,
+  setSelectedThread,
   currentUserId,
   isfetching,
   showBackButton = false,
@@ -39,7 +42,7 @@ const EmailDetail = ({
   refetch,
 }: EmailDetailProps) => {
   const [showReplyForm, setShowReplyForm] = useState(false);
-
+  const ids = thread?.map((email) => email.id);
   const handleReplyClick = () => setShowReplyForm(true);
   const handleReplyClose = () => setShowReplyForm(false);
 
@@ -74,32 +77,46 @@ const EmailDetail = ({
                 </Button>
               )}
               <div className="min-w-0 flex-1">
-                <div className="flex items-center space-x-2">
-                  <h1 className="flex space-x-1 truncate text-lg">
-                    <span className="text-foreground font-semibold">
-                      Subject :
-                    </span>
-                    <span className="font-medium">{thread[0]?.subject}</span>
-                  </h1>
-                </div>
-                <div className="text-muted-foreground mt-1 flex items-center space-x-4 text-sm">
-                  <div className="flex items-center space-x-1">
-                    <Mail className="h-3 w-3" />
-                    <span>
-                      {thread.length} message{thread.length > 1 ? "s" : ""}
-                    </span>
-                  </div>
-                  {lastMessage?.createdAt && (
-                    <div className="flex items-center space-x-1">
-                      <Clock className="h-3 w-3" />
-                      <span>
-                        Last reply{" "}
-                        {formatDistanceToNow(new Date(lastMessage.createdAt), {
-                          addSuffix: true,
-                        })}
-                      </span>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="flex items-center space-x-2">
+                      <h1 className="space -x-1 flex truncate text-lg">
+                        <span className="text-foreground font-semibold">
+                          Subject :
+                        </span>
+                        <span className="font-medium">
+                          {thread[0]?.subject}
+                        </span>
+                      </h1>
                     </div>
-                  )}
+                    <div className="text-muted-foreground mt-1 flex items-center space-x-4 text-sm">
+                      <div className="flex items-center space-x-1">
+                        <Mail className="h-3 w-3" />
+                        <span>
+                          {thread.length} message{thread.length > 1 ? "s" : ""}
+                        </span>
+                      </div>
+                      {lastMessage?.createdAt && (
+                        <div className="flex items-center space-x-1">
+                          <Clock className="h-3 w-3" />
+                          <span>
+                            Last reply{" "}
+                            {formatDistanceToNow(
+                              new Date(lastMessage.createdAt),
+                              {
+                                addSuffix: true,
+                              },
+                            )}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <DeleteMail
+                    ids={ids}
+                    refetch={refetch}
+                    setSelectedThread={setSelectedThread}
+                  />
                 </div>
               </div>
             </div>

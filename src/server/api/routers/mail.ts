@@ -41,9 +41,9 @@ export const mailRouter = createTRPCRouter({
     return await markAllAsRead();
   }),
   deleteMail: protectedRoute
-    .input(z.object({ id: z.string() }))
+    .input(z.object({ ids: z.array(z.string()) }))
     .mutation(async ({ input }) => {
-      return deleteMail({ id: input.id });
+      return deleteMail(input);
     }),
   sendMailTo: protectedRoute
     .input(
