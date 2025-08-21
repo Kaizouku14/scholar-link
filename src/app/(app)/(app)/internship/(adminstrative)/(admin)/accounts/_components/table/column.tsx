@@ -1,7 +1,6 @@
 "use client";
 
 import type { ColumnDef } from "@tanstack/react-table";
-import { IdCard } from "lucide-react";
 import type { AccountSchema } from "./column-schema";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -11,46 +10,63 @@ import {
   type YearLevelType,
 } from "@/constants/users/year-level";
 import { DataTableRowActions } from "./table-row-actions";
+import { ROLE } from "@/constants/users/roles";
 
 export const AccountColumns: ColumnDef<AccountSchema>[] = [
-  {
-    accessorKey: "studentNo",
-    header: "Student No.",
-    cell: ({ row }) => (
-      <div className="flex items-center gap-2">
-        <IdCard className="text-muted-foreground" />
-        {row.original.studentNo}
-      </div>
-    ),
-  },
   {
     accessorKey: "surname",
     header: "Student",
     cell: ({ row }) => {
-      const { name, middleName, surname, course, section, yearLevel, profile } =
-        row.original;
+      const {
+        name,
+        middleName,
+        surname,
+        course,
+        section,
+        yearLevel,
+        profile,
+        role,
+      } = row.original;
+      const isStudent = role == ROLE.INTERNSHIP_STUDENT;
 
       return (
-        <div className="flex items-center gap-x-1.5">
-          <Avatar className="h-10 w-10">
-            <AvatarImage src={profile ?? undefined} />
-            <AvatarFallback className="text-sm">
-              {name?.charAt(0)?.toUpperCase()}
-            </AvatarFallback>
-          </Avatar>
+        <>
+          {isStudent ? (
+            <div className="flex items-center gap-x-1.5">
+              <Avatar className="h-10 w-10">
+                <AvatarImage src={profile ?? undefined} />
+                <AvatarFallback className="text-sm">
+                  {name?.charAt(0)?.toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
 
-          <div className="flex flex-col">
-            <div className="text-foreground text-sm leading-tight font-medium">
-              {surname}, {name} {middleName?.charAt(0).toUpperCase()}.
-            </div>
+              <div className="flex flex-col">
+                <div className="text-foreground text-sm leading-tight font-medium">
+                  {surname}, {name} {middleName?.charAt(0).toUpperCase()}.
+                </div>
 
-            <div className="text-muted-foreground text-xs">
-              {COURSE_LABELS[course as courseType]} ·{" "}
-              {YEAR_LEVEL_LABELS[yearLevel as YearLevelType]}
-              {section}
+                <div className="text-muted-foreground text-xs">
+                  {COURSE_LABELS[course as courseType]} ·{" "}
+                  {YEAR_LEVEL_LABELS[yearLevel as YearLevelType]}
+                  {section?.[0]}
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+          ) : (
+            <div className="flex items-center gap-x-1.5">
+              <Avatar className="h-10 w-10">
+                <AvatarImage src={profile ?? undefined} />
+                <AvatarFallback className="text-sm">
+                  {name?.charAt(0)?.toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+
+              <div className="text-foreground text-sm leading-tight font-medium">
+                {surname}, {name} {middleName?.charAt(0).toUpperCase()}.
+              </div>
+            </div>
+          )}
+        </>
       );
     },
   },

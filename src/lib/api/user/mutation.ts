@@ -84,6 +84,7 @@ export const insertStudentProfile = async ({
           profile: data.profile,
           profileKey: data.profileKey,
           gender: data.gender,
+          section: [data.section],
           dateOfBirth: data.dateOfBirth,
           contact: data.contact,
           address: data.address,
@@ -101,7 +102,6 @@ export const insertStudentProfile = async ({
       const [updatedStudent] = await tx
         .update(studentTable)
         .set({
-          section: data.section,
           yearLevel: data.yearLevel,
           onboarded: true,
         })

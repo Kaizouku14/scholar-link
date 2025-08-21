@@ -42,12 +42,6 @@ export const NAVIGATION_DATA: NavigationData = {
             description: "Manage all internships",
           },
           {
-            title: "Documents",
-            url: PageRoutes.INTERNSHIP_INTERNS_DOCUMENTS,
-            icon: FileUser,
-            description: "View interns documents",
-          },
-          {
             title: "HTE",
             url: PageRoutes.INTERNSHIPS_COMPANIES,
             icon: Building2,

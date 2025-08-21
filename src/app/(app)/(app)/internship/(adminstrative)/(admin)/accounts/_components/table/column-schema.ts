@@ -1,3 +1,4 @@
+import { SECTIONS } from "@/constants/users/sections";
 import z from "zod";
 
 export const accountSchema = z.object({
@@ -6,11 +7,10 @@ export const accountSchema = z.object({
   surname: z.string().nullish(),
   email: z.string().email().nullish(),
   role: z.string().nullish(),
-  section: z.string().nullish(),
+  section: z.array(z.enum(SECTIONS)).nullish(),
   course: z.string().nullish(),
   yearLevel: z.string().nullish(),
   profile: z.string().nullish(),
-  studentNo: z.string().nullish(),
   status: z.string().nullish(),
 });
 

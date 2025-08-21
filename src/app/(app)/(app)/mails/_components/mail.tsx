@@ -184,7 +184,6 @@ const Mail = () => {
         </ScrollArea>
       </div>
 
-      {/* Desktop: Email Detail */}
       <div className="hidden flex-1 flex-col md:flex">
         <EmailDetail
           thread={selectedThread}

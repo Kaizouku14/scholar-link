@@ -16,10 +16,9 @@ export const gellAllInternshipAccounts = async () => {
         profile: UserTable.profile,
         email: UserTable.email,
         role: UserTable.role,
-        section: StudentTable.section,
+        section: UserTable.section,
         course: StudentTable.course,
         yearLevel: StudentTable.yearLevel,
-        studentNo: StudentTable.studentNo,
         status: sql<string>`CASE WHEN EXISTS (
         SELECT 1 FROM sl_authorized_email ae WHERE ae.email = ${UserTable.email}
         ) THEN 'verified' ELSE 'revoked' END`,

@@ -4,7 +4,7 @@ import { sql } from "drizzle-orm";
 import { ROLES } from "@/constants/users/roles";
 import { COURSES } from "@/constants/users/courses";
 import { DEPARTMENTS } from "@/constants/users/departments";
-import { SECTIONS } from "@/constants/users/sections";
+import { type SectionType } from "@/constants/users/sections";
 import { YEAR_LEVEL } from "@/constants/users/year-level";
 import { GENDERS } from "@/constants/users/genders";
 
@@ -21,6 +21,9 @@ export const user = createTable("user", {
   dateOfBirth: integer("date_of_birth", { mode: "timestamp" }),
   gender: text("gender", { enum: GENDERS }),
   department: text("department", { enum: DEPARTMENTS }),
+  section: text("section", { mode: "json" })
+    .$type<SectionType[]>()
+    .default(sql`(json_array())`),
   role: text("role", { enum: ROLES }),
   emailVerified: integer("email_verified", { mode: "boolean" }),
   createdAt: integer("created_at", { mode: "timestamp" }).default(
@@ -38,7 +41,6 @@ export const student = createTable("student", {
     .references(() => user.id, { onDelete: "cascade" }),
   studentNo: text("student_no").unique().notNull(),
   course: text("course", { enum: COURSES }),
-  section: text("section", { enum: SECTIONS }),
   yearLevel: text("year_level", { enum: YEAR_LEVEL }),
   onboarded: integer("onboarded", { mode: "boolean" }).default(false),
 });
