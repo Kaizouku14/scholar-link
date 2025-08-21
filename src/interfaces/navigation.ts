@@ -25,9 +25,3 @@ export interface RoleNavigation {
 }
 
 export type NavigationData = Record<roleType, RoleNavigation>;
-
-export interface NotificationCounts {
-  messages?: number;
-  //   applications?: number;
-  //   documents?: number;
-}

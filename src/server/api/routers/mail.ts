@@ -8,11 +8,7 @@ import {
 } from "@/lib/api/mail/mutation";
 import { TRPCError } from "@trpc/server";
 import { generateUUID } from "@/lib/utils";
-import {
-  getAllMails,
-  getAllUnReadMails,
-  getAllUserEmail,
-} from "@/lib/api/mail/query";
+import { getAllMails, getAllUserEmail } from "@/lib/api/mail/query";
 import { cacheData } from "@/lib/redis";
 
 export const mailRouter = createTRPCRouter({
@@ -34,20 +30,6 @@ export const mailRouter = createTRPCRouter({
     return cacheData(
       `mails-${id}`,
       async () => await getAllMails({ userId: id }),
-    );
-  }),
-  getUnReadCount: protectedRoute.query(({ ctx }) => {
-    if (!ctx.session) {
-      throw new TRPCError({
-        code: "UNAUTHORIZED",
-        message: "User is not authenticated",
-      });
-    }
-
-    const { id } = ctx.session.user;
-    return cacheData(
-      `unread-${id}`,
-      async () => await getAllUnReadMails({ userId: id }),
     );
   }),
   markMailAsRead: protectedRoute

@@ -3,7 +3,7 @@
 import { StatCard } from "@/components/cards/status-card";
 import { api } from "@/trpc/react";
 import { format } from "date-fns";
-import { CalendarDays, ChartColumn, Clock, Hourglass } from "lucide-react";
+import { CalendarDays, ChartColumn, Hourglass } from "lucide-react";
 import { useMemo } from "react";
 
 export const InternsDashboardStats = () => {
@@ -15,10 +15,6 @@ export const InternsDashboardStats = () => {
     const totalHoursRequired = progress?.[0]?.totalHoursRequired ?? 0;
     const totalHoursLog =
       progress?.reduce((acc, curr) => acc + curr.hoursLog, 0) ?? 0;
-    const averageHours = progress?.length
-      ? (totalHoursLog / progress.length).toFixed(1)
-      : 0;
-
     const latestDate = progress?.length
       ? new Date(
           Math.max(...progress.map((log) => new Date(log.dateLogs).getTime())),
@@ -33,14 +29,13 @@ export const InternsDashboardStats = () => {
       totalHoursRequired,
       noProgress,
       totalHoursLog,
-      averageHours,
       latestDate,
       latestHoursLog,
     };
   }, [progress]);
 
   return (
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
       <StatCard
         title="Total Hours Required"
         value={statistic.totalHoursRequired}
@@ -52,12 +47,6 @@ export const InternsDashboardStats = () => {
         value={statistic.totalHoursLog}
         subtitle={`Across ${statistic.noProgress} sessions Logged`}
         icon={<ChartColumn className="text-primary h-4 w-4" />}
-      />
-      <StatCard
-        title="Average Hours"
-        value={statistic.averageHours}
-        subtitle="Per session"
-        icon={<Clock className="text-primary h-4 w-4" />}
       />
       <StatCard
         title="Latest Session"
