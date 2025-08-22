@@ -1,24 +1,31 @@
 "use client";
 
 import type { ColumnDef } from "@tanstack/react-table";
-import { type ColumnSchema } from "./column-schema";
+import { type DocumentSchema } from "./column-schema";
 import { DOCUMENT_LABELS } from "@/constants/internship/documents";
-import { CheckCircle, Clock, FileText, XCircle } from "lucide-react";
+import { FileText } from "lucide-react";
 import { COURSE_LABELS } from "@/constants/users/courses";
 import { YEAR_LEVEL_LABELS } from "@/constants/users/year-level";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { format } from "date-fns";
-import { cn, getStatusColor, getStatusVariant } from "@/lib/utils";
+import {
+  cn,
+  getStatusColor,
+  getStatusIcon,
+  getStatusVariant,
+} from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DataTableRowActions } from "./table-row-actions";
+import React from "react";
 
-export const DocumentReviewColumns: ColumnDef<ColumnSchema>[] = [
+export const DocumentReviewColumns: ColumnDef<DocumentSchema>[] = [
   {
     accessorKey: "documentType",
     header: "Document",
     cell: ({ row }) => (
       <Button
+        title={row.original.documentType}
         className="m-0 h-fit w-full cursor-pointer border-none p-0 shadow-none"
         variant={"outline"}
         onClick={() => {
@@ -34,7 +41,7 @@ export const DocumentReviewColumns: ColumnDef<ColumnSchema>[] = [
             <FileText className="h-5 w-5" />
           </div>
           <div className="flex flex-col justify-center">
-            <span className="text-foreground truncate text-sm font-semibold">
+            <span className="text-foreground max-w-40 truncate text-sm font-semibold">
               {DOCUMENT_LABELS[row.original.documentType]}
             </span>
             <span className="text-muted-foreground text-start text-xs">
@@ -49,7 +56,7 @@ export const DocumentReviewColumns: ColumnDef<ColumnSchema>[] = [
     accessorKey: "surname",
     header: "Student",
     cell: ({ row }) => {
-      const { name, surname, course, section, yearLevel, profile } =
+      const { name, middleName, surname, course, section, yearLevel, profile } =
         row.original;
 
       return (
@@ -63,12 +70,12 @@ export const DocumentReviewColumns: ColumnDef<ColumnSchema>[] = [
 
           <div className="flex flex-col">
             <div className="text-foreground text-sm leading-tight font-medium">
-              {name} {surname}
+              {surname}, {name} {middleName?.charAt(0).toUpperCase()}.
             </div>
 
             <div className="text-muted-foreground text-xs">
               {COURSE_LABELS[course!]} · {YEAR_LEVEL_LABELS[yearLevel!]}
-              {section}
+              {section?.[0]}
             </div>
           </div>
         </div>
@@ -79,7 +86,7 @@ export const DocumentReviewColumns: ColumnDef<ColumnSchema>[] = [
     accessorKey: "companyName",
     header: "Company",
     cell: ({ row }) => (
-      <div className="w-20 truncate text-base" title={row.original.companyName}>
+      <div className="w-40 truncate text-base" title={row.original.companyName}>
         {row.original.companyName}
       </div>
     ),
@@ -98,8 +105,8 @@ export const DocumentReviewColumns: ColumnDef<ColumnSchema>[] = [
     header: "Status",
     cell: ({ row }) => {
       const { reviewStatus } = row.original;
-      const color = getStatusColor(reviewStatus ?? "");
-      const variant = getStatusVariant(reviewStatus ?? "");
+      const color = getStatusColor(reviewStatus ?? "default");
+      const variant = getStatusVariant(reviewStatus ?? "default");
 
       return (
         <Badge
@@ -109,13 +116,9 @@ export const DocumentReviewColumns: ColumnDef<ColumnSchema>[] = [
             color,
           )}
         >
-          {reviewStatus === "pending" ? (
-            <Clock className={cn("h-4 w-4", color)} />
-          ) : reviewStatus === "approved" ? (
-            <CheckCircle className={cn("h-4 w-4", color)} />
-          ) : (
-            <XCircle className={cn("h-4 w-4", color)} />
-          )}
+          {React.createElement(getStatusIcon(reviewStatus ?? "default"), {
+            className: cn(color),
+          })}
           {reviewStatus}
         </Badge>
       );
@@ -124,8 +127,8 @@ export const DocumentReviewColumns: ColumnDef<ColumnSchema>[] = [
   {
     id: "actions",
     header: "Actions",
-    cell: ({ row, table }) => {
-      return <DataTableRowActions row={row} table={table} />;
+    cell: ({ row }) => {
+      return <DataTableRowActions row={row} />;
     },
   },
 ];

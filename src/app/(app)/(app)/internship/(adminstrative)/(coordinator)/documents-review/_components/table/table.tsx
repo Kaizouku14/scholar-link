@@ -15,7 +15,7 @@ const ReviewDocumentsTable = () => {
     api.internshipCoordinator.getAllDocumentBySections.useQuery();
 
   return (
-    <div className="mx-auto mt-4 w-full">
+    <div className="mx-auto w-full">
       {!isLoading && data ? (
         <div className="flex flex-col space-y-6">
           <div className="flex gap-2">

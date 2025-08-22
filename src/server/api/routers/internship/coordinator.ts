@@ -8,7 +8,10 @@ import { getCompanyRecords } from "@/lib/api/internship/query";
 import { cacheData } from "@/lib/redis";
 import z from "zod";
 import { getAllUserAccount } from "@/lib/api/internship/coordinator/hei/query";
-import { postDocument } from "@/lib/api/internship/coordinator/document-review/mutation";
+import {
+  postDocument,
+  rejectDocument,
+} from "@/lib/api/internship/coordinator/document-review/mutation";
 
 export const internshipCoordinatorRouter = createTRPCRouter({
   /******************************************
@@ -23,6 +26,20 @@ export const internshipCoordinatorRouter = createTRPCRouter({
     )
     .mutation(async ({ input }) => {
       await postDocument(input);
+    }),
+  rejectInternDocument: protectedRoute
+    .input(
+      z.object({
+        documentId: z.string(),
+        userId: z.string(),
+        receiverId: z.string(),
+        subject: z.string(),
+        reason: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const id = ctx.session!.user.id;
+      await rejectDocument({ ...input, userId: id });
     }),
   /******************************************
    *          Coordinator API Query         *

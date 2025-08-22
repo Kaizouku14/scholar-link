@@ -1,27 +1,18 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import type { Row, Table } from "@tanstack/react-table";
-import { CheckCircle, CircleX, MoreHorizontal, Trash2 } from "lucide-react";
+import type { Row } from "@tanstack/react-table";
+import { CheckCircle } from "lucide-react";
+import { RejectDocumentDialog } from "../dialog/reject-dialog";
+import type { DocumentSchema } from "./column-schema";
 
-interface DataTableRowActionsProps<TData> {
-  row: Row<TData>;
-  table: Table<TData>;
+interface DataTableRowActionsProps {
+  row: Row<DocumentSchema>;
 }
 
-export function DataTableRowActions<TData>({
-  row,
-  table,
-}: DataTableRowActionsProps<TData>) {
-  console.log(row);
-  console.log(table);
+export function DataTableRowActions({ row }: DataTableRowActionsProps) {
+  const { id, studentId, documentType } = row.original;
+
   return (
     <div className="flex gap-2">
       <Button
@@ -31,28 +22,11 @@ export function DataTableRowActions<TData>({
         <CheckCircle />
         Approved
       </Button>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button
-            variant="ghost"
-            className="data-[state=open]:bg-muted flex h-8 w-8 p-0"
-          >
-            <MoreHorizontal />
-            <span className="sr-only">Open menu</span>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-[160px]">
-          <DropdownMenuItem className="flex justify-between">
-            <span>Rejected</span>
-            <CircleX />
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem className="flex justify-between">
-            <span>Delete</span>
-            <Trash2 />
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <RejectDocumentDialog
+        documentId={id}
+        receiverId={studentId}
+        documentType={documentType}
+      />
     </div>
   );
 }
