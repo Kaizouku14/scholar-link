@@ -52,7 +52,7 @@ export enum PageRoutes {
   INTERNSHIPS = "/internship",
 
   // Admin only
-  INTERNSHIPS_COMPANIES = `${INTERNSHIPS}/companies`,
+  INTERNSHIPS_COMPANIES = `${INTERNSHIPS}/host-training-establishment`,
   INTERNSHIPS_COMPANIES_CREATE = `${INTERNSHIPS_COMPANIES}/create`,
   INTERNSHIPS_DEPARTMENTS = `${INTERNSHIPS}/departments`,
   INTERNSHIPS_REPORTS = `${INTERNSHIPS}/reports`,
@@ -69,6 +69,6 @@ export enum PageRoutes {
   INTERNSHIP_INTERNS_DOCUMENTS = `${INTERNSHIPS}/documents-list`,
 
   //Admin & Coordinator
-  INTERNSHIP_MANAGE_INTERNSHIPS = `${INTERNSHIPS}/internship`,
+  INTERNSHIP_MANAGE_INTERNSHIPS = `${INTERNSHIPS}/higher-education-institution`,
   INTERNSHIP_INTERNS_CREATE = `${INTERNSHIP_MANAGE_INTERNSHIPS}/create`,
 }
