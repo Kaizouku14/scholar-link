@@ -8,40 +8,24 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { Separator } from "../ui/separator";
+import { Separator } from "@/components/ui/separator";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { ROUTE_LABELS } from "@/constants/page-routes";
 
-interface PageHeaderLayoutProps {
-  subPage?: string;
-  currentPage: string;
-}
-
-const PageBreadCrumb: React.FC<PageHeaderLayoutProps> = ({
-  currentPage,
-  subPage,
-}) => {
+export const PageBreadCrumb = () => {
   const pathname = usePathname();
-  const activeStyle = "font-medium text-primary";
-  const inactiveStyle = "text-muted-foreground";
 
-  /**
-   * Returns the parent path of a given path string.
-   *
-   * This function takes a path string, splits it into segments,
-   * and returns the parent path by joining all segments except the last one.
-   * If the path has only one segment or is empty, it returns "/".
-   *
-   * @param path - The path string to process.
-   * @returns The parent path string.
-   */
-  const getParentPath = (path: string): string => {
-    const segments = path.split("/").filter(Boolean);
-    if (segments.length <= 1) return "/";
-    return "/" + segments.slice(0, -1).join("/");
-  };
+  // break into segments → [internship, accounts, create]
+  const parts = pathname.split("/").filter(Boolean);
 
-  const parentPath = getParentPath(pathname);
+  // skip first segment if it's just "internship"
+  const relevant = parts[0] === "internship" ? parts.slice(1) : parts;
+
+  // build cumulative paths like /internship/accounts, /internship/accounts/create
+  const pathSegments = relevant.map((_, i) => {
+    return "/" + ["internship", ...relevant.slice(0, i + 1)].join("/");
+  });
 
   return (
     <Breadcrumb className="mt-1 flex items-center">
@@ -50,30 +34,28 @@ const PageBreadCrumb: React.FC<PageHeaderLayoutProps> = ({
         className="mr-2.5 data-[orientation=vertical]:h-4"
       />
       <BreadcrumbList className="flex items-center">
-        <BreadcrumbItem>
-          {subPage ? (
-            <BreadcrumbLink asChild>
-              <Link href={parentPath} className={inactiveStyle}>
-                {currentPage}
-              </Link>
-            </BreadcrumbLink>
-          ) : (
-            <BreadcrumbPage className={activeStyle}>
-              {currentPage}
-            </BreadcrumbPage>
-          )}
-        </BreadcrumbItem>
-        {subPage && (
-          <>
-            <BreadcrumbSeparator className="hidden md:block" />
-            <BreadcrumbItem>
-              <BreadcrumbPage className={activeStyle}>{subPage}</BreadcrumbPage>
+        {pathSegments.map((segment, idx) => {
+          const label = ROUTE_LABELS[segment] ?? segment.split("/").pop();
+          const isLast = idx === pathSegments.length - 1;
+
+          return (
+            <BreadcrumbItem key={segment} className="flex items-center">
+              {!isLast ? (
+                <BreadcrumbLink asChild>
+                  <Link href={segment} className="text-muted-foreground">
+                    {label}
+                  </Link>
+                </BreadcrumbLink>
+              ) : (
+                <BreadcrumbPage className="text-primary font-medium">
+                  {label}
+                </BreadcrumbPage>
+              )}
+              {!isLast && <BreadcrumbSeparator />}
             </BreadcrumbItem>
-          </>
-        )}
+          );
+        })}
       </BreadcrumbList>
     </Breadcrumb>
   );
 };
-
-export default PageBreadCrumb;

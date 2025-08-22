@@ -1,4 +1,8 @@
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar";
 import { SideBar } from "@/components/sidebar/sidebar";
 import { type PropsWithChildren } from "react";
 import { auth } from "@/lib/auth";
@@ -6,6 +10,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { PageRoutes } from "@/constants/page-routes";
 import { checkStudentOnBoarded } from "@/lib/api/auth/mutation";
+import { PageBreadCrumb } from "@/components/breadcrumbs/page-header";
 
 const Layout = async ({ children }: PropsWithChildren) => {
   const session = await auth.api.getSession({
@@ -23,12 +28,15 @@ const Layout = async ({ children }: PropsWithChildren) => {
   return (
     <SidebarProvider>
       <SideBar />
-      <main className="border-border my-2 mr-2 min-h-screen w-full flex-1 rounded-lg p-4 px-2.5 shadow-sm md:border">
-        <div className="flex flex-row">
-          <SidebarTrigger />
-          {children}
-        </div>
-      </main>
+      <SidebarInset className="flex">
+        <header className="flex h-16 w-fit shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+          <div className="flex items-center gap-2 px-4">
+            <SidebarTrigger />
+            <PageBreadCrumb />
+          </div>
+        </header>
+        <div className="flex flex-row overflow-y-auto px-4">{children}</div>
+      </SidebarInset>
     </SidebarProvider>
   );
 };

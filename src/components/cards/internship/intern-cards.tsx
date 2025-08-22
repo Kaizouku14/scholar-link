@@ -1,7 +1,12 @@
-import { getStatusVariant, getStatusColor, cn } from "@/lib/utils";
-import { Clock, Hourglass, CheckCircle, XCircle } from "lucide-react";
+import {
+  getStatusVariant,
+  getStatusColor,
+  cn,
+  getStatusIcon,
+} from "@/lib/utils";
 import { Badge } from "../../ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
+import React from "react";
 
 export const InternCard = ({
   intern,
@@ -12,16 +17,15 @@ export const InternCard = ({
     surname: string;
     email: string;
     profile?: string | null;
-    studentNo?: string | null;
+
     course?: string | null;
     status?: string | null;
-    yearLevel?: string | null;
     section?: string | null;
   };
 }) => {
   const { status } = intern;
-  const variant = getStatusVariant(status ?? "");
-  const color = getStatusColor(status ?? "");
+  const variant = getStatusVariant(status ?? "default");
+  const color = getStatusColor(status ?? "default");
 
   return (
     <div className="border-border hover:bg-muted/50 rounded-md border p-3 transition-colors">
@@ -54,15 +58,9 @@ export const InternCard = ({
                 color ?? "border-gray-200 bg-gray-50 text-gray-700",
               )}
             >
-              {status === "pending" ? (
-                <Clock className={cn("h-4 w-4", color)} />
-              ) : status === "in-progress" ? (
-                <Hourglass className={cn("h-4 w-4", color)} />
-              ) : status === "completed" ? (
-                <CheckCircle className={cn("h-4 w-4", color)} />
-              ) : (
-                <XCircle className={cn("h-4 w-4", color)} />
-              )}
+              {React.createElement(getStatusIcon(status ?? "default"), {
+                className: cn(color),
+              })}
               {status}
             </Badge>
           </div>

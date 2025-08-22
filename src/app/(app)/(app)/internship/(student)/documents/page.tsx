@@ -1,4 +1,3 @@
-import PageBreadCrumb from "@/components/breadcrumbs/page-header";
 import { type Metadata } from "next";
 import UpcomingDeadlines from "@/components/cards/internship/upcoming-deadlines";
 import Documents from "./_components/documents";
@@ -11,7 +10,6 @@ export const metadata: Metadata = {
 const Page = () => {
   return (
     <div className="mx-auto h-auto w-full space-y-4 px-2 pb-12">
-      <PageBreadCrumb currentPage="Documents" />
       <div className="flex gap-2">
         <UpcomingDeadlines />
         <DocumentForm />

@@ -29,7 +29,7 @@ export const getAllInternsDocuments = async ({
         surname: UserTable.surname,
         profile: UserTable.profile,
         studentNo: StudentTable.studentNo,
-        section: StudentTable.section,
+        section: UserTable.section,
         course: StudentTable.course,
         yearLevel: StudentTable.yearLevel,
       })

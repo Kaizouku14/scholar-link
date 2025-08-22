@@ -31,8 +31,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
     return internsInfo?.filter(
       (intern) =>
         intern.surname?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        intern.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        intern.studentNo?.toLowerCase().includes(searchTerm.toLowerCase()),
+        intern.name?.toLowerCase().includes(searchTerm.toLowerCase()),
     );
   }, [internsInfo, searchTerm]);
 

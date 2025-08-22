@@ -131,7 +131,6 @@ export const getStatusIcon = (status: string) => {
     case "pending":
       return Clock;
     case "on-going":
-    case "ongoing":
     case "in-progress":
       return Hourglass;
     case "approved":
@@ -139,7 +138,6 @@ export const getStatusIcon = (status: string) => {
       return CheckCircle;
     case "rejected":
     case "canceled":
-    case "cancelled":
       return XCircle;
     default:
       return Clock;
@@ -194,4 +192,10 @@ export const calculateCompletionPercentage = (
   return totalRequiredHours > 0 && totalProgressHours > 0
     ? Number(((totalProgressHours / totalRequiredHours) * 100).toFixed(1))
     : 0;
+};
+
+export const getStatusFromPercentage = (percentage: number): string => {
+  if (percentage === 0) return "pending";
+  if (percentage >= 100) return "completed";
+  return "on-going";
 };

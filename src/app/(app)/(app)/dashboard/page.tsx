@@ -1,4 +1,3 @@
-import PageBreadCrumb from "@/components/breadcrumbs/page-header";
 import type { Metadata } from "next";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
@@ -21,7 +20,6 @@ const Pages = async () => {
 
   return (
     <div className="mx-auto h-auto w-full space-y-4 px-2">
-      <PageBreadCrumb currentPage="Dashboard" />
       {role === ROLE.INTERNSHIP_STUDENT ? (
         <InternshipStudentDashboard />
       ) : role === ROLE.INTERNSHIP_COORDINATOR ? (

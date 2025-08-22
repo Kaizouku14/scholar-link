@@ -72,3 +72,30 @@ export enum PageRoutes {
   INTERNSHIP_MANAGE_INTERNSHIPS = `${INTERNSHIPS}/higher-education-institution`,
   INTERNSHIP_INTERNS_CREATE = `${INTERNSHIP_MANAGE_INTERNSHIPS}/create`,
 }
+
+export const ROUTE_LABELS: Record<string, string> = {
+  // Scholarships
+  "/scholarship/browse": "Browse",
+  "/scholarship/my-applications": "My Applications",
+  "/scholarship/applications": "Applications",
+  "/scholarship/programs": "Programs",
+  "/scholarship/programs/create": "Create Program",
+  "/scholarship/scholars": "Scholars",
+  "/scholarship/accounts": "Accounts",
+  "/scholarship/accounts/create": "Create Account",
+
+  // Internships
+  "/internship/host-training-establishment": "Companies",
+  "/internship/host-training-establishment/create": "Create Company",
+  "/internship/departments": "Departments",
+  "/internship/reports": "Reports",
+  "/internship/accounts": "Accounts",
+  "/internship/accounts/create": "Create Account",
+  "/internship/progress": "Progress",
+  "/internship/documents": "Documents",
+  "/internship/documents-review": "Documents Review",
+  "/internship/progress-monitor": "Progress Monitor",
+  "/internship/documents-list": "Intern Documents",
+  "/internship/higher-education-institution": "Manage Internships",
+  "/internship/higher-education-institution/create": "Create Internship",
+};

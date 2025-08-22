@@ -95,8 +95,8 @@ export function DataTable<TData, TValue>({
         options={options}
         onImport={onImport}
       />
-      <div className="border-border rounded-xl border">
-        <Table>
+      <div className="border-border w-auto max-w-[90rem] rounded-xl border">
+        <Table className="">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
