@@ -10,8 +10,8 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import { usePathname } from "next/navigation";
-import Link from "next/link";
 import { ROUTE_LABELS } from "@/constants/page-routes";
+import React from "react";
 
 export const PageBreadCrumb = () => {
   const pathname = usePathname();
@@ -28,7 +28,7 @@ export const PageBreadCrumb = () => {
   });
 
   return (
-    <Breadcrumb className="mt-1 flex items-center">
+    <Breadcrumb className="flex items-center">
       <Separator
         orientation="vertical"
         className="mr-2.5 data-[orientation=vertical]:h-4"
@@ -39,20 +39,23 @@ export const PageBreadCrumb = () => {
           const isLast = idx === pathSegments.length - 1;
 
           return (
-            <BreadcrumbItem key={segment} className="flex items-center">
-              {!isLast ? (
-                <BreadcrumbLink asChild>
-                  <Link href={segment} className="text-muted-foreground">
+            <React.Fragment key={segment}>
+              <BreadcrumbItem className="flex items-center">
+                {!isLast ? (
+                  <BreadcrumbLink
+                    href={segment}
+                    className="text-mute-foreground"
+                  >
                     {label}
-                  </Link>
-                </BreadcrumbLink>
-              ) : (
-                <BreadcrumbPage className="text-primary font-medium">
-                  {label}
-                </BreadcrumbPage>
-              )}
+                  </BreadcrumbLink>
+                ) : (
+                  <BreadcrumbPage className="text-primary font-medium">
+                    {label}
+                  </BreadcrumbPage>
+                )}
+              </BreadcrumbItem>
               {!isLast && <BreadcrumbSeparator />}
-            </BreadcrumbItem>
+            </React.Fragment>
           );
         })}
       </BreadcrumbList>

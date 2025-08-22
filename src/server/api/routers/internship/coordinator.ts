@@ -8,6 +8,7 @@ import type { departmentType } from "@/constants/users/departments";
 import { getCompanyRecords } from "@/lib/api/internship/query";
 import { cacheData } from "@/lib/redis";
 import z from "zod";
+import { getAllUserAccount } from "@/lib/api/internship/coordinator/hei/query";
 
 export const internshipCoordinatorRouter = createTRPCRouter({
   /******************************************
@@ -49,5 +50,9 @@ export const internshipCoordinatorRouter = createTRPCRouter({
   }),
   getCompanyRecords: protectedRoute.query(async () => {
     return await getCompanyRecords();
+  }),
+  getAllUserAccount: protectedRoute.query(async ({ ctx }) => {
+    const userId = ctx.session!.user.id;
+    return await getAllUserAccount({ userId });
   }),
 });

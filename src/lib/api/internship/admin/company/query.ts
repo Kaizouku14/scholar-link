@@ -3,6 +3,7 @@ import { TRPCError } from "@trpc/server";
 import {
   company as CompanyTable,
   internship as InternshipTable,
+  supervisor as SupervisorTable,
 } from "@/server/db/schema/internship";
 
 export const getAllCompany = async () => {
@@ -12,9 +13,9 @@ export const getAllCompany = async () => {
         companyId: CompanyTable.companyId,
         companyName: CompanyTable.name,
         address: CompanyTable.address,
-        contactPerson: CompanyTable.contactPerson,
-        contactPersonEmail: CompanyTable.email,
-        contactPersonNo: CompanyTable.contactNo,
+        contactPerson: SupervisorTable.name,
+        contactPersonEmail: SupervisorTable.email,
+        contactPersonNo: SupervisorTable.contactNo,
         internCount: countDistinct(InternshipTable.userId),
       })
       .from(CompanyTable)

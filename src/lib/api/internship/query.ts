@@ -9,7 +9,6 @@ import {
   sum,
   and,
   max,
-  isNull,
   sql,
   isNotNull,
 } from "@/server/db";
@@ -128,49 +127,6 @@ export const getAllInternships = async ({
         message: "Failed to get interns: " + (error as Error).message,
       });
     });
-};
-
-export const getAllUserAccount = async ({
-  role,
-  department,
-}: {
-  role: roleType;
-  department: departmentType;
-}) => {
-  try {
-    const conditions = [
-      eq(UserTable.role, ROLE.INTERNSHIP_STUDENT),
-      isNull(InternshipTable.userId),
-    ];
-
-    if (role === ROLE.INTERNSHIP_COORDINATOR) {
-      conditions.push(eq(UserTable.department, department));
-    }
-
-    const response = await db
-      .select({
-        userId: UserTable.id,
-        name: UserTable.name,
-        middleName: UserTable.middleName,
-        surname: UserTable.surname,
-        studentNo: StudentTable.studentNo,
-        course: StudentTable.course,
-        section: UserTable.section,
-        yearLevel: StudentTable.yearLevel,
-      })
-      .from(UserTable)
-      .leftJoin(StudentTable, eq(UserTable.id, StudentTable.id))
-      .leftJoin(InternshipTable, eq(UserTable.id, InternshipTable.userId))
-      .where(and(...conditions))
-      .execute();
-
-    return response;
-  } catch (error) {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: (error as Error).message,
-    });
-  }
 };
 
 export const getCompanyRecords = async () => {

@@ -6,10 +6,7 @@ import type { roleType } from "@/constants/users/roles";
 import type { createInternship } from "@/interfaces/internship/internship";
 import { getAllInternsDocuments } from "@/lib/api/internship/coordinator/document-list/query";
 import { createStudentInternship } from "@/lib/api/internship/mutation";
-import {
-  getAllInternships,
-  getAllUserAccount,
-} from "@/lib/api/internship/query";
+import { getAllInternships } from "@/lib/api/internship/query";
 import {
   getAllDocumentsAvailable,
   getAllUpcomingDeadlines,
@@ -67,10 +64,5 @@ export const internshipRouter = createTRPCRouter({
     return cacheData(`${role}-${department}-documents`, async () => {
       return await getAllInternsDocuments({ role, department });
     });
-  }),
-  getAllUserAccount: protectedRoute.query(async ({ ctx }) => {
-    const role = ctx.session!.user.role as roleType;
-    const department = ctx.session!.user.department as departmentType;
-    return await getAllUserAccount({ role, department });
   }),
 });
