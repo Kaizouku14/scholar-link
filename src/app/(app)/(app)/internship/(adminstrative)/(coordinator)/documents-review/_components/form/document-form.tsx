@@ -41,12 +41,21 @@ const DocumentForm = () => {
     },
   });
 
-  const { mutateAsync: createDocument } =
-    api.internshipCoordinator.createDocument.useMutation();
+  const { mutateAsync: postDocument } =
+    api.internshipCoordinator.postDocumentDeadline.useMutation();
+  const { refetch } = api.internshipUsers.getAllUpcomingDeadlines.useQuery(
+    undefined,
+    {
+      enabled: false,
+    },
+  );
   const onSubmit = async (data: FormSchema) => {
-    await toast.promise(createDocument(data), {
-      loading: "Creating document...",
-      success: "Document created successfully",
+    await toast.promise(postDocument(data), {
+      loading: "Uploading document...",
+      success: () => {
+        refetch();
+        return "Document uploaded successfully!";
+      },
       error: (error: unknown) => {
         return (error as Error).message;
       },
