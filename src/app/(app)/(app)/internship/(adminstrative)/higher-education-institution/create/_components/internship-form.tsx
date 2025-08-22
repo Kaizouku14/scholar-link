@@ -337,18 +337,29 @@ const InternshipForm = () => {
                         </Button>
                       </FormControl>
                     </PopoverTrigger>
-                    <PopoverContent className="z-100 w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={field.value}
-                        onSelect={field.onChange}
-                        disabled={(date) => {
-                          const today = new Date();
-                          today.setHours(0, 0, 0, 0); // reset time to midnight
-                          return date < today;
-                        }}
-                        captionLayout="dropdown"
-                      />
+                    <PopoverContent className="z-100 w-auto p-2" align="start">
+                      <div className="flex flex-col gap-2">
+                        <span className="text-muted-foreground text-xs">
+                          Select start date
+                        </span>
+                        <Calendar
+                          mode="single"
+                          selected={field.value}
+                          onSelect={field.onChange}
+                          disabled={(date) => {
+                            const today = new Date();
+                            today.setHours(0, 0, 0, 0); // reset time to midnight
+                            return date < today;
+                          }}
+                          captionLayout="dropdown"
+                          hideWeekdays
+                          hideNavigation
+                          className="m-0 h-10 w-40 p-0"
+                          components={{
+                            Day: () => <></>,
+                          }}
+                        />
+                      </div>
                     </PopoverContent>
                   </Popover>
                   <FormDescription className="text-xs">
@@ -384,18 +395,29 @@ const InternshipForm = () => {
                         </Button>
                       </FormControl>
                     </PopoverTrigger>
-                    <PopoverContent className="z-100 w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={field.value}
-                        onSelect={field.onChange}
-                        disabled={(date) => {
-                          const today = new Date();
-                          today.setHours(0, 0, 0, 0); // reset time to midnight
-                          return date < today;
-                        }}
-                        captionLayout="dropdown"
-                      />
+                    <PopoverContent className="z-100 w-auto p-2" align="start">
+                      <div className="flex flex-col gap-2">
+                        <span className="text-muted-foreground text-xs">
+                          Select end date
+                        </span>
+                        <Calendar
+                          mode="single"
+                          selected={field.value}
+                          onSelect={field.onChange}
+                          disabled={(date) => {
+                            const today = new Date();
+                            today.setHours(0, 0, 0, 0); // reset time to midnight
+                            return date < today;
+                          }}
+                          captionLayout="dropdown"
+                          hideWeekdays
+                          hideNavigation
+                          className="m-0 h-10 w-40 p-0"
+                          components={{
+                            Day: () => <></>,
+                          }}
+                        />
+                      </div>
                     </PopoverContent>
                   </Popover>
                   <FormDescription className="text-xs">
