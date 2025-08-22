@@ -1,6 +1,9 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import z from "zod";
+import { CheckCircle, Clock, Hourglass, XCircle } from "lucide-react";
+import type { departmentType } from "@/constants/users/departments";
+import { departmentHoursMap } from "@/constants/internship/hours";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -123,6 +126,26 @@ export const getStatusColor = (status: string) => {
   }
 };
 
+export const getStatusIcon = (status: string) => {
+  switch (status.toLowerCase()) {
+    case "pending":
+      return Clock;
+    case "on-going":
+    case "ongoing":
+    case "in-progress":
+      return Hourglass;
+    case "approved":
+    case "completed":
+      return CheckCircle;
+    case "rejected":
+    case "canceled":
+    case "cancelled":
+      return XCircle;
+    default:
+      return Clock;
+  }
+};
+
 export const getStatusIndicatorColor = (status: string) => {
   switch (status.toLowerCase()) {
     case "pending":
@@ -159,3 +182,16 @@ export function formatText(text: string) {
     .toLowerCase()
     .replace(/\b\w/g, (c) => c.toUpperCase());
 }
+
+export const calculateCompletionPercentage = (
+  totalProgressHours: number,
+  studentCount: number,
+  department: departmentType,
+): number => {
+  const hoursRequired = departmentHoursMap[department];
+  const totalRequiredHours = studentCount * hoursRequired;
+
+  return totalRequiredHours > 0 && totalProgressHours > 0
+    ? Number(((totalProgressHours / totalRequiredHours) * 100).toFixed(1))
+    : 0;
+};
