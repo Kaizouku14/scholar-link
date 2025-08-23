@@ -1,12 +1,8 @@
 "use client";
 
+import type { AdminSectionData } from "@/interfaces/internship/hei";
 import type { ColumnDef } from "@tanstack/react-table";
-import type { InternColumn } from "./column-schema";
-import { Building2, User2 } from "lucide-react";
-import type { departmentType } from "@/constants/users/departments";
 import { departmentHoursMap } from "@/constants/internship/hours";
-import { Progress } from "@/components/ui/progress";
-import { Badge } from "@/components/ui/badge";
 import {
   calculateCompletionPercentage,
   cn,
@@ -15,54 +11,60 @@ import {
   getStatusIcon,
   getStatusVariant,
 } from "@/lib/utils";
-import { DataTableRowActions } from "./table-row-actions";
-import { DataTableColumnHeader } from "@/components/table/table-column-header";
 import React from "react";
+import { DataTableColumnHeader } from "@/components/table/table-column-header";
+import { Building, Clock, Users } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
+import { Badge } from "@/components/ui/badge";
+import { DataTableRowActions } from "./table-row-actions";
 
-export const InternsColumns: ColumnDef<InternColumn>[] = [
+export const AdminInternsColumns: ColumnDef<AdminSectionData>[] = [
   {
-    accessorKey: "companyName",
+    accessorKey: "section",
     header: ({ column }) => (
-      <div className="text-right">
-        <DataTableColumnHeader column={column} title="Company" />
+      <div className="text-left">
+        <DataTableColumnHeader column={column} title="Section" />
       </div>
     ),
     cell: ({ row }) => (
+      <div className="flex flex-col gap-1">
+        <div className="flex items-center gap-1.5">
+          <div className="bg-primary h-2 w-2 rounded-full" />
+          <span className="text-primary text-xs font-medium tracking-wider uppercase">
+            {row.original.course}
+          </span>
+        </div>
+        <div className="flex items-center gap-2 pl-3.5">
+          <span className="text-sm tracking-wide">
+            SECTION {row.original.section}
+          </span>
+        </div>
+      </div>
+    ),
+  },
+  {
+    accessorKey: "department",
+    header: "Department",
+    cell: ({ row }) => (
       <div className="flex items-center overflow-hidden whitespace-nowrap">
-        <Building2 className="text-muted-foreground mr-1.5 h-4 w-4 flex-shrink-0" />
-        <span className="max-w-[80px] truncate">
-          {row.original.companyName}
+        <Building className="text-muted-foreground mr-1.5 h-4 w-4 flex-shrink-0" />
+        <span className="max-w-[120px] truncate">
+          {row.original.department}
         </span>
       </div>
     ),
   },
   {
-    accessorKey: "address",
-    header: "Address",
-    cell: ({ row }) => (
-      <div className="max-w-[10rem] truncate" title={row.original.address!}>
-        {row.original.address}
-      </div>
-    ),
-  },
-  {
-    accessorKey: "supervisor",
-    header: "Supervisor",
-  },
-  {
-    accessorKey: "supervisorEmail",
-    header: "Supervisor Email",
-  },
-  {
     accessorKey: "hoursRequired",
     header: "Hours Required",
     cell: ({ row }) => {
-      const department = row.original.department as departmentType;
+      const department = row.original.department!;
       const hoursRequired = departmentHoursMap[department];
       return (
-        <div className="flex items-center">
+        <div className="flex items-center gap-1">
+          <Clock className="text-muted-foreground h-4 w-4" />
           <span>{hoursRequired}</span>
-          <span className="text-muted-foreground">hrs</span>
+          <span className="text-muted-foreground text-xs">hrs</span>
         </div>
       );
     },
@@ -74,7 +76,7 @@ export const InternsColumns: ColumnDef<InternColumn>[] = [
       const percentage = calculateCompletionPercentage(
         Number(row.totalProgressHours),
         row.studentCount,
-        row.department as departmentType,
+        row.department!,
       );
       return getStatusFromPercentage(percentage);
     },
@@ -83,7 +85,7 @@ export const InternsColumns: ColumnDef<InternColumn>[] = [
       const percentage = calculateCompletionPercentage(
         Number(totalProgressHours),
         studentCount,
-        department as departmentType,
+        department!,
       );
 
       const status = getStatusFromPercentage(percentage);
@@ -107,9 +109,10 @@ export const InternsColumns: ColumnDef<InternColumn>[] = [
     accessorKey: "studentCount",
     header: "Students",
     cell: ({ row }) => (
-      <div className="flex items-center">
-        <User2 className="text-muted-foreground mr-2 h-4 w-4" />
-        <span>{row.original.studentCount}</span>
+      <div className="flex items-center gap-1">
+        <Users className="text-muted-foreground h-4 w-4" />
+        <span className="font-medium">{row.original.studentCount}</span>
+        <span className="text-muted-foreground text-xs">students</span>
       </div>
     ),
   },
@@ -121,12 +124,12 @@ export const InternsColumns: ColumnDef<InternColumn>[] = [
       const percentage = calculateCompletionPercentage(
         Number(totalProgressHours),
         studentCount,
-        department as departmentType,
+        department!,
       );
       return (
-        <div className="flex w-24 items-center gap-2">
-          <Progress value={percentage} />
-          <span className="text-muted-foreground">{percentage}%</span>
+        <div className="flex w-32 items-center gap-2">
+          <Progress value={percentage} className="h-2" />
+          <span className="text-muted-foreground text-xs">{percentage}%</span>
         </div>
       );
     },

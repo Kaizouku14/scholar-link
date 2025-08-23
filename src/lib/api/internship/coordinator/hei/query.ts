@@ -1,11 +1,105 @@
 import { ROLE } from "@/constants/users/roles";
-import { db, eq, and, isNull, sql } from "@/server/db";
+import {
+  db,
+  eq,
+  countDistinct,
+  sum,
+  and,
+  sql,
+  isNotNull,
+  isNull,
+} from "@/server/db";
 import {
   user as UserTable,
   student as StudentTable,
 } from "@/server/db/schema/auth";
-import { internship as InternshipTable } from "@/server/db/schema/internship";
+import {
+  internship as InternshipTable,
+  company as CompanyTable,
+  progressLog as ProgressTable,
+  supervisor as SupervisorTable,
+} from "@/server/db/schema/internship";
 import { TRPCError } from "@trpc/server";
+import type {
+  CoordinatorIntern,
+  CoordinatorSectionData,
+} from "@/interfaces/internship/hei";
+
+export const getCoordinatorSections = async (
+  userId: string,
+): Promise<CoordinatorSectionData[]> => {
+  return await db.transaction(async (tx) => {
+    const [coordinator] = await tx
+      .select({
+        section: UserTable.section,
+        department: UserTable.department,
+      })
+      .from(UserTable)
+      .where(eq(UserTable.id, userId))
+      .limit(1);
+
+    const coordinatorSections = coordinator?.section ?? [];
+    const coordinatorDepartment = coordinator!.department;
+
+    const response = await tx
+      .select({
+        section: UserTable.section,
+        department: UserTable.department,
+        studentCount: countDistinct(InternshipTable.userId),
+        totalProgressHours: sum(ProgressTable.hours),
+        interns: sql<string>`
+          json_group_array(
+            DISTINCT json_object(
+              'name', ${UserTable.name},
+              'middleName', ${UserTable.middleName},
+              'surname', ${UserTable.surname},
+              'profile', ${UserTable.profile},
+              'email', ${UserTable.email},
+              'section', ${UserTable.section},
+              'status', ${InternshipTable.status},
+              'companyName', ${CompanyTable.name},
+              'companyAddress', ${CompanyTable.address},
+              'supervisorName', ${SupervisorTable.name},
+              'supervisorEmail', ${SupervisorTable.email}
+            )
+          )
+        `.as("interns"),
+      })
+      .from(UserTable)
+      .innerJoin(InternshipTable, eq(UserTable.id, InternshipTable.userId))
+      .leftJoin(
+        CompanyTable,
+        eq(InternshipTable.companyId, CompanyTable.companyId),
+      )
+      .leftJoin(
+        SupervisorTable,
+        eq(InternshipTable.supervisorId, SupervisorTable.supervisorId),
+      )
+      .leftJoin(
+        ProgressTable,
+        eq(ProgressTable.internshipId, InternshipTable.internshipId),
+      )
+      .where(
+        and(
+          isNotNull(InternshipTable.userId),
+          sql`EXISTS (
+            SELECT 1
+            FROM json_each(${UserTable.section})
+            WHERE value IN (${sql.join(coordinatorSections, sql`,`)})
+          )`,
+          eq(UserTable.department, coordinatorDepartment!),
+        ),
+      )
+      .groupBy(UserTable.section);
+
+    return response.map((row) => ({
+      ...row,
+      interns: row.interns
+        ? (JSON.parse(row.interns) as CoordinatorIntern[])
+        : [],
+    }));
+  });
+};
 
 export const getAllUserAccount = async ({ userId }: { userId: string }) => {
   try {

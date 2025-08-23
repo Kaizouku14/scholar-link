@@ -21,12 +21,4 @@ export const internshipRouter = createTRPCRouter({
   /******************************************
    *   Admin/Coordinator API Mutation/Query *
    ******************************************/
-  getAllInternships: protectedRoute.query(({ ctx }) => {
-    const userId = ctx.session!.user.id;
-    const role = ctx.session!.user.role as roleType;
-
-    return cacheData(`${role}-internships`, async () => {
-      return await getAllInternshipsData({ role, userId });
-    });
-  }),
 });

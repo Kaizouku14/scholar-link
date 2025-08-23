@@ -9,7 +9,10 @@ import {
 import { getAllCompanyRecords } from "@/lib/api/internship/query";
 import { cacheData } from "@/lib/redis";
 import z from "zod";
-import { getAllUserAccount } from "@/lib/api/internship/coordinator/hei/query";
+import {
+  getAllUserAccount,
+  getCoordinatorSections,
+} from "@/lib/api/internship/coordinator/hei/query";
 import {
   postDocument,
   rejectDocument,
@@ -18,6 +21,7 @@ import type { createInternship } from "@/interfaces/internship/internship";
 import { insertStudentInternship } from "@/lib/api/internship/mutation";
 import { getAllInternsDocumentsBySection } from "@/lib/api/internship/coordinator/document-list/query";
 import { getAllDocumentsToReviewBySection } from "@/lib/api/internship/coordinator/document-review/query";
+import type { roleType } from "@/constants/users/roles";
 
 export const internshipCoordinatorRouter = createTRPCRouter({
   /******************************************
@@ -107,5 +111,11 @@ export const internshipCoordinatorRouter = createTRPCRouter({
   getAllUserAccount: protectedRoute.query(async ({ ctx }) => {
     const userId = ctx.session!.user.id;
     return await getAllUserAccount({ userId });
+  }),
+  getAllInternships: protectedRoute.query(({ ctx }) => {
+    const userId = ctx.session!.user.id;
+    return cacheData(`${userId}-internships`, async () => {
+      return await getCoordinatorSections(userId);
+    });
   }),
 });

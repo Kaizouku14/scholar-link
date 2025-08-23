@@ -37,7 +37,7 @@ export const NAVIGATION_DATA: NavigationData = {
         items: [
           {
             title: "HEI",
-            url: PageRoutes.INTERNSHIP_MANAGE_INTERNSHIPS,
+            url: PageRoutes.INTERNSHIP_ADMIN_MANAGE_INTERNSHIPS,
             icon: Handshake,
             description: "Manage all internships",
           },
@@ -113,7 +113,7 @@ export const NAVIGATION_DATA: NavigationData = {
         items: [
           {
             title: "HEI",
-            url: PageRoutes.INTERNSHIP_MANAGE_INTERNSHIPS,
+            url: PageRoutes.INTERNSHIP_COORDINATION_MANAGE_INTERNSHIPS,
             icon: NotepadText,
             description: "Internships under supervision",
           },

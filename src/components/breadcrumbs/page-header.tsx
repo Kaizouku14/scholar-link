@@ -20,7 +20,11 @@ export const PageBreadCrumb = () => {
   const parts = pathname.split("/").filter(Boolean);
 
   // skip first segment if it's just "internship"
-  const relevant = parts[0] === "internship" ? parts.slice(1) : parts;
+  let relevant = parts[0] === "internship" ? parts.slice(1) : parts;
+
+  relevant = relevant.filter(
+    (part) => part.toLowerCase() !== "higher-education-institution",
+  );
 
   // build cumulative paths like /internship/accounts, /internship/accounts/create
   const pathSegments = relevant.map((_, i) => {
@@ -35,7 +39,15 @@ export const PageBreadCrumb = () => {
       />
       <BreadcrumbList className="flex items-center">
         {pathSegments.map((segment, idx) => {
-          const label = ROUTE_LABELS[segment] ?? segment.split("/").pop();
+          const routeLabel = ROUTE_LABELS[segment];
+          const label = routeLabel
+            ? routeLabel.charAt(0).toUpperCase() + routeLabel.slice(1)
+            : (segment
+                .split("/")
+                .pop()
+                ?.replace(/-/g, " ")
+                .replace(/\b\w/g, (l) => l.toUpperCase()) ?? segment);
+
           const isLast = idx === pathSegments.length - 1;
 
           return (

@@ -52,6 +52,7 @@ export enum PageRoutes {
   INTERNSHIPS = "/internship",
 
   // Admin only
+  INTERNSHIP_ADMIN_MANAGE_INTERNSHIPS = `${INTERNSHIPS}/higher-education-institution/admin`,
   INTERNSHIPS_COMPANIES = `${INTERNSHIPS}/host-training-establishment`,
   INTERNSHIPS_COMPANIES_CREATE = `${INTERNSHIPS_COMPANIES}/create`,
   INTERNSHIPS_DEPARTMENTS = `${INTERNSHIPS}/departments`,
@@ -69,8 +70,8 @@ export enum PageRoutes {
   INTERNSHIP_INTERNS_DOCUMENTS = `${INTERNSHIPS}/documents-list`,
 
   //Admin & Coordinator
-  INTERNSHIP_MANAGE_INTERNSHIPS = `${INTERNSHIPS}/higher-education-institution`,
-  INTERNSHIP_INTERNS_CREATE = `${INTERNSHIP_MANAGE_INTERNSHIPS}/create`,
+  INTERNSHIP_COORDINATION_MANAGE_INTERNSHIPS = `${INTERNSHIPS}/higher-education-institution/coordination`,
+  INTERNSHIP_INTERNS_CREATE = `${INTERNSHIP_COORDINATION_MANAGE_INTERNSHIPS}/create`,
 }
 
 export const ROUTE_LABELS: Record<string, string> = {
@@ -96,6 +97,8 @@ export const ROUTE_LABELS: Record<string, string> = {
   "/internship/documents-review": "Documents Review",
   "/internship/progress-monitor": "Progress Monitor",
   "/internship/documents-list": "Intern Documents",
-  "/internship/higher-education-institution": "Manage Internships",
+  "/internship/higher-education-institution": "Higher Education Institutions",
+  "/internship/admin": "Manage Internships",
+  "/internship/coordination": "Manage Internships",
   "/internship/higher-education-institution/create": "Create Internship",
 };
