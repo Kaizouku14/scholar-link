@@ -3,7 +3,10 @@ import { getAllDocumentBySection } from "@/lib/api/internship/coordinator/docume
 import { getStudentProgressByDept } from "@/lib/api/internship/coordinator/progress-monitoring/query";
 import { getCoordinatorDashboardStats } from "@/lib/api/internship/coordinator/dashboard/query";
 import { DOCUMENTS } from "@/constants/internship/documents";
-import type { departmentType } from "@/constants/users/departments";
+import {
+  DEPARTMENTS,
+  type departmentType,
+} from "@/constants/users/departments";
 import { getCompanyRecords } from "@/lib/api/internship/query";
 import { cacheData } from "@/lib/redis";
 import z from "zod";
@@ -12,6 +15,8 @@ import {
   postDocument,
   rejectDocument,
 } from "@/lib/api/internship/coordinator/document-review/mutation";
+import type { createInternship } from "@/interfaces/internship/internship";
+import { createStudentInternship } from "@/lib/api/internship/mutation";
 
 export const internshipCoordinatorRouter = createTRPCRouter({
   /******************************************

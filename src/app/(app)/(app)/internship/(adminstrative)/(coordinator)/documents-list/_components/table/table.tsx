@@ -3,15 +3,19 @@
 import { DataTable } from "@/components/table/data-table";
 import { DataTableSkeleton } from "@/components/table/table-skeleton";
 import { DocumentListColumns } from "./column";
+import { api } from "@/trpc/react";
 
 const DocumentListTable = () => {
+  const { data, isLoading } =
+    api.internshipCoordinator.getAllDocumentBySections.useQuery();
+
   return (
     <div className="mx-auto mt-4 w-full">
-      {!false && true ? (
+      {!isLoading && data ? (
         <DataTable
           columns={DocumentListColumns}
-          data={[]}
-          filteredTitle={"studentNo"}
+          data={data}
+          filteredTitle={"surname"}
           filteredColumn="status"
           options={[
             {

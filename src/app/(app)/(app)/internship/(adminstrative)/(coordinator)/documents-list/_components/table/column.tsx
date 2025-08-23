@@ -1,24 +1,17 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { COURSE_LABELS } from "@/constants/users/courses";
-import { YEAR_LEVEL_LABELS } from "@/constants/users/year-level";
+import { COURSE_LABELS, type courseType } from "@/constants/users/courses";
+import {
+  YEAR_LEVEL_LABELS,
+  type YearLevelType,
+} from "@/constants/users/year-level";
 import type { ColumnDef } from "@tanstack/react-table";
-import type { DocumentListColumn } from "./column-schema";
-import { CheckCircle, Clock, IdCard } from "lucide-react";
+import { CheckCircle, Clock } from "lucide-react";
 import { DOCUMENTS } from "@/constants/internship/documents";
 import { Badge } from "@/components/ui/badge";
 import { DataTableRowActions } from "./table-row-actions";
+import type { StudentDocuments } from "@/interfaces/internship/document";
 
-export const DocumentListColumns: ColumnDef<DocumentListColumn>[] = [
-  {
-    accessorKey: "studentNo",
-    header: "Student No.",
-    cell: ({ row }) => (
-      <div className="flex items-center gap-2">
-        <IdCard className="text-muted-foreground" />
-        {row.original.studentNo}
-      </div>
-    ),
-  },
+export const DocumentListColumns: ColumnDef<StudentDocuments>[] = [
   {
     accessorKey: "surname",
     header: "Student",
@@ -41,7 +34,8 @@ export const DocumentListColumns: ColumnDef<DocumentListColumn>[] = [
             </div>
 
             <div className="text-muted-foreground text-xs">
-              {COURSE_LABELS[course]} · {YEAR_LEVEL_LABELS[yearLevel]}
+              {COURSE_LABELS[course as courseType]} ·{" "}
+              {YEAR_LEVEL_LABELS[yearLevel as YearLevelType]}
               {section}
             </div>
           </div>

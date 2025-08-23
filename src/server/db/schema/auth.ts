@@ -10,10 +10,10 @@ import { GENDERS } from "@/constants/users/genders";
 
 export const user = createTable("user", {
   id: text("id").primaryKey(),
-  name: text("name"),
-  surname: text("surname"),
-  middleName: text("middle_name"),
-  email: text("email").unique(),
+  name: text("name").notNull(),
+  surname: text("surname").notNull(),
+  middleName: text("middle_name").notNull(),
+  email: text("email").unique().notNull(),
   profile: text("profile"),
   profileKey: text("profile_key"),
   contact: text("contact"),
