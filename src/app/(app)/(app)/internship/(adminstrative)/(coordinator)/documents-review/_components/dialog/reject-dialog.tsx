@@ -30,6 +30,7 @@ export const RejectDocumentDialog = ({
   receiverId: string;
   documentType: documentsType;
 }) => {
+  const [open, setOpen] = useState(false);
   const [reason, setReason] = useState<string>("");
   const document = DOCUMENT_LABELS[documentType];
 
@@ -47,15 +48,21 @@ export const RejectDocumentDialog = ({
       });
 
       toast.success("Document rejected successfully.");
+      setReason("");
+      setOpen(false);
     } catch {
       toast.error("Failed to reject document. Please try again.");
     }
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="flex items-center text-red-500">
+        <Button
+          variant="outline"
+          className="text-primary hover:text-primary/70 flex items-center"
+          onClick={() => setOpen(true)}
+        >
           <CircleX className="h-4 w-4" />
           <span>Reject</span>
         </Button>
@@ -88,7 +95,9 @@ export const RejectDocumentDialog = ({
 
           <DialogFooter className="flex justify-end gap-2">
             <DialogClose>
-              <Button variant="outline">Cancel</Button>
+              <Button variant="outline" type="button">
+                Cancel
+              </Button>
             </DialogClose>
             <Button
               variant="default"

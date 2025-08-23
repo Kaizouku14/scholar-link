@@ -1,4 +1,4 @@
-import { db, eq, and, isNull, desc, gt, sql } from "@/server/db";
+import { db, eq, and, isNull, asc, gt, sql } from "@/server/db";
 import { TRPCError } from "@trpc/server";
 import {
   document as DocumentsTable,
@@ -49,7 +49,7 @@ export const getAllUpcomingDeadlines = async ({
           gt(DocumentsTable.deadline, sql`${now}`),
         ),
       )
-      .orderBy(desc(DocumentsTable.deadline));
+      .orderBy(asc(DocumentsTable.deadline));
 
     return response ?? [];
   } catch (error) {
