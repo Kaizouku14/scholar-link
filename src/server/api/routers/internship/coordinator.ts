@@ -1,5 +1,4 @@
 import { createTRPCRouter, protectedRoute } from "../../trpc";
-import { getAllDocumentBySection } from "@/lib/api/internship/coordinator/document-review/query";
 import { getStudentProgressByDept } from "@/lib/api/internship/coordinator/progress-monitoring/query";
 import { getCoordinatorDashboardStats } from "@/lib/api/internship/coordinator/dashboard/query";
 import { DOCUMENTS } from "@/constants/internship/documents";
@@ -7,7 +6,7 @@ import {
   DEPARTMENTS,
   type departmentType,
 } from "@/constants/users/departments";
-import { getCompanyRecords } from "@/lib/api/internship/query";
+import { getAllCompanyRecords } from "@/lib/api/internship/query";
 import { cacheData } from "@/lib/redis";
 import z from "zod";
 import { getAllUserAccount } from "@/lib/api/internship/coordinator/hei/query";
@@ -16,7 +15,9 @@ import {
   rejectDocument,
 } from "@/lib/api/internship/coordinator/document-review/mutation";
 import type { createInternship } from "@/interfaces/internship/internship";
-import { createStudentInternship } from "@/lib/api/internship/mutation";
+import { insertStudentInternship } from "@/lib/api/internship/mutation";
+import { getAllInternsDocumentsBySection } from "@/lib/api/internship/coordinator/document-list/query";
+import { getAllDocumentsToReviewBySection } from "@/lib/api/internship/coordinator/document-review/query";
 
 export const internshipCoordinatorRouter = createTRPCRouter({
   /******************************************
@@ -40,7 +41,7 @@ export const internshipCoordinatorRouter = createTRPCRouter({
       const data = {
         ...input,
       } as createInternship;
-      await createStudentInternship({ data });
+      await insertStudentInternship({ data });
     }),
   postDocumentDeadline: protectedRoute
     .input(
@@ -69,12 +70,22 @@ export const internshipCoordinatorRouter = createTRPCRouter({
   /******************************************
    *          Coordinator API Query         *
    ******************************************/
-  getAllDocumentBySections: protectedRoute.query(({ ctx }) => {
+  getAllDocumentsToReview: protectedRoute.query(({ ctx }) => {
+    const id = ctx.session!.user.id;
+    return cacheData(
+      `${id}-review-documents`,
+      async () =>
+        await getAllDocumentsToReviewBySection({
+          id,
+        }),
+    );
+  }),
+  getAllInternsDocuments: protectedRoute.query(({ ctx }) => {
     const id = ctx.session!.user.id;
     return cacheData(
       `${id}-documents`,
       async () =>
-        await getAllDocumentBySection({
+        await getAllInternsDocumentsBySection({
           id,
         }),
     );
@@ -91,7 +102,7 @@ export const internshipCoordinatorRouter = createTRPCRouter({
     );
   }),
   getCompanyRecords: protectedRoute.query(async () => {
-    return await getCompanyRecords();
+    return await getAllCompanyRecords();
   }),
   getAllUserAccount: protectedRoute.query(async ({ ctx }) => {
     const userId = ctx.session!.user.id;

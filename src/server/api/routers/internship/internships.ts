@@ -1,10 +1,8 @@
-import { type departmentType } from "@/constants/users/departments";
 import type { roleType } from "@/constants/users/roles";
-import { getAllInternsDocuments } from "@/lib/api/internship/coordinator/document-list/query";
-import { getAllInternships } from "@/lib/api/internship/query";
+import { getAllInternshipsData } from "@/lib/api/internship/query";
 import {
   getAllDocumentsAvailable,
-  getAllUpcomingDeadlines,
+  getAllDocumentsDeadlines,
 } from "@/lib/api/internship/student/documents/query";
 import { cacheData } from "@/lib/redis";
 import { createTRPCRouter, protectedRoute } from "../../trpc";
@@ -18,7 +16,7 @@ export const internshipRouter = createTRPCRouter({
   }),
   getAllUpcomingDeadlines: protectedRoute.query(async ({ ctx }) => {
     const userId = ctx.session!.user.id;
-    return await getAllUpcomingDeadlines({ userId });
+    return await getAllDocumentsDeadlines({ userId });
   }),
   /******************************************
    *   Admin/Coordinator API Mutation/Query *
@@ -28,15 +26,7 @@ export const internshipRouter = createTRPCRouter({
     const role = ctx.session!.user.role as roleType;
 
     return cacheData(`${role}-internships`, async () => {
-      return await getAllInternships({ role, userId });
-    });
-  }),
-  getAllInternsDocuments: protectedRoute.query(({ ctx }) => {
-    const role = ctx.session!.user.role as roleType;
-    const department = ctx.session!.user.department as departmentType;
-
-    return cacheData(`${role}-${department}-documents`, async () => {
-      return await getAllInternsDocuments({ role, department });
+      return await getAllInternshipsData({ role, userId });
     });
   }),
 });

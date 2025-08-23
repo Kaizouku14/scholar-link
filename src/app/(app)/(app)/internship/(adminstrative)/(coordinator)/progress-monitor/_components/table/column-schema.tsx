@@ -6,10 +6,11 @@ import { SECTIONS } from "@/constants/users/sections";
 
 export const columnSchema = z.object({
   id: z.string(),
-  name: z.string().nullish(),
-  surname: z.string().nullish(),
+  name: z.string(),
+  middleName: z.string(),
+  surname: z.string(),
   profile: z.string().nullish(),
-  section: z.enum(SECTIONS).nullish(),
+  section: z.array(z.enum(SECTIONS)).nullish(),
   course: z.enum(COURSES).nullish(),
   yearLevel: z.enum(YEAR_LEVEL).nullish(),
   companyName: z.string(),

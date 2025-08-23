@@ -22,7 +22,7 @@ export const getAllDocumentsAvailable = async () => {
   }
 };
 
-export const getAllUpcomingDeadlines = async ({
+export const getAllDocumentsDeadlines = async ({
   userId,
 }: {
   userId: string;

@@ -24,7 +24,7 @@ import {
 } from "@/server/db/schema/internship";
 import { TRPCError } from "@trpc/server";
 
-export const getAllInternships = async ({
+export const getAllInternshipsData = async ({
   role,
   userId,
 }: {
@@ -129,7 +129,7 @@ export const getAllInternships = async ({
     });
 };
 
-export const getCompanyRecords = async () => {
+export const getAllCompanyRecords = async () => {
   try {
     const response = await db
       .select({

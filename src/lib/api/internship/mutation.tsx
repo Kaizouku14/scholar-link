@@ -13,7 +13,7 @@ import {
   user as UserTable,
 } from "@/server/db/schema/auth";
 
-export const createStudentInternship = async ({
+export const insertStudentInternship = async ({
   data,
 }: {
   data: createInternship;

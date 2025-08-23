@@ -1,89 +1,110 @@
-import type { departmentType } from "@/constants/users/departments";
-import { type roleType, ROLE } from "@/constants/users/roles";
-import { db, eq } from "@/server/db";
+import { and, db, eq, sql } from "@/server/db";
 import { TRPCError } from "@trpc/server";
-import { internDocuments as InternDocumentsTable } from "@/server/db/schema/internship";
+import {
+  internDocuments as InternDocumentsTable,
+  internship as InternshipTable,
+  company as CompanyTable,
+} from "@/server/db/schema/internship";
 import {
   user as UserTable,
   student as StudentTable,
 } from "@/server/db/schema/auth";
+import type { SectionType } from "@/constants/users/sections";
+import type { StudentDocuments } from "@/interfaces/internship/document";
 
-export const getAllInternsDocuments = async ({
-  role,
-  department,
+export const getAllInternsDocumentsBySection = async ({
+  id,
 }: {
-  role: roleType;
-  department: departmentType;
+  id: string;
 }) => {
-  try {
-    const baseQuery = db
-      .select({
-        documentId: InternDocumentsTable.documentId,
-        documentType: InternDocumentsTable.documentType,
-        documentUrl: InternDocumentsTable.documentUrl,
-        documentStatus: InternDocumentsTable.reviewStatus,
-        studentId: UserTable.id,
-        name: UserTable.name,
-        email: UserTable.email,
-        contactNo: UserTable.contact,
-        surname: UserTable.surname,
-        profile: UserTable.profile,
-        studentNo: StudentTable.studentNo,
-        section: UserTable.section,
-        course: StudentTable.course,
-        yearLevel: StudentTable.yearLevel,
-      })
-      .from(InternDocumentsTable)
-      .leftJoin(UserTable, eq(InternDocumentsTable.internId, UserTable.id))
-      .leftJoin(StudentTable, eq(UserTable.id, StudentTable.id));
+  const response = await db
+    .transaction(async (tx) => {
+      const [coordinator] = await tx
+        .select({
+          section: UserTable.section,
+          department: UserTable.department,
+        })
+        .from(UserTable)
+        .where(eq(UserTable.id, id))
+        .limit(1);
 
-    let query;
-    if (role === ROLE.INTERNSHIP_COORDINATOR) {
-      query = baseQuery.where(eq(UserTable.department, department));
-    } else {
-      query = baseQuery;
-    }
+      const coordinatorSections: SectionType[] = coordinator?.section ?? [];
+      const coordinatorDeparment = coordinator?.department;
 
-    const response = await query.execute();
-    console.log(response);
+      const documents = await tx
+        .select({
+          id: InternDocumentsTable.documentId,
+          type: InternDocumentsTable.documentType,
+          url: InternDocumentsTable.documentUrl,
+          reviewStatus: InternDocumentsTable.reviewStatus,
+          submittedAt: InternDocumentsTable.submittedAt,
+          studentId: UserTable.id,
+          name: UserTable.name,
+          middleName: UserTable.middleName,
+          surname: UserTable.surname,
+          email: UserTable.email,
+          contactNo: UserTable.contact,
+          profile: UserTable.profile,
+          section: UserTable.section,
+          course: StudentTable.course,
+          yearLevel: StudentTable.yearLevel,
+        })
+        .from(InternDocumentsTable)
+        .innerJoin(UserTable, eq(InternDocumentsTable.internId, UserTable.id))
+        .innerJoin(StudentTable, eq(UserTable.id, StudentTable.id))
+        .innerJoin(InternshipTable, eq(UserTable.id, InternshipTable.userId))
+        .where(
+          and(
+            eq(UserTable.department, coordinatorDeparment!),
+            sql`EXISTS (
+                        SELECT 1
+                        FROM json_each(${UserTable.section})
+                        WHERE value IN (${sql.join(coordinatorSections, sql`,`)})
+                    )`,
+          ),
+        )
+        .innerJoin(
+          CompanyTable,
+          eq(InternshipTable.companyId, CompanyTable.companyId),
+        )
+        .orderBy(InternDocumentsTable.submittedAt, UserTable.section);
 
-    return [];
-
-    // return Object.values(
-    //   response.reduce(
-    //     (acc, row) => {
-    //       if (!acc[row.studentId!]) {
-    //         acc[row.studentId!] = {
-    //           studentId: row.studentId,
-    //           studentNo: row.studentNo,
-    //           name: row.name,
-    //           email: row.email,
-    //           contactNo: row.contactNo,
-    //           surname: row.surname,
-    //           profile: row.profile,
-    //           section: row.section,
-    //           course: row.course,
-    //           yearLevel: row.yearLevel,
-    //           documents: [],
-    //         };
-    //       }
-
-    //       acc[row.studentId!].documents.push({
-    //         id: row.documentId,
-    //         type: row.documentType,
-    //         url: row.documentUrl,
-    //         status: row.documentStatus,
-    //       });
-
-    //       return acc;
-    //     },
-    //     {} as Record<string, any>,
-    //   ),
-    // );
-  } catch (error) {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: "Failed to get documents," + (error as Error).message,
+      return documents;
+    })
+    .catch((error) => {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Failed to get documents: " + (error as Error).message,
+      });
     });
-  }
+
+  return Object.values(
+    response.reduce(
+      (acc, row) => {
+        if (!acc[row.studentId] && row) {
+          // First time we see this student → create entry
+          acc[row.studentId] = {
+            ...row,
+            profile: row.profile!,
+            section: row.section!,
+            course: row.course!,
+            yearLevel: row.yearLevel!,
+            documents: [],
+          };
+        }
+
+        if (row.id) {
+          acc[row.studentId]?.documents.push({
+            id: row.id,
+            type: row.type,
+            url: row.url,
+            reviewStatus: row.reviewStatus,
+          });
+        }
+
+        return acc;
+      },
+      {} as Record<string, StudentDocuments>,
+    ),
+  );
 };

@@ -16,7 +16,7 @@ export const DocumentListColumns: ColumnDef<StudentDocuments>[] = [
     accessorKey: "surname",
     header: "Student",
     cell: ({ row }) => {
-      const { name, surname, course, section, yearLevel, profile } =
+      const { name, middleName, surname, course, section, yearLevel, profile } =
         row.original;
 
       return (
@@ -30,7 +30,7 @@ export const DocumentListColumns: ColumnDef<StudentDocuments>[] = [
 
           <div className="flex flex-col">
             <div className="text-foreground text-sm leading-tight font-medium">
-              {name} {surname}
+              {surname}, {name} {middleName?.charAt(0).toUpperCase()}.
             </div>
 
             <div className="text-muted-foreground text-xs">
@@ -56,26 +56,41 @@ export const DocumentListColumns: ColumnDef<StudentDocuments>[] = [
     header: "Status",
     accessorFn: (row) => {
       const documents = row.documents;
-      const submittedTypes = documents.map((doc) => doc.type);
-      const allSubmitted = DOCUMENTS.every((required) =>
-        submittedTypes.includes(required),
+      const requiredDocs = DOCUMENTS;
+      const allSubmitted = requiredDocs.every((required) =>
+        documents.some((doc) => doc.type === required),
       );
+      const allCompleted = requiredDocs.every((required) =>
+        documents.some(
+          (doc) => doc.type === required && doc.reviewStatus === "completed",
+        ),
+      );
+      const showCompleted = allSubmitted && allCompleted;
 
-      return allSubmitted ? "completed" : "pending";
+      return showCompleted ? "completed" : "pending";
     },
     cell: ({ row }) => {
       const { documents } = row.original;
-      const submittedTypes = documents.map((doc) => doc.type);
-      const allSubmitted = DOCUMENTS.every((required) =>
-        submittedTypes.includes(required),
+      const requiredDocs = DOCUMENTS;
+      const allSubmitted = requiredDocs.every((required) =>
+        documents.some((doc) => doc.type === required),
       );
+
+      // check if all required docs are completed
+      const allCompleted = requiredDocs.every((required) =>
+        documents.some(
+          (doc) => doc.type === required && doc.reviewStatus === "completed",
+        ),
+      );
+
+      const showCompleted = allSubmitted && allCompleted;
 
       return (
         <Badge
           variant={"outline"}
           className={`flex justify-evenly ${allSubmitted ? "border-emerald-200 bg-emerald-50 text-emerald-700" : "border-amber-200 bg-amber-50 text-amber-700"} `}
         >
-          {allSubmitted ? (
+          {showCompleted ? (
             <>
               <CheckCircle className="h-4 w-4" />
               <span>completed</span>

@@ -70,7 +70,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
                         {reviewStatus === STATUS[1] ? (
                           <CircleCheck className="text-green-800 dark:text-green-500" />
                         ) : (
-                          <Minus />
+                          <Minus className="text-muted-foreground" />
                         )}
                       </td>
                       <td className="px-2 py-1">

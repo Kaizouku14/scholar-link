@@ -10,10 +10,13 @@ import {
   student as StudentTable,
 } from "@/server/db/schema/auth";
 import type { SectionType } from "@/constants/users/sections";
-import type { StudentDocuments } from "@/interfaces/internship/document";
 
-export const getAllDocumentBySection = async ({ id }: { id: string }) => {
-  const response = await db
+export const getAllDocumentsToReviewBySection = async ({
+  id,
+}: {
+  id: string;
+}) => {
+  return await db
     .transaction(async (tx) => {
       const [coordinator] = await tx
         .select({
@@ -30,20 +33,19 @@ export const getAllDocumentBySection = async ({ id }: { id: string }) => {
       const documents = await tx
         .select({
           id: InternDocumentsTable.documentId,
-          type: InternDocumentsTable.documentType,
-          url: InternDocumentsTable.documentUrl,
+          documentType: InternDocumentsTable.documentType,
+          documentUrl: InternDocumentsTable.documentUrl,
           reviewStatus: InternDocumentsTable.reviewStatus,
           submittedAt: InternDocumentsTable.submittedAt,
           studentId: UserTable.id,
           name: UserTable.name,
           middleName: UserTable.middleName,
           surname: UserTable.surname,
-          email: UserTable.email,
-          contactNo: UserTable.contact,
           profile: UserTable.profile,
           section: UserTable.section,
           course: StudentTable.course,
           yearLevel: StudentTable.yearLevel,
+          companyName: CompanyTable.name,
         })
         .from(InternDocumentsTable)
         .innerJoin(UserTable, eq(InternDocumentsTable.internId, UserTable.id))
@@ -68,39 +70,10 @@ export const getAllDocumentBySection = async ({ id }: { id: string }) => {
       return documents;
     })
     .catch((error) => {
+      console.log(error);
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
         message: "Failed to get documents: " + (error as Error).message,
       });
     });
-
-  return Object.values(
-    response.reduce(
-      (acc, row) => {
-        if (!acc[row.studentId] && row) {
-          // First time we see this student → create entry
-          acc[row.studentId] = {
-            ...row,
-            profile: row.profile!,
-            section: row.section!,
-            course: row.course!,
-            yearLevel: row.yearLevel!,
-            documents: [],
-          };
-        }
-
-        if (row.id) {
-          acc[row.studentId]?.documents.push({
-            id: row.id,
-            type: row.type,
-            url: row.url,
-            reviewStatus: row.reviewStatus,
-          });
-        }
-
-        return acc;
-      },
-      {} as Record<string, StudentDocuments>,
-    ),
-  );
 };

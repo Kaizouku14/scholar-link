@@ -16,7 +16,7 @@ export const ProgressMonitoringColumns: ColumnDef<ColumnSchema>[] = [
     accessorKey: "surname",
     header: "Student",
     cell: ({ row }) => {
-      const { name, surname, course, section, yearLevel, profile } =
+      const { name, middleName, surname, course, section, yearLevel, profile } =
         row.original;
 
       return (
@@ -30,7 +30,7 @@ export const ProgressMonitoringColumns: ColumnDef<ColumnSchema>[] = [
 
           <div className="flex flex-col">
             <div className="text-foreground text-sm leading-tight font-medium">
-              {name} {surname}
+              {surname}, {name} {middleName?.charAt(0).toUpperCase()}.
             </div>
 
             <div className="text-muted-foreground text-xs">

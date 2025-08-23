@@ -7,7 +7,7 @@ import { api } from "@/trpc/react";
 
 const DocumentListTable = () => {
   const { data, isLoading } =
-    api.internshipCoordinator.getAllDocumentBySections.useQuery();
+    api.internshipCoordinator.getAllInternsDocuments.useQuery();
 
   return (
     <div className="mx-auto mt-4 w-full">
