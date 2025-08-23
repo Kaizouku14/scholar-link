@@ -30,11 +30,13 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   filteredTitle: string;
-  filteredColumn?: string;
   columnVisibility?: VisibilityState;
-  options?: {
-    label: string;
-    value: string;
+  filters?: {
+    column: string;
+    options: {
+      label: string;
+      value: string;
+    }[];
   }[];
   refetch?: () => Promise<QueryObserverResult<TData[] | undefined, unknown>>;
   onImport?: () => void;
@@ -44,9 +46,8 @@ export function DataTable<TData, TValue>({
   columns,
   data,
   filteredTitle,
-  filteredColumn,
   columnVisibility,
-  options,
+  filters,
   refetch,
   onImport,
 }: DataTableProps<TData, TValue>) {
@@ -91,8 +92,7 @@ export function DataTable<TData, TValue>({
       <DataTableToolbar
         table={table}
         filteredTitle={filteredTitle}
-        filteredColumn={filteredColumn}
-        options={options}
+        filters={filters}
         onImport={onImport}
       />
       <div className="border-border w-auto max-w-[90rem] rounded-xl border">

@@ -17,8 +17,12 @@ const ProgressMonitoringTable = () => {
           columns={ProgressMonitoringColumns}
           data={data}
           filteredTitle={"surname"}
-          filteredColumn="status"
-          options={INTERNSHIP_STATUS_LABELS}
+          filters={[
+            {
+              column: "status",
+              options: INTERNSHIP_STATUS_LABELS,
+            },
+          ]}
         />
       ) : (
         <DataTableSkeleton />

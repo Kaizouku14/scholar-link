@@ -4,17 +4,19 @@ import { type Table } from "@tanstack/react-table";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Import, X } from "lucide-react";
-import { DataTableFacetedFilter } from "./table-faceted-filter";
+import { DataTableMultiFacetedFilter } from "./table-faceted-filter";
 import { DataTableViewOptions } from "./table-view-options";
 import { Search } from "lucide-react";
 import { formatText } from "@/lib/utils";
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
   filteredTitle: string;
-  filteredColumn?: string;
-  options?: {
-    label: string;
-    value: string;
+  filters?: {
+    column: string;
+    options: {
+      label: string;
+      value: string;
+    }[];
   }[];
   onImport?: () => void;
 }
@@ -22,8 +24,7 @@ interface DataTableToolbarProps<TData> {
 export const DataTableToolbar = <TData,>({
   table,
   filteredTitle,
-  filteredColumn,
-  options,
+  filters,
   onImport,
 }: DataTableToolbarProps<TData>) => {
   const isFiltered = table.getState().columnFilters.length > 0;
@@ -44,11 +45,12 @@ export const DataTableToolbar = <TData,>({
             className="h-10 w-[200px] pl-10 lg:w-[340px]"
           />
         </div>
-        {filteredColumn && options && table.getColumn(filteredColumn) && (
-          <DataTableFacetedFilter
-            column={table.getColumn(filteredColumn)}
-            title={filteredColumn}
-            options={options}
+        {filters && filters.length > 0 && (
+          <DataTableMultiFacetedFilter
+            filters={filters.map((f) => ({
+              column: table.getColumn(f.column)!,
+              options: f.options,
+            }))}
           />
         )}
         {isFiltered && (

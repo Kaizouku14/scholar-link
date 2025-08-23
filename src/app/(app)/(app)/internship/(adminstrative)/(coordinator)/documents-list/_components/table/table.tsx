@@ -16,15 +16,19 @@ const DocumentListTable = () => {
           columns={DocumentListColumns}
           data={data}
           filteredTitle={"surname"}
-          filteredColumn="status"
-          options={[
+          filters={[
             {
-              label: "Completed",
-              value: "completed",
-            },
-            {
-              label: "Pending",
-              value: "pending",
+              column: "status",
+              options: [
+                {
+                  label: "Completed",
+                  value: "completed",
+                },
+                {
+                  label: "Pending",
+                  value: "pending",
+                },
+              ],
             },
           ]}
         />

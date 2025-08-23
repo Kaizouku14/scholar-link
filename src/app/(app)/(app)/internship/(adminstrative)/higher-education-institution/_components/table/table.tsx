@@ -16,8 +16,12 @@ const InternshipTable = () => {
           columns={InternsColumns}
           data={data}
           filteredTitle={"companyName"}
-          filteredColumn="status"
-          options={INTERNSHIP_STATUS_LABELS}
+          filters={[
+            {
+              column: "status",
+              options: INTERNSHIP_STATUS_LABELS,
+            },
+          ]}
         />
       ) : (
         <DataTableSkeleton />

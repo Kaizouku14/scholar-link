@@ -39,8 +39,12 @@ const ReviewDocumentsTable = () => {
                 id: false,
               }}
               filteredTitle={"surname"}
-              filteredColumn="reviewStatus"
-              options={STATUS_LABELS}
+              filters={[
+                {
+                  column: "reviewStatus",
+                  options: STATUS_LABELS,
+                },
+              ]}
             />
           </div>
         </div>
