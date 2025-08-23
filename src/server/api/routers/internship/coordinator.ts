@@ -17,6 +17,26 @@ export const internshipCoordinatorRouter = createTRPCRouter({
   /******************************************
    *          Coordinator API Mutation      *
    ******************************************/
+  createStudentInternship: protectedRoute
+    .input(
+      z.object({
+        userId: z.string(),
+        name: z.string(),
+        address: z.string(),
+        contactPerson: z.string(),
+        contactEmail: z.string(),
+        contactNo: z.string(),
+        startDate: z.date(),
+        endDate: z.date(),
+        department: z.enum(DEPARTMENTS),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      const data = {
+        ...input,
+      } as createInternship;
+      await createStudentInternship({ data });
+    }),
   postDocumentDeadline: protectedRoute
     .input(
       z.object({

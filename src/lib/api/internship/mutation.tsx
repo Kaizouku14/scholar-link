@@ -8,34 +8,39 @@ import {
 } from "@/server/db/schema/internship";
 import { departmentHoursMap } from "@/constants/internship/hours";
 import type { createInternship } from "@/interfaces/internship/internship";
+import {
+  authorizedEmail as AuthorizedEmailTable,
+  user as UserTable,
+} from "@/server/db/schema/auth";
 
 export const createStudentInternship = async ({
   data,
 }: {
   data: createInternship;
 }) => {
-  const internship = await db
-    .select({
-      internshipId: InternshipTable.internshipId,
-      companyId: InternshipTable.companyId,
-    })
-    .from(InternshipTable)
-    .where(eq(InternshipTable.userId, data.userId))
-    .limit(1);
-
-  if (internship.length > 0 && internship[0]!.companyId) {
-    throw new TRPCError({
-      code: "BAD_REQUEST",
-      message: "This student already has an internship.",
-    });
-  }
-
   await db.transaction(async (tx) => {
-    let companyId: string;
+    const internship = await db
+      .select({
+        internshipId: InternshipTable.internshipId,
+        companyId: InternshipTable.companyId,
+      })
+      .from(InternshipTable)
+      .where(eq(InternshipTable.userId, data.userId))
+      .limit(1);
+
+    if (internship.length > 0 && internship[0]!.companyId) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "This student already has an internship.",
+      });
+    }
+
     const internshipId = generateUUID();
     const supervisorId = generateUUID();
+    const authorizedEmailId = generateUUID();
     const totalHoursRequired = departmentHoursMap[data.department];
 
+    let companyId: string;
     const [companyExist] = await tx
       .select({ companyId: CompanyTable.companyId })
       .from(CompanyTable)
@@ -73,11 +78,20 @@ export const createStudentInternship = async ({
       startDate: data.startDate,
       endDate: data.endDate,
       totalOfHoursRequired: totalHoursRequired,
+      status: "on-going",
     });
 
-    await tx
-      .update(InternshipTable)
-      .set({ status: "on-going" })
-      .where(eq(InternshipTable.internshipId, internshipId));
+    const [user] = await tx
+      .select({ email: UserTable.email })
+      .from(UserTable)
+      .where(eq(UserTable.id, data.userId))
+      .limit(1);
+
+    if (user?.email) {
+      await tx.insert(AuthorizedEmailTable).values({
+        id: authorizedEmailId,
+        email: user.email,
+      });
+    }
   });
 };

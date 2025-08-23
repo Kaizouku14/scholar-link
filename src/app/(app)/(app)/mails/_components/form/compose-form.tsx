@@ -19,14 +19,12 @@ import { LoaderCircle, Send } from "lucide-react";
 import { formSchema, type FormSchema } from "./schema";
 import EmailComboBox from "./email-cb";
 import { api } from "@/trpc/react";
-import { useState } from "react";
 
 interface ComposeFormProps {
   onSuccess?: () => void;
   refetch: () => Promise<unknown>;
 }
 const ComposeForm = ({ onSuccess, refetch }: ComposeFormProps) => {
-  const [isLoading, setIsLoading] = useState(false);
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -36,11 +34,11 @@ const ComposeForm = ({ onSuccess, refetch }: ComposeFormProps) => {
     },
   });
 
-  const { mutateAsync: sendMailToMutation } = api.mail.sendMailTo.useMutation();
+  const { mutateAsync: sendMailToMutation, isPending } =
+    api.mail.sendMailTo.useMutation();
   const handleSubmit = async (values: FormSchema) => {
     const { to, subject, content } = values;
 
-    setIsLoading(true);
     try {
       await toast.promise(
         sendMailToMutation({
@@ -52,7 +50,6 @@ const ComposeForm = ({ onSuccess, refetch }: ComposeFormProps) => {
           loading: "Sending email...",
           success: () => {
             form.reset();
-            setIsLoading(false);
             void refetch();
 
             return "Email sent successfully";
@@ -123,8 +120,8 @@ const ComposeForm = ({ onSuccess, refetch }: ComposeFormProps) => {
           <Button type="button" variant="outline" onClick={() => onSuccess?.()}>
             Cancel
           </Button>
-          <Button type="submit" disabled={isLoading}>
-            {isLoading ? (
+          <Button type="submit" disabled={isPending}>
+            {isPending ? (
               <div className="text-foreground flex items-center gap-1">
                 <LoaderCircle className="h-6 w-6 animate-spin" />
                 <span className="animate-pulse">Sending...</span>

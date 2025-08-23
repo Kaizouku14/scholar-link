@@ -84,7 +84,7 @@ const EmailList = ({
               <div
                 key={thread[0]?.threadId}
                 className={cn(
-                  "hover:bg-muted/50 border-border cursor-pointer border-b p-4 transition-colors",
+                  "hover:bg-muted/50 border-border w-96 cursor-pointer border-b p-4 transition-colors",
                   isSelected && "bg-muted border-l-primary border-l-2",
                   !lastMesageIsRead &&
                     !isFromCurrentUser &&

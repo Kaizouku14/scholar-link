@@ -65,7 +65,7 @@ const InternshipForm = () => {
   });
 
   const { mutateAsync: createInternship } =
-    api.internshipUsers.createStudentInternship.useMutation();
+    api.internshipCoordinator.createStudentInternship.useMutation();
   const onSubmit = async (values: CompanyFormSchema) => {
     const coordinatoDepartment = data?.user.department;
     if (role === ROLE.INTERNSHIP_COORDINATOR) {
