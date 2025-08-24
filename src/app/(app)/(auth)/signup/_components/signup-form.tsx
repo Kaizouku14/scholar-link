@@ -99,9 +99,9 @@ const SignUpForm = () => {
           () => {
             return (
               <div className="flex flex-col">
-                <p>Pleas wait for the admin to verify your account!</p>
+                <p>Account created successfully!</p>
                 <p className="text-muted-foreground m-0 text-sm">
-                  Always check your email
+                  Check your email to verify your account
                 </p>
               </div>
             );
@@ -113,9 +113,9 @@ const SignUpForm = () => {
       router.push(PageRoutes.LOGIN);
       form.reset();
     } catch (error) {
-      console.log(error);
       toast.error(
         "An error Occured, Please try again!" + (error as Error).message,
+        { id: toastId },
       );
     }
   };
