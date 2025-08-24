@@ -13,7 +13,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { DOCUMENTS } from "@/constants/internship/documents";
 import type { StudentDocuments } from "@/interfaces/internship/document";
 import React from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -29,6 +28,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
   const noOfCompleted = documents.filter(
     (doc) => doc.reviewStatus === "completed",
   ).length;
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -56,7 +56,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
                 </tr>
               </thead>
               <tbody>
-                {DOCUMENTS.map((doc) => {
+                {/* {DOCUMENTS.map((doc) => {
                   const submittedDoc = documents.find((d) => d.type === doc);
                   const isSubmitted = Boolean(submittedDoc);
                   const reviewStatus = submittedDoc?.reviewStatus;
@@ -93,7 +93,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
                       </td>
                     </tr>
                   );
-                })}
+                })} */}
               </tbody>
             </table>
           </ScrollArea>
@@ -101,13 +101,13 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
 
         <DialogFooter className="w-full">
           <div className="flex w-full items-center justify-between">
-            <span className="ml-2 flex items-center gap-1 text-sm font-medium">
+            {/* <span className="ml-2 flex items-center gap-1 text-sm font-medium">
               <span className="text-primary">{noOfCompleted}</span>
               <span className="text-muted-foreground">
                 / {DOCUMENTS.length}
               </span>
               <span className="text-muted-foreground">completed</span>
-            </span>
+            </span> */}
             <DialogClose asChild>
               <Button variant="outline">Close</Button>
             </DialogClose>

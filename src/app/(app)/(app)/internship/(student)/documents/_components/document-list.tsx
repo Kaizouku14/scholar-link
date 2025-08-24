@@ -2,10 +2,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { EyeIcon, FileTextIcon, CalendarIcon } from "lucide-react";
-import { DOCUMENT_LABELS } from "@/constants/internship/documents";
 import { format } from "date-fns";
 import {
   cn,
+  formatText,
   getStatusColor,
   getStatusIndicatorColor,
   getStatusVariant,
@@ -29,7 +29,7 @@ const DocumentList = ({ documents }: { documents: DocumentCardProps }) => {
           </div>
           <div className="min-w-0 flex-1">
             <CardTitle className="text-foreground line-clamp-2 text-base leading-tight font-semibold">
-              {DOCUMENT_LABELS[documents.documentType]}
+              {formatText(documents.documentType)}
             </CardTitle>
           </div>
         </div>

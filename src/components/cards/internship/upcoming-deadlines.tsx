@@ -3,8 +3,12 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { DOCUMENT_LABELS } from "@/constants/internship/documents";
-import { calculateDaysLeft, cn, isDeadlineApproaching } from "@/lib/utils";
+import {
+  calculateDaysLeft,
+  cn,
+  formatText,
+  isDeadlineApproaching,
+} from "@/lib/utils";
 import { api } from "@/trpc/react";
 import { Calendar, FileText, RefreshCcw } from "lucide-react";
 import { useState } from "react";
@@ -85,7 +89,7 @@ const UpcomingDeadlines = () => {
 
                         <div className="flex flex-col">
                           <span className="text-foreground text-sm font-semibold">
-                            {DOCUMENT_LABELS[doc.name]}
+                            {formatText(doc.name)}
                           </span>
 
                           <span className="text-muted-foreground text-xs">

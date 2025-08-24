@@ -1,4 +1,3 @@
-import type { documentsType } from "@/constants/internship/documents";
 import { generateUUID } from "@/lib/utils";
 import { db, eq, and } from "@/server/db";
 import { internDocuments as internDocumentsTable } from "@/server/db/schema/internship";
@@ -12,7 +11,7 @@ export const insertDocument = async ({
   documentKey,
 }: {
   userId: string;
-  documentType: documentsType;
+  documentType: string;
   documentUrl: string;
   documentKey: string;
 }) => {

@@ -1,5 +1,4 @@
 import z from "zod";
-import { DOCUMENTS } from "@/constants/internship/documents";
 import { STATUS } from "@/constants/users/status";
 import { YEAR_LEVEL } from "@/constants/users/year-level";
 import { COURSES } from "@/constants/users/courses";
@@ -7,7 +6,7 @@ import { SECTIONS } from "@/constants/users/sections";
 
 export const documentColumnsSchema = z.object({
   id: z.string(),
-  documentType: z.enum(DOCUMENTS),
+  documentType: z.string(),
   documentUrl: z.string().nullish(),
   reviewStatus: z.enum(STATUS).nullish(),
   submittedAt: z.date().nullish(),

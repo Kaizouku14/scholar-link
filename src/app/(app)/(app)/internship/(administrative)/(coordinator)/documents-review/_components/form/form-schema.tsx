@@ -1,8 +1,7 @@
-import { DOCUMENTS } from "@/constants/internship/documents";
 import z from "zod";
 
 export const formSchema = z.object({
-  documentType: z.enum(DOCUMENTS),
+  documentType: z.string(),
   deadline: z.date(),
 });
 

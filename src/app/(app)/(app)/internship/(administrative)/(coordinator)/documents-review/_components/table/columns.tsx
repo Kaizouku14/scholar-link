@@ -2,7 +2,6 @@
 
 import type { ColumnDef } from "@tanstack/react-table";
 import { type DocumentSchema } from "./column-schema";
-import { DOCUMENT_LABELS } from "@/constants/internship/documents";
 import { FileText } from "lucide-react";
 import { COURSE_LABELS } from "@/constants/users/courses";
 import { YEAR_LEVEL_LABELS } from "@/constants/users/year-level";
@@ -10,6 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { format } from "date-fns";
 import {
   cn,
+  formatText,
   getStatusColor,
   getStatusIcon,
   getStatusVariant,
@@ -42,7 +42,7 @@ export const DocumentReviewColumns: ColumnDef<DocumentSchema>[] = [
           </div>
           <div className="flex flex-col justify-center">
             <span className="text-foreground max-w-40 truncate text-sm font-semibold">
-              {DOCUMENT_LABELS[row.original.documentType]}
+              {formatText(row.original.documentType)}
             </span>
             <span className="text-muted-foreground text-start text-xs">
               Document

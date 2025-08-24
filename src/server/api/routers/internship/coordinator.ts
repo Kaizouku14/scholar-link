@@ -1,7 +1,6 @@
 import { createTRPCRouter, protectedRoute } from "../../trpc";
 import { getStudentProgressByDept } from "@/lib/api/internship/coordinator/progress-monitoring/query";
 import { getCoordinatorDashboardStats } from "@/lib/api/internship/coordinator/dashboard/query";
-import { DOCUMENTS } from "@/constants/internship/documents";
 import {
   DEPARTMENTS,
   type departmentType,
@@ -20,7 +19,11 @@ import {
 import type { createInternship } from "@/interfaces/internship/internship";
 import { insertStudentInternship } from "@/lib/api/internship/mutation";
 import { getAllInternsDocumentsBySection } from "@/lib/api/internship/coordinator/document-list/query";
-import { getAllDocumentsToReviewBySection } from "@/lib/api/internship/coordinator/document-review/query";
+import {
+  deleteDocuments,
+  getAllDocumentsToReviewBySection,
+  getDocuments,
+} from "@/lib/api/internship/coordinator/document-review/query";
 
 export const internshipCoordinatorRouter = createTRPCRouter({
   /******************************************
@@ -48,12 +51,21 @@ export const internshipCoordinatorRouter = createTRPCRouter({
   postDocumentDeadline: protectedRoute
     .input(
       z.object({
-        documentType: z.enum(DOCUMENTS),
+        documentType: z.string(),
         deadline: z.date(),
       }),
     )
     .mutation(async ({ input }) => {
       await postDocument(input);
+    }),
+  removeDocument: protectedRoute
+    .input(
+      z.object({
+        documentType: z.string(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      await deleteDocuments(input.documentType);
     }),
   rejectInternDocument: protectedRoute
     .input(
@@ -72,6 +84,9 @@ export const internshipCoordinatorRouter = createTRPCRouter({
   /******************************************
    *          Coordinator API Query         *
    ******************************************/
+  getAllDocuments: protectedRoute.query(() => {
+    return cacheData("documents", async () => await getDocuments());
+  }),
   getAllDocumentsToReview: protectedRoute.query(({ ctx }) => {
     const id = ctx.session!.user.id;
     return cacheData(
@@ -92,9 +107,12 @@ export const internshipCoordinatorRouter = createTRPCRouter({
         }),
     );
   }),
-  getCoordinatorDashboardStats: protectedRoute.query(async ({ ctx }) => {
+  getCoordinatorDashboardStats: protectedRoute.query(({ ctx }) => {
     const department = ctx.session!.user.department as departmentType;
-    return await getCoordinatorDashboardStats({ department });
+    return cacheData(
+      `${department}-stats`,
+      async () => await getCoordinatorDashboardStats({ department }),
+    );
   }),
   getAllStudentProgressByDept: protectedRoute.query(({ ctx }) => {
     const department = ctx.session!.user.department as departmentType;
@@ -103,12 +121,18 @@ export const internshipCoordinatorRouter = createTRPCRouter({
       async () => await getStudentProgressByDept({ department }),
     );
   }),
-  getCompanyRecords: protectedRoute.query(async () => {
-    return await getAllCompanyRecords();
+  getCompanyRecords: protectedRoute.query(() => {
+    return cacheData(
+      "company-records",
+      async () => await getAllCompanyRecords(),
+    );
   }),
-  getAllUserAccount: protectedRoute.query(async ({ ctx }) => {
+  getAllUserAccount: protectedRoute.query(({ ctx }) => {
     const userId = ctx.session!.user.id;
-    return await getAllUserAccount({ userId });
+    return cacheData(
+      "accounts",
+      async () => await getAllUserAccount({ userId }),
+    );
   }),
   getAllInternships: protectedRoute.query(({ ctx }) => {
     const userId = ctx.session!.user.id;

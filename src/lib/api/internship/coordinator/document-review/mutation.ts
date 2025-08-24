@@ -1,4 +1,3 @@
-import type { documentsType } from "@/constants/internship/documents";
 import { generateUUID } from "@/lib/utils";
 import { db, eq } from "@/server/db";
 import {
@@ -12,7 +11,7 @@ export const postDocument = async ({
   documentType,
   deadline,
 }: {
-  documentType: documentsType;
+  documentType: string;
   deadline: Date;
 }) => {
   await db

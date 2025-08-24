@@ -1,8 +1,7 @@
-import { DOCUMENTS } from "@/constants/internship/documents";
 import { z } from "zod";
 
 export const documentSchema = z.object({
-  documentType: z.enum(DOCUMENTS),
+  documentType: z.string(),
   documentFile: z.instanceof(File, { message: "File is required" }),
 });
 

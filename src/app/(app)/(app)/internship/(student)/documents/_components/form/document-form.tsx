@@ -23,11 +23,11 @@ import { Button } from "@/components/ui/button";
 import { FileTextIcon, Upload, XIcon } from "lucide-react";
 import { useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { DOCUMENT_LABELS } from "@/constants/internship/documents";
 import SubmitButton from "@/components/forms/submit-button";
 import { api } from "@/trpc/react";
 import { toast } from "react-hot-toast";
 import { uploadFile } from "@/lib/uploadthing";
+import { formatText } from "@/lib/utils";
 
 const DocumentForm = () => {
   const form = useForm<DocumentSchema>({
@@ -96,7 +96,7 @@ const DocumentForm = () => {
                     <SelectContent className="bg-popover text-popover-foreground">
                       {data?.map((type, index) => (
                         <SelectItem key={index} value={type.documentType}>
-                          {DOCUMENT_LABELS[type.documentType]}
+                          {formatText(type.documentType)}
                         </SelectItem>
                       ))}
                     </SelectContent>

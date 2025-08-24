@@ -5,7 +5,6 @@ import {
   updateStudentLogProgress,
 } from "@/lib/api/internship/student/progress/mutation";
 import { insertDocument } from "@/lib/api/internship/student/documents/mutation";
-import { DOCUMENTS } from "@/constants/internship/documents";
 import { getAllUploadedDocuments } from "@/lib/api/internship/student/documents/query";
 import z from "zod";
 
@@ -16,7 +15,7 @@ export const internshipStudentRouter = createTRPCRouter({
   insertStudentDocument: protectedRoute
     .input(
       z.object({
-        documentType: z.enum(DOCUMENTS),
+        documentType: z.string(),
         documentUrl: z.string(),
         documentKey: z.string(),
       }),

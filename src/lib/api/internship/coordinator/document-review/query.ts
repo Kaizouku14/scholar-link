@@ -4,6 +4,7 @@ import {
   internDocuments as InternDocumentsTable,
   internship as InternshipTable,
   company as CompanyTable,
+  document as DocumentTable,
 } from "@/server/db/schema/internship";
 import {
   user as UserTable,
@@ -68,10 +69,43 @@ export const getAllDocumentsToReviewBySection = async ({
       return documents;
     })
     .catch((error) => {
-      console.log(error);
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
         message: "Failed to get documents: " + (error as Error).message,
       });
     });
+};
+
+export const getDocuments = async () => {
+  try {
+    const response = await db
+      .select({
+        documentType: DocumentTable.documentType,
+      })
+      .from(DocumentTable)
+      .execute();
+
+    return response;
+  } catch (error) {
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "Failed to get documents: " + (error as Error).message,
+    });
+  }
+};
+
+export const deleteDocuments = async (documentType: string) => {
+  try {
+    const response = await db
+      .delete(DocumentTable)
+      .where(eq(DocumentTable.documentType, documentType))
+      .execute();
+
+    return response;
+  } catch (error) {
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "Failed to get documents: " + (error as Error).message,
+    });
+  }
 };

@@ -3,15 +3,9 @@
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  DOCUMENT_LABELS,
-  type documentsType,
-} from "@/constants/internship/documents";
 
-// eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
-type NameType = documentsType | string;
 interface SimpleCalendarProps {
-  events?: { deadline: Date; name: NameType }[];
+  events?: { deadline: Date; name: string }[];
 }
 
 const EventCalendar = ({ events = [] }: SimpleCalendarProps) => {
@@ -103,9 +97,7 @@ const EventCalendar = ({ events = [] }: SimpleCalendarProps) => {
           </span>
           {dayEvent && (
             <span className="mx-1 mt-0.5 line-clamp-2 text-center text-[10px] leading-tight sm:text-xs">
-              {dayEvent.name in DOCUMENT_LABELS
-                ? DOCUMENT_LABELS[dayEvent.name as documentsType]
-                : dayEvent.name}
+              {dayEvent.name}
             </span>
           )}
         </div>,

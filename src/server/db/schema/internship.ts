@@ -2,7 +2,6 @@ import { integer, text } from "drizzle-orm/sqlite-core";
 import { user } from "./auth";
 import { createTable } from "../schema";
 import { STATUS, INTERNSHIP_STATUS } from "@/constants/users/status";
-import { DOCUMENTS } from "@/constants/internship/documents";
 import { sql } from "drizzle-orm";
 
 export const internship = createTable("internship", {
@@ -47,9 +46,7 @@ export const supervisor = createTable("supervisor", {
 });
 
 export const document = createTable("document", {
-  documentType: text("document_type", { enum: DOCUMENTS })
-    .notNull()
-    .primaryKey(),
+  documentType: text("document_type").notNull().primaryKey(),
   deadline: integer("deadline", { mode: "timestamp" }).notNull(),
 });
 
@@ -60,7 +57,7 @@ export const internDocuments = createTable("intern_documents", {
     .references(() => user.id, {
       onDelete: "cascade",
     }),
-  documentType: text("document_type", { enum: DOCUMENTS })
+  documentType: text("document_type")
     .notNull()
     .references(() => document.documentType, { onDelete: "cascade" }),
   submittedAt: integer("submitted_at", { mode: "timestamp" }),

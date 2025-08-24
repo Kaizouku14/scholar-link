@@ -12,10 +12,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  DOCUMENT_LABELS,
-  type documentsType,
-} from "@/constants/internship/documents";
+import { formatText } from "@/lib/utils";
 import { api } from "@/trpc/react";
 import { CircleX, LoaderCircle } from "lucide-react";
 import { useState, type FormEvent } from "react";
@@ -28,11 +25,11 @@ export const RejectDocumentDialog = ({
 }: {
   documentId: string;
   receiverId: string;
-  documentType: documentsType;
+  documentType: string;
 }) => {
   const [open, setOpen] = useState(false);
   const [reason, setReason] = useState<string>("");
-  const document = DOCUMENT_LABELS[documentType];
+  const formattedDocument = formatText(documentType);
 
   const { mutateAsync: RejectDocument, isPending } =
     api.internshipCoordinator.rejectInternDocument.useMutation();
@@ -43,7 +40,7 @@ export const RejectDocumentDialog = ({
         documentId,
         userId: receiverId,
         receiverId,
-        subject: `Document Rejected - [${document}]`,
+        subject: `Document Rejected - [${formattedDocument}]`,
         reason,
       });
 
@@ -83,7 +80,7 @@ export const RejectDocumentDialog = ({
           <div className="bg-muted rounded-md p-3 text-xs">
             <span className="text-foreground font-medium">Subject: </span>
             <span className="text-muted-foreground">
-              Document Rejected - [{document}]
+              Document Rejected - [{formattedDocument}]
             </span>
           </div>
           <Textarea

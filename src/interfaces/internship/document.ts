@@ -1,9 +1,8 @@
-import type { documentsType } from "@/constants/internship/documents";
 import type { SectionType } from "@/constants/users/sections";
 
 export interface DocumentCardProps {
   documentId: string;
-  documentType: documentsType;
+  documentType: string;
   documentUrl: string;
   submittedAt: Date;
   status: string;

@@ -11,14 +11,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { DOCUMENT_LABELS, DOCUMENTS } from "@/constants/internship/documents";
 import { CalendarIcon, FileText } from "lucide-react";
 import {
   Popover,
@@ -31,6 +23,7 @@ import { Button } from "@/components/ui/button";
 import SubmitButton from "@/components/forms/submit-button";
 import { api } from "@/trpc/react";
 import { toast } from "react-hot-toast";
+import { DocumentsCb } from "./documents-cb";
 
 const DocumentForm = () => {
   const form = useForm<FormSchema>({
@@ -84,27 +77,9 @@ const DocumentForm = () => {
                   <FileText className="h-4 w-4" />
                   Document Type
                 </FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger className="border-input bg-background text-foreground placeholder:text-muted-foreground focus:ring-primary w-full rounded-lg border px-3 py-2 text-sm focus:ring-2">
-                      <SelectValue placeholder="Select document type" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent className="border-border bg-popover text-popover-foreground rounded-lg border shadow-lg">
-                    {DOCUMENTS.map((type, index) => (
-                      <SelectItem
-                        key={index}
-                        value={type}
-                        className="hover:bg-accent hover:text-accent-foreground cursor-pointer"
-                      >
-                        {DOCUMENT_LABELS[type]}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <FormControl>
+                  <DocumentsCb value={field.value} onChange={field.onChange} />
+                </FormControl>
                 <FormMessage className="text-destructive text-xs" />
               </FormItem>
             )}
