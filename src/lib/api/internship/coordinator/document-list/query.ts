@@ -85,8 +85,8 @@ export const getAllInternsDocumentsBySection = async ({
             ...row,
             profile: row.profile!,
             section: row.section!,
-            course: row.course,
-            yearLevel: row.yearLevel,
+            course: row.course!,
+            yearLevel: row.yearLevel!,
             documents: [],
           };
         }

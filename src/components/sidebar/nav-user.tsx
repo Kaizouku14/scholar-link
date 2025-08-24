@@ -25,8 +25,6 @@ import { formatText } from "@/lib/utils";
 
 export interface UserItem {
   name?: string;
-  middleName?: string;
-  surname?: string;
   email?: string;
   role?: string;
   profile?: string;
@@ -69,8 +67,6 @@ export const NavUser = ({ user }: { user?: UserItem }) => {
                 <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
                   <div className="flex max-w-[8rem] items-center gap-x-1 truncate font-semibold">
                     <span> {formatText(user?.name ?? "")}</span>
-                    <span>{user?.middleName?.charAt(0).toUpperCase()}.</span>
-                    <span> {formatText(user?.surname ?? "")}</span>
                   </div>
                   <span className="text-muted-foreground truncate text-xs">
                     {user?.email ?? "Unknown"}
@@ -96,8 +92,6 @@ export const NavUser = ({ user }: { user?: UserItem }) => {
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <div className="flex items-center gap-x-1 truncate font-semibold">
                     <span>{formatText(user?.name ?? "")}</span>
-                    <span>{user?.middleName?.charAt(0).toUpperCase()}.</span>
-                    <span> {formatText(user?.surname ?? "")}</span>
                   </div>
                   <span className="truncate text-xs">
                     {user?.email ?? "Unknown"}

@@ -13,8 +13,6 @@ export const InternCard = ({
 }: {
   intern: {
     name: string;
-    middleName: string;
-    surname: string;
     email: string;
     profile?: string | null;
 
@@ -44,8 +42,7 @@ export const InternCard = ({
               </Avatar>
               <div className="flex flex-col">
                 <h3 className="text-card-foreground text-sm font-medium">
-                  {intern.surname}, {intern.name}{" "}
-                  {intern.middleName && `${intern.middleName} `}
+                  {intern.name}
                 </h3>
                 <p className="text-muted-foreground text-xs">{intern.email}</p>
               </div>
