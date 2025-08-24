@@ -43,6 +43,10 @@ export const CoordinatorInternsColumns: ColumnDef<CoordinatorSectionData>[] = [
   },
   {
     accessorKey: "section",
+    filterFn: (row, columnId, filterValues: string[]) => {
+      const cellValue = row.getValue<string[]>(columnId) ?? [];
+      return filterValues.some((val) => cellValue.includes(val));
+    },
     header: ({ column }) => (
       <div className="text-left">
         <DataTableColumnHeader column={column} title="Section" />

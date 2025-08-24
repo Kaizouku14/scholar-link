@@ -20,7 +20,7 @@ interface DataTableRowActionsProps {
 }
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
-  console.log(row);
+  const { name } = row.original;
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -29,7 +29,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
           <span className="text-sm">View</span>
         </Button>
       </DialogTrigger>
-
+      <div>{name}</div>
       <DialogContent className="h-[80vh] sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>Internship Details</DialogTitle>
