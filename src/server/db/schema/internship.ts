@@ -16,8 +16,7 @@ export const internship = createTable("internship", {
   supervisorId: text("supervisor_id")
     .notNull()
     .references(() => supervisor.supervisorId, { onDelete: "cascade" }),
-  startDate: integer("start_date", { mode: "timestamp" }).notNull(),
-  endDate: integer("end_date", { mode: "timestamp" }).notNull(),
+  duration: text("duration").notNull(),
   totalOfHoursRequired: integer("total_of_hours_required").notNull(), //Values i.e(450, 600)
   status: text("status", { enum: INTERNSHIP_STATUS })
     .notNull()

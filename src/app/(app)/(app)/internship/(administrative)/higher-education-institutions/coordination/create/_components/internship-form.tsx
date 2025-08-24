@@ -73,9 +73,20 @@ const InternshipForm = () => {
     }
     const toastId = toast.loading("Saving internship company details...");
     try {
-      await createInternship({
-        ...values,
+      const formattedDuration = `${format(values.startDate, "LLLL yyyy")} - ${format(values.endDate, "LLLL yyyy")}`;
+      const data = {
+        userId: values.userId,
+        name: values.name,
+        address: values.address,
+        contactPerson: values.contactPerson,
+        contactEmail: values.contactEmail,
+        contactNo: values.contactNo,
         department: values.department!,
+        duration: formattedDuration,
+      };
+
+      await createInternship({
+        ...data,
       });
 
       toast.success("Internship company linked successfully!", {

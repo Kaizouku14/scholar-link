@@ -75,8 +75,7 @@ export const insertStudentInternship = async ({
       userId: data.userId,
       supervisorId,
       companyId,
-      startDate: data.startDate,
-      endDate: data.endDate,
+      duration: data.duration,
       totalOfHoursRequired: totalHoursRequired,
       status: "on-going",
     });

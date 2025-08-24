@@ -35,8 +35,7 @@ export const internshipCoordinatorRouter = createTRPCRouter({
         contactPerson: z.string(),
         contactEmail: z.string(),
         contactNo: z.string(),
-        startDate: z.date(),
-        endDate: z.date(),
+        duration: z.string(),
         department: z.enum(DEPARTMENTS),
       }),
     )

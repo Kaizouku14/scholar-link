@@ -8,6 +8,5 @@ export interface createInternship {
   contactPerson: string;
   contactEmail: string;
   contactNo: string;
-  startDate: Date;
-  endDate: Date;
+  duration: string;
 }
