@@ -24,12 +24,15 @@ import SubmitButton from "@/components/forms/submit-button";
 import { api } from "@/trpc/react";
 import { toast } from "react-hot-toast";
 import { DocumentsCb } from "./documents-cb";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
+import { RemoveDocumentAlert } from "../dialog/remove-dialog";
 
 const DocumentForm = () => {
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      documentType: undefined,
+      documentType: "",
       deadline: undefined,
     },
   });
@@ -47,6 +50,7 @@ const DocumentForm = () => {
       loading: "Uploading document...",
       success: () => {
         void refetch();
+        form.reset();
         return "Document uploaded successfully!";
       },
       error: (error: unknown) => {
@@ -68,22 +72,64 @@ const DocumentForm = () => {
         </div>
 
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <FormField
-            control={form.control}
-            name="documentType"
-            render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel className="text-foreground text-sm font-medium">
-                  <FileText className="h-4 w-4" />
-                  Document Type
-                </FormLabel>
-                <FormControl>
-                  <DocumentsCb value={field.value} onChange={field.onChange} />
-                </FormControl>
-                <FormMessage className="text-destructive text-xs" />
-              </FormItem>
-            )}
-          />
+          <Tabs defaultValue="list">
+            <TabsList>
+              <TabsTrigger value="list">List</TabsTrigger>
+              <TabsTrigger
+                value="new"
+                onClick={() => form.setValue("documentType", "")}
+              >
+                New
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent
+              value="list"
+              className="flex w-full items-center gap-1"
+            >
+              <FormField
+                control={form.control}
+                name="documentType"
+                render={({ field }) => (
+                  <FormItem className="flex w-full flex-col">
+                    <FormLabel className="text-foreground text-sm font-medium">
+                      <FileText className="h-4 w-4" />
+                      Document Type
+                    </FormLabel>
+                    <FormControl>
+                      <DocumentsCb
+                        value={field.value}
+                        onChange={field.onChange}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-destructive text-xs" />
+                  </FormItem>
+                )}
+              />
+              {form.watch("documentType") && (
+                <RemoveDocumentAlert
+                  documentType={form.getValues("documentType")}
+                />
+              )}
+            </TabsContent>
+            <TabsContent value="new">
+              <FormField
+                control={form.control}
+                name="documentType"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel className="text-foreground text-sm font-medium">
+                      <FileText className="h-4 w-4" />
+                      Document Type
+                    </FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder="Document Type" />
+                    </FormControl>
+                    <FormMessage className="text-destructive text-xs" />
+                  </FormItem>
+                )}
+              />
+            </TabsContent>
+          </Tabs>
 
           <FormField
             control={form.control}

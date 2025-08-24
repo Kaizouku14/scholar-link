@@ -28,6 +28,10 @@ export const DocumentsCb = ({ value, onChange }: DocumentProps) => {
   const [open, setOpen] = React.useState(false);
   const { data } = api.internshipCoordinator.getAllDocuments.useQuery();
 
+  const isMatched = value
+    ? data?.find((detail) => detail.documentType === value)?.documentType
+    : "Select document";
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -37,14 +41,11 @@ export const DocumentsCb = ({ value, onChange }: DocumentProps) => {
           aria-expanded={open}
           className="w-full justify-between"
         >
-          {value
-            ? data?.find((detail) => detail.documentType === value)
-                ?.documentType
-            : "Select document"}
+          {formatText(isMatched!)}
           <ChevronsUpDown className="opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-80 p-0">
+      <PopoverContent className="p-0 md:w-[25rem]">
         <Command>
           <CommandInput placeholder="Search document" className="h-9" />
           <CommandList>
@@ -59,7 +60,7 @@ export const DocumentsCb = ({ value, onChange }: DocumentProps) => {
                     setOpen(false);
                   }}
                 >
-                  {formatText(detail.documentType)}
+                  {detail.documentType && formatText(detail.documentType)}
                   <Check
                     className={cn(
                       "ml-auto",

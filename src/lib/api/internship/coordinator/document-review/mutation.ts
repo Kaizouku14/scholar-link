@@ -1,4 +1,4 @@
-import { generateUUID } from "@/lib/utils";
+import { generateUUID, slugify } from "@/lib/utils";
 import { db, eq } from "@/server/db";
 import {
   document as DocumentTable,
@@ -16,10 +16,11 @@ export const postDocument = async ({
 }) => {
   await db
     .transaction(async (tx) => {
+      const document = slugify(documentType);
       const documentExist = await tx
         .select({ documentType: DocumentTable.documentType })
         .from(DocumentTable)
-        .where(eq(DocumentTable.documentType, documentType))
+        .where(eq(DocumentTable.documentType, document))
         .limit(1)
         .execute();
 
@@ -27,12 +28,12 @@ export const postDocument = async ({
         await tx
           .update(DocumentTable)
           .set({ deadline })
-          .where(eq(DocumentTable.documentType, documentType))
+          .where(eq(DocumentTable.documentType, document))
           .execute();
       } else {
         await tx
           .insert(DocumentTable)
-          .values({ documentType, deadline })
+          .values({ documentType: document, deadline })
           .execute();
       }
     })

@@ -1,4 +1,3 @@
-import UpcomingDeadlines from "@/components/cards/internship/upcoming-deadlines";
 import CoordinatorDashboardStats from "./_components/cards/coordinator-stats";
 
 const CoordinatorDashboard = () => {
@@ -11,7 +10,6 @@ const CoordinatorDashboard = () => {
         </span>
       </div>
       <CoordinatorDashboardStats />
-      <UpcomingDeadlines />
     </div>
   );
 };

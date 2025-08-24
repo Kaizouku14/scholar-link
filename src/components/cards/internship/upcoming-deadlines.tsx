@@ -31,9 +31,9 @@ const UpcomingDeadlines = () => {
   return (
     <>
       {isLoading ? (
-        <Skeleton className="h-80 w-full max-w-md rounded-xl" />
+        <Skeleton className="w-full rounded-xl" />
       ) : (
-        <Card className="w-full max-w-md shadow-none">
+        <Card className="w-full shadow-none">
           <CardHeader>
             <CardTitle className="flex items-center gap-1">
               <div className="flex w-full items-center justify-between">
@@ -72,7 +72,7 @@ const UpcomingDeadlines = () => {
                 </div>
               </div>
             ) : (
-              <ScrollArea className="h-50 p-2">
+              <ScrollArea className="h-60 p-2">
                 <div className="flex flex-col gap-2">
                   {internshipDocuments?.map((doc, index) => {
                     const daysLeft = calculateDaysLeft(doc.deadline);
@@ -91,7 +91,6 @@ const UpcomingDeadlines = () => {
                           <span className="text-foreground text-sm font-semibold">
                             {formatText(doc.name)}
                           </span>
-
                           <span className="text-muted-foreground text-xs">
                             {doc.deadline.toLocaleDateString("en-US", {
                               month: "short",

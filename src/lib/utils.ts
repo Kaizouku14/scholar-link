@@ -176,6 +176,7 @@ export function formatText(text: string) {
     .trim()
     .replace(/([a-z])([A-Z])/g, "$1 $2") // split camelCase
     .replace(/_/g, " ") // underscores → spaces
+    .replace(/-/g, " ")
     .replace(/\s+/g, " ") // collapse multiple spaces
     .toLowerCase()
     .replace(/\b\w/g, (c) => c.toUpperCase())
