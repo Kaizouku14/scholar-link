@@ -23,4 +23,7 @@ export interface StudentDocuments {
     url: string | null;
     reviewStatus: string | null;
   }[];
+  requiredDocuments: {
+    documentType: string;
+  }[];
 }

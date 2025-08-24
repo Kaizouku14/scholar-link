@@ -53,53 +53,56 @@ export const DocumentListColumns: ColumnDef<StudentDocuments>[] = [
     accessorKey: "status",
     header: "Status",
     accessorFn: (row) => {
-      //   const documents = row.documents;
-      //   const requiredDocs = DOCUMENTS;
-      //   const allSubmitted = requiredDocs.every((required) =>
-      //     documents.some((doc) => doc.type === required),
-      //   );
-      //   const allCompleted = requiredDocs.every((required) =>
-      //     documents.some(
-      //       (doc) => doc.type === required && doc.reviewStatus === "completed",
-      //     ),
-      //   );
-      //   const showCompleted = allSubmitted && allCompleted;
-      //   return showCompleted ? "completed" : "pending";
+      const documents = row.documents;
+      const requiredDocs = row.requiredDocuments;
+      const allSubmitted = requiredDocs.every((required) =>
+        documents.some((doc) => doc.type === required.documentType),
+      );
+      const allCompleted = requiredDocs.every((required) =>
+        documents.some(
+          (doc) =>
+            doc.type === required.documentType &&
+            doc.reviewStatus === "completed",
+        ),
+      );
+      const showCompleted = allSubmitted && allCompleted;
+      return showCompleted ? "completed" : "pending";
     },
     cell: ({ row }) => {
-      //   const { documents } = row.original;
-      //   const requiredDocs = DOCUMENTS;
-      //   const allSubmitted = requiredDocs.every((required) =>
-      //     documents.some((doc) => doc.type === required),
-      //   );
+      const { documents, requiredDocuments } = row.original;
+      const requiredDocs = requiredDocuments;
+      const allSubmitted = requiredDocs.every((required) =>
+        documents.some((doc) => doc.type === required.documentType),
+      );
 
-      //   // check if all required docs are completed
-      //   const allCompleted = requiredDocs.every((required) =>
-      //     documents.some(
-      //       (doc) => doc.type === required && doc.reviewStatus === "completed",
-      //     ),
-      //   );
+      // check if all required docs are completed
+      const allCompleted = requiredDocs.every((required) =>
+        documents.some(
+          (doc) =>
+            doc.type === required.documentType &&
+            doc.reviewStatus === "completed",
+        ),
+      );
 
-      //   const showCompleted = allSubmitted && allCompleted;
-      return "TO FIXED";
-      //   return (
-      //     <Badge
-      //       variant={"outline"}
-      //       className={`flex justify-evenly ${allSubmitted ? "border-emerald-200 bg-emerald-50 text-emerald-700" : "border-amber-200 bg-amber-50 text-amber-700"} `}
-      //     >
-      //       {showCompleted ? (
-      //         <>
-      //           <CheckCircle className="h-4 w-4" />
-      //           <span>completed</span>
-      //         </>
-      //       ) : (
-      //         <>
-      //           <Clock className="h-4 w-4" />
-      //           <span>pending</span>
-      //         </>
-      //       )}
-      //     </Badge>
-      //   );
+      const showCompleted = allSubmitted && allCompleted;
+      return (
+        <Badge
+          variant={"outline"}
+          className={`flex justify-evenly ${allSubmitted ? "border-emerald-200 bg-emerald-50 text-emerald-700" : "border-amber-200 bg-amber-50 text-amber-700"} `}
+        >
+          {showCompleted ? (
+            <>
+              <CheckCircle className="h-4 w-4" />
+              <span>completed</span>
+            </>
+          ) : (
+            <>
+              <Clock className="h-4 w-4" />
+              <span>pending</span>
+            </>
+          )}
+        </Badge>
+      );
     },
   },
   {

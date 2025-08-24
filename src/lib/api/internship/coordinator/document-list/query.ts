@@ -4,6 +4,7 @@ import {
   internDocuments as InternDocumentsTable,
   internship as InternshipTable,
   company as CompanyTable,
+  document as DocumentTable,
 } from "@/server/db/schema/internship";
 import {
   user as UserTable,
@@ -30,6 +31,10 @@ export const getAllInternsDocumentsBySection = async ({
 
       const coordinatorSections: SectionType[] = coordinator?.section ?? [];
       const coordinatorDeparment = coordinator?.department;
+
+      const requiredDocuments = await tx
+        .select({ documentType: DocumentTable.documentType })
+        .from(DocumentTable);
 
       const documents = await tx
         .select({
@@ -67,7 +72,7 @@ export const getAllInternsDocumentsBySection = async ({
         )
         .orderBy(InternDocumentsTable.submittedAt, UserTable.section);
 
-      return documents;
+      return { documents, requiredDocuments };
     })
     .catch((error) => {
       throw new TRPCError({
@@ -76,8 +81,10 @@ export const getAllInternsDocumentsBySection = async ({
       });
     });
 
+  const { documents, requiredDocuments } = response;
+
   return Object.values(
-    response.reduce(
+    documents.reduce(
       (acc, row) => {
         if (!acc[row.studentId] && row) {
           // First time we see this student → create entry
@@ -88,6 +95,7 @@ export const getAllInternsDocumentsBySection = async ({
             course: row.course!,
             yearLevel: row.yearLevel!,
             documents: [],
+            requiredDocuments,
           };
         }
 
