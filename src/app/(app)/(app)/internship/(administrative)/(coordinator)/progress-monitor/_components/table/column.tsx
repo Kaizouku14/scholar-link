@@ -4,12 +4,18 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { COURSE_LABELS } from "@/constants/users/courses";
 import { YEAR_LEVEL_LABELS } from "@/constants/users/year-level";
-import { cn, getStatusColor, getStatusVariant } from "@/lib/utils";
+import {
+  cn,
+  getStatusColor,
+  getStatusIcon,
+  getStatusVariant,
+} from "@/lib/utils";
 import type { ColumnDef } from "@tanstack/react-table";
 import { CheckCircle, Clock, Hourglass, XCircle } from "lucide-react";
 import type { ColumnSchema } from "./column-schema";
 import { Progress } from "@/components/ui/progress";
 import { DataTableRowActions } from "./table-row-actions";
+import React from "react";
 
 export const ProgressMonitoringColumns: ColumnDef<ColumnSchema>[] = [
   {
@@ -80,15 +86,9 @@ export const ProgressMonitoringColumns: ColumnDef<ColumnSchema>[] = [
             color,
           )}
         >
-          {status === "pending" ? (
-            <Clock className={cn("h-4 w-4", color)} />
-          ) : status === "on-going" ? (
-            <Hourglass className={cn("h-4 w-4", color)} />
-          ) : status === "completed" ? (
-            <CheckCircle className={cn("h-4 w-4", color)} />
-          ) : (
-            <XCircle className={cn("h-4 w-4", color)} />
-          )}
+          {React.createElement(getStatusIcon(status ?? "default"), {
+            className: cn(color),
+          })}
           {status}
         </Badge>
       );

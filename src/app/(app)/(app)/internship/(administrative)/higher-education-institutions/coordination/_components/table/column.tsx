@@ -2,23 +2,45 @@
 
 import type { CoordinatorSectionData } from "@/interfaces/internship/hei";
 import type { ColumnDef } from "@tanstack/react-table";
-import { departmentHoursMap } from "@/constants/internship/hours";
-import {
-  calculateCompletionPercentage,
-  cn,
-  getStatusColor,
-  getStatusFromPercentage,
-  getStatusIcon,
-  getStatusVariant,
-} from "@/lib/utils";
+import { cn, getStatusColor, getStatusIcon } from "@/lib/utils";
 import React from "react";
-import { DataTableColumnHeader } from "@/components/table/table-column-header";
-import { Clock, GraduationCap, Users } from "lucide-react";
-import { Progress } from "@/components/ui/progress";
+import { Building2, GraduationCap, UserCheck } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { DataTableRowActions } from "./table-row-actions";
+import { DataTableColumnHeader } from "@/components/table/table-column-header";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { YEAR_LEVEL_LABELS } from "@/constants/users/year-level";
 
 export const CoordinatorInternsColumns: ColumnDef<CoordinatorSectionData>[] = [
+  {
+    accessorKey: "surname",
+    header: "Student",
+    cell: ({ row }) => {
+      const { name, middleName, surname, profile } = row.original;
+
+      return (
+        <div className="flex items-center gap-x-2">
+          <Avatar className="h-9 w-9">
+            <AvatarImage src={profile ?? undefined} />
+            <AvatarFallback className="text-sm">
+              {name?.charAt(0)?.toUpperCase()}
+              {surname?.charAt(0)?.toUpperCase()}
+            </AvatarFallback>
+          </Avatar>
+
+          <div className="flex flex-col">
+            <div className="text-foreground text-sm font-medium">
+              {surname}, {name}{" "}
+              {middleName && `${middleName.charAt(0).toUpperCase()}.`}
+            </div>
+            <div className="text-muted-foreground text-xs">
+              {row.original.email}
+            </div>
+          </div>
+        </div>
+      );
+    },
+  },
   {
     accessorKey: "section",
     header: ({ column }) => (
@@ -27,90 +49,96 @@ export const CoordinatorInternsColumns: ColumnDef<CoordinatorSectionData>[] = [
       </div>
     ),
     cell: ({ row }) => (
-      <div className="flex items-center gap-2">
-        <GraduationCap className="text-muted-foreground h-4 w-4 flex-shrink-0" />
-        <span className="font-bold tracking-wide">
-          SECTION {row.original.section}
-        </span>
+      <div className="flex flex-col gap-0.5">
+        <div className="flex items-center gap-1.5">
+          <GraduationCap className="text-muted-foreground h-4 w-4 flex-shrink-0" />
+          <span className="max-w-[200px] truncate tracking-wide">
+            {row.original.course}
+          </span>
+        </div>
+        <div className="text-muted-foreground flex max-w-[200px] gap-1 truncate pl-5 text-xs">
+          <span>SECTION</span>·
+          <span>
+            {YEAR_LEVEL_LABELS[row.original.yearLevel!]}
+            {row.original.section}
+          </span>
+        </div>
+      </div>
+    ),
+  },
+
+  {
+    accessorKey: "companyName",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Company" />
+    ),
+    cell: ({ row }) => (
+      <div className="flex flex-col gap-0.5">
+        <div className="flex items-center gap-1.5">
+          <Building2 className="text-muted-foreground h-4 w-4 flex-shrink-0" />
+          <span className="text-sm font-medium">
+            {row.original.companyName ?? "Not assigned"}
+          </span>
+        </div>
+        {row.original.companyAddress && (
+          <div className="text-muted-foreground max-w-[200px] truncate pl-5 text-xs">
+            {row.original.companyAddress}
+          </div>
+        )}
       </div>
     ),
   },
   {
-    accessorKey: "hoursRequired",
-    header: "Hours Required",
-    cell: ({ row }) => {
-      const hoursRequired = departmentHoursMap[row.original.department!];
-      return (
-        <div className="flex items-center gap-1">
-          <Clock className="text-muted-foreground h-4 w-4" />
-          <span>{hoursRequired}</span>
-          <span className="text-muted-foreground text-xs">hrs</span>
-        </div>
-      );
-    },
+    accessorKey: "supervisorName",
+    header: "Supervisor",
+    cell: ({ row }) => (
+      <div className="flex flex-col gap-0.5">
+        {row.original.supervisorName ? (
+          <>
+            <div className="flex items-center gap-1.5">
+              <UserCheck className="text-muted-foreground h-4 w-4 flex-shrink-0" />
+              <span className="text-sm font-medium">
+                {row.original.supervisorName}
+              </span>
+            </div>
+            <div className="text-muted-foreground pl-5 text-xs">
+              {row.original.supervisorEmail}
+            </div>
+          </>
+        ) : (
+          <span className="text-muted-foreground text-sm">Not assigned</span>
+        )}
+      </div>
+    ),
+  },
+  {
+    accessorKey: "supervisorContactNo",
+    header: "Supervisor No.",
+    cell: ({ row }) => (
+      <div className="text-sm">{row.original.supervisorContactNo}</div>
+    ),
   },
   {
     accessorKey: "status",
-    header: "Status",
-    accessorFn: (row) => {
-      const percentage = calculateCompletionPercentage(
-        Number(row.totalProgressHours),
-        row.studentCount,
-        row.department!,
-      );
-      return getStatusFromPercentage(percentage);
-    },
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Status" />
+    ),
     cell: ({ row }) => {
-      const { totalProgressHours, studentCount, department } = row.original;
-      const percentage = calculateCompletionPercentage(
-        Number(totalProgressHours),
-        studentCount,
-        department!,
-      );
-
-      const status = getStatusFromPercentage(percentage);
+      const status = row.original.status;
       const color = getStatusColor(status);
-      const variant = getStatusVariant(status);
+
       return (
         <Badge
-          variant={variant}
           className={cn(
-            "rounded-full border px-3 py-1 text-xs font-medium capitalize transition-all duration-200",
+            "rounded-full px-3 py-1 text-xs font-medium capitalize",
             color,
           )}
         >
-          {React.createElement(getStatusIcon(status), { className: cn(color) })}
+          {React.createElement(getStatusIcon(status ?? "default"), {
+            className: cn(color),
+          })}
           {status}
         </Badge>
-      );
-    },
-  },
-  {
-    accessorKey: "studentCount",
-    header: "Students",
-    cell: ({ row }) => (
-      <div className="flex items-center gap-1">
-        <Users className="text-muted-foreground h-4 w-4" />
-        <span className="font-medium">{row.original.studentCount}</span>
-        <span className="text-muted-foreground text-xs">students</span>
-      </div>
-    ),
-  },
-  {
-    accessorKey: "totalProgressHours",
-    header: "Progress",
-    cell: ({ row }) => {
-      const { totalProgressHours, studentCount, department } = row.original;
-      const percentage = calculateCompletionPercentage(
-        Number(totalProgressHours),
-        studentCount,
-        department!,
-      );
-      return (
-        <div className="flex w-32 items-center gap-2">
-          <Progress value={percentage} className="h-2" />
-          <span className="text-muted-foreground text-xs">{percentage}%</span>
-        </div>
       );
     },
   },

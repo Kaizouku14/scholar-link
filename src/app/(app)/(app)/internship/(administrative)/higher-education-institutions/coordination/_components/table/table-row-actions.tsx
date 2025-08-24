@@ -20,9 +20,7 @@ interface DataTableRowActionsProps {
 }
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
-  const internsInfo = row.original.interns;
-
-  console.log(internsInfo);
+  console.log(row);
   return (
     <Dialog>
       <DialogTrigger asChild>

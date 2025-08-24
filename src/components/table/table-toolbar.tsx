@@ -4,7 +4,7 @@ import { type Table } from "@tanstack/react-table";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Import, X } from "lucide-react";
-import { DataTableMultiFacetedFilter } from "./table-faceted-filter";
+import { DataTableFacetedFilter } from "./table-faceted-filter";
 import { DataTableViewOptions } from "./table-view-options";
 import { Search } from "lucide-react";
 import { formatText } from "@/lib/utils";
@@ -45,13 +45,19 @@ export const DataTableToolbar = <TData,>({
             className="h-10 w-[200px] pl-10 lg:w-[340px]"
           />
         </div>
+        {}
         {filters && filters.length > 0 && (
-          <DataTableMultiFacetedFilter
-            filters={filters.map((f) => ({
-              column: table.getColumn(f.column)!,
-              options: f.options,
-            }))}
-          />
+          <>
+            {filters.map((filter) => (
+              <DataTableFacetedFilter
+                key={filter.column}
+                filter={{
+                  column: table.getColumn(filter.column)!,
+                  options: filter.options,
+                }}
+              />
+            ))}
+          </>
         )}
         {isFiltered && (
           <Button

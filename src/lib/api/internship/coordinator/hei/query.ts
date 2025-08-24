@@ -1,14 +1,5 @@
 import { ROLE } from "@/constants/users/roles";
-import {
-  db,
-  eq,
-  countDistinct,
-  sum,
-  and,
-  sql,
-  isNotNull,
-  isNull,
-} from "@/server/db";
+import { db, eq, and, sql, isNotNull, isNull } from "@/server/db";
 import {
   user as UserTable,
   student as StudentTable,
@@ -20,10 +11,7 @@ import {
   supervisor as SupervisorTable,
 } from "@/server/db/schema/internship";
 import { TRPCError } from "@trpc/server";
-import type {
-  CoordinatorIntern,
-  CoordinatorSectionData,
-} from "@/interfaces/internship/hei";
+import type { CoordinatorSectionData } from "@/interfaces/internship/hei";
 
 export const getCoordinatorSections = async (
   userId: string,
@@ -45,28 +33,23 @@ export const getCoordinatorSections = async (
       .select({
         section: UserTable.section,
         department: UserTable.department,
-        studentCount: countDistinct(InternshipTable.userId),
-        totalProgressHours: sum(ProgressTable.hours),
-        interns: sql<string>`
-          json_group_array(
-            DISTINCT json_object(
-              'name', ${UserTable.name},
-              'middleName', ${UserTable.middleName},
-              'surname', ${UserTable.surname},
-              'profile', ${UserTable.profile},
-              'email', ${UserTable.email},
-              'section', ${UserTable.section},
-              'status', ${InternshipTable.status},
-              'companyName', ${CompanyTable.name},
-              'companyAddress', ${CompanyTable.address},
-              'supervisorName', ${SupervisorTable.name},
-              'supervisorEmail', ${SupervisorTable.email}
-            )
-          )
-        `.as("interns"),
+        name: UserTable.name,
+        middleName: UserTable.middleName,
+        surname: UserTable.surname,
+        profile: UserTable.profile,
+        email: UserTable.email,
+        course: StudentTable.course,
+        yearLevel: StudentTable.yearLevel,
+        status: InternshipTable.status,
+        companyName: CompanyTable.name,
+        companyAddress: CompanyTable.address,
+        supervisorName: SupervisorTable.name,
+        supervisorEmail: SupervisorTable.email,
+        supervisorContactNo: SupervisorTable.contactNo,
       })
       .from(UserTable)
       .innerJoin(InternshipTable, eq(UserTable.id, InternshipTable.userId))
+      .leftJoin(StudentTable, eq(UserTable.id, StudentTable.id))
       .leftJoin(
         CompanyTable,
         eq(InternshipTable.companyId, CompanyTable.companyId),
@@ -92,12 +75,7 @@ export const getCoordinatorSections = async (
       )
       .groupBy(UserTable.section);
 
-    return response.map((row) => ({
-      ...row,
-      interns: row.interns
-        ? (JSON.parse(row.interns) as CoordinatorIntern[])
-        : [],
-    }));
+    return response;
   });
 };
 
