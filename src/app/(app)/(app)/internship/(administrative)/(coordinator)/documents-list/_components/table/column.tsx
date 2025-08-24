@@ -13,11 +13,10 @@ import type { StudentDocuments } from "@/interfaces/internship/document";
 
 export const DocumentListColumns: ColumnDef<StudentDocuments>[] = [
   {
-    accessorKey: "surname",
+    accessorKey: "name",
     header: "Student",
     cell: ({ row }) => {
-      const { name, middleName, surname, course, section, yearLevel, profile } =
-        row.original;
+      const { name, course, section, yearLevel, profile } = row.original;
 
       return (
         <div className="flex items-center gap-x-1.5">
@@ -30,7 +29,7 @@ export const DocumentListColumns: ColumnDef<StudentDocuments>[] = [
 
           <div className="flex flex-col">
             <div className="text-foreground text-sm leading-tight font-medium">
-              {surname}, {name} {middleName?.charAt(0).toUpperCase()}.
+              {name}
             </div>
 
             <div className="text-muted-foreground text-xs">

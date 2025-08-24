@@ -1,10 +1,7 @@
-import type { roleType } from "@/constants/users/roles";
-import { getAllInternshipsData } from "@/lib/api/internship/query";
 import {
   getAllDocumentsAvailable,
   getAllDocumentsDeadlines,
 } from "@/lib/api/internship/student/documents/query";
-import { cacheData } from "@/lib/redis";
 import { createTRPCRouter, protectedRoute } from "../../trpc";
 
 export const internshipRouter = createTRPCRouter({

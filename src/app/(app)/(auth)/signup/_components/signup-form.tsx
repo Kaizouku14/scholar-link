@@ -80,10 +80,9 @@ const SignUpForm = () => {
         );
       }
 
+      const fullName = `${name} ${middleName}. ${surname}`;
       const { data, error } = await authClient.signUp.email({
-        name,
-        surname,
-        middleName,
+        name: fullName,
         department,
         email,
         password,
@@ -157,9 +156,9 @@ const SignUpForm = () => {
               name="middleName"
               render={({ field }) => (
                 <FormItem className="grid gap-2">
-                  <FormLabel>Middle Name</FormLabel>
+                  <FormLabel>Middle Initial</FormLabel>
                   <FormControl>
-                    <Input placeholder="Denzel" {...field} />
+                    <Input placeholder="D" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

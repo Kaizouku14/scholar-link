@@ -47,7 +47,7 @@ export function DataTableFacetedFilter<TData, TValue>({
       <PopoverTrigger asChild>
         <Button variant="outline" size="lg" className="h-10 border-dashed">
           <PlusCircle />
-          {title}
+          {formatText(title)}
           {totalSelected > 0 && (
             <>
               <Separator orientation="vertical" className="mx-2 h-4" />
@@ -64,7 +64,7 @@ export function DataTableFacetedFilter<TData, TValue>({
 
       <PopoverContent className="w-[250px] p-0" align="start">
         <Command>
-          <CommandInput placeholder={`Search ${title}...`} />
+          <CommandInput placeholder={`Search ${formatText(title)}...`} />
           <CommandList>
             <CommandEmpty>No results found.</CommandEmpty>
 

@@ -1,18 +1,16 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import type { DepartmentColumn } from "./column-schema";
-import {
-  Building,
-  CheckCircle,
-  Clock,
-  Hourglass,
-  Users,
-  UsersRound,
-  XCircle,
-} from "lucide-react";
+import { Building, Users, UsersRound } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { getStatusColor, getStatusVariant, cn } from "@/lib/utils";
+import {
+  getStatusColor,
+  getStatusVariant,
+  cn,
+  getStatusIcon,
+} from "@/lib/utils";
 import { DataTableRowActions } from "./table-row-actions";
+import React from "react";
 
 export const departmentsColumn: ColumnDef<DepartmentColumn>[] = [
   {
@@ -135,15 +133,9 @@ export const departmentsColumn: ColumnDef<DepartmentColumn>[] = [
             color,
           )}
         >
-          {status === "pending" ? (
-            <Clock className={cn("h-4 w-4", color)} />
-          ) : status === "in-progress" ? (
-            <Hourglass className={cn("h-4 w-4", color)} />
-          ) : status === "completed" ? (
-            <CheckCircle className={cn("h-4 w-4", color)} />
-          ) : (
-            <XCircle className={cn("h-4 w-4", color)} />
-          )}
+          {React.createElement(getStatusIcon(status), {
+            className: cn(color),
+          })}
           {status}
         </Badge>
       );

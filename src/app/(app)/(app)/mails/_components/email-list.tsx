@@ -31,15 +31,11 @@ const EmailList = ({
     const otherParticipant = isFromCurrentUser
       ? {
           name: lastMessage?.receiverName,
-          middleName: lastMessage?.receiverMiddleName,
-          surname: lastMessage?.receiverSurname,
           email: lastMessage?.receiverEmail,
           avatar: lastMessage?.receiverProfile,
         }
       : {
           name: lastMessage?.senderName,
-          middleName: lastMessage?.senderMiddleName,
-          surname: lastMessage?.senderSurname,
           email: lastMessage?.senderEmail,
           avatar: lastMessage?.senderProfile,
         };
@@ -116,7 +112,7 @@ const EmailList = ({
                         {isFromCurrentUser ? (
                           <div className="flex flex-col">
                             <span className="flex gap-1">
-                              {`To: ${otherParticipant.name} ${otherParticipant.middleName?.charAt(0).toUpperCase()}. ${otherParticipant.surname}`}
+                              {`To: ${otherParticipant.name}`}
                             </span>
                             <span className="text-muted-foreground text-xs">
                               {otherParticipant.email}

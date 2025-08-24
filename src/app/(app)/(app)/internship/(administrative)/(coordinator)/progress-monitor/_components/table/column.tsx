@@ -11,7 +11,6 @@ import {
   getStatusVariant,
 } from "@/lib/utils";
 import type { ColumnDef } from "@tanstack/react-table";
-import { CheckCircle, Clock, Hourglass, XCircle } from "lucide-react";
 import type { ColumnSchema } from "./column-schema";
 import { Progress } from "@/components/ui/progress";
 import { DataTableRowActions } from "./table-row-actions";
@@ -19,11 +18,10 @@ import React from "react";
 
 export const ProgressMonitoringColumns: ColumnDef<ColumnSchema>[] = [
   {
-    accessorKey: "surname",
+    accessorKey: "name",
     header: "Student",
     cell: ({ row }) => {
-      const { name, middleName, surname, course, section, yearLevel, profile } =
-        row.original;
+      const { name, course, section, yearLevel, profile } = row.original;
 
       return (
         <div className="flex items-center gap-x-1.5">
@@ -36,7 +34,7 @@ export const ProgressMonitoringColumns: ColumnDef<ColumnSchema>[] = [
 
           <div className="flex flex-col">
             <div className="text-foreground text-sm leading-tight font-medium">
-              {surname}, {name} {middleName?.charAt(0).toUpperCase()}.
+              {name}
             </div>
 
             <div className="text-muted-foreground text-xs">

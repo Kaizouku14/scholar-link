@@ -7,8 +7,6 @@ import type { YearLevelType } from "@/constants/users/year-level";
 
 export interface UserAccount {
   name: string;
-  middleName: string;
-  surname: string;
   section?: SectionType[];
   email: string;
   profile?: string;

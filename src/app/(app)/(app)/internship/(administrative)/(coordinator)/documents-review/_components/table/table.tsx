@@ -38,7 +38,7 @@ const ReviewDocumentsTable = () => {
               columnVisibility={{
                 id: false,
               }}
-              filteredTitle={"surname"}
+              filteredTitle={"name"}
               filters={[
                 {
                   column: "reviewStatus",

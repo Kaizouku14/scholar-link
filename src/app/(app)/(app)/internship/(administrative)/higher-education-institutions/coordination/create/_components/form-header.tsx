@@ -10,7 +10,7 @@ const FormHeader = () => {
   const router = useRouter();
 
   const handleBackButton = () => {
-    router.push(PageRoutes.INTERNSHIP_MANAGE_INTERNSHIPS);
+    router.push(PageRoutes.INTERNSHIP_COORDINATION_MANAGE_INTERNSHIPS);
   };
 
   return (

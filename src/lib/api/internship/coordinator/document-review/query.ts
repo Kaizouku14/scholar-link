@@ -39,8 +39,6 @@ export const getAllDocumentsToReviewBySection = async ({
           submittedAt: InternDocumentsTable.submittedAt,
           studentId: UserTable.id,
           name: UserTable.name,
-          middleName: UserTable.middleName,
-          surname: UserTable.surname,
           profile: UserTable.profile,
           section: UserTable.section,
           course: StudentTable.course,

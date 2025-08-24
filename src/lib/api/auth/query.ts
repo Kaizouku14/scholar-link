@@ -11,8 +11,6 @@ export const gellAllInternshipAccounts = async () => {
       .select({
         id: UserTable.id,
         name: UserTable.name,
-        middleName: UserTable.middleName,
-        surname: UserTable.surname,
         profile: UserTable.profile,
         email: UserTable.email,
         role: UserTable.role,

@@ -53,11 +53,10 @@ export const DocumentReviewColumns: ColumnDef<DocumentSchema>[] = [
     ),
   },
   {
-    accessorKey: "surname",
+    accessorKey: "name",
     header: "Student",
     cell: ({ row }) => {
-      const { name, middleName, surname, course, section, yearLevel, profile } =
-        row.original;
+      const { name, course, section, yearLevel, profile } = row.original;
 
       return (
         <div className="flex items-center gap-x-1.5">
@@ -70,7 +69,7 @@ export const DocumentReviewColumns: ColumnDef<DocumentSchema>[] = [
 
           <div className="flex flex-col">
             <div className="text-foreground text-sm leading-tight font-medium">
-              {surname}, {name} {middleName?.charAt(0).toUpperCase()}.
+              {name}
             </div>
 
             <div className="text-muted-foreground text-xs">

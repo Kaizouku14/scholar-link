@@ -40,8 +40,6 @@ export const getAllInternsDocumentsBySection = async ({
           submittedAt: InternDocumentsTable.submittedAt,
           studentId: UserTable.id,
           name: UserTable.name,
-          middleName: UserTable.middleName,
-          surname: UserTable.surname,
           email: UserTable.email,
           contactNo: UserTable.contact,
           profile: UserTable.profile,
@@ -87,8 +85,8 @@ export const getAllInternsDocumentsBySection = async ({
             ...row,
             profile: row.profile!,
             section: row.section!,
-            course: row.course!,
-            yearLevel: row.yearLevel!,
+            course: row.course,
+            yearLevel: row.yearLevel,
             documents: [],
           };
         }

@@ -42,7 +42,7 @@ const AdminDashboard = () => {
             { name: "InnoSoft Inc.", count: 15, label: "Interns" },
           ]}
           actionLabel="Manage Internships"
-          page={PageRoutes.INTERNSHIP_MANAGE_INTERNSHIPS}
+          page={PageRoutes.INTERNSHIP_ADMIN_MANAGE_INTERNSHIPS}
         />
       </div>
     </div>

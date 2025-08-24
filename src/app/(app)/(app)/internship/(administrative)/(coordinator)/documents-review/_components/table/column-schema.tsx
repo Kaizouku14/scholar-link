@@ -14,8 +14,6 @@ export const documentColumnsSchema = z.object({
 
   studentId: z.string(),
   name: z.string().nullish(),
-  middleName: z.string().nullish(),
-  surname: z.string().nullish(),
   profile: z.string().nullish(),
   section: z.array(z.enum(SECTIONS)).nullish(),
   course: z.enum(COURSES).nullish(),

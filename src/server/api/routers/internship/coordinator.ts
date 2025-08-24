@@ -21,7 +21,6 @@ import type { createInternship } from "@/interfaces/internship/internship";
 import { insertStudentInternship } from "@/lib/api/internship/mutation";
 import { getAllInternsDocumentsBySection } from "@/lib/api/internship/coordinator/document-list/query";
 import { getAllDocumentsToReviewBySection } from "@/lib/api/internship/coordinator/document-review/query";
-import type { roleType } from "@/constants/users/roles";
 
 export const internshipCoordinatorRouter = createTRPCRouter({
   /******************************************

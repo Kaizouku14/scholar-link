@@ -16,7 +16,7 @@ const ProgressMonitoringTable = () => {
         <DataTable
           columns={ProgressMonitoringColumns}
           data={data}
-          filteredTitle={"surname"}
+          filteredTitle={"name"}
           filters={[
             {
               column: "status",

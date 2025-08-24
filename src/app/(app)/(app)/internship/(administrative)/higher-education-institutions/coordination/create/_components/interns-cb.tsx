@@ -61,11 +61,7 @@ export const InternsComboBox = ({ value, onChange }: AccountListProps) => {
                   }}
                 >
                   <div className="flex w-full flex-col text-xs">
-                    <div className="flex gap-1">
-                      <span>{detail.surname},</span>
-                      <span>{detail.name}</span>
-                      <span>{detail.middleName}</span>
-                    </div>
+                    <span>{detail.name}</span>
                     <div className="text-muted-foreground flex gap-1">
                       {detail.studentNo} -
                       <div>

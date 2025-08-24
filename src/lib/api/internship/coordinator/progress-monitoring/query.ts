@@ -21,8 +21,6 @@ export const getStudentProgressByDept = async ({
       .select({
         id: InternshipTable.internshipId,
         name: UserTable.name,
-        middleName: UserTable.middleName,
-        surname: UserTable.surname,
         profile: UserTable.profile,
         section: UserTable.section,
         course: StudentTable.course,
@@ -47,7 +45,6 @@ export const getStudentProgressByDept = async ({
       .groupBy(
         InternshipTable.internshipId,
         UserTable.name,
-        UserTable.surname,
         UserTable.section,
         StudentTable.course,
         StudentTable.yearLevel,

@@ -34,8 +34,6 @@ export const getCoordinatorSections = async (
         section: UserTable.section,
         department: UserTable.department,
         name: UserTable.name,
-        middleName: UserTable.middleName,
-        surname: UserTable.surname,
         profile: UserTable.profile,
         email: UserTable.email,
         course: StudentTable.course,
@@ -100,8 +98,6 @@ export const getAllUserAccount = async ({ userId }: { userId: string }) => {
           .select({
             userId: UserTable.id,
             name: UserTable.name,
-            middleName: UserTable.middleName,
-            surname: UserTable.surname,
             studentNo: StudentTable.studentNo,
             course: StudentTable.course,
             section: UserTable.section,

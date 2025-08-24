@@ -34,8 +34,6 @@ export const getAllInternshipDeparments = async () => {
             json_group_array(
                 DISTINCT json_object(
                 'name', ${UserTable.name},
-                'middleName', ${UserTable.middleName},
-                'surname', ${UserTable.surname},
                 'profile', ${UserTable.profile},
                 'section', ${UserTable.section},
                 'role', ${UserTable.role},

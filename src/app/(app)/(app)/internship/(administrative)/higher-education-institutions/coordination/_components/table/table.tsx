@@ -11,15 +11,13 @@ const InternshipTable = () => {
   const { data, isLoading } =
     api.internshipCoordinator.getAllInternships.useQuery();
 
-  console.log(data);
-
   return (
     <div className="w-full">
       {!isLoading && data ? (
         <DataTable
           columns={CoordinatorInternsColumns}
           data={data}
-          filteredTitle={"surname"}
+          filteredTitle={"name"}
           filters={[
             {
               column: "status",

@@ -14,19 +14,10 @@ import { ROLE } from "@/constants/users/roles";
 
 export const AccountColumns: ColumnDef<AccountSchema>[] = [
   {
-    accessorKey: "surname",
+    accessorKey: "name",
     header: "Student",
     cell: ({ row }) => {
-      const {
-        name,
-        middleName,
-        surname,
-        course,
-        section,
-        yearLevel,
-        profile,
-        role,
-      } = row.original;
+      const { name, course, section, yearLevel, profile, role } = row.original;
       const isStudent = role == ROLE.INTERNSHIP_STUDENT;
 
       return (
@@ -42,7 +33,7 @@ export const AccountColumns: ColumnDef<AccountSchema>[] = [
 
               <div className="flex flex-col">
                 <div className="text-foreground text-sm leading-tight font-medium">
-                  {surname}, {name} {middleName?.charAt(0).toUpperCase()}.
+                  {name}
                 </div>
 
                 <div className="text-muted-foreground text-xs">
@@ -62,7 +53,7 @@ export const AccountColumns: ColumnDef<AccountSchema>[] = [
               </Avatar>
 
               <div className="text-foreground text-sm leading-tight font-medium">
-                {surname}, {name} {middleName?.charAt(0).toUpperCase()}.
+                {name}
               </div>
             </div>
           )}

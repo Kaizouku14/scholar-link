@@ -53,7 +53,7 @@ const DocumentForm = () => {
     await toast.promise(postDocument(data), {
       loading: "Uploading document...",
       success: () => {
-        refetch();
+        void refetch();
         return "Document uploaded successfully!";
       },
       error: (error: unknown) => {

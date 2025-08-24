@@ -12,8 +12,6 @@ export interface DocumentCardProps {
 export interface StudentDocuments {
   studentId: string;
   name: string;
-  middleName: string;
-  surname: string;
   email: string | null;
   contactNo: string | null;
   profile: string;

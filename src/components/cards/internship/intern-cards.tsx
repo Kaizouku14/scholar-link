@@ -74,26 +74,10 @@ export const InternCard = ({
             </div>
           )}
 
-          {intern.yearLevel && (
-            <div>
-              <span className="text-card-foreground font-medium">Year:</span>
-              <p className="text-muted-foreground">{intern.yearLevel}</p>
-            </div>
-          )}
-
           {intern.section && (
             <div>
               <span className="text-card-foreground font-medium">Section:</span>
               <p className="text-muted-foreground">{intern.section}</p>
-            </div>
-          )}
-
-          {intern.studentNo && (
-            <div>
-              <span className="text-card-foreground font-medium">
-                Student No:
-              </span>
-              <p className="text-muted-foreground">{intern.studentNo}</p>
             </div>
           )}
         </div>

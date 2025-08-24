@@ -93,7 +93,12 @@ const CreateAccountForm = () => {
         return;
       }
 
-      await createUser({ ...values, profile: uploadedImage.url });
+      const fullName = `${values.name} ${values.middleName} ${values.surname}`;
+      await createUser({
+        ...values,
+        name: fullName,
+        profile: uploadedImage.url,
+      });
       toast.success("User created successfully!");
       form.reset();
     } catch (error) {

@@ -23,7 +23,7 @@ export const PageBreadCrumb = () => {
   let relevant = parts[0] === "internship" ? parts.slice(1) : parts;
 
   relevant = relevant.filter(
-    (part) => part.toLowerCase() !== "higher-education-institution",
+    (part) => part.toLowerCase() !== "higher-education-institutions",
   );
 
   // build cumulative paths like /internship/accounts, /internship/accounts/create

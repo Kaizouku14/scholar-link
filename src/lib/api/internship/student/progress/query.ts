@@ -15,6 +15,7 @@ export const getStudentLogProgress = async ({ userId }: { userId: string }) => {
 
       companyName: CompanyTable.name,
       companyAddress: CompanyTable.address,
+      totalHoursRequired: InternshipTable.totalOfHoursRequired,
       //   startDate: InternshipTable.startDate,
       //   endDate: InternshipTable.endDate,
     })

@@ -6,8 +6,6 @@ import type { YearLevelType } from "@/constants/users/year-level";
 
 export interface InternData {
   name: string;
-  middleName: string;
-  surname: string;
   profile: string | null;
   email: string;
   section: SectionType[] | null;

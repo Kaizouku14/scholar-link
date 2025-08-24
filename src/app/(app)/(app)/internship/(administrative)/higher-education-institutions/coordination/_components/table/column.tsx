@@ -13,10 +13,10 @@ import { YEAR_LEVEL_LABELS } from "@/constants/users/year-level";
 
 export const CoordinatorInternsColumns: ColumnDef<CoordinatorSectionData>[] = [
   {
-    accessorKey: "surname",
+    accessorKey: "name",
     header: "Student",
     cell: ({ row }) => {
-      const { name, middleName, surname, profile } = row.original;
+      const { name, profile } = row.original;
 
       return (
         <div className="flex items-center gap-x-2">
@@ -24,15 +24,11 @@ export const CoordinatorInternsColumns: ColumnDef<CoordinatorSectionData>[] = [
             <AvatarImage src={profile ?? undefined} />
             <AvatarFallback className="text-sm">
               {name?.charAt(0)?.toUpperCase()}
-              {surname?.charAt(0)?.toUpperCase()}
             </AvatarFallback>
           </Avatar>
 
           <div className="flex flex-col">
-            <div className="text-foreground text-sm font-medium">
-              {surname}, {name}{" "}
-              {middleName && `${middleName.charAt(0).toUpperCase()}.`}
-            </div>
+            <div className="text-foreground text-sm font-medium">{name}</div>
             <div className="text-muted-foreground text-xs">
               {row.original.email}
             </div>

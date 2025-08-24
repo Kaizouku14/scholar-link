@@ -3,8 +3,6 @@ import z from "zod";
 
 export const accountSchema = z.object({
   name: z.string().nullish(),
-  middleName: z.string().nullish(),
-  surname: z.string().nullish(),
   email: z.string().email().nullish(),
   role: z.string().nullish(),
   section: z.array(z.enum(SECTIONS)).nullish(),

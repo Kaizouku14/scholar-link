@@ -73,8 +73,6 @@ export const createUserAccount = async ({ data }: { data: UserAccount }) => {
       .values({
         id: generatedID,
         name: data.name,
-        surname: data.surname,
-        middleName: data.middleName,
         email: data.email,
         section: data.section,
         profile: data.profile,

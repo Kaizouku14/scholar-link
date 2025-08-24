@@ -11,8 +11,6 @@ import { GENDERS } from "@/constants/users/genders";
 export const user = createTable("user", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
-  surname: text("surname").notNull(),
-  middleName: text("middle_name").notNull(),
   email: text("email").unique().notNull(),
   profile: text("profile"),
   profileKey: text("profile_key"),
@@ -40,8 +38,8 @@ export const student = createTable("student", {
     .primaryKey()
     .references(() => user.id, { onDelete: "cascade" }),
   studentNo: text("student_no").unique().notNull(),
-  course: text("course", { enum: COURSES }).notNull(),
-  yearLevel: text("year_level", { enum: YEAR_LEVEL }).notNull(),
+  course: text("course", { enum: COURSES }),
+  yearLevel: text("year_level", { enum: YEAR_LEVEL }),
   onboarded: integer("onboarded", { mode: "boolean" }).default(false),
 });
 

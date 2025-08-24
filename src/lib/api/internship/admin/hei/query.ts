@@ -27,8 +27,6 @@ export const getAdminSections = async (): Promise<AdminSectionData[]> => {
           json_group_array(
             DISTINCT json_object(
               'name', ${UserTable.name},
-              'middleName', ${UserTable.middleName},
-              'surname', ${UserTable.surname},
               'profile', ${UserTable.profile},
               'email', ${UserTable.email},
               'section', ${UserTable.section},

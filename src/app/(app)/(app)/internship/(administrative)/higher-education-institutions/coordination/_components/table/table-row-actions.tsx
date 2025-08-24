@@ -29,7 +29,6 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
           <span className="text-sm">View</span>
         </Button>
       </DialogTrigger>
-      <div>{name}</div>
       <DialogContent className="h-[80vh] sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>Internship Details</DialogTitle>
@@ -37,6 +36,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
             List of interns in this company.
           </DialogDescription>
         </DialogHeader>
+        <div>{name}</div>
 
         <DialogFooter>
           <DialogClose asChild>
