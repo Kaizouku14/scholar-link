@@ -4,11 +4,6 @@ import type { ColumnDef } from "@tanstack/react-table";
 import type { AccountSchema } from "./column-schema";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { COURSE_LABELS, type courseType } from "@/constants/users/courses";
-import {
-  YEAR_LEVEL_LABELS,
-  type YearLevelType,
-} from "@/constants/users/year-level";
 import { DataTableRowActions } from "./table-row-actions";
 import { ROLE } from "@/constants/users/roles";
 
@@ -17,51 +12,24 @@ export const AccountColumns: ColumnDef<AccountSchema>[] = [
     accessorKey: "name",
     header: "Student",
     cell: ({ row }) => {
-      const { name, course, section, yearLevel, profile, role } = row.original;
-      const isStudent = role == ROLE.INTERNSHIP_STUDENT;
+      const { name, profile } = row.original;
 
       return (
-        <>
-          {isStudent ? (
-            <div className="flex items-center gap-x-1.5">
-              <Avatar className="h-10 w-10">
-                <AvatarImage src={profile ?? undefined} />
-                <AvatarFallback className="text-sm">
-                  {name?.charAt(0)?.toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
+        <div className="flex items-center gap-x-1.5">
+          <Avatar className="h-10 w-10">
+            <AvatarImage src={profile ?? undefined} />
+            <AvatarFallback className="text-sm">
+              {name?.charAt(0)?.toUpperCase()}
+            </AvatarFallback>
+          </Avatar>
 
-              <div className="flex flex-col">
-                <div className="text-foreground text-sm leading-tight font-medium">
-                  {name}
-                </div>
-
-                <div className="text-muted-foreground text-xs">
-                  {COURSE_LABELS[course as courseType]} ·{" "}
-                  {YEAR_LEVEL_LABELS[yearLevel as YearLevelType]}
-                  {section?.[0]}
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className="flex items-center gap-x-1.5">
-              <Avatar className="h-10 w-10">
-                <AvatarImage src={profile ?? undefined} />
-                <AvatarFallback className="text-sm">
-                  {name?.charAt(0)?.toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
-
-              <div className="text-foreground text-sm leading-tight font-medium">
-                {name}
-              </div>
-            </div>
-          )}
-        </>
+          <div className="text-foreground text-sm leading-tight font-medium">
+            {name}
+          </div>
+        </div>
       );
     },
   },
-
   {
     accessorKey: "email",
     header: "Email",
@@ -85,9 +53,9 @@ export const AccountColumns: ColumnDef<AccountSchema>[] = [
             role ? `${roleColors[role]} px-2 py-1` : "bg-gray-100 text-gray-800"
           }
         >
-          {role === "internshipStudent" && " Student"}
-          {role === "internshipCoordinator" && " Coordinator"}
-          {role === "internshipAdmin" && " Admin"}
+          {role === ROLE.INTERNSHIP_STUDENT && " Student"}
+          {role === ROLE.INTERNSHIP_COORDINATOR && " Coordinator"}
+          {role === ROLE.INTERNSHIP_ADMIN && " Admin"}
         </Badge>
       );
     },

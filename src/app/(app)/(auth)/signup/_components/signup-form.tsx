@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/select";
 import { COURSES } from "@/constants/users/courses";
 import { DEPARTMENTS } from "@/constants/users/departments";
+import { formatText } from "@/lib/utils";
 
 const SignUpForm = () => {
   const router = useRouter();
@@ -79,7 +80,7 @@ const SignUpForm = () => {
 
       const fullName = `${name} ${middleName} ${surname}`;
       const { data, error } = await authClient.signUp.email({
-        name: fullName,
+        name: formatText(fullName),
         department,
         email,
         password,
@@ -117,6 +118,8 @@ const SignUpForm = () => {
         "An error Occured, Please try again!" + (error as Error).message,
         { id: toastId },
       );
+    } finally {
+      toast.dismiss(toastId);
     }
   };
 

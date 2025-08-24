@@ -178,7 +178,8 @@ export function formatText(text: string) {
     .replace(/_/g, " ") // underscores → spaces
     .replace(/\s+/g, " ") // collapse multiple spaces
     .toLowerCase()
-    .replace(/\b\w/g, (c) => c.toUpperCase());
+    .replace(/\b\w/g, (c) => c.toUpperCase())
+    .replace(/\b([A-Z])\b(?!\.)/g, "$1.");
 }
 
 export const calculateCompletionPercentage = (
