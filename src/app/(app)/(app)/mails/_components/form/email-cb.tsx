@@ -56,7 +56,7 @@ const EmailComboBox = ({ value, onChange }: EmailListProps) => {
                 data.map((item) => (
                   <CommandItem
                     key={item.id}
-                    value={item.email!}
+                    value={item.email}
                     onSelect={() => {
                       onChange(item.id);
                       setOpen(false);
