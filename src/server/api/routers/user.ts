@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createTRPCRouter, protectedRoute } from "../trpc";
+import { createTRPCRouter, protectedRoute, publicProcedure } from "../trpc";
 import {
   checkStudentNoAvailability,
   createdStudentNo,
@@ -11,7 +11,7 @@ import { SECTIONS } from "@/constants/users/sections";
 import { YEAR_LEVEL } from "@/constants/users/year-level";
 
 export const userRouter = createTRPCRouter({
-  createStudentNo: protectedRoute
+  createStudentNo: publicProcedure
     .input(
       z.object({
         id: z.string(),
@@ -23,7 +23,7 @@ export const userRouter = createTRPCRouter({
       return await createdStudentNo(input);
     }),
 
-  checkStudentNoAvailability: protectedRoute
+  checkStudentNoAvailability: publicProcedure
     .input(
       z.object({
         studentNo: z.string(),
