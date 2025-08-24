@@ -64,9 +64,6 @@ const SignUpForm = () => {
 
     const toastId = toast.loading(
       "Signing you up. This may take a few seconds...",
-      {
-        position: "top-center",
-      },
     );
 
     try {
@@ -80,7 +77,7 @@ const SignUpForm = () => {
         );
       }
 
-      const fullName = `${name} ${middleName}. ${surname}`;
+      const fullName = `${name} ${middleName} ${surname}`;
       const { data, error } = await authClient.signUp.email({
         name: fullName,
         department,
@@ -116,10 +113,10 @@ const SignUpForm = () => {
       router.push(PageRoutes.LOGIN);
       form.reset();
     } catch (error) {
-      toast.error((error as Error).message, {
-        id: toastId,
-        position: "top-center",
-      });
+      console.log(error);
+      toast.error(
+        "An error Occured, Please try again!" + (error as Error).message,
+      );
     }
   };
 

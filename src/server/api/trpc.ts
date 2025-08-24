@@ -12,6 +12,7 @@ import { ZodError } from "zod";
 
 import { db } from "@/server/db";
 import { auth } from "@/lib/auth";
+import { ROLE } from "@/constants/users/roles";
 
 /**
  * 1. CONTEXT
@@ -120,10 +121,10 @@ const isAdmin = t.middleware(async ({ ctx, next }) => {
   }
 
   if (
-    ctx.session.user.role?.toLowerCase() !== "scholarship-admin" ||
-    ctx.session.user.role?.toLowerCase() !== "internship-admin" ||
-    ctx.session.user.role?.toLowerCase() !== "scholarship-coordinator" ||
-    ctx.session.user.role?.toLowerCase() !== "internship-coordinator"
+    ctx.session.user.role?.toLowerCase() !== ROLE.SCHOLARSHIP_ADMIN ||
+    ctx.session.user.role?.toLowerCase() !== ROLE.SCHOLARSHIP_COORDINATOR ||
+    ctx.session.user.role?.toLowerCase() !== ROLE.INTERNSHIP_ADMIN ||
+    ctx.session.user.role?.toLowerCase() !== ROLE.INTERNSHIP_COORDINATOR
   ) {
     throw new TRPCError({
       code: "UNAUTHORIZED",
