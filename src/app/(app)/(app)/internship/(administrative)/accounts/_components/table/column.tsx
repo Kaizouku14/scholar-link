@@ -10,7 +10,7 @@ import { ROLE } from "@/constants/users/roles";
 export const AccountColumns: ColumnDef<AccountSchema>[] = [
   {
     accessorKey: "name",
-    header: "Student",
+    header: "User",
     cell: ({ row }) => {
       const { name, profile } = row.original;
 

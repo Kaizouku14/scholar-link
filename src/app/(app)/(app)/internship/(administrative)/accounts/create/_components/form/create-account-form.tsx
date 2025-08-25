@@ -28,7 +28,7 @@ import { GENDERS } from "@/constants/users/genders";
 import { ROLE, ROLES } from "@/constants/users/roles";
 import { SECTIONS } from "@/constants/users/sections";
 import { YEAR_LEVEL } from "@/constants/users/year-level";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { CalendarIcon, ChevronsUpDown } from "lucide-react";
 import {
   Popover,
@@ -45,13 +45,15 @@ import toast from "react-hot-toast";
 import { api } from "@/trpc/react";
 import SubmitButton from "@/components/forms/submit-button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { authClient } from "@/lib/auth-client";
 
 const CreateAccountForm = () => {
   const [profilePreview, setProfilePreview] = useState<string>("");
+  const { data: user } = authClient.useSession();
+  const userRole = user?.user.role;
 
-  const form = useForm<Accounts>({
-    resolver: zodResolver(accountFormSchema),
-    defaultValues: {
+  const defaultValues = useMemo(
+    () => ({
       name: "",
       surname: "",
       middleName: "",
@@ -59,14 +61,25 @@ const CreateAccountForm = () => {
       profile: undefined,
       contact: "",
       address: "",
-      role: "internshipAdmin",
+      role:
+        userRole === ROLE.INTERNSHIP_ADMIN
+          ? ROLE.INTERNSHIP_ADMIN
+          : ROLE.INTERNSHIP_STUDENT,
       studentNo: "",
-    },
+      section: [],
+    }),
+    [userRole],
+  );
+
+  const form = useForm<Accounts>({
+    resolver: zodResolver(accountFormSchema),
+    defaultValues,
   });
 
   const watchedRole = form.watch("role");
   const isStudent = watchedRole === ROLE.INTERNSHIP_STUDENT;
   const isCoordinator = watchedRole === ROLE.INTERNSHIP_COORDINATOR;
+  const isAdmin = watchedRole === ROLE.INTERNSHIP_ADMIN;
 
   const handleProfilePictureChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -371,36 +384,38 @@ const CreateAccountForm = () => {
               </div>
 
               <div className="mt-4 grid gap-4 md:grid-cols-2">
-                <FormField
-                  control={form.control}
-                  name="role"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Role *</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Select role" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {[ROLES[0], ROLES[3], ROLES[5]].map((role) => (
-                            <SelectItem key={role} value={role}>
-                              {formatText(role)}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormDescription>
-                        Choose the user’s role in the system.
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                {isAdmin && (
+                  <FormField
+                    control={form.control}
+                    name="role"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Role *</FormLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger className="w-full">
+                              <SelectValue placeholder="Select role" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {[ROLES[0], ROLES[3], ROLES[5]].map((role) => (
+                              <SelectItem key={role} value={role}>
+                                {formatText(role)}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormDescription>
+                          Choose the user’s role in the system.
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )}
 
                 <FormField
                   control={form.control}

@@ -64,7 +64,8 @@ export const authRouter = createTRPCRouter({
       return await createUserAccount({ data: input });
     }),
 
-  getAllInternshipAccounts: protectedRoute.query(async () => {
-    return await gellAllInternshipAccounts();
+  getAllInternshipAccounts: protectedRoute.query(async ({ ctx }) => {
+    const userId = ctx.session!.user.id;
+    return await gellAllInternshipAccounts({ userId });
   }),
 });

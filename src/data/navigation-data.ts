@@ -89,7 +89,7 @@ export const NAVIGATION_DATA: NavigationData = {
             title: "User Accounts",
             url: PageRoutes.INTERNSHIPS_ACCOUNTS,
             icon: ShieldUser,
-            description: "Manage user accounts",
+            description: "Manage User accounts",
           },
         ],
       },
@@ -147,6 +147,19 @@ export const NAVIGATION_DATA: NavigationData = {
             url: PageRoutes.MAILS,
             icon: Mail,
             description: "Student communications",
+          },
+        ],
+      },
+    ],
+    management: [
+      {
+        title: "System Administration",
+        items: [
+          {
+            title: "User Accounts",
+            url: PageRoutes.INTERNSHIPS_ACCOUNTS,
+            icon: ShieldUser,
+            description: "Manage user accounts",
           },
         ],
       },

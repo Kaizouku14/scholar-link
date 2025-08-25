@@ -1,12 +1,46 @@
-import { db, not, eq, sql, like } from "@/server/db";
-import { TRPCError } from "@trpc/server";
+import { db, not, eq, sql, like, and } from "@/server/db";
 import {
   user as UserTable,
   student as StudentTable,
 } from "@/server/db/schema/auth";
+import { ROLE } from "@/constants/users/roles";
+import type { SectionType } from "@/constants/users/sections";
 
-export const gellAllInternshipAccounts = async () => {
-  try {
+export const gellAllInternshipAccounts = async ({
+  userId,
+}: {
+  userId: string;
+}) => {
+  return await db.transaction(async (tx) => {
+    const [user] = await tx
+      .select({
+        role: UserTable.role,
+        section: UserTable.section,
+        department: UserTable.department,
+      })
+      .from(UserTable)
+      .where(eq(UserTable.id, userId))
+      .limit(1)
+      .execute();
+
+    const role = user?.role;
+    const assignedSections: SectionType[] = user?.section ?? [];
+    const department = user?.department;
+
+    const conditions = [not(like(UserTable.role, "scholarship%"))];
+
+    if (role === ROLE.INTERNSHIP_COORDINATOR) {
+      conditions.push(
+        eq(UserTable.department, department!),
+        eq(UserTable.role, ROLE.INTERNSHIP_STUDENT),
+        sql`EXISTS (
+                SELECT 1
+                FROM json_each(${UserTable.section})
+                WHERE value IN (${sql.join(assignedSections, sql`,`)})
+            )`,
+      );
+    }
+
     const response = await db
       .select({
         id: UserTable.id,
@@ -23,15 +57,9 @@ export const gellAllInternshipAccounts = async () => {
       })
       .from(UserTable)
       .leftJoin(StudentTable, eq(UserTable.id, StudentTable.id))
-      .where(not(like(UserTable.role, "scholarship%")))
+      .where(and(...conditions))
       .execute();
 
     return response;
-  } catch (error) {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message:
-        "Failed to get all internship accounts," + (error as Error).message,
-    });
-  }
+  });
 };
