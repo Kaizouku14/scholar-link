@@ -1,7 +1,7 @@
 "use client";
 
 import type { Row } from "@tanstack/react-table";
-import { Eye, GraduationCap, Search, UserCheck } from "lucide-react";
+import { Eye, GraduationCap, Mail, Search, UserCheck } from "lucide-react";
 import {
   Dialog,
   DialogClose,
@@ -21,6 +21,7 @@ import { ROLE } from "@/constants/users/roles";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { InternCard } from "@/components/cards/internship/intern-cards";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { formatText } from "@/lib/utils";
 
 interface DataTableRowActionsProps {
   row: Row<DepartmentColumn>;
@@ -34,17 +35,13 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
   const interns =
     users?.filter((user) => user.role === ROLE.INTERNSHIP_STUDENT) || [];
 
-  // Search state for interns
   const [searchTerm, setSearchTerm] = useState("");
 
-  // Filter interns based on search term
   const filteredInterns = interns.filter((intern) => {
     const searchLower = searchTerm.toLowerCase();
     return (
       intern.name?.toLowerCase().includes(searchLower) ??
-      intern.surname?.toLowerCase().includes(searchLower) ??
       intern.email?.toLowerCase().includes(searchLower) ??
-      intern.studentNo?.toLowerCase().includes(searchLower) ??
       intern.course?.toLowerCase().includes(searchLower)
     );
   });
@@ -119,30 +116,72 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
                   {coordinators.map((coordinator, index) => (
                     <div
                       key={index}
-                      className="hover:bg-muted/50 flex items-center gap-3 rounded-lg border p-3 shadow-sm transition-colors"
+                      className="flex items-center gap-3 rounded-lg border p-3"
                     >
                       <Avatar className="h-12 w-12 border">
                         <AvatarImage
                           src={coordinator.profile ?? undefined}
                           className="object-cover"
                         />
-                        <AvatarFallback className="text-sm font-medium">
+                        <AvatarFallback className="bg-primary/10 text-primary font-medium">
                           {coordinator.name?.charAt(0)?.toUpperCase()}
                         </AvatarFallback>
                       </Avatar>
 
-                      <div className="flex flex-col overflow-hidden">
-                        <h3 className="text-card-foreground truncate text-sm font-semibold">
-                          {coordinator.surname}, {coordinator.name}{" "}
-                          {coordinator.middleName &&
-                            `${coordinator.middleName}`}
-                        </h3>
-                        <p className="text-muted-foreground truncate text-xs">
-                          {coordinator.email}
-                        </p>
-                        <p className="text-primary mt-0.5 text-xs font-medium">
-                          Internship Coordinator
-                        </p>
+                      <div className="min-w-0 flex-1 space-y-1">
+                        <div className="flex items-center justify-between">
+                          <h3 className="text-foreground truncate font-semibold">
+                            {formatText(coordinator.name)}
+                          </h3>
+                          <span className="text-primary bg-primary/10 rounded-full px-2 py-0.5 text-xs font-medium">
+                            Coordinator
+                          </span>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <Mail className="text-muted-foreground h-3.5 w-3.5" />
+                          <a
+                            href={`mailto:${coordinator.email}`}
+                            className="text-muted-foreground hover:text-primary truncate text-xs hover:underline"
+                          >
+                            {coordinator.email}
+                          </a>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <span className="text-muted-foreground text-xs font-medium">
+                            Assigned Section:
+                          </span>
+                          <div className="flex flex-wrap gap-1">
+                            {coordinator.section ? (
+                              (() => {
+                                try {
+                                  const sections = JSON.parse(
+                                    coordinator.section.toString(),
+                                  ) as string[];
+                                  return sections.map((section, idx) => (
+                                    <span
+                                      key={idx}
+                                      className="bg-secondary rounded px-1.5 py-0.5 text-xs"
+                                    >
+                                      {section}
+                                    </span>
+                                  ));
+                                } catch {
+                                  return (
+                                    <span className="text-muted-foreground text-xs">
+                                      No sections
+                                    </span>
+                                  );
+                                }
+                              })()
+                            ) : (
+                              <span className="text-muted-foreground text-xs">
+                                No sections
+                              </span>
+                            )}
+                          </div>
+                        </div>
                       </div>
                     </div>
                   ))}

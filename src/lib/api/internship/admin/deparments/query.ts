@@ -1,4 +1,5 @@
 import { ROLE } from "@/constants/users/roles";
+import type { DeparmentUsers } from "@/interfaces/internship/department";
 import {
   countDistinct,
   db,
@@ -39,8 +40,6 @@ export const getAllInternshipDeparments = async () => {
                 'role', ${UserTable.role},
                 'email', ${UserTable.email},
                 'course', ${StudentTable.course},
-                'yearLevel', ${StudentTable.yearLevel},
-                'studentNo', ${StudentTable.studentNo},
                 'status', ${InternshipTable.status}
                 )
             )
@@ -64,8 +63,9 @@ export const getAllInternshipDeparments = async () => {
 
     return response.map((row) => ({
       ...row,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      users: row.users ? JSON.parse(row.users as string) : [],
+      users: row.users
+        ? (JSON.parse(row.users as string) as DeparmentUsers[])
+        : [],
     }));
   } catch (error) {
     throw new TRPCError({

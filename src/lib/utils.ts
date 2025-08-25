@@ -188,9 +188,12 @@ export function formatText(text: string) {
 export const calculateCompletionPercentage = (
   totalProgressHours: number,
   studentCount: number,
-  department: departmentType,
+  department?: departmentType,
+  requiredHours?: string,
 ): number => {
-  const hoursRequired = departmentHoursMap[department];
+  const hoursRequired = department
+    ? departmentHoursMap[department]
+    : Number(requiredHours);
   const totalRequiredHours = studentCount * hoursRequired;
 
   return totalRequiredHours > 0 && totalProgressHours > 0

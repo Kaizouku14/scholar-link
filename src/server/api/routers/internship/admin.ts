@@ -18,11 +18,8 @@ export const internshipAdminRouter = createTRPCRouter({
   getAllCompany: protectedRoute.query(async () => {
     return await cacheData("company", async () => await getAllCompany());
   }),
-  getAllInternshipDeparments: protectedRoute.query(async () => {
-    return await cacheData(
-      "departments",
-      async () => getAllInternshipDeparments,
-    );
+  getAllInternshipDeparments: protectedRoute.query(() => {
+    return cacheData("departments", async () => getAllInternshipDeparments());
   }),
   getAllInternships: protectedRoute.query(() => {
     return cacheData(`internships`, async () => {

@@ -7,6 +7,9 @@ import {
 import { Badge } from "../../ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
 import React from "react";
+import type { courseType } from "@/constants/users/courses";
+import type { internshipStatusType } from "@/constants/users/status";
+import type { SectionType } from "@/constants/users/sections";
 
 export const InternCard = ({
   intern,
@@ -16,9 +19,9 @@ export const InternCard = ({
     email: string;
     profile?: string | null;
 
-    course?: string | null;
-    status?: string | null;
-    section?: string | null;
+    course?: courseType | null;
+    status?: internshipStatusType | null;
+    section?: SectionType[] | null;
   };
 }) => {
   const { status } = intern;
@@ -74,7 +77,7 @@ export const InternCard = ({
           {intern.section && (
             <div>
               <span className="text-card-foreground font-medium">Section:</span>
-              <p className="text-muted-foreground">{intern.section}</p>
+              <p className="text-muted-foreground">{intern.section[2]}</p>
             </div>
           )}
         </div>

@@ -87,42 +87,30 @@ export const departmentsColumn: ColumnDef<DepartmentColumn>[] = [
     accessorKey: "status",
     header: "Status",
     accessorFn: (row) => {
-      const percentage =
-        Number(row.totalProgressHours) > 0
-          ? Number(
-              (
-                (Number(row.totalProgressHours) /
-                  (row.interns * Number(row.requiredHours))) *
-                100
-              ).toFixed(1),
-            )
-          : 0;
-
-      return percentage === 0
-        ? "pending"
-        : percentage >= 100
+      const noOfIntern = row.users.length;
+      const statuses = row.users.map((intern) => intern.status);
+      const noOfCompleted = statuses.filter((s) => s === "completed").length;
+      const noOfPending = statuses.filter((s) => s === "pending").length;
+      const status =
+        noOfCompleted === noOfIntern
           ? "completed"
-          : "in-progress";
+          : noOfPending === noOfIntern
+            ? "pending"
+            : "on-going";
+      return status;
     },
     cell: ({ row }) => {
-      const { totalProgressHours, interns, requiredHours } = row.original;
-      const percentage =
-        Number(totalProgressHours) > 0
-          ? Number(
-              (
-                (Number(totalProgressHours) /
-                  (interns * Number(requiredHours))) *
-                100
-              ).toFixed(1),
-            )
-          : 0;
-
+      const { users } = row.original;
+      const noOfIntern = users.length;
+      const statuses = users.map((intern) => intern.status);
+      const noOfCompleted = statuses.filter((s) => s === "completed").length;
+      const noOfPending = statuses.filter((s) => s === "pending").length;
       const status =
-        percentage === 0
-          ? "pending"
-          : percentage >= 100
-            ? "completed"
-            : "in-progress";
+        noOfCompleted === noOfIntern
+          ? "completed"
+          : noOfPending === noOfIntern
+            ? "pending"
+            : "on-going";
       const color = getStatusColor(status);
       const variant = getStatusVariant(status);
       return (
