@@ -5,6 +5,7 @@ import { api } from "@/trpc/react";
 import { DataTableSkeleton } from "@/components/table/table-skeleton";
 import { INTERNSHIP_STATUS_LABELS } from "@/constants/users/status";
 import { AdminInternsColumns } from "./column";
+import { COURSE_FILTER } from "@/constants/users/courses";
 
 const InternshipTable = () => {
   const { data, isLoading } = api.internshipAdmin.getAllInternships.useQuery();
@@ -15,11 +16,15 @@ const InternshipTable = () => {
         <DataTable
           columns={AdminInternsColumns}
           data={data}
-          filteredTitle={"section"}
+          filteredTitle={"course"}
           filters={[
             {
               column: "status",
               options: INTERNSHIP_STATUS_LABELS,
+            },
+            {
+              column: "course",
+              options: COURSE_FILTER,
             },
           ]}
         />

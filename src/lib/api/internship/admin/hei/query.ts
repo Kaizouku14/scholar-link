@@ -35,7 +35,8 @@ export const getAdminSections = async (): Promise<AdminSectionData[]> => {
               'companyName', ${CompanyTable.name},
               'companyAddress', ${CompanyTable.address},
               'supervisorName', ${SupervisorTable.name},
-              'supervisorEmail', ${SupervisorTable.email}
+              'supervisorEmail', ${SupervisorTable.email},
+              'supervisorContactNo', ${SupervisorTable.contactNo}
             )
           )
         `.as("interns"),

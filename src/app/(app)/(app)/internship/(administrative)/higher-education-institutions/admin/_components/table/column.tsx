@@ -20,7 +20,7 @@ import { DataTableRowActions } from "./table-row-actions";
 
 export const AdminInternsColumns: ColumnDef<AdminSectionData>[] = [
   {
-    accessorKey: "section",
+    accessorKey: "course",
     header: ({ column }) => (
       <div className="text-left">
         <DataTableColumnHeader column={column} title="Section" />
@@ -109,10 +109,9 @@ export const AdminInternsColumns: ColumnDef<AdminSectionData>[] = [
     accessorKey: "studentCount",
     header: "Students",
     cell: ({ row }) => (
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-1.5">
         <Users className="text-muted-foreground h-4 w-4" />
         <span className="font-medium">{row.original.studentCount}</span>
-        <span className="text-muted-foreground text-xs">students</span>
       </div>
     ),
   },

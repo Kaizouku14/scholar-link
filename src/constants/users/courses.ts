@@ -42,4 +42,9 @@ export const COURSE_LABELS = {
   "BIT Major in Food Processing Technology": "BIT-FOOD",
 } as const;
 
+export const COURSE_FILTER = COURSES.map((course) => ({
+  label: course,
+  value: course,
+}));
+
 export type courseType = (typeof COURSES)[number];

@@ -4,11 +4,11 @@ import { DataTable } from "@/components/table/data-table";
 import { api } from "@/trpc/react";
 import { DataTableSkeleton } from "@/components/table/table-skeleton";
 import { CompaniesColumns } from "./column";
+import { INTERNSHIP_STATUS_LABELS } from "@/constants/users/status";
 
 const CompaniesTable = () => {
   const { data, isLoading } = api.internshipAdmin.getAllCompany.useQuery();
 
-  console.log(data);
   return (
     <div className="w-full">
       {!isLoading && data ? (
@@ -16,6 +16,12 @@ const CompaniesTable = () => {
           columns={CompaniesColumns}
           data={data}
           filteredTitle={"companyName"}
+          filters={[
+            {
+              column: "status",
+              options: INTERNSHIP_STATUS_LABELS,
+            },
+          ]}
         />
       ) : (
         <DataTableSkeleton />
