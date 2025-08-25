@@ -9,6 +9,7 @@ const DocumentListTable = () => {
   const { data, isLoading } =
     api.internshipCoordinator.getAllInternsDocuments.useQuery();
 
+  console.log(data);
   return (
     <div className="mx-auto mt-4 w-full">
       {!isLoading && data ? (

@@ -42,7 +42,6 @@ export const getAllInternsDocumentsBySection = async ({
           type: InternDocumentsTable.documentType,
           url: InternDocumentsTable.documentUrl,
           reviewStatus: InternDocumentsTable.reviewStatus,
-          submittedAt: InternDocumentsTable.submittedAt,
           studentId: UserTable.id,
           name: UserTable.name,
           email: UserTable.email,
@@ -52,8 +51,11 @@ export const getAllInternsDocumentsBySection = async ({
           course: StudentTable.course,
           yearLevel: StudentTable.yearLevel,
         })
-        .from(InternDocumentsTable)
-        .innerJoin(UserTable, eq(InternDocumentsTable.internId, UserTable.id))
+        .from(UserTable)
+        .leftJoin(
+          InternDocumentsTable,
+          eq(InternDocumentsTable.internId, UserTable.id),
+        )
         .innerJoin(StudentTable, eq(UserTable.id, StudentTable.id))
         .innerJoin(InternshipTable, eq(UserTable.id, InternshipTable.userId))
         .where(
@@ -70,12 +72,11 @@ export const getAllInternsDocumentsBySection = async ({
           CompanyTable,
           eq(InternshipTable.companyId, CompanyTable.companyId),
         )
-        .orderBy(InternDocumentsTable.submittedAt, UserTable.section);
+        .orderBy(UserTable.section);
 
       return { documents, requiredDocuments };
     })
     .catch((error) => {
-      console.log((error as Error).message);
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
         message: "Failed to get documents: " + (error as Error).message,
@@ -87,21 +88,20 @@ export const getAllInternsDocumentsBySection = async ({
   return Object.values(
     documents.reduce(
       (acc, row) => {
-        if (!acc[row.studentId] && row) {
-          // First time we see this student → create entry
-          acc[row.studentId] = {
-            ...row,
-            profile: row.profile!,
-            section: row.section!,
-            course: row.course!,
-            yearLevel: row.yearLevel!,
-            documents: [],
-            requiredDocuments,
-          };
-        }
+        const studentId = row.studentId;
+
+        acc[studentId] ??= {
+          ...row,
+          profile: row.profile!,
+          section: row.section!,
+          course: row.course!,
+          yearLevel: row.yearLevel!,
+          documents: [],
+          requiredDocuments,
+        };
 
         if (row.id) {
-          acc[row.studentId]?.documents.push({
+          acc[studentId].documents.push({
             id: row.id,
             type: row.type,
             url: row.url,

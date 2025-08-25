@@ -19,7 +19,7 @@ export interface StudentDocuments {
   yearLevel: string;
   documents: {
     id: string;
-    type: string;
+    type: string | null;
     url: string | null;
     reviewStatus: string | null;
   }[];
