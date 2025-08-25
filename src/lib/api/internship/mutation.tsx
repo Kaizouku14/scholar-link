@@ -12,6 +12,7 @@ import {
   authorizedEmail as AuthorizedEmailTable,
   user as UserTable,
 } from "@/server/db/schema/auth";
+import { isEmailAuthorized } from "../auth/mutation";
 
 export const insertStudentInternship = async ({
   data,
@@ -86,7 +87,8 @@ export const insertStudentInternship = async ({
       .where(eq(UserTable.id, data.userId))
       .limit(1);
 
-    if (user?.email) {
+    const isAuthorized = await isEmailAuthorized({ email: user!.email });
+    if (user && !isAuthorized) {
       await tx.insert(AuthorizedEmailTable).values({
         id: authorizedEmailId,
         email: user.email,

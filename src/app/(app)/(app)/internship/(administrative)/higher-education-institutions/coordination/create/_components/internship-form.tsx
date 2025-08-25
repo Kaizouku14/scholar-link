@@ -18,14 +18,7 @@ import { companyformSchema, type CompanyFormSchema } from "./schema";
 import SubmitButton from "@/components/forms/submit-button";
 import { api } from "@/trpc/react";
 import { CalendarIcon } from "lucide-react";
-import { Calendar } from "@/components/ui/calendar";
-import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { InternsComboBox } from "./interns-cb";
 import { CompanyCombobox } from "./company-cb";
@@ -43,6 +36,7 @@ import {
   DEPARTMENTS,
   type departmentType,
 } from "@/constants/users/departments";
+import { MonthYearPicker } from "./month-picker";
 
 const InternshipForm = () => {
   const [isDisabled, setIsDisabled] = useState<boolean>(false);
@@ -92,8 +86,10 @@ const InternshipForm = () => {
       toast.success("Internship company linked successfully!", {
         id: toastId,
       });
-    } catch (error) {
-      toast.error((error as Error).message);
+    } catch {
+      toast.error("An error Occured, Please Try Again!");
+    } finally {
+      toast.dismiss(toastId);
     }
   };
 
@@ -330,49 +326,16 @@ const InternshipForm = () => {
                 <FormItem>
                   <FormLabel className="flex items-center gap-2">
                     <CalendarIcon className="h-4 w-4" />
-                    Start Date
+                    Start Month
                   </FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant="outline"
-                          className={`w-full pl-3 text-left font-normal ${!field.value ? "text-muted-foreground" : ""}`}
-                        >
-                          {field.value ? (
-                            format(field.value, "PPP")
-                          ) : (
-                            <span>Pick a date</span>
-                          )}
-                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="z-100 w-auto p-2" align="start">
-                      <div className="flex flex-col gap-2">
-                        <span className="text-muted-foreground text-xs">
-                          Select start date
-                        </span>
-                        <Calendar
-                          mode="single"
-                          selected={field.value}
-                          onSelect={field.onChange}
-                          disabled={(date) => {
-                            const today = new Date();
-                            today.setHours(0, 0, 0, 0); // reset time to midnight
-                            return date < today;
-                          }}
-                          captionLayout="dropdown"
-                          hideWeekdays
-                          hideNavigation
-                          className="m-0 h-10 w-40 p-0"
-                          components={{
-                            Day: () => <></>,
-                          }}
-                        />
-                      </div>
-                    </PopoverContent>
-                  </Popover>
+
+                  <FormControl>
+                    <MonthYearPicker
+                      value={field.value}
+                      onChange={field.onChange}
+                    />
+                  </FormControl>
+
                   <FormDescription className="text-xs">
                     Enter the internship start date.
                   </FormDescription>
@@ -388,49 +351,14 @@ const InternshipForm = () => {
                 <FormItem>
                   <FormLabel className="flex items-center gap-2">
                     <CalendarIcon className="h-4 w-4" />
-                    End Date
+                    End Month
                   </FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant="outline"
-                          className={`w-full pl-3 text-left font-normal ${!field.value ? "text-muted-foreground" : ""}`}
-                        >
-                          {field.value ? (
-                            format(field.value, "PPP")
-                          ) : (
-                            <span>Pick a date</span>
-                          )}
-                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="z-100 w-auto p-2" align="start">
-                      <div className="flex flex-col gap-2">
-                        <span className="text-muted-foreground text-xs">
-                          Select end date
-                        </span>
-                        <Calendar
-                          mode="single"
-                          selected={field.value}
-                          onSelect={field.onChange}
-                          disabled={(date) => {
-                            const today = new Date();
-                            today.setHours(0, 0, 0, 0); // reset time to midnight
-                            return date < today;
-                          }}
-                          captionLayout="dropdown"
-                          hideWeekdays
-                          hideNavigation
-                          className="m-0 h-10 w-40 p-0"
-                          components={{
-                            Day: () => <></>,
-                          }}
-                        />
-                      </div>
-                    </PopoverContent>
-                  </Popover>
+                  <FormControl>
+                    <MonthYearPicker
+                      value={field.value}
+                      onChange={field.onChange}
+                    />
+                  </FormControl>
                   <FormDescription className="text-xs">
                     Enter the internship end date.
                   </FormDescription>
