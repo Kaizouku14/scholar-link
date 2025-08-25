@@ -65,22 +65,19 @@ export const InternCard = ({
             </Badge>
           </div>
         </div>
-
-        <div className="grid grid-cols-2 gap-1 text-xs">
-          {intern.course && (
+        {intern.course && intern.section && (
+          <div className="grid grid-cols-2 gap-1 text-xs">
             <div>
               <span className="text-card-foreground font-medium">Course:</span>
               <p className="text-muted-foreground">{intern.course}</p>
             </div>
-          )}
 
-          {intern.section && (
             <div>
               <span className="text-card-foreground font-medium">Section:</span>
               <p className="text-muted-foreground">{intern.section[2]}</p>
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );
