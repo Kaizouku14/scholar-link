@@ -1,9 +1,8 @@
 import type { LucideIcon } from "lucide-react";
 
 type ManagementItem = {
-  name: string;
+  name?: string | null;
   count: number;
-  label: string;
 };
 
 export interface ManagementCardProps {
@@ -11,7 +10,6 @@ export interface ManagementCardProps {
   description?: string;
   total: number;
   totalLabel: string;
-  growth?: number;
   icon: LucideIcon;
   items: ManagementItem[];
   actionLabel: string;

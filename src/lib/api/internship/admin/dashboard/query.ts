@@ -1,25 +1,25 @@
 import { countDistinct, db, eq, sql } from "@/server/db";
+import { user as UserTable } from "@/server/db/schema/auth";
 import {
   internship as InternshipTable,
   progressLog as ProgressLogTable,
+  company as CompanyTable,
 } from "@/server/db/schema/internship";
-import { TRPCError } from "@trpc/server";
 
-//TODO: TO REVIEW (ACTIVE INTERNS)
 export const getAdminDashboardStats = async () => {
-  try {
-    const [response] = await db
-      .select({
-        totalInternship: countDistinct(InternshipTable.userId),
-        totalActiveInterns: countDistinct(InternshipTable.userId),
-        totalPendingInterns: sql<number>`COUNT(DISTINCT ${InternshipTable.userId}) FILTER (WHERE ${InternshipTable.status} = 'in-progress')`,
-        totalCompletedInterns: sql<number>`COUNT(DISTINCT ${InternshipTable.userId}) FILTER (WHERE ${InternshipTable.status} = 'completed')`,
-        monthlyLogs: sql<number>`
+  return db
+    .transaction(async (tx) => {
+      const [overview] = await tx
+        .select({
+          totalInternship: countDistinct(InternshipTable.userId),
+          totalActiveInterns: sql<number>`COUNT(DISTINCT ${InternshipTable.userId}) FILTER (WHERE ${InternshipTable.status} = 'on-going')`,
+          totalCompletedInterns: sql<number>`COUNT(DISTINCT ${InternshipTable.userId}) FILTER (WHERE ${InternshipTable.status} = 'completed')`,
+          monthlyLogs: sql<number>`
             SUM(${ProgressLogTable.hours})
             FILTER (
                 WHERE date(${ProgressLogTable.logDate}, 'unixepoch') >= date('now','start of month')
             )`,
-        prevMonthlyLogs: sql<number>`
+          prevMonthlyLogs: sql<number>`
             COALESCE(
                 SUM(
                 CASE
@@ -32,19 +32,47 @@ export const getAdminDashboardStats = async () => {
                 ),
                 0
             )`,
-      })
-      .from(InternshipTable)
-      .innerJoin(
-        ProgressLogTable,
-        eq(InternshipTable.internshipId, ProgressLogTable.internshipId),
-      )
-      .execute();
+        })
+        .from(InternshipTable)
+        .leftJoin(
+          ProgressLogTable,
+          eq(InternshipTable.internshipId, ProgressLogTable.internshipId),
+        )
 
-    return response;
-  } catch (error) {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: "Failed to get dashboard stats," + (error as Error).message,
-    });
-  }
+        .execute();
+
+      const internshipStats = await tx
+        .select({
+          name: CompanyTable.name,
+          count: countDistinct(InternshipTable.userId).as("internCount"),
+        })
+        .from(CompanyTable)
+        .innerJoin(
+          InternshipTable,
+          eq(CompanyTable.companyId, InternshipTable.companyId),
+        )
+        .groupBy(CompanyTable.name)
+        .orderBy(sql`internCount DESC`)
+        .limit(5)
+        .execute();
+
+      const departmentStats = await tx
+        .select({
+          name: UserTable.department,
+          count: countDistinct(InternshipTable.userId).as("internCount"),
+        })
+        .from(UserTable)
+        .innerJoin(InternshipTable, eq(UserTable.id, InternshipTable.userId))
+        .groupBy(UserTable.department)
+        .orderBy(sql`internCount DESC`)
+        .limit(5)
+        .execute();
+
+      return {
+        overview,
+        internshipStats,
+        departmentStats,
+      };
+    })
+    .catch((error) => console.log(error));
 };
