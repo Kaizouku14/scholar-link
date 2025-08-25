@@ -4,7 +4,7 @@ const CompaniesHeader = () => {
       <div className="flex items-center gap-1">
         <div className="space-y-1">
           <h1 className="text-center text-2xl font-bold text-white md:text-start md:text-3xl">
-            Manage All Companies
+            Manage Host Training Establishments
           </h1>
           <p className="text-center text-sm font-medium text-white/90 md:text-start md:text-base">
             View and manage all companies.

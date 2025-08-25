@@ -70,13 +70,15 @@ export const DataTableToolbar = <TData,>({
           </Button>
         )}
       </div>
-      {onImport && (
-        <Button variant={"outline"} size={"sm"} onClick={onImport}>
-          <Import className="size-4" />
-          Import
-        </Button>
-      )}
-      <DataTableViewOptions table={table} />
+      <div className="flex items-center gap-2">
+        {onImport && (
+          <Button variant={"outline"} size={"lg"} onClick={onImport}>
+            <Import className="size-4" />
+            Import
+          </Button>
+        )}
+        <DataTableViewOptions table={table} />
+      </div>
     </div>
   );
 };
