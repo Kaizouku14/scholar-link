@@ -117,6 +117,11 @@ const UpcomingDeadlines = () => {
                 </div>
               </ScrollArea>
             )}
+            {internshipDocuments && (
+              <div className="text-muted-foreground mr-3 text-right text-xs">
+                {internshipDocuments?.length} posted documents
+              </div>
+            )}
           </CardContent>
         </Card>
       )}

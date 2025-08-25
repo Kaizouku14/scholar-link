@@ -1,5 +1,5 @@
 import { createTRPCRouter, protectedRoute } from "../../trpc";
-import { getStudentProgressByDept } from "@/lib/api/internship/coordinator/progress-monitoring/query";
+import { getStudentProgressBySection } from "@/lib/api/internship/coordinator/progress-monitoring/query";
 import { getCoordinatorDashboardStats } from "@/lib/api/internship/coordinator/dashboard/query";
 import {
   DEPARTMENTS,
@@ -115,10 +115,10 @@ export const internshipCoordinatorRouter = createTRPCRouter({
     );
   }),
   getAllStudentProgressByDept: protectedRoute.query(({ ctx }) => {
-    const department = ctx.session!.user.department as departmentType;
+    const userId = ctx.session!.user.id;
     return cacheData(
-      `${department}-progress`,
-      async () => await getStudentProgressByDept({ department }),
+      `${userId}-progress`,
+      async () => await getStudentProgressBySection({ userId }),
     );
   }),
   getCompanyRecords: protectedRoute.query(() => {
