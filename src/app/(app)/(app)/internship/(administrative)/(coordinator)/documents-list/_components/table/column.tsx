@@ -13,6 +13,13 @@ import type { StudentDocuments } from "@/interfaces/internship/document";
 export const DocumentListColumns: ColumnDef<StudentDocuments>[] = [
   {
     accessorKey: "name",
+  },
+  {
+    accessorKey: "section",
+    filterFn: (row, columnId, filterValues: string[]) => {
+      const cellValue = row.getValue<string[]>(columnId) ?? [];
+      return filterValues.some((val) => cellValue.includes(val));
+    },
     header: "Student",
     cell: ({ row }) => {
       const { name, course, section, yearLevel, profile } = row.original;

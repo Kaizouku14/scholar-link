@@ -19,6 +19,7 @@ interface DataTableToolbarProps<TData> {
     }[];
   }[];
   onImport?: () => void;
+  viewOptions?: boolean;
 }
 
 export const DataTableToolbar = <TData,>({
@@ -26,6 +27,7 @@ export const DataTableToolbar = <TData,>({
   filteredTitle,
   filters,
   onImport,
+  viewOptions,
 }: DataTableToolbarProps<TData>) => {
   const isFiltered = table.getState().columnFilters.length > 0;
 
@@ -77,7 +79,7 @@ export const DataTableToolbar = <TData,>({
             Import
           </Button>
         )}
-        <DataTableViewOptions table={table} />
+        {viewOptions && <DataTableViewOptions table={table} />}
       </div>
     </div>
   );

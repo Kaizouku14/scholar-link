@@ -4,12 +4,12 @@ import { DataTable } from "@/components/table/data-table";
 import { DataTableSkeleton } from "@/components/table/table-skeleton";
 import { DocumentListColumns } from "./column";
 import { api } from "@/trpc/react";
+import { SECTIONS_LABELS } from "@/constants/users/sections";
 
 const DocumentListTable = () => {
   const { data, isLoading } =
     api.internshipCoordinator.getAllInternsDocuments.useQuery();
 
-  console.log(data);
   return (
     <div className="mx-auto mt-4 w-full">
       {!isLoading && data ? (
@@ -31,7 +31,13 @@ const DocumentListTable = () => {
                 },
               ],
             },
+            {
+              column: "section",
+              options: SECTIONS_LABELS,
+            },
           ]}
+          columnVisibility={{ name: false }}
+          viewOptions={false}
         />
       ) : (
         <DataTableSkeleton />
