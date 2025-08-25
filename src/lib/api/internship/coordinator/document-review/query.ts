@@ -13,9 +13,9 @@ import {
 import type { SectionType } from "@/constants/users/sections";
 
 export const getAllDocumentsToReviewBySection = async ({
-  id,
+  userId,
 }: {
-  id: string;
+  userId: string;
 }) => {
   return await db
     .transaction(async (tx) => {
@@ -25,7 +25,7 @@ export const getAllDocumentsToReviewBySection = async ({
           department: UserTable.department,
         })
         .from(UserTable)
-        .where(eq(UserTable.id, id))
+        .where(eq(UserTable.id, userId))
         .limit(1);
 
       const coordinatorSections: SectionType[] = coordinator?.section ?? [];

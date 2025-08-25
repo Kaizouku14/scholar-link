@@ -78,7 +78,6 @@ export const insertStudentInternship = async ({
       companyId,
       duration: data.duration,
       totalOfHoursRequired: totalHoursRequired,
-      status: "on-going",
     });
 
     const [user] = await tx

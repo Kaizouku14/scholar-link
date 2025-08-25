@@ -113,8 +113,9 @@ export const getStatusVariant = (status: string) => {
 export const getStatusColor = (status: string) => {
   switch (status.toLowerCase()) {
     case "pending":
+      return "bg-yellow-50 text-yellow-700 border-yellow-200";
     case "on-going":
-      return "bg-amber-50 text-amber-700 border-amber-200";
+      return "bg-blue-50 text-blue-700 border-blue-200";
     case "approved":
     case "completed":
       return "bg-green-100 text-green-800 border-green-200";
@@ -147,8 +148,9 @@ export const getStatusIcon = (status: string) => {
 export const getStatusIndicatorColor = (status: string) => {
   switch (status.toLowerCase()) {
     case "pending":
+      return "bg-yellow-50";
     case "on-going":
-      return "bg-amber-400";
+      return "bg-blue-50 ";
     case "approved":
     case "completed":
       return "bg-green-100";

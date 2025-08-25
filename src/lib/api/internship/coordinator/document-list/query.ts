@@ -14,9 +14,9 @@ import type { SectionType } from "@/constants/users/sections";
 import type { StudentDocuments } from "@/interfaces/internship/document";
 
 export const getAllInternsDocumentsBySection = async ({
-  id,
+  userId,
 }: {
-  id: string;
+  userId: string;
 }) => {
   const response = await db
     .transaction(async (tx) => {
@@ -26,7 +26,7 @@ export const getAllInternsDocumentsBySection = async ({
           department: UserTable.department,
         })
         .from(UserTable)
-        .where(eq(UserTable.id, id))
+        .where(eq(UserTable.id, userId))
         .limit(1);
 
       const coordinatorSections: SectionType[] = coordinator?.section ?? [];
@@ -60,10 +60,10 @@ export const getAllInternsDocumentsBySection = async ({
           and(
             eq(UserTable.department, coordinatorDeparment!),
             sql`EXISTS (
-                        SELECT 1
-                        FROM json_each(${UserTable.section})
-                        WHERE value IN (${sql.join(coordinatorSections, sql`,`)})
-                    )`,
+                SELECT 1
+                FROM json_each(${UserTable.section})
+                WHERE value IN (${sql.join(coordinatorSections, sql`,`)})
+            )`,
           ),
         )
         .innerJoin(
@@ -75,6 +75,7 @@ export const getAllInternsDocumentsBySection = async ({
       return { documents, requiredDocuments };
     })
     .catch((error) => {
+      console.log((error as Error).message);
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
         message: "Failed to get documents: " + (error as Error).message,

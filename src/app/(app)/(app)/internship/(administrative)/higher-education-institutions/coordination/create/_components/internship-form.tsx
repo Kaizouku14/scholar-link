@@ -62,10 +62,11 @@ const InternshipForm = () => {
     api.internshipCoordinator.createStudentInternship.useMutation();
   const onSubmit = async (values: CompanyFormSchema) => {
     const coordinatoDepartment = data?.user.department;
+
+    const toastId = toast.loading("Saving internship company details...");
     if (role === ROLE.INTERNSHIP_COORDINATOR) {
       values.department = coordinatoDepartment as departmentType;
     }
-    const toastId = toast.loading("Saving internship company details...");
     try {
       const formattedDuration = `${format(values.startDate, "LLLL yyyy")} - ${format(values.endDate, "LLLL yyyy")}`;
       const data = {
@@ -83,9 +84,8 @@ const InternshipForm = () => {
         ...data,
       });
 
-      toast.success("Internship company linked successfully!", {
-        id: toastId,
-      });
+      toast.success("Internship company linked successfully!");
+      form.reset();
     } catch {
       toast.error("An error Occured, Please Try Again!");
     } finally {

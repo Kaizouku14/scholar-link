@@ -70,8 +70,7 @@ export const getCoordinatorSections = async (
           )`,
           eq(UserTable.department, coordinatorDepartment!),
         ),
-      )
-      .groupBy(UserTable.section);
+      );
 
     return response;
   });

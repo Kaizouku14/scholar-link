@@ -16,7 +16,7 @@ const CoordinatorDashboardStats = () => {
           <StatCard
             title="Assigned Students"
             value={data.counts?.studentCount ?? 0}
-            subtitle={`${data.department} Department`}
+            subtitle={`${data.coordinatorDeparment} Department`}
             icon={<Clipboard className="text-primary h-4 w-4" />}
           />
           <StatCard
@@ -26,7 +26,7 @@ const CoordinatorDashboardStats = () => {
             icon={<Clock className="text-primary h-4 w-4" />}
           />
           <StatCard
-            title="In Progess"
+            title="On Going"
             value={data.counts?.inProgressCount ?? 0}
             subtitle="Requires your attention"
             icon={<Hourglass className="text-primary h-4 w-4" />}

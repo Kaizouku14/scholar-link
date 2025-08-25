@@ -1,10 +1,7 @@
 import { createTRPCRouter, protectedRoute } from "../../trpc";
 import { getStudentProgressBySection } from "@/lib/api/internship/coordinator/progress-monitoring/query";
 import { getCoordinatorDashboardStats } from "@/lib/api/internship/coordinator/dashboard/query";
-import {
-  DEPARTMENTS,
-  type departmentType,
-} from "@/constants/users/departments";
+import { DEPARTMENTS } from "@/constants/users/departments";
 import { getAllCompanyRecords } from "@/lib/api/internship/query";
 import { cacheData } from "@/lib/redis";
 import z from "zod";
@@ -88,30 +85,30 @@ export const internshipCoordinatorRouter = createTRPCRouter({
     return cacheData("documents", async () => await getDocuments());
   }),
   getAllDocumentsToReview: protectedRoute.query(({ ctx }) => {
-    const id = ctx.session!.user.id;
+    const userId = ctx.session!.user.id;
     return cacheData(
-      `${id}-review-documents`,
+      `${userId}-review-documents`,
       async () =>
         await getAllDocumentsToReviewBySection({
-          id,
+          userId,
         }),
     );
   }),
   getAllInternsDocuments: protectedRoute.query(({ ctx }) => {
-    const id = ctx.session!.user.id;
+    const userId = ctx.session!.user.id;
     return cacheData(
-      `${id}-documents`,
+      `${userId}-documents`,
       async () =>
         await getAllInternsDocumentsBySection({
-          id,
+          userId,
         }),
     );
   }),
   getCoordinatorDashboardStats: protectedRoute.query(({ ctx }) => {
-    const department = ctx.session!.user.department as departmentType;
+    const userId = ctx.session!.user.id;
     return cacheData(
-      `${department}-stats`,
-      async () => await getCoordinatorDashboardStats({ department }),
+      `${userId}-stats`,
+      async () => await getCoordinatorDashboardStats({ userId }),
     );
   }),
   getAllStudentProgressByDept: protectedRoute.query(({ ctx }) => {

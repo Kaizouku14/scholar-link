@@ -1,5 +1,5 @@
 import type { SectionType } from "@/constants/users/sections";
-import { db, eq, sum, and, sql } from "@/server/db";
+import { db, eq, and, sql } from "@/server/db";
 import {
   user as UserTable,
   student as StudentTable,
@@ -16,7 +16,7 @@ export const getStudentProgressBySection = async ({
 }: {
   userId: string;
 }) => {
-  return db
+  return await db
     .transaction(async (tx) => {
       const [coordinator] = await tx
         .select({
@@ -39,14 +39,16 @@ export const getStudentProgressBySection = async ({
           course: StudentTable.course,
           yearLevel: StudentTable.yearLevel,
           companyName: CompanyTable.name,
-          progress: sum(ProgressTable.hours),
+          progress: sql<string>`COALESCE(SUM(${ProgressTable.hours}), 0)`.as(
+            "progress",
+          ),
           totalRequiredHours: InternshipTable.totalOfHoursRequired,
           status: InternshipTable.status,
         })
-        .from(ProgressTable)
-        .innerJoin(
-          InternshipTable,
-          eq(InternshipTable.internshipId, ProgressTable.internshipId),
+        .from(InternshipTable)
+        .leftJoin(
+          ProgressTable,
+          eq(ProgressTable.internshipId, InternshipTable.internshipId),
         )
         .innerJoin(StudentTable, eq(StudentTable.id, InternshipTable.userId))
         .innerJoin(
@@ -67,8 +69,13 @@ export const getStudentProgressBySection = async ({
         .groupBy(
           InternshipTable.internshipId,
           UserTable.name,
+          UserTable.profile,
           UserTable.section,
           StudentTable.course,
+          StudentTable.yearLevel,
+          CompanyTable.name,
+          InternshipTable.totalOfHoursRequired,
+          InternshipTable.status,
         )
         .execute();
 
