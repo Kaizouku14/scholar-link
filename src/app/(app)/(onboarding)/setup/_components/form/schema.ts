@@ -1,5 +1,4 @@
 import { GENDERS } from "@/constants/users/genders";
-import { SECTIONS } from "@/constants/users/sections";
 import { YEAR_LEVEL } from "@/constants/users/year-level";
 import z from "zod";
 
@@ -15,7 +14,7 @@ export const profileSetupSchema = z.object({
 });
 
 export const studentSetupSchema = z.object({
-  section: z.enum(SECTIONS),
+  studentNo: z.string().min(1, { message: "Student number is required" }),
   yearLevel: z.enum(YEAR_LEVEL),
 });
 

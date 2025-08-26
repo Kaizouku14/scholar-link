@@ -13,11 +13,10 @@ const Layout = async ({ children }: PropsWithChildren) => {
   if (!session) {
     redirect(PageRoutes.LOGIN);
   } else {
-    const response = await checkStudentOnBoarded({
-      id: session.user.id,
-    });
-
-    if (response) redirect(PageRoutes.DASHBOARD);
+    // const response = await checkStudentOnBoarded({
+    //   id: session.user.id,
+    // });
+    // if (response) redirect(PageRoutes.DASHBOARD);
   }
 
   return <main>{children}</main>;

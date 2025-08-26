@@ -1,5 +1,4 @@
 import type { GenderType } from "@/constants/users/genders";
-import type { SectionType } from "@/constants/users/sections";
 import type { YearLevelType } from "@/constants/users/year-level";
 
 export interface StudentProfileType {
@@ -10,6 +9,6 @@ export interface StudentProfileType {
   address: string;
   contact: string;
   dateOfBirth: Date;
-  section: SectionType;
+  studentNo: string;
   yearLevel: YearLevelType;
 }

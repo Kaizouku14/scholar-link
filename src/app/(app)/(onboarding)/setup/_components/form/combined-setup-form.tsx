@@ -37,10 +37,11 @@ const CombinedSetupForm = ({
       address: "",
       contact: "",
       dateOfBirth: undefined,
-      section: undefined,
-      yearLevel: undefined,
+      studentNo: "",
+      yearLevel: "4th",
     },
     mode: "onChange", // Validate on change to enable/disable next button
+    shouldUnregister: false,
   });
 
   const handleFileSelect = (file: File) => {
@@ -73,13 +74,25 @@ const CombinedSetupForm = ({
     }
   };
 
+  const { mutateAsync: checkStudentNoAvailability } =
+    api.user.checkStudentNoAvailability.useMutation();
   const { mutateAsync: insertStudentProfile } =
     api.user.insertStudentProfile.useMutation();
   const onSubmit = async (values: CombinedSetupSchema) => {
     try {
       if (!userId) throw new Error("User not found");
-
       setIsLoading(true);
+
+      const isStudentExist = await checkStudentNoAvailability({
+        studentNo: values.studentNo,
+      });
+
+      if (isStudentExist) {
+        toast.error("Student no is already taken. Please try again.");
+        setCurrentStep(1);
+        return;
+      }
+
       const uploadedImage = await uploadFile(values.profile);
       if (!uploadedImage?.url || !uploadedImage?.key) {
         toast.error("Failed to upload image. Please try again.");

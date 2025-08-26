@@ -2,25 +2,23 @@ import { z } from "zod";
 import { createTRPCRouter, protectedRoute, publicProcedure } from "../trpc";
 import {
   checkStudentNoAvailability,
-  createdStudentNo,
+  insertStudentInfo,
   insertStudentProfile,
 } from "@/lib/api/user/mutation";
 import { COURSES } from "@/constants/users/courses";
 import { GENDERS } from "@/constants/users/genders";
-import { SECTIONS } from "@/constants/users/sections";
 import { YEAR_LEVEL } from "@/constants/users/year-level";
 
 export const userRouter = createTRPCRouter({
-  createStudentNo: publicProcedure
+  createStudentInfo: publicProcedure
     .input(
       z.object({
         id: z.string(),
-        studentNo: z.string(),
         course: z.enum(COURSES),
       }),
     )
     .mutation(async ({ input }) => {
-      return await createdStudentNo(input);
+      return await insertStudentInfo(input);
     }),
 
   checkStudentNoAvailability: publicProcedure
@@ -43,7 +41,7 @@ export const userRouter = createTRPCRouter({
         address: z.string(),
         gender: z.enum(GENDERS),
         dateOfBirth: z.date(),
-        section: z.enum(SECTIONS),
+        studentNo: z.string(),
         yearLevel: z.enum(YEAR_LEVEL),
       }),
     )

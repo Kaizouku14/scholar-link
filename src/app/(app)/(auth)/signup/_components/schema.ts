@@ -1,5 +1,6 @@
 import { COURSES } from "@/constants/users/courses";
 import { DEPARTMENTS } from "@/constants/users/departments";
+import { SECTIONS } from "@/constants/users/sections";
 import { strongPasswordSchema } from "@/lib/utils";
 import z from "zod";
 
@@ -10,6 +11,7 @@ export const signUpSchema = z.object({
   name: z.string().min(1, "Name is required"),
   surname: z.string().min(1, "Surname is required"),
   middleName: z.string().min(1, "Middle name is required"),
+  section: z.enum(SECTIONS),
   department: z.enum(DEPARTMENTS),
   course: z.enum(COURSES),
   email: z.string().email(),

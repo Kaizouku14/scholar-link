@@ -23,7 +23,7 @@ const SetupPage = () => {
       {isLoading ? (
         <FinishingSetup />
       ) : (
-        <Card className="z-10 w-full max-w-lg">
+        <Card className="z-10 w-full max-w-lg border-none bg-transparent opacity-90 shadow-none backdrop-blur-xl">
           <CardHeader className="m-0">
             <CardTitle className="flex text-2xl">
               <span>Welcome to Scholar</span>

@@ -28,13 +28,11 @@ export const checkStudentNoAvailability = async ({
   }
 };
 
-export const createdStudentNo = async ({
+export const insertStudentInfo = async ({
   id,
-  studentNo,
   course,
 }: {
   id: string;
-  studentNo: string;
   course: courseType;
 }) => {
   try {
@@ -53,7 +51,6 @@ export const createdStudentNo = async ({
 
     await db.insert(studentTable).values({
       id: createdUser.id,
-      studentNo,
       course,
     });
   } catch {
@@ -84,7 +81,6 @@ export const insertStudentProfile = async ({
           profile: data.profile,
           profileKey: data.profileKey,
           gender: data.gender,
-          section: [data.section],
           dateOfBirth: data.dateOfBirth,
           contact: data.contact,
           address: data.address,

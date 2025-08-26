@@ -2,7 +2,7 @@
 
 import { FormControl } from "@/components/ui/form";
 
-import type { Control } from "react-hook-form";
+import { useFormContext, type Control } from "react-hook-form";
 import {
   FormField,
   FormItem,

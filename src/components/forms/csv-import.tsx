@@ -13,7 +13,8 @@ interface CSVImportProps {
 
 export function CSVImport({ onImportCompleteAction }: CSVImportProps) {
   const [file, setFile] = useState<File | null>(null);
-  const importMutation = api.internshipAdmin.uploadInternshipCSV.useMutation();
+  const importMutation =
+    api.internshipCoordinator.uploadInternshipCSV.useMutation();
 
   console.log(file);
   console.log(onImportCompleteAction);

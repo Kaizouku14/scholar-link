@@ -30,6 +30,7 @@ import {
 import { COURSES } from "@/constants/users/courses";
 import { DEPARTMENTS } from "@/constants/users/departments";
 import { formatText } from "@/lib/utils";
+import { SECTIONS } from "@/constants/users/sections";
 
 const SignUpForm = () => {
   const router = useRouter();
@@ -40,6 +41,7 @@ const SignUpForm = () => {
       name: "",
       surname: "",
       middleName: "",
+      section: undefined,
       department: undefined,
       course: undefined,
       email: "",
@@ -47,16 +49,14 @@ const SignUpForm = () => {
     },
   });
 
-  const { mutateAsync: checkStudentNoAvailability } =
-    api.user.checkStudentNoAvailability.useMutation();
-  const { mutateAsync: createdStudentNo } =
-    api.user.createStudentNo.useMutation();
+  const { mutateAsync: createStudentInfo } =
+    api.user.createStudentInfo.useMutation();
   const onSubmit = async (values: SignUpSchema) => {
     const {
-      studentNo,
       name,
       surname,
       middleName,
+      section,
       department,
       course,
       email,
@@ -68,19 +68,10 @@ const SignUpForm = () => {
     );
 
     try {
-      const available = await checkStudentNoAvailability({
-        studentNo,
-      });
-
-      if (available) {
-        throw new Error(
-          `The student number ${studentNo} is already registered.`,
-        );
-      }
-
       const fullName = `${name} ${middleName} ${surname}`;
       const { data, error } = await authClient.signUp.email({
         name: formatText(fullName),
+        section,
         department,
         email,
         password,
@@ -90,9 +81,8 @@ const SignUpForm = () => {
       if (error) {
         throw new Error(error.message);
       } else {
-        await createdStudentNo({
+        await createStudentInfo({
           id: data.user.id,
-          studentNo,
           course,
         });
 
@@ -182,47 +172,33 @@ const SignUpForm = () => {
 
           <FormField
             control={form.control}
-            name="studentNo"
+            name="course"
             render={({ field }) => (
-              <FormItem className="grid gap-2">
-                <FormLabel>Student No.</FormLabel>
-                <FormControl>
-                  <Input placeholder="e.g 2022123456" {...field} />
-                </FormControl>
+              <FormItem className="flex flex-col">
+                <FormLabel>Course</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select course" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {COURSES.map((type) => (
+                      <SelectItem key={type} value={type}>
+                        {type}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
                 <FormMessage />
               </FormItem>
             )}
           />
 
           <div className="grid grid-cols-2 items-center gap-x-2">
-            <FormField
-              control={form.control}
-              name="course"
-              render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel>Course</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select course" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {COURSES.map((type) => (
-                        <SelectItem key={type} value={type}>
-                          {type}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
             <FormField
               control={form.control}
               name="department"
@@ -242,6 +218,34 @@ const SignUpForm = () => {
                       {DEPARTMENTS.map((type) => (
                         <SelectItem key={type} value={type}>
                           {type}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="section"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Section</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select your section" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {SECTIONS.map((section) => (
+                        <SelectItem key={section} value={section}>
+                          {section}
                         </SelectItem>
                       ))}
                     </SelectContent>

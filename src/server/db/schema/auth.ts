@@ -37,7 +37,7 @@ export const student = createTable("student", {
     .notNull()
     .primaryKey()
     .references(() => user.id, { onDelete: "cascade" }),
-  studentNo: text("student_no").unique().notNull(),
+  studentNo: text("student_no").unique(),
   course: text("course", { enum: COURSES }),
   yearLevel: text("year_level", { enum: YEAR_LEVEL }),
   onboarded: integer("onboarded", { mode: "boolean" }).default(false),

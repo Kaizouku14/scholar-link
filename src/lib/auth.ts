@@ -48,6 +48,7 @@ export const auth = betterAuth({
   },
   user: {
     additionalFields: {
+      section: { type: ["A", "B", "C", "D", "E"], required: true },
       department: { type: "string", required: true },
       profile: { type: "string", required: false },
     },
