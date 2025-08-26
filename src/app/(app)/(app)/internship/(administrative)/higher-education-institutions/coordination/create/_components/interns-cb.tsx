@@ -40,21 +40,21 @@ export const InternsComboBox = ({ value, onChange }: AccountListProps) => {
           className="w-full justify-between"
         >
           {value
-            ? data?.find((detail) => detail.userId === value)?.studentNo
-            : "Select student No."}
+            ? data?.find((detail) => detail.userId === value)?.name
+            : "Select student..."}
           <ChevronsUpDown className="opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-80 p-0">
         <Command>
-          <CommandInput placeholder="Search student No." className="h-9" />
+          <CommandInput placeholder="Search student..." className="h-9" />
           <CommandList>
-            <CommandEmpty>No Student No. found.</CommandEmpty>
+            <CommandEmpty>No Student found.</CommandEmpty>
             <CommandGroup>
               {data?.map((detail) => (
                 <CommandItem
                   key={detail.userId}
-                  value={detail.studentNo!}
+                  value={detail.name}
                   onSelect={() => {
                     onChange(detail.userId);
                     setOpen(false);
@@ -63,12 +63,9 @@ export const InternsComboBox = ({ value, onChange }: AccountListProps) => {
                   <div className="flex w-full flex-col text-xs">
                     <span>{detail.name}</span>
                     <div className="text-muted-foreground flex gap-1">
-                      {detail.studentNo} -
-                      <div>
-                        {COURSE_LABELS[detail.course!]} ·{" "}
-                        {YEAR_LEVEL_LABELS[detail.yearLevel!]}
-                        {detail.section}
-                      </div>
+                      {COURSE_LABELS[detail.course!]} ·{" "}
+                      {YEAR_LEVEL_LABELS[detail.yearLevel!]}
+                      {detail.section}
                     </div>
                   </div>
                   <Check

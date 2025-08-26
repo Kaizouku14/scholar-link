@@ -67,6 +67,7 @@ const InternshipForm = () => {
     if (role === ROLE.INTERNSHIP_COORDINATOR) {
       values.department = coordinatoDepartment as departmentType;
     }
+
     try {
       const formattedDuration = `${format(values.startDate, "LLLL yyyy")} - ${format(values.endDate, "LLLL yyyy")}`;
       const data = {
@@ -111,7 +112,7 @@ const InternshipForm = () => {
               name="userId"
               render={({ field }) => (
                 <FormItem className="w-full md:mt-5.5">
-                  <FormLabel>Student No.</FormLabel>
+                  <FormLabel>Student</FormLabel>
                   <FormControl>
                     <InternsComboBox
                       value={field.value}
@@ -119,7 +120,7 @@ const InternshipForm = () => {
                     />
                   </FormControl>
                   <FormDescription className="text-xs">
-                    Select the student’s assigned ID number.
+                    Select the student you want to link.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>

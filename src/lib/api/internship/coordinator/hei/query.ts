@@ -97,7 +97,6 @@ export const getAllUserAccount = async ({ userId }: { userId: string }) => {
           .select({
             userId: UserTable.id,
             name: UserTable.name,
-            studentNo: StudentTable.studentNo,
             course: StudentTable.course,
             section: UserTable.section,
             yearLevel: StudentTable.yearLevel,
