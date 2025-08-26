@@ -34,15 +34,15 @@ export const progressLog = createTable("student_progress", {
 
 export const company = createTable("company", {
   companyId: text("company_id").primaryKey(),
-  name: text("name").notNull(),
-  address: text("address").notNull(),
+  name: text("name"),
+  address: text("address"),
 });
 
 export const supervisor = createTable("supervisor", {
   supervisorId: text("supervisor_id").primaryKey(),
-  name: text("name").notNull(),
-  contactNo: text("contact_no").notNull(),
-  email: text("email").notNull(),
+  name: text("name"),
+  contactNo: text("contact_no"),
+  email: text("email"),
 });
 
 export const document = createTable("document", {

@@ -14,7 +14,7 @@ interface FileDropAreaProps {
 
 export function FileDropArea({
   onFileSelectAction,
-  acceptedFileTypes = [".csv", "text/csv"],
+  acceptedFileTypes = ["application/vnd.ms-excel", ".xlsx"],
   maxFileSize = 5 * 1024 * 1024, // 5MB
 }: FileDropAreaProps) {
   const [file, setFile] = useState<File | undefined>(undefined);

@@ -17,7 +17,6 @@ export function CSVImport({ onImportCompleteAction }: CSVImportProps) {
     api.internshipCoordinator.uploadInternshipCSV.useMutation();
 
   console.log(file);
-  console.log(onImportCompleteAction);
   const handleFileSelect = (selectedFile: File) => {
     setFile(selectedFile);
   };
@@ -30,13 +29,13 @@ export function CSVImport({ onImportCompleteAction }: CSVImportProps) {
       formData.append("file", file);
 
       await importMutation.mutateAsync(formData);
-      toast.success("CSV imported successfully!");
+      toast.success("File imported successfully!");
       setFile(null);
       onImportCompleteAction();
     } catch (error) {
       if (error instanceof Error) {
-        console.error("Error importing CSV:", error);
-        toast.error("Failed to import CSV");
+        console.error("Error importing File:", error);
+        toast.error("Failed to import File");
       }
     }
   };
@@ -45,7 +44,7 @@ export function CSVImport({ onImportCompleteAction }: CSVImportProps) {
     <div className="space-y-4">
       <FileDropArea
         onFileSelectAction={handleFileSelect}
-        acceptedFileTypes={[".csv"]}
+        acceptedFileTypes={[".xlsx", "application/vnd.ms-excel"]}
         maxFileSize={5 * 1024 * 1024} // 5MB
       />
       <Button

@@ -4,7 +4,7 @@ import type { CoordinatorSectionData } from "@/interfaces/internship/hei";
 import type { ColumnDef } from "@tanstack/react-table";
 import { cn, getStatusColor, getStatusIcon } from "@/lib/utils";
 import React from "react";
-import { Building2, GraduationCap, UserCheck } from "lucide-react";
+import { Building2, GraduationCap, Phone, UserCheck } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { DataTableColumnHeader } from "@/components/table/table-column-header";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -133,12 +133,19 @@ export const CoordinatorInternsColumns: ColumnDef<CoordinatorSectionData>[] = [
     accessorKey: "supervisorContactNo",
     header: "Supervisor No.",
     cell: ({ row }) => (
-      <a
-        href={`tel:${row.original.supervisorContactNo}`}
-        className="text-sm text-blue-600 hover:text-blue-800 hover:underline"
-      >
-        {row.original.supervisorContactNo}
-      </a>
+      <div className="flex items-center space-x-2">
+        <Phone className="text-muted-foreground h-4 w-4" />
+        {row.original.supervisorContactNo ? (
+          <a
+            href={`tel:${row.original.supervisorContactNo}`}
+            className="text-sm text-blue-600 hover:text-blue-800 hover:underline"
+          >
+            {row.original.supervisorContactNo}
+          </a>
+        ) : (
+          <span className="text-muted-foreground text-sm">No phone</span>
+        )}
+      </div>
     ),
   },
 ];

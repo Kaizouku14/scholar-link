@@ -22,7 +22,7 @@ import {
   getDocuments,
 } from "@/lib/api/internship/coordinator/document-review/query";
 import { zfd } from "zod-form-data";
-import { insertInternshipsCsv } from "@/lib/api/internship/coordinator/hei/mutation";
+import { insertInternshipsXLSX } from "@/lib/api/internship/coordinator/hei/mutation";
 
 export const internshipCoordinatorRouter = createTRPCRouter({
   /******************************************
@@ -86,8 +86,9 @@ export const internshipCoordinatorRouter = createTRPCRouter({
         file: zfd.file(),
       }),
     )
-    .mutation(async ({ input }) => {
-      await insertInternshipsCsv({ file: input.file });
+    .mutation(async ({ ctx, input }) => {
+      const department = ctx.session!.user.department;
+      await insertInternshipsXLSX({ file: input.file, department });
     }),
   /******************************************
    *          Coordinator API Query         *

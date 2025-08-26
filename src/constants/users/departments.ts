@@ -4,6 +4,6 @@ export type departmentType = (typeof DEPARTMENTS)[number];
 export const DEPARMENTS_LABELS = {
   ITDS: "Information Technology and Data Science",
   GATE: "General Academics and teacher education",
-  HTM: "",
-  BIT: "",
+  HTM: "Bachelor of Hospitality Management",
+  BIT: "Bachelor of Industrial Technology",
 };
