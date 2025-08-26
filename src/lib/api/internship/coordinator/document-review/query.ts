@@ -43,7 +43,6 @@ export const getAllDocumentsToReviewBySection = async ({
           profile: UserTable.profile,
           section: UserTable.section,
           course: StudentTable.course,
-          yearLevel: StudentTable.yearLevel,
           companyName: CompanyTable.name,
         })
         .from(InternDocumentsTable)

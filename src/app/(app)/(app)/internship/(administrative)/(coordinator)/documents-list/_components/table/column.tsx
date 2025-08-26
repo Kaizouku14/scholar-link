@@ -1,11 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { COURSE_LABELS, type courseType } from "@/constants/users/courses";
-import {
-  YEAR_LEVEL_LABELS,
-  type YearLevelType,
-} from "@/constants/users/year-level";
 import type { ColumnDef } from "@tanstack/react-table";
-import { CheckCircle, Clock } from "lucide-react";
+import { CheckCircle, Clock, Mail, Phone } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { DataTableRowActions } from "./table-row-actions";
 import type { StudentDocuments } from "@/interfaces/internship/document";
@@ -22,7 +18,7 @@ export const DocumentListColumns: ColumnDef<StudentDocuments>[] = [
     },
     header: "Student",
     cell: ({ row }) => {
-      const { name, course, section, yearLevel, profile } = row.original;
+      const { name, course, section, profile } = row.original;
 
       return (
         <div className="flex items-center gap-x-1.5">
@@ -39,9 +35,7 @@ export const DocumentListColumns: ColumnDef<StudentDocuments>[] = [
             </div>
 
             <div className="text-muted-foreground text-xs">
-              {COURSE_LABELS[course as courseType]} ·{" "}
-              {YEAR_LEVEL_LABELS[yearLevel as YearLevelType]}
-              {section}
+              {COURSE_LABELS[course as courseType]} · {section}
             </div>
           </div>
         </div>
@@ -51,10 +45,40 @@ export const DocumentListColumns: ColumnDef<StudentDocuments>[] = [
   {
     accessorKey: "email",
     header: "Email",
+    cell: ({ row }) => (
+      <div className="flex items-center space-x-2">
+        <Mail className="text-muted-foreground h-4 w-4" />
+        {row.original.email ? (
+          <a
+            href={`mailto:${row.original.email}`}
+            className="text-sm text-blue-600 hover:text-blue-800 hover:underline"
+          >
+            {row.original.email}
+          </a>
+        ) : (
+          <span className="text-muted-foreground text-sm">No email</span>
+        )}
+      </div>
+    ),
   },
   {
     accessorKey: "contactNo",
     header: "Contact No.",
+    cell: ({ row }) => (
+      <div className="flex items-center space-x-2">
+        <Phone className="text-muted-foreground h-4 w-4" />
+        {row.original.contactNo ? (
+          <a
+            href={`tel:${row.original.contactNo}`}
+            className="text-sm text-blue-600 hover:text-blue-800 hover:underline"
+          >
+            {row.original.contactNo}
+          </a>
+        ) : (
+          <span className="text-muted-foreground text-sm">No phone</span>
+        )}
+      </div>
+    ),
   },
   {
     accessorKey: "status",

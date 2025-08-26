@@ -37,7 +37,6 @@ export const getStudentProgressBySection = async ({
           profile: UserTable.profile,
           section: UserTable.section,
           course: StudentTable.course,
-          yearLevel: StudentTable.yearLevel,
           companyName: CompanyTable.name,
           progress: sql<string>`COALESCE(SUM(${ProgressTable.hours}), 0)`.as(
             "progress",

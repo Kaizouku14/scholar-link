@@ -37,7 +37,6 @@ export const getCoordinatorSections = async (
         profile: UserTable.profile,
         email: UserTable.email,
         course: StudentTable.course,
-        yearLevel: StudentTable.yearLevel,
         status: InternshipTable.status,
         companyName: CompanyTable.name,
         companyAddress: CompanyTable.address,

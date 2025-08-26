@@ -6,10 +6,8 @@ import { cn, getStatusColor, getStatusIcon } from "@/lib/utils";
 import React from "react";
 import { Building2, GraduationCap, UserCheck } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { DataTableRowActions } from "./table-row-actions";
 import { DataTableColumnHeader } from "@/components/table/table-column-header";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { YEAR_LEVEL_LABELS } from "@/constants/users/year-level";
 
 export const CoordinatorInternsColumns: ColumnDef<CoordinatorSectionData>[] = [
   {
@@ -57,16 +55,33 @@ export const CoordinatorInternsColumns: ColumnDef<CoordinatorSectionData>[] = [
           </span>
         </div>
         <div className="text-muted-foreground flex max-w-[200px] gap-1 truncate pl-5 text-xs">
-          <span>SECTION</span>·
-          <span>
-            {YEAR_LEVEL_LABELS[row.original.yearLevel!]}
-            {row.original.section}
-          </span>
+          <span>SECTION</span>·<span>{row.original.section}</span>
         </div>
       </div>
     ),
   },
+  {
+    accessorKey: "status",
+    header: "Status",
+    cell: ({ row }) => {
+      const status = row.original.status;
+      const color = getStatusColor(status);
 
+      return (
+        <Badge
+          className={cn(
+            "rounded-full px-3 py-1 text-xs font-medium capitalize",
+            color,
+          )}
+        >
+          {React.createElement(getStatusIcon(status ?? "default"), {
+            className: cn(color),
+          })}
+          {status}
+        </Badge>
+      );
+    },
+  },
   {
     accessorKey: "companyName",
     header: ({ column }) => (
@@ -101,9 +116,12 @@ export const CoordinatorInternsColumns: ColumnDef<CoordinatorSectionData>[] = [
                 {row.original.supervisorName}
               </span>
             </div>
-            <div className="text-muted-foreground pl-5 text-xs">
+            <a
+              href={`mailto:${row.original.supervisorEmail}`}
+              className="py-0 pl-5 text-xs text-blue-500 hover:text-blue-800 hover:underline"
+            >
               {row.original.supervisorEmail}
-            </div>
+            </a>
           </>
         ) : (
           <span className="text-muted-foreground text-sm">Not assigned</span>
@@ -115,36 +133,12 @@ export const CoordinatorInternsColumns: ColumnDef<CoordinatorSectionData>[] = [
     accessorKey: "supervisorContactNo",
     header: "Supervisor No.",
     cell: ({ row }) => (
-      <div className="text-sm">{row.original.supervisorContactNo}</div>
+      <a
+        href={`tel:${row.original.supervisorContactNo}`}
+        className="text-sm text-blue-600 hover:text-blue-800 hover:underline"
+      >
+        {row.original.supervisorContactNo}
+      </a>
     ),
-  },
-  {
-    accessorKey: "status",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Status" />
-    ),
-    cell: ({ row }) => {
-      const status = row.original.status;
-      const color = getStatusColor(status);
-
-      return (
-        <Badge
-          className={cn(
-            "rounded-full px-3 py-1 text-xs font-medium capitalize",
-            color,
-          )}
-        >
-          {React.createElement(getStatusIcon(status ?? "default"), {
-            className: cn(color),
-          })}
-          {status}
-        </Badge>
-      );
-    },
-  },
-  {
-    accessorKey: "actions",
-    header: "Actions",
-    cell: ({ row }) => <DataTableRowActions row={row} />,
   },
 ];

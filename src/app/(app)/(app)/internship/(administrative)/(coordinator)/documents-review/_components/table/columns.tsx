@@ -4,7 +4,6 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { type DocumentSchema } from "./column-schema";
 import { FileText } from "lucide-react";
 import { COURSE_LABELS } from "@/constants/users/courses";
-import { YEAR_LEVEL_LABELS } from "@/constants/users/year-level";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { format } from "date-fns";
 import {
@@ -56,7 +55,7 @@ export const DocumentReviewColumns: ColumnDef<DocumentSchema>[] = [
     accessorKey: "name",
     header: "Student",
     cell: ({ row }) => {
-      const { name, course, section, yearLevel, profile } = row.original;
+      const { name, course, section, profile } = row.original;
 
       return (
         <div className="flex items-center gap-x-1.5">
@@ -73,8 +72,7 @@ export const DocumentReviewColumns: ColumnDef<DocumentSchema>[] = [
             </div>
 
             <div className="text-muted-foreground text-xs">
-              {COURSE_LABELS[course!]} · {YEAR_LEVEL_LABELS[yearLevel!]}
-              {section?.[0]}
+              {COURSE_LABELS[course!]} · {section?.[0]}
             </div>
           </div>
         </div>

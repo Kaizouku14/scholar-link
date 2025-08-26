@@ -49,7 +49,6 @@ export const getAllInternsDocumentsBySection = async ({
           profile: UserTable.profile,
           section: UserTable.section,
           course: StudentTable.course,
-          yearLevel: StudentTable.yearLevel,
         })
         .from(UserTable)
         .leftJoin(

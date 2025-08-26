@@ -3,7 +3,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { COURSE_LABELS } from "@/constants/users/courses";
-import { YEAR_LEVEL_LABELS } from "@/constants/users/year-level";
 import {
   cn,
   getStatusColor,
@@ -21,7 +20,7 @@ export const ProgressMonitoringColumns: ColumnDef<ColumnSchema>[] = [
     accessorKey: "name",
     header: "Student",
     cell: ({ row }) => {
-      const { name, course, section, yearLevel, profile } = row.original;
+      const { name, course, section, profile } = row.original;
 
       return (
         <div className="flex items-center gap-x-1.5">
@@ -38,8 +37,7 @@ export const ProgressMonitoringColumns: ColumnDef<ColumnSchema>[] = [
             </div>
 
             <div className="text-muted-foreground text-xs">
-              {COURSE_LABELS[course!]} · {YEAR_LEVEL_LABELS[yearLevel!]}
-              {section}
+              {COURSE_LABELS[course!]} · {section}
             </div>
           </div>
         </div>

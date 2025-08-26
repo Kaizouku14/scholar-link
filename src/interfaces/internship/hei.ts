@@ -2,7 +2,6 @@ import type { courseType } from "@/constants/users/courses";
 import type { departmentType } from "@/constants/users/departments";
 import type { SectionType } from "@/constants/users/sections";
 import type { internshipStatusType } from "@/constants/users/status";
-import type { YearLevelType } from "@/constants/users/year-level";
 
 export interface InternData {
   name: string;
@@ -21,7 +20,6 @@ export interface CoordinatorSectionData extends InternData {
   section: SectionType[] | null;
   department: departmentType | null;
   course: courseType | null;
-  yearLevel: YearLevelType | null;
 }
 
 export interface AdminIntern extends InternData {

@@ -59,7 +59,9 @@ const LoginForm = () => {
 
       if (error) {
         if (error.status === 403) {
-          throw new Error("Please verify your email address to continue.");
+          throw new Error(
+            "We’ve sent a verification link to your email address. Please verify it to continue.",
+          );
         }
 
         throw new Error(error.message);
