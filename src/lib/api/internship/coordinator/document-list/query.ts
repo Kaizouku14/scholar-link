@@ -94,7 +94,6 @@ export const getAllInternsDocumentsBySection = async ({
           profile: row.profile!,
           section: row.section!,
           course: row.course!,
-          yearLevel: row.yearLevel!,
           documents: [],
           requiredDocuments,
         };

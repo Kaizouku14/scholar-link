@@ -5,10 +5,14 @@ export const ProgressOverviewSkeleton = () => {
   return (
     <div className="space-y-4">
       <div className="space-y-4">
-        <div className="mt-4 ml-1 flex flex-col gap-2">
-          <Skeleton className="h-6 w-40" />
-          <Skeleton className="h-4 w-80" />
+        <div className="flex items-center justify-between">
+          <div className="mt-4 ml-1 flex flex-col gap-2">
+            <Skeleton className="h-6 w-40" />
+            <Skeleton className="h-4 w-80" />
+          </div>
+          <Skeleton className="h-6 w-50" />
         </div>
+
         <div className="border-border rounded-2xl border p-6">
           <div className="mb-4 flex items-center justify-between">
             <Skeleton className="h-4 w-40" />

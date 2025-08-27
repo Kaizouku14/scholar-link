@@ -25,13 +25,14 @@ const ProgressOverview = () => {
     api.internshipStudent.getStudentLogProgress.useQuery();
   const { data: session } = authClient.useSession();
 
-  const progress = useMemo(() => {
+  const internship = useMemo(() => {
     const deparment = session?.user.department as departmentType;
 
     const required = departmentHoursMap[deparment];
-    const completed = data?.reduce((sum, log) => sum + log.hoursLog, 0) ?? 0;
+    const completed =
+      data?.progress.reduce((sum, log) => sum + log.hoursLog, 0) ?? 0;
     const logs =
-      data?.map((log) => ({
+      data?.progress.map((log) => ({
         ...log,
       })) ?? [];
     const percentage =
@@ -39,14 +40,16 @@ const ProgressOverview = () => {
         ? Math.min(100, Math.round((completed / required) * 100))
         : 0;
     const uniqueDays = new Set(
-      data?.map((log) => new Date(log.dateLogs).toDateString()),
+      data?.progress.map((log) => new Date(log.dateLogs).toDateString()),
     );
 
     const daysCompleted = uniqueDays.size;
     const remainingHours = Math.max(required - completed, 0);
-    const estimatedRemainingDays = Math.ceil(remainingHours / 8); // cap at 8hrs/day
+    const estimatedRemainingDays = Math.ceil(remainingHours / 7); // cap at 8hrs/day
+    const company = data?.internshipDetails;
 
     return {
+      company,
       required,
       completed,
       logs,
@@ -85,25 +88,29 @@ const ProgressOverview = () => {
             ) : (
               <div className="space-y-4">
                 <div className="my-4">
-                  {progress.logs.map((log, index) => (
-                    <div key={index} className="flex flex-col gap-1">
+                  <div className="flex flex-col gap-1">
+                    <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <Building2 className="text-muted-foreground h-4 w-4" />
                         <h3 className="text-card-foreground font-medium">
-                          {log.companyName ?? "Company Name Not Provided"}
+                          {internship?.company?.companyName ??
+                            "Company Name Not Provided"}
                         </h3>
                       </div>
-
-                      {log.companyAddress && (
-                        <div className="flex items-start gap-2">
-                          <MapPin className="text-muted-foreground mt-0.5 h-4 w-4" />
-                          <p className="text-muted-foreground text-sm">
-                            {log.companyAddress}
-                          </p>
-                        </div>
-                      )}
+                      <div className="text-muted-foreground text-sm">
+                        {internship?.company?.duration}
+                      </div>
                     </div>
-                  ))}
+
+                    {internship?.company?.companyAddress && (
+                      <div className="flex items-start gap-2">
+                        <MapPin className="text-muted-foreground mt-0.5 h-4 w-4" />
+                        <p className="text-muted-foreground text-sm">
+                          {internship?.company.companyAddress}
+                        </p>
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 <div>
@@ -113,25 +120,25 @@ const ProgressOverview = () => {
                         Hours Completed
                       </span>
                       <span className="text-muted-foreground rounded-full bg-gray-100 px-3 py-1 text-xs dark:bg-gray-700">
-                        {Math.round(progress?.completed) ?? 0} /{" "}
-                        {progress?.required ?? 0}
+                        {Math.round(internship?.completed) ?? 0} /{" "}
+                        {internship?.required ?? 0}
                       </span>
                     </div>
 
                     <div className="space-y-3">
                       <Progress
-                        value={progress?.percentage ?? 0}
+                        value={internship?.percentage ?? 0}
                         className="h-3 bg-gray-100 dark:bg-gray-700"
                       />
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <div className="h-2 w-2 rounded-full bg-blue-500"></div>
                           <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                            {progress?.percentage ?? 0}% complete
+                            {internship?.percentage ?? 0}% complete
                           </span>
                         </div>
                         <span className="text-muted-foreground text-xs">
-                          {Math.round(progress?.remainingHours) ?? 0} hours
+                          {Math.round(internship?.remainingHours) ?? 0} hours
                           remaining
                         </span>
                       </div>
@@ -148,7 +155,7 @@ const ProgressOverview = () => {
                         </div>
                         <div className="flex flex-col">
                           <span className="text-base font-bold text-blue-700 dark:text-blue-300">
-                            {Math.round(progress?.completed) ?? 0}
+                            {Math.round(internship?.completed) ?? 0}
                           </span>
                           <span className="text-xs font-medium tracking-wide text-blue-600/70 uppercase dark:text-blue-400/70">
                             Hours Logged
@@ -166,7 +173,7 @@ const ProgressOverview = () => {
                         </div>
                         <div className="flex flex-col">
                           <span className="text-base font-bold text-green-700 dark:text-green-300">
-                            {progress?.daysCompleted ?? 0}
+                            {internship?.daysCompleted ?? 0}
                           </span>
                           <span className="text-xs font-medium tracking-wide text-green-600/70 uppercase dark:text-green-400/70">
                             Days Completed
@@ -184,7 +191,7 @@ const ProgressOverview = () => {
                         </div>
                         <div className="flex flex-col">
                           <span className="text-base font-bold text-amber-700 dark:text-amber-300">
-                            {progress?.estimatedRemainingDays ?? 0}
+                            {internship?.estimatedRemainingDays ?? 0}
                           </span>
                           <span className="text-xs font-medium tracking-wide text-amber-600/70 uppercase dark:text-amber-400/70">
                             Days Remaining
@@ -204,7 +211,7 @@ const ProgressOverview = () => {
         </CardContent>
         <CardFooter className="flex w-full flex-col space-y-4">
           <Separator />
-          <ProgressLogs logs={progress?.logs} refetch={refetch} />
+          <ProgressLogs logs={internship?.logs} refetch={refetch} />
         </CardFooter>
       </Card>
     </div>

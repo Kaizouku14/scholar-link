@@ -16,7 +16,6 @@ export interface StudentDocuments {
   profile: string;
   section: SectionType[];
   course: string;
-  yearLevel: string;
   documents: {
     id: string;
     type: string | null;
