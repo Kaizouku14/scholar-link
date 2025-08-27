@@ -11,7 +11,7 @@ import {
   student as StudentTable,
   authorizedEmail as AuthorizedEmailTable,
 } from "@/server/db/schema/auth";
-import { generateUUID } from "@/lib/utils";
+import { generateUUID, getCompanyKey } from "@/lib/utils";
 import { ROLE } from "@/constants/users/roles";
 import { departmentHoursMap } from "@/constants/internship/hours";
 import type { departmentType } from "@/constants/users/departments";
@@ -75,13 +75,20 @@ export const insertInternshipsXLSX = async ({
     const seenEmails = new Set<string>();
     const insertErrors: Array<{ studentNo: string; error: string }> = [];
 
+    const existingCompanies = await db.select().from(CompanyTable);
+    const companyMap = new Map<string, string>();
+    for (const comp of existingCompanies) {
+      const key = getCompanyKey(comp.name!, comp.address!);
+      companyMap.set(key, comp.companyId);
+    }
+
     for (const row of dataRows) {
       try {
         const userId = generateUUID();
         const internshipId = generateUUID();
-        const companyId = generateUUID();
         const supervisorId = generateUUID();
         const authorizedEmailId = generateUUID();
+        let companyId: string;
 
         users.push({
           id: userId,
@@ -113,11 +120,24 @@ export const insertInternshipsXLSX = async ({
           });
         }
 
-        companies.push({
-          companyId,
-          name: row["PARTNER HOST TRAINING ESTABLISHMENTS (HTEs)"],
-          address: row.ADDRESS,
-        });
+        const companyKey = getCompanyKey(
+          row["PARTNER HOST TRAINING ESTABLISHMENTS (HTEs)"],
+          row.ADDRESS,
+        );
+
+        if (companyMap.has(companyKey)) {
+          companyId = companyMap.get(companyKey)!;
+        } else {
+          // New company
+          companyId = generateUUID();
+          companyMap.set(companyKey, companyId);
+
+          companies.push({
+            companyId,
+            name: row["PARTNER HOST TRAINING ESTABLISHMENTS (HTEs)"],
+            address: row.ADDRESS,
+          });
+        }
 
         supervisors.push({
           supervisorId,

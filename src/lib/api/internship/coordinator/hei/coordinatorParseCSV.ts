@@ -1,5 +1,8 @@
 import * as ExcelJS from "exceljs";
-import type { CoordinatorInternshipHeaders } from "@/interfaces/internship/csv-headers";
+import {
+  manualHeaderMap,
+  type CoordinatorInternshipHeaders,
+} from "@/interfaces/internship/csv-headers";
 import { TRPCError } from "@trpc/server";
 
 export const parseInternshipXLSX = async (fileBuffer: ArrayBuffer) => {
@@ -19,24 +22,6 @@ export const parseInternshipXLSX = async (fileBuffer: ArrayBuffer) => {
     "SUPERVISOR NO.",
   ];
 
-  const normalize = (s: string) =>
-    s?.trim().toUpperCase().replace(/\s+/g, " ") || "";
-
-  const isHeaderMatch = (cellText: string, requiredHeader: string) => {
-    const cell = normalize(cellText);
-    const required = normalize(requiredHeader);
-
-    if (cell === required) return true;
-
-    // Check if cell contains key words from required header
-    const requiredWords = required.split(" ").filter((w) => w.length > 2);
-    const cellWords = cell.split(" ");
-
-    return requiredWords.some((reqWord) =>
-      cellWords.some((cellWord) => cellWord.includes(reqWord)),
-    );
-  };
-
   try {
     const workbook = new ExcelJS.Workbook();
     await workbook.xlsx.load(fileBuffer);
@@ -49,66 +34,42 @@ export const parseInternshipXLSX = async (fileBuffer: ArrayBuffer) => {
       });
     }
 
-    // Find header row
-    let headerRow: ExcelJS.Row | undefined;
-    let headerRowNumber = 0;
+    // Verify mapping
+    const headerRow = worksheet.getRow(1);
 
-    for (let i = 1; i <= Math.min(10, worksheet.rowCount); i++) {
-      const row = worksheet.getRow(i);
-      const cellValues: string[] = [];
-      row.eachCell({ includeEmpty: true }, (cell) =>
-        cellValues.push(cell.text || ""),
-      );
+    // console.log("=== MANUAL MAPPING VERIFICATION ===");
+    // console.log("Total columns in worksheet:", headerRow.cellCount);
 
-      const matchCount = requiredHeaders.filter((header) =>
-        cellValues.some((cell) => isHeaderMatch(cell, header)),
-      ).length;
+    // // Verify each mapped column has data
+    // manualHeaderMap.forEach((colIndex, header) => {
+    //   const cell = headerRow.getCell(colIndex);
+    //   const cellText = cell?.text ?? "";
+    //   console.log(`${header} -> Column ${colIndex}: "${cellText}"`);
+    // });
 
-      if (matchCount >= requiredHeaders.length * 0.8) {
-        headerRow = row;
-        headerRowNumber = i;
-        break;
-      }
-    }
-
-    if (!headerRow) {
+    // Check if all required columns exist
+    const maxColumn = Math.max(...Array.from(manualHeaderMap.values()));
+    if (maxColumn > headerRow.cellCount) {
       throw new TRPCError({
         code: "BAD_REQUEST",
-        message: "Header row not found. Please check your Excel file headers.",
+        message: `Excel file doesn't have enough columns. Expected at least ${maxColumn} columns, but found ${headerRow.cellCount}.`,
       });
     }
 
-    // Map headers to column indices
-    const headerMap = new Map<string, number>();
-    headerRow.eachCell({ includeEmpty: true }, (cell, colNumber) => {
-      requiredHeaders.forEach((header) => {
-        if (!headerMap.has(header) && isHeaderMatch(cell.text || "", header)) {
-          headerMap.set(header, colNumber);
-        }
-      });
-    });
-
-    // Check all headers found
-    const missingHeaders = requiredHeaders.filter((h) => !headerMap.has(h));
-    if (missingHeaders.length > 0) {
-      throw new TRPCError({
-        code: "BAD_REQUEST",
-        message: `Missing headers: ${missingHeaders.join(", ")}`,
-      });
-    }
-
-    // Parse data rows (skip footer)
+    // Parse data rows (starting from row 2)
     const validRows: CoordinatorInternshipHeaders[] = [];
     const invalidRows: string[] = [];
 
-    for (let i = headerRowNumber + 1; i <= worksheet.rowCount; i++) {
+    // Process all data rows
+    for (let i = 2; i <= worksheet.rowCount; i++) {
       const row = worksheet.getRow(i);
       const rowData: Partial<CoordinatorInternshipHeaders> = {};
 
       requiredHeaders.forEach((header) => {
-        const colIndex = headerMap.get(header);
+        const colIndex = manualHeaderMap.get(header);
         if (colIndex) {
-          rowData[header] = row.getCell(colIndex).text?.trim() || "";
+          const cell = row.getCell(colIndex);
+          rowData[header] = (cell?.text ?? "").trim();
         }
       });
 
@@ -118,11 +79,6 @@ export const parseInternshipXLSX = async (fileBuffer: ArrayBuffer) => {
 
       // Validate required fields
       const missingFields = requiredHeaders.filter((h) => !rowData[h]?.trim());
-
-      // If missing more than half the fields, likely footer - stop processing
-      if (missingFields.length > requiredHeaders.length / 2) {
-        break;
-      }
 
       if (missingFields.length > 0) {
         invalidRows.push(`Row ${i}: Missing ${missingFields.join(", ")}`);

@@ -185,6 +185,25 @@ export function formatText(text: string) {
     .replace(/\b([A-Z])\b(?!\.)/g, "$1.");
 }
 
+/**
+ * Normalize a string for deduplication purposes.
+ * - Trims whitespace
+ * - Converts to lowercase
+ * - Collapses multiple spaces into one
+ */
+export function normalizeString(value: string | null | undefined): string {
+  if (!value) return "";
+  return value.trim().toLowerCase().replace(/\s+/g, " "); // collapse multiple spaces
+}
+
+/**
+ * Generate a consistent key for company deduplication
+ * using name + address.
+ */
+export function getCompanyKey(name: string, address: string): string {
+  return `${normalizeString(name)}|${normalizeString(address)}`;
+}
+
 export const calculateCompletionPercentage = (
   totalProgressHours: number,
   studentCount: number,

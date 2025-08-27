@@ -1,4 +1,3 @@
-import type { departmentType } from "@/constants/users/departments";
 import type {
   internship as InternshipTable,
   company as CompanyTable,
@@ -18,8 +17,6 @@ export type NewSupervisor = InferInsertModel<typeof SupervisorTable>;
 export type NewInternship = InferInsertModel<typeof InternshipTable>;
 export type NewAuthorizedEmail = InferInsertModel<typeof AuthorizedEmailTable>;
 
-// Some sheets include this but it's not always typed in CoordinatorInternshipHeaders.
-// Make it optional without using `any`.
 export type RowWithOptionalSupervisorEmail = CoordinatorInternshipHeaders &
   Partial<Record<"SUPERVISOR EMAIL", string>>;
 
@@ -39,7 +36,19 @@ export interface CoordinatorInternshipHeaders {
   "SUPERVISOR NO.": string;
 }
 
-export interface AdminInternshipHeaders
-  extends Omit<CoordinatorInternshipHeaders, "DEPARTMENT"> {
-  DEPARTMENT: departmentType;
-}
+// COLUMN MAPPING - Adjust these column numbers to match your Excel file
+export const manualHeaderMap = new Map<string, number>([
+  ["STUDENT NO.", 1],
+  ["NAME OF STUDENT INTERNSHIPS (First Name, Middle Inital & Last Name)", 2],
+  ["EMAIL", 3],
+  ["CONTACT NO.", 4],
+  ["SEX", 5],
+  ["SECTION", 6],
+  ["FULL TITLE OF THE PROGRAM ENROLLED IN (DO NOT ABBREVIATE)", 7],
+  ["DATES OF DURATION OF THE INTERNSHIP", 8],
+  ["PARTNER HOST TRAINING ESTABLISHMENTS (HTEs)", 9],
+  ["ADDRESS", 10],
+  ["SUPERVISOR NAME", 11],
+  ["SUPERVISOR EMAIL", 12],
+  ["SUPERVISOR NO.", 13],
+]);
