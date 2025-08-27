@@ -9,7 +9,7 @@ export const columnSchema = z.object({
   profile: z.string().nullish(),
   section: z.array(z.enum(SECTIONS)).nullish(),
   course: z.enum(COURSES).nullish(),
-  companyName: z.string(),
+  companyName: z.string().nullish(),
 
   status: z.enum(INTERNSHIP_STATUS).nullish(),
   progress: z.string().nullish(),

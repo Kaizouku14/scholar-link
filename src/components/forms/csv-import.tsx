@@ -16,7 +16,6 @@ export function CSVImport({ onImportCompleteAction }: CSVImportProps) {
   const importMutation =
     api.internshipCoordinator.uploadInternshipCSV.useMutation();
 
-  console.log(file);
   const handleFileSelect = (selectedFile: File) => {
     setFile(selectedFile);
   };
@@ -28,9 +27,8 @@ export function CSVImport({ onImportCompleteAction }: CSVImportProps) {
       const formData = new FormData();
       formData.append("file", file);
 
-      const response = await importMutation.mutateAsync(formData);
+      await importMutation.mutateAsync(formData);
 
-      console.log(response);
       toast.success("File imported successfully!");
       setFile(null);
       onImportCompleteAction();

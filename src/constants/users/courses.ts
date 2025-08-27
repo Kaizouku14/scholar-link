@@ -27,6 +27,7 @@ export const COURSE_LABELS = {
   "BS in Tourism Management": "BSTM",
 
   "Bachelor of Elementary Education": "BEE",
+  "BS in Elementary Education": "BEE",
   "BSEd Major in Filipino": "BSEd-FIL",
   "BSEd Major in English (Mandarin)": "BSEd-ENG(MAN)",
   "BSEd Major in Mathematics": "BSEd-MATH",

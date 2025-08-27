@@ -17,6 +17,13 @@ import React from "react";
 
 export const ProgressMonitoringColumns: ColumnDef<ColumnSchema>[] = [
   {
+    accessorKey: "section",
+    filterFn: (row, columnId, filterValues: string[]) => {
+      const cellValue = row.getValue<string[]>(columnId) ?? [];
+      return filterValues.some((val) => cellValue.includes(val));
+    },
+  },
+  {
     accessorKey: "name",
     header: "Student",
     cell: ({ row }) => {
@@ -48,7 +55,7 @@ export const ProgressMonitoringColumns: ColumnDef<ColumnSchema>[] = [
     accessorKey: "companyName",
     header: "Company",
     cell: ({ row }) => (
-      <div className="w-20 truncate text-sm" title={row.original.companyName}>
+      <div className="w-20 truncate text-sm" title={row.original.companyName!}>
         {row.original.companyName}
       </div>
     ),

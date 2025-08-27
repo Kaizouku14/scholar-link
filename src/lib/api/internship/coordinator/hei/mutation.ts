@@ -108,7 +108,7 @@ export const insertInternshipsXLSX = async ({
           studentNo: row["STUDENT NO."],
           course: row[
             "FULL TITLE OF THE PROGRAM ENROLLED IN (DO NOT ABBREVIATE)"
-          ] as courseType,
+          ].replace(/\s+/g, " ") as courseType,
           yearLevel: "4th",
         });
 
@@ -193,16 +193,6 @@ export const insertInternshipsXLSX = async ({
     return {
       success: true,
       message: `Processed ${rows.validRows.length} rows. Inserted ${insertedCount}, ${insertErrors.length} failed, ${rows.invalidRows.length} invalid.`,
-      results: {
-        totalProcessed: rows.validRows.length,
-        successfulInserts: insertedCount,
-        insertErrors: insertErrors.length,
-        validationErrors: rows.invalidRows.length,
-      },
-      errors: {
-        insertErrors,
-        invalidRows: rows.invalidRows,
-      },
     };
   } catch (error) {
     if (error instanceof TRPCError) throw error;
