@@ -7,6 +7,7 @@ import { TRPCReactProvider } from "@/trpc/react";
 import { siteConfig } from "@/types/site.config";
 import { Toaster } from "react-hot-toast";
 import { ThemeProvider } from "@/components/theme/theme-provider";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.origin),
@@ -63,6 +64,7 @@ export default function RootLayout({
           <NextTopLoader color="#e8304f" showSpinner={true} />
           <TRPCReactProvider>{children}</TRPCReactProvider>
           <Toaster />
+          <SpeedInsights />
         </ThemeProvider>
       </body>
     </html>
