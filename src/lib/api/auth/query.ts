@@ -1,4 +1,4 @@
-import { db, not, eq, sql, like, and } from "@/server/db";
+import { db, not, eq, sql, like, and, or } from "@/server/db";
 import {
   user as UserTable,
   student as StudentTable,
@@ -39,6 +39,8 @@ export const gellAllInternshipAccounts = async ({
                 WHERE value IN (${sql.join(assignedSections, sql`,`)})
             )`,
       );
+    } else {
+      conditions.push(eq(UserTable.role, ROLE.INTERNSHIP_COORDINATOR));
     }
 
     const response = await db
@@ -57,7 +59,7 @@ export const gellAllInternshipAccounts = async ({
       })
       .from(UserTable)
       .leftJoin(StudentTable, eq(UserTable.id, StudentTable.id))
-      .where(and(...conditions))
+      .where(or(and(...conditions), eq(UserTable.id, userId)))
       .execute();
 
     return response;

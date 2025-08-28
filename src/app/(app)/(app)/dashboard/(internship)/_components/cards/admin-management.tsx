@@ -1,4 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import type { ManagementCardProps } from "@/interfaces/internship/management";
 import Link from "next/link";
 
@@ -30,24 +31,26 @@ export function ManagementCard({
           </div>
         </div>
 
-        <div className="h-40 space-y-2">
-          {items?.length > 0 &&
-            items.map((item, index) => (
-              <div
-                key={`${item.name}-${index}`}
-                className="flex items-center justify-between rounded-lg border px-3 py-2"
-              >
-                <span className="font-medium">{item.name}</span>
-                <span className="text-muted-foreground text-sm">
-                  {item.count} Interns
-                </span>
-              </div>
-            ))}
-        </div>
+        <ScrollArea className="h-40">
+          <div className="space-y-2">
+            {items?.length > 0 &&
+              items.map((item, index) => (
+                <div
+                  key={`${item.name}-${index}`}
+                  className="flex items-center justify-between rounded-lg border px-3 py-2"
+                >
+                  <span className="font-medium">{item.name}</span>
+                  <span className="text-muted-foreground text-sm">
+                    {item.count} Interns
+                  </span>
+                </div>
+              ))}
+          </div>
+        </ScrollArea>
 
         <Link
           href={page}
-          className="bg-primary hover:bg-primary/90 focus:ring-primary/50 mt-2 flex w-full items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-medium text-white shadow-md transition-all duration-200 hover:shadow-lg focus:ring-2 focus:outline-none active:scale-95 active:shadow-sm"
+          className="bg-primary hover:bg-primary/90 focus:ring-primary/50 mt-2 flex w-full items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium text-white shadow-md transition-all duration-200 hover:shadow-lg focus:ring-2 focus:outline-none active:scale-95 active:shadow-sm"
         >
           {actionLabel}
         </Link>

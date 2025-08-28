@@ -61,7 +61,7 @@ export const CompaniesColumns: ColumnDef<CompanySchema>[] = [
         {row.original.supervisorEmail ? (
           <a
             href={`mailto:${row.original.supervisorEmail}`}
-            className="text-sm text-blue-600 hover:text-blue-800 hover:underline"
+            className="w-40 truncate text-sm text-blue-600 hover:text-blue-800 hover:underline"
           >
             {row.original.supervisorEmail}
           </a>

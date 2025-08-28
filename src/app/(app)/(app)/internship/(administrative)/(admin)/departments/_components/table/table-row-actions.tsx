@@ -16,12 +16,23 @@ import { Button } from "@/components/ui/button";
 import type { DepartmentColumn } from "./column-schema";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { ROLE } from "@/constants/users/roles";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { InternCard } from "@/components/cards/internship/intern-cards";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatText } from "@/lib/utils";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  INTERNSHIP_STATUS,
+  type internshipStatusType,
+} from "@/constants/users/status";
 
 interface DataTableRowActionsProps {
   row: Row<DepartmentColumn>;
@@ -32,19 +43,32 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
 
   const coordinators =
     users?.filter((user) => user.role === ROLE.INTERNSHIP_COORDINATOR) || [];
-  const interns =
-    users?.filter((user) => user.role === ROLE.INTERNSHIP_STUDENT) || [];
+  const interns = useMemo(() => {
+    return users?.filter((user) => user.role === ROLE.INTERNSHIP_STUDENT) || [];
+  }, [users]);
 
   const [searchTerm, setSearchTerm] = useState("");
+  const [status, setStatus] = useState<internshipStatusType | undefined>();
 
-  const filteredInterns = interns.filter((intern) => {
-    const searchLower = searchTerm.toLowerCase();
-    return (
-      intern.name?.toLowerCase().includes(searchLower) ??
-      intern.email?.toLowerCase().includes(searchLower) ??
-      intern.course?.toLowerCase().includes(searchLower)
-    );
-  });
+  const filteredInterns = useMemo(() => {
+    let result = interns;
+
+    if (searchTerm) {
+      const searchLower = searchTerm.toLowerCase();
+      result = result.filter(
+        (intern) =>
+          intern.name?.toLowerCase().includes(searchLower) ||
+          intern.email?.toLowerCase().includes(searchLower) ||
+          intern.course?.toLowerCase().includes(searchLower),
+      );
+    }
+
+    if (status) {
+      result = result.filter((intern) => intern.status === status);
+    }
+
+    return result;
+  }, [interns, searchTerm, status]);
 
   return (
     <Dialog>
@@ -55,15 +79,45 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="h-[80vh] sm:max-w-[500px]">
-        <DialogHeader>
+      <DialogContent className="h-[90vh] sm:max-w-[570px]">
+        <DialogHeader className="mb-0 pb-0">
           <DialogTitle> Internship Deparment Details</DialogTitle>
           <DialogDescription>
             List of interns & coordinator in this deparment.
           </DialogDescription>
         </DialogHeader>
 
-        <Tabs defaultValue="interns" className="flex h-90 flex-1 flex-col">
+        <div className="flex">
+          <div className="relative mx-1 w-full">
+            <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform" />
+            <Input
+              placeholder="Search interns..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+          <Select
+            onValueChange={(value) => setStatus(value as internshipStatusType)}
+            defaultValue={status}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select status" />
+            </SelectTrigger>
+            <SelectContent>
+              {INTERNSHIP_STATUS.map((type) => (
+                <SelectItem key={type} value={type}>
+                  {formatText(type)}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <Tabs
+          defaultValue="interns"
+          className="mt-0 flex h-90 flex-1 flex-col pt-0"
+        >
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="interns" className="flex items-center gap-2">
               <GraduationCap className="h-4 w-4" />
@@ -79,17 +133,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
           </TabsList>
 
           <TabsContent value="interns" className="flex flex-1 flex-col">
-            <div className="relative mx-1 mb-2">
-              <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform" />
-              <Input
-                placeholder="Search interns..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-
-            <ScrollArea className="h-70 px-1">
+            <ScrollArea className="h-80 px-1">
               {filteredInterns.length > 0 ? (
                 <div className="space-y-3 pr-2">
                   {filteredInterns.map((intern, index) => (

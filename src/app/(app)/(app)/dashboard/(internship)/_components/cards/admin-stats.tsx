@@ -74,18 +74,18 @@ const AdminDashboardStats = () => {
         )}
       </div>
 
-      <div className="grid grid-cols-1 gap-1.5 md:grid-cols-3">
+      <div className="grid grid-cols-1 gap-2 md:grid-cols-3 md:gap-1.5">
         {!isLoading && data ? (
           <>
             <ManagementCard
-              title="Department Management"
-              description="Manage all departments"
-              total={data.departmentStats.length}
-              totalLabel="Manage Department"
-              icon={Building}
-              items={data.departmentStats}
-              actionLabel="Manage Department"
-              page={PageRoutes.INTERNSHIPS_DEPARTMENTS}
+              title="Internship Management"
+              description="Track active internships"
+              total={data.overview?.totalActiveInterns ?? 0}
+              totalLabel="Active Internships"
+              icon={Briefcase}
+              items={data.internshipStats}
+              actionLabel="Manage Internships"
+              page={PageRoutes.INTERNSHIP_ADMIN_MANAGE_INTERNSHIPS}
             />
 
             <ManagementCard
@@ -100,14 +100,14 @@ const AdminDashboardStats = () => {
             />
 
             <ManagementCard
-              title="Internship Management"
-              description="Track active internships"
-              total={data.overview?.totalActiveInterns ?? 0}
-              totalLabel="Active Internships"
-              icon={Briefcase}
-              items={data.internshipStats}
-              actionLabel="Manage Internships"
-              page={PageRoutes.INTERNSHIP_ADMIN_MANAGE_INTERNSHIPS}
+              title="Department Management"
+              description="Manage all departments"
+              total={data.departmentStats.length}
+              totalLabel="Manage Department"
+              icon={Building}
+              items={data.departmentStats}
+              actionLabel="Manage Department"
+              page={PageRoutes.INTERNSHIPS_DEPARTMENTS}
             />
           </>
         ) : (
