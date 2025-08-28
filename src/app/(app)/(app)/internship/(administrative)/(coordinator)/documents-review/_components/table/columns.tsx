@@ -52,6 +52,13 @@ export const DocumentReviewColumns: ColumnDef<DocumentSchema>[] = [
     ),
   },
   {
+    accessorKey: "section",
+    filterFn: (row, columnId, filterValues: string[]) => {
+      const cellValue = row.getValue<string[]>(columnId) ?? [];
+      return filterValues.some((val) => cellValue.includes(val));
+    },
+  },
+  {
     accessorKey: "name",
     header: "Student",
     cell: ({ row }) => {

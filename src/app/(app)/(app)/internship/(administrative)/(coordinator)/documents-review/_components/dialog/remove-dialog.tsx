@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { api } from "@/trpc/react";
-import { AlertTriangle, XCircleIcon } from "lucide-react";
+import { AlertTriangle, Trash2 } from "lucide-react";
 import { useState, type FormEvent } from "react";
 import toast from "react-hot-toast";
 
@@ -42,7 +42,7 @@ export const RemoveDocumentAlert = ({
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
         <Button className="mt-7 cursor-pointer" variant="outline" size="icon">
-          <XCircleIcon className="text-primary h-4 w-4" />
+          <Trash2 className="text-primary h-4 w-4" />
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>

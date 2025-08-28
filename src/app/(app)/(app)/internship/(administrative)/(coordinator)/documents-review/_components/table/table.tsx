@@ -9,6 +9,7 @@ import UpcomingDeadlines from "@/components/cards/internship/upcoming-deadlines"
 import DocumentForm from "../form/document-form";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
+import { SECTIONS_LABELS } from "@/constants/users/sections";
 
 const ReviewDocumentsTable = () => {
   const { data, isLoading } =
@@ -37,6 +38,7 @@ const ReviewDocumentsTable = () => {
               data={data}
               columnVisibility={{
                 id: false,
+                section: false,
               }}
               filteredTitle={"name"}
               filters={[
@@ -44,7 +46,12 @@ const ReviewDocumentsTable = () => {
                   column: "reviewStatus",
                   options: STATUS_LABELS,
                 },
+                {
+                  column: "section",
+                  options: SECTIONS_LABELS,
+                },
               ]}
+              viewOptions={false}
             />
           </div>
         </div>

@@ -15,7 +15,7 @@ export const documentColumnsSchema = z.object({
   profile: z.string().nullish(),
   section: z.array(z.enum(SECTIONS)).nullish(),
   course: z.enum(COURSES).nullish(),
-  companyName: z.string(),
+  companyName: z.string().nullish(),
 });
 
 export type DocumentSchema = z.infer<typeof documentColumnsSchema>;
