@@ -169,7 +169,7 @@ const DocumentForm = () => {
                       {errors.documentFile?.message}
                     </FormMessage>
                   )}
-                  <FormDescription>
+                  <FormDescription className="text-xs">
                     Upload a PDF file (up to 5 MB).
                   </FormDescription>
                 </FormItem>

@@ -1,18 +1,36 @@
 "use client";
 
 import { StatCard } from "@/components/cards/status-card";
-import { api } from "@/trpc/react";
 import { format } from "date-fns";
 import { CalendarDays, ChartColumn, Hourglass } from "lucide-react";
 import { useMemo } from "react";
 
-export const InternsDashboardStats = () => {
-  const { data: progress } =
-    api.internshipStudent.getStudentLogProgress.useQuery();
+interface DashboardStats {
+  internshipDetails:
+    | {
+        companyName: string | null;
+        companyAddress: string | null;
+        totalHoursRequired: number;
+        duration: string;
+      }
+    | undefined;
+  progress: {
+    hoursLog: number;
+    dateLogs: Date;
+    description: string;
+  }[];
+}
 
+export const InternsDashboardStats = ({
+  dashboard,
+}: {
+  dashboard: DashboardStats;
+}) => {
   const statistic = useMemo(() => {
-    const noProgress = progress?.length;
-    const totalHoursRequired = progress?.[0]?.totalHoursRequired ?? 0;
+    const progress = dashboard?.progress;
+    const noProgress = progress?.length ?? 0;
+    const totalHoursRequired =
+      dashboard?.internshipDetails?.totalHoursRequired ?? 0;
     const totalHoursLog =
       progress?.reduce((acc, curr) => acc + curr.hoursLog, 0) ?? 0;
     const latestDate = progress?.length
@@ -32,7 +50,7 @@ export const InternsDashboardStats = () => {
       latestDate,
       latestHoursLog,
     };
-  }, [progress]);
+  }, [dashboard]);
 
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
@@ -51,7 +69,11 @@ export const InternsDashboardStats = () => {
       <StatCard
         title="Latest Session"
         value={statistic.latestHoursLog + "h"}
-        subtitle={format(statistic.latestDate!, "MMM dd")}
+        subtitle={
+          statistic.latestDate
+            ? format(statistic?.latestDate ?? "", "MMM dd")
+            : "N/A"
+        }
         icon={<CalendarDays className="text-primary h-4 w-4" />}
       />
     </div>

@@ -8,7 +8,6 @@ import {
 export const getStudentLogProgress = async ({ userId }: { userId: string }) => {
   const progress = await db
     .select({
-      progressId: ProgressLogTable.progressId,
       dateLogs: ProgressLogTable.logDate,
       hoursLog: ProgressLogTable.hours,
       description: ProgressLogTable.description,

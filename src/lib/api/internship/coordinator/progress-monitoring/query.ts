@@ -1,5 +1,5 @@
 import type { SectionType } from "@/constants/users/sections";
-import { db, eq, and, sql } from "@/server/db";
+import { db, eq, and, sql, desc } from "@/server/db";
 import {
   user as UserTable,
   student as StudentTable,
@@ -76,6 +76,7 @@ export const getStudentProgressBySection = async ({
           InternshipTable.totalOfHoursRequired,
           InternshipTable.status,
         )
+        .orderBy(desc(ProgressTable.hours))
         .execute();
 
       return response;
