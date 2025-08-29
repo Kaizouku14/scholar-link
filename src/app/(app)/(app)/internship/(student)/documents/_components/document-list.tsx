@@ -7,18 +7,20 @@ import {
   cn,
   formatText,
   getStatusColor,
-  getStatusIndicatorColor,
+  getStatusIcon,
   getStatusVariant,
 } from "@/lib/utils";
 import type { DocumentCardProps } from "@/interfaces/internship/document";
+import React from "react";
 
 const DocumentList = ({ documents }: { documents: DocumentCardProps }) => {
+  const color = getStatusColor(documents.status);
   return (
     <Card className="group from-card to-card/95 border-border/60 relative w-full max-w-sm overflow-hidden rounded-xl border bg-gradient-to-br">
       <div
         className={cn(
           "absolute top-0 right-0 left-0 h-1 transition-all duration-200",
-          getStatusIndicatorColor(documents.status),
+          color,
         )}
       />
 
@@ -48,9 +50,12 @@ const DocumentList = ({ documents }: { documents: DocumentCardProps }) => {
                 variant={getStatusVariant(documents.status)}
                 className={cn(
                   "border px-3 py-1 text-xs font-medium capitalize transition-all duration-200",
-                  getStatusColor(documents.status),
+                  color,
                 )}
               >
+                {React.createElement(getStatusIcon(documents.status), {
+                  className: cn(color),
+                })}
                 {documents.status.replace(/_/g, " ")}
               </Badge>
 
@@ -73,12 +78,7 @@ const DocumentList = ({ documents }: { documents: DocumentCardProps }) => {
           <div className="text-muted-foreground border-border/50 flex items-center justify-between border-t pt-2 text-xs">
             <span>ID: {documents.documentId.slice(-8)}</span>
             <div className="flex items-center">
-              <div
-                className={cn(
-                  "mr-1.5 h-2 w-2 rounded-full",
-                  getStatusIndicatorColor(documents.status),
-                )}
-              />
+              <div className={cn("mr-1.5 h-2 w-2 rounded-full", color)} />
               <span className="capitalize">{documents.status}</span>
             </div>
           </div>

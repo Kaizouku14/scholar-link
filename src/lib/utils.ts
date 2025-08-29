@@ -145,22 +145,6 @@ export const getStatusIcon = (status: string) => {
   }
 };
 
-export const getStatusIndicatorColor = (status: string) => {
-  switch (status.toLowerCase()) {
-    case "pending":
-      return "bg-yellow-50";
-    case "on-going":
-      return "bg-blue-50 ";
-    case "approved":
-    case "completed":
-      return "bg-green-100";
-    case "rejected":
-      return "bg-primary";
-    default:
-      return "bg-gray-400";
-  }
-};
-
 /**
  * Format a string by trimming, normalizing camelCase to spaces, and capitalizing
  * the first letter of each word.

@@ -13,7 +13,7 @@ const InternshipStudentDashboard = () => {
     <div className="flex w-full flex-col space-y-4">
       {!isLoading && dashboard ? (
         <>
-          <div className="mt-2 flex flex-col">
+          <div className="flex flex-col">
             <span className="text-3xl">Dashboard</span>
             <span className="text-muted-foreground text-sm">
               Overview of your internship progress and deadlines.

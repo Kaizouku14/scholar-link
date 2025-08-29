@@ -128,9 +128,9 @@ const EventCalendar = ({ events = [] }: SimpleCalendarProps) => {
         "border-border flex h-20 cursor-pointer flex-col items-center justify-start overflow-hidden rounded border p-1 sm:h-20 transition-all duration-200 relative";
 
       if (isFirst) {
-        dayClasses += " border-blue-500 bg-blue-700";
+        dayClasses += " border-blue-800 bg-blue-400";
       } else if (dayEvent) {
-        dayClasses += " border-green-500 bg-green-800";
+        dayClasses += " border-green-500 bg-green-400";
       } else {
         dayClasses += " bg-background hover:bg-gray-100 dark:hover:bg-gray-800";
       }
@@ -149,7 +149,7 @@ const EventCalendar = ({ events = [] }: SimpleCalendarProps) => {
                     Start of Internship
                   </span>
                 ) : dayEvent ? (
-                  <span className="mx-1 mt-2 line-clamp-2 truncate text-center text-[10px] leading-tight sm:text-xs">
+                  <span className="mx-1 line-clamp-2 w-20 truncate text-center text-[10px] leading-tight text-wrap text-white sm:text-xs">
                     {formatText(dayEvent.description)}
                   </span>
                 ) : null}
@@ -197,7 +197,6 @@ const EventCalendar = ({ events = [] }: SimpleCalendarProps) => {
 
   return (
     <div className="border-border mx-auto w-full rounded-xl border p-4">
-      {/* Calendar header */}
       <div className="mb-6 flex items-center justify-between">
         <Button
           variant={"outline"}
