@@ -1,13 +1,14 @@
+import { env } from "@/env";
 import { documentDeadlineNotifier } from "@/lib/api/cron/document-deadline-notifier";
 import { type NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
   try {
     const authHeader = request.headers.get("authorization");
-    if (authHeader != `Bearer ${process.env.SECRET_KEY}`) {
+    if (authHeader != `Bearer ${env.CRON_SECRET}`) {
       return NextResponse.json(
         {
-          error: "UNAUTHORIZED",
+          error: "UNAUTHORIZED" + env.CRON_SECRET,
         },
         { status: 400 },
       );

@@ -94,12 +94,10 @@ async function sendNotification(notifications: StudentNotification[]) {
   for (const notification of notifications) {
     try {
       await sendEmail({
-        to: notification.email,
+        to: "mandaalv72@gmail.com",
         subject: "Deadline Reminder",
         html: deadlineReminderEmailTemplate(notification),
       });
-
-      console.log(`Notification sent to ${notification.email}`);
     } catch (error) {
       console.error(`Failed to notify ${notification.email}:`, error);
     }

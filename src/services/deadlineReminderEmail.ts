@@ -1,3 +1,4 @@
+import { formatText } from "@/lib/utils";
 import { format } from "date-fns";
 
 export const deadlineReminderEmailTemplate = ({
@@ -58,7 +59,7 @@ export const deadlineReminderEmailTemplate = ({
             <tr>
               <td style="padding-bottom: 24px;">
                 <ul style="text-align: left; color: hsl(0, 0%, 3.9%); font-size: 15px; padding-left: 20px; margin: 0;">
-                  ${missingDocuments.map((doc) => `<li>${doc}</li>`).join("")}
+                  ${missingDocuments.map((doc) => `<li>${formatText(doc)}</li>`).join("")}
                 </ul>
               </td>
             </tr>
@@ -75,7 +76,7 @@ export const deadlineReminderEmailTemplate = ({
                   color: white;
                   border-radius: 6px;
                 ">
-                  Deadline: ${format(deadline, "MM dd, yyyy")}
+                  Deadline: ${format(deadline, "MMM dd, yyyy")}
                 </div>
               </td>
             </tr>
