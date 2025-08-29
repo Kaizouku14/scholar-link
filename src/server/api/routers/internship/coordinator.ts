@@ -1,6 +1,9 @@
 import { createTRPCRouter, protectedRoute } from "../../trpc";
 import { getStudentProgressBySection } from "@/lib/api/internship/coordinator/progress-monitoring/query";
-import { getCoordinatorDashboardStats } from "@/lib/api/internship/coordinator/dashboard/query";
+import {
+  getCoordinatorDashboardStats,
+  getReminderForDocuments,
+} from "@/lib/api/internship/coordinator/dashboard/query";
 import { DEPARTMENTS } from "@/constants/users/departments";
 import { getAllCompanyRecords } from "@/lib/api/internship/query";
 import { cacheData } from "@/lib/redis";
@@ -143,6 +146,13 @@ export const internshipCoordinatorRouter = createTRPCRouter({
     return cacheData(
       `${userId}-stats`,
       async () => await getCoordinatorDashboardStats({ userId }),
+    );
+  }),
+  getAllDocumentReminders: protectedRoute.query(({ ctx }) => {
+    const userId = ctx.session!.user.id;
+    return cacheData(
+      `${userId}-reminders`,
+      async () => await getReminderForDocuments({ userId }),
     );
   }),
   getAllStudentProgressByDept: protectedRoute.query(({ ctx }) => {
