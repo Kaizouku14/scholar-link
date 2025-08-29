@@ -25,6 +25,7 @@ import { useState } from "react";
 import { DataTableToolbar } from "./table-toolbar";
 import { DataTablePagination } from "./table-pagination";
 import { ActionDialog } from "../dropdown/actions-dialog";
+import type { CoordinatorSectionData } from "@/interfaces/internship/hei";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -121,7 +122,9 @@ export function DataTable<TData, TValue>({
                                 header.column.columnDef.header,
                                 header.getContext(),
                               )}
-                          <ActionDialog table={table} />
+                          <ActionDialog<{ internshipId: string }>
+                            table={table}
+                          />
                         </div>
                       ) : header.isPlaceholder ? null : (
                         flexRender(

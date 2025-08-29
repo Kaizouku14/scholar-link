@@ -31,6 +31,8 @@ const InternshipTable = () => {
             columns={CoordinatorInternsColumns}
             data={data}
             filteredTitle={"name"}
+            onImport={handleImport}
+            refetch={refetch}
             filters={[
               {
                 column: "status",
@@ -41,7 +43,6 @@ const InternshipTable = () => {
                 options: SECTIONS_LABELS,
               },
             ]}
-            onImport={handleImport}
           />
         ) : (
           <DataTableSkeleton />
