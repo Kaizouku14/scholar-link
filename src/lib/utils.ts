@@ -121,7 +121,7 @@ export const getStatusColor = (status: string) => {
       return "bg-green-100 text-green-800 border-green-200";
     case "rejected":
     case "canceled":
-      return " text-white";
+      return "bg-red-200 text-red-800 border-red-300";
     default:
       return "bg-gray-50 text-gray-700 border-gray-200";
   }

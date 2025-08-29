@@ -1,7 +1,11 @@
 import type { SectionType } from "@/constants/users/sections";
 import { and, countDistinct, db, eq, sql } from "@/server/db";
 import { user as UserTable } from "@/server/db/schema/auth";
-import { internship as InternshipTable } from "@/server/db/schema/internship";
+import {
+  internship as InternshipTable,
+  document as DocumentTable,
+  internDocuments as InternDocumentsTable,
+} from "@/server/db/schema/internship";
 import { TRPCError } from "@trpc/server";
 
 export const getCoordinatorDashboardStats = async ({
@@ -23,7 +27,12 @@ export const getCoordinatorDashboardStats = async ({
       const coordinatorSections: SectionType[] = coordinator?.section ?? [];
       const coordinatorDeparment = coordinator?.department;
 
-      const [counts] = await db
+      const requiredDocuments = await tx
+        .select({ documentType: DocumentTable.documentType })
+        .from(DocumentTable);
+      const totalRequiredDocuments = requiredDocuments.length;
+
+      const [counts] = await tx
         .select({
           studentCount: countDistinct(InternshipTable.userId).as(
             "studentCount",
@@ -31,9 +40,23 @@ export const getCoordinatorDashboardStats = async ({
           pendingCount: sql<number>`COUNT(DISTINCT ${InternshipTable.userId}) FILTER (WHERE ${InternshipTable.status} = 'pending')`,
           completedCount: sql<number>`COUNT(DISTINCT ${InternshipTable.userId}) FILTER (WHERE ${InternshipTable.status} = 'completed')`,
           inProgressCount: sql<number>`COUNT(DISTINCT ${InternshipTable.userId}) FILTER (WHERE ${InternshipTable.status} = 'on-going')`,
+          documentsCompletedCount: sql<number>`
+          COUNT(DISTINCT ${InternshipTable.userId}) FILTER (
+            WHERE (
+              SELECT COUNT(DISTINCT ${InternDocumentsTable.documentType})
+              FROM ${InternDocumentsTable}
+              WHERE ${InternDocumentsTable.internId} = ${InternshipTable.userId}
+              AND ${InternDocumentsTable.reviewStatus} = 'approved'
+            ) = ${totalRequiredDocuments}
+          )
+        `,
         })
         .from(InternshipTable)
         .innerJoin(UserTable, eq(InternshipTable.userId, UserTable.id))
+        .leftJoin(
+          InternDocumentsTable,
+          eq(InternDocumentsTable.internId, UserTable.id),
+        )
         .where(
           and(
             eq(UserTable.department, coordinatorDeparment!),

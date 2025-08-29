@@ -3,14 +3,20 @@
 import { StatCard } from "@/components/cards/status-card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { api } from "@/trpc/react";
-import { CheckCircle, Clipboard, Clock, Hourglass } from "lucide-react";
+import {
+  CheckCircle,
+  Clipboard,
+  Clock,
+  Hourglass,
+  Folders,
+} from "lucide-react";
 
 const CoordinatorDashboardStats = () => {
   const { data, isLoading } =
     api.internshipCoordinator.getCoordinatorDashboardStats.useQuery();
 
   return (
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+    <div className="grid grid-cols-1 gap-2 md:grid-cols-5">
       {!isLoading && data ? (
         <>
           <StatCard
@@ -18,6 +24,12 @@ const CoordinatorDashboardStats = () => {
             value={data.counts?.studentCount ?? 0}
             subtitle={`${data.coordinatorDeparment} Department`}
             icon={<Clipboard className="text-primary h-4 w-4" />}
+          />
+          <StatCard
+            title="Intern's Document"
+            value={data.counts?.documentsCompletedCount ?? 0}
+            subtitle="All documents completed"
+            icon={<Folders className="text-primary h-4 w-4" />}
           />
           <StatCard
             title="Pending"

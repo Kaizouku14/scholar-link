@@ -25,6 +25,8 @@ export const InternCard = ({
   };
 }) => {
   const { status } = intern;
+
+  console.log(status);
   const variant = getStatusVariant(status ?? "default");
   const color = getStatusColor(status ?? "default");
 
@@ -73,7 +75,7 @@ export const InternCard = ({
           variant={variant ?? "outline"}
           className={cn(
             "flex items-center gap-1 rounded-full border px-3 py-1 text-xs font-medium capitalize transition-all duration-200",
-            color ?? "border-gray-200 bg-gray-50 text-gray-700",
+            color,
           )}
         >
           {React.createElement(getStatusIcon(status ?? "default"), {
