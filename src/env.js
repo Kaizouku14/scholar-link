@@ -18,6 +18,7 @@ export const env = createEnv({
     EMAIL_PORT: z.coerce.number(),
     EMAIL_USER: z.string(),
     EMAIL_PASS: z.string(),
+    CRON_SECRET: z.string(),
 
     NODE_ENV: z
       .enum(["development", "test", "production"])
@@ -46,11 +47,11 @@ export const env = createEnv({
     BETTER_AUTH_URL: process.env.BETTER_AUTH_URL,
     UPLOADTHING_TOKEN: process.env.UPLOADTHING_TOKEN,
     NODE_ENV: process.env.NODE_ENV,
-
     EMAIL_HOST: process.env.EMAIL_HOST,
     EMAIL_PORT: process.env.EMAIL_PORT,
     EMAIL_USER: process.env.EMAIL_USER,
     EMAIL_PASS: process.env.EMAIL_PASS,
+    CRON_SECRET: process.env.CRON_SECRET,
 
     NEXT_PUBLIC_BETTER_AUTH_URL: process.env.NEXT_PUBLIC_BETTER_AUTH_URL,
   },
