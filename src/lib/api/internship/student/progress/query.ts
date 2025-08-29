@@ -1,4 +1,4 @@
-import { db, eq, desc } from "@/server/db";
+import { db, eq, desc, and, ne } from "@/server/db";
 import {
   progressLog as ProgressLogTable,
   internship as InternshipTable,
@@ -17,7 +17,12 @@ export const getStudentLogProgress = async ({ userId }: { userId: string }) => {
       InternshipTable,
       eq(ProgressLogTable.internshipId, InternshipTable.internshipId),
     )
-    .where(eq(InternshipTable.userId, userId))
+    .where(
+      and(
+        eq(InternshipTable.userId, userId),
+        ne(InternshipTable.status, "canceled"),
+      ),
+    )
     .orderBy(desc(ProgressLogTable.logDate))
     .execute();
 
@@ -33,7 +38,12 @@ export const getStudentLogProgress = async ({ userId }: { userId: string }) => {
       CompanyTable,
       eq(CompanyTable.companyId, InternshipTable.companyId),
     )
-    .where(eq(InternshipTable.userId, userId))
+    .where(
+      and(
+        eq(InternshipTable.userId, userId),
+        ne(InternshipTable.status, "canceled"),
+      ),
+    )
     .limit(1)
     .execute();
 

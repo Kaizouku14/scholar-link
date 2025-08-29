@@ -19,12 +19,13 @@ export function ActionDialog<TData>({
   table,
 }: DataTableRowActionsProps<TData>) {
   console.log(table);
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
-          className="data-[state=open]:bg-muted flex h-8 w-8 p-0"
+          className="data-[state=open]:bg-muted ml-4 flex h-8 w-8 p-0"
         >
           <MoreHorizontal />
           <span className="sr-only">Open menu</span>
@@ -32,7 +33,7 @@ export function ActionDialog<TData>({
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
         <DropdownMenuItem className="flex justify-between">
-          <span>Rejected</span>
+          <span>Cancel</span>
           <CircleX />
         </DropdownMenuItem>
         <DropdownMenuSeparator />

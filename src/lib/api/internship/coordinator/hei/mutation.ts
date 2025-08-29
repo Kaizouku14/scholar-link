@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { db } from "@/server/db";
+import { db, inArray } from "@/server/db";
 import { parseInternshipXLSX } from "./coordinatorParseCSV";
 import {
   internship as InternshipTable,
@@ -191,7 +191,6 @@ export const insertInternshipsXLSX = async ({
     });
 
     return {
-      success: true,
       message: `Processed ${rows.validRows.length} rows. Inserted ${insertedCount}, ${insertErrors.length} failed, ${rows.invalidRows.length} invalid.`,
     };
   } catch (error) {
@@ -203,6 +202,35 @@ export const insertInternshipsXLSX = async ({
         error instanceof Error
           ? error.message
           : "Unknown error occurred during insertion",
+    });
+  }
+};
+
+export const cancelInternship = async (internshipId: string[]) => {
+  try {
+    await db
+      .update(InternshipTable)
+      .set({ status: "canceled" })
+      .where(inArray(InternshipTable.internshipId, internshipId))
+      .execute();
+  } catch (error) {
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: (error as Error).message,
+    });
+  }
+};
+
+export const deleteInternship = async (internshipId: string[]) => {
+  try {
+    await db
+      .delete(InternshipTable)
+      .where(inArray(InternshipTable.internshipId, internshipId))
+      .execute();
+  } catch (error) {
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: (error as Error).message,
     });
   }
 };

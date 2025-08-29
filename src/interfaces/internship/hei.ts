@@ -17,6 +17,7 @@ export interface InternData {
 }
 
 export interface CoordinatorSectionData extends InternData {
+  internshipId: string;
   section: SectionType[] | null;
   department: departmentType | null;
   course: courseType | null;

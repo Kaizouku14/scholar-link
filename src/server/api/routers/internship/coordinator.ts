@@ -22,7 +22,11 @@ import {
   getDocuments,
 } from "@/lib/api/internship/coordinator/document-review/query";
 import { zfd } from "zod-form-data";
-import { insertInternshipsXLSX } from "@/lib/api/internship/coordinator/hei/mutation";
+import {
+  cancelInternship,
+  deleteInternship,
+  insertInternshipsXLSX,
+} from "@/lib/api/internship/coordinator/hei/mutation";
 
 export const internshipCoordinatorRouter = createTRPCRouter({
   /******************************************
@@ -88,7 +92,25 @@ export const internshipCoordinatorRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const department = ctx.session!.user.department;
-      await insertInternshipsXLSX({ file: input.file, department });
+      return await insertInternshipsXLSX({ file: input.file, department });
+    }),
+  cancelStudentInternship: protectedRoute
+    .input(
+      z.object({
+        internshipId: z.array(z.string()),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      await cancelInternship(input.internshipId);
+    }),
+  deleteStudentInternship: protectedRoute
+    .input(
+      z.object({
+        internshipId: z.array(z.string()),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      await deleteInternship(input.internshipId);
     }),
   /******************************************
    *          Coordinator API Query         *

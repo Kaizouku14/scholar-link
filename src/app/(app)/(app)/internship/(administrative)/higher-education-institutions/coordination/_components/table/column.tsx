@@ -8,8 +8,32 @@ import { Building2, GraduationCap, Phone, UserCheck } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { DataTableColumnHeader } from "@/components/table/table-column-header";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Checkbox } from "@/components/ui/checkbox";
+import { DataTableRowActions } from "./data-row-actions";
 
 export const CoordinatorInternsColumns: ColumnDef<CoordinatorSectionData>[] = [
+  {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && "indeterminate")
+        }
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
   {
     accessorKey: "name",
     header: "Student",
@@ -27,7 +51,7 @@ export const CoordinatorInternsColumns: ColumnDef<CoordinatorSectionData>[] = [
 
           <div className="flex flex-col">
             <div className="text-foreground text-sm font-medium">{name}</div>
-            <div className="text-muted-foreground text-xs">
+            <div className="text-muted-foreground w-30 truncate text-xs">
               {row.original.email}
             </div>
           </div>
@@ -50,11 +74,11 @@ export const CoordinatorInternsColumns: ColumnDef<CoordinatorSectionData>[] = [
       <div className="flex flex-col gap-0.5">
         <div className="flex items-center gap-1.5">
           <GraduationCap className="text-muted-foreground h-4 w-4 flex-shrink-0" />
-          <span className="max-w-[200px] truncate tracking-wide">
+          <span className="max-w-[150px] truncate tracking-wide">
             {row.original.course}
           </span>
         </div>
-        <div className="text-muted-foreground flex max-w-[200px] gap-1 truncate pl-5 text-xs">
+        <div className="text-muted-foreground flex max-w-[150px] gap-1 truncate pl-5 text-xs">
           <span>SECTION</span>·<span>{row.original.section}</span>
         </div>
       </div>
@@ -118,7 +142,7 @@ export const CoordinatorInternsColumns: ColumnDef<CoordinatorSectionData>[] = [
             </div>
             <a
               href={`mailto:${row.original.supervisorEmail}`}
-              className="py-0 pl-5 text-xs text-blue-500 hover:text-blue-800 hover:underline"
+              className="w-30 truncate py-0 pl-5 text-xs text-blue-500 hover:text-blue-800 hover:underline"
             >
               {row.original.supervisorEmail}
             </a>
@@ -147,5 +171,13 @@ export const CoordinatorInternsColumns: ColumnDef<CoordinatorSectionData>[] = [
         )}
       </div>
     ),
+  },
+  {
+    accessorKey: "actions",
+    header: "Actions",
+    cell: ({ row, table }) => {
+      const selected = table.getSelectedRowModel().rows.length > 0;
+      return <DataTableRowActions row={row} disabled={selected} />;
+    },
   },
 ];

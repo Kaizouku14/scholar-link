@@ -1,5 +1,5 @@
 import { ROLE } from "@/constants/users/roles";
-import { db, eq, and, sql, isNotNull, isNull } from "@/server/db";
+import { db, eq, and, sql, isNotNull, isNull, or } from "@/server/db";
 import {
   user as UserTable,
   student as StudentTable,
@@ -31,6 +31,7 @@ export const getCoordinatorSections = async (
 
     const response = await tx
       .select({
+        internshipId: InternshipTable.internshipId,
         section: UserTable.section,
         department: UserTable.department,
         name: UserTable.name,
@@ -106,7 +107,10 @@ export const getAllUserAccount = async ({ userId }: { userId: string }) => {
           .where(
             and(
               eq(UserTable.role, ROLE.INTERNSHIP_STUDENT),
-              isNull(InternshipTable.userId),
+              or(
+                isNull(InternshipTable.userId),
+                eq(InternshipTable.status, "canceled"),
+              ),
               eq(UserTable.department, department!),
               sql`EXISTS (
                     SELECT 1

@@ -1,5 +1,5 @@
 import { generateUUID } from "@/lib/utils";
-import { db, eq, or } from "@/server/db";
+import { db, eq, or, and, ne } from "@/server/db";
 import { TRPCError } from "@trpc/server";
 import {
   internship as InternshipTable,
@@ -26,7 +26,12 @@ export const insertStudentInternship = async ({
         companyId: InternshipTable.companyId,
       })
       .from(InternshipTable)
-      .where(eq(InternshipTable.userId, data.userId))
+      .where(
+        and(
+          eq(InternshipTable.userId, data.userId),
+          ne(InternshipTable.status, "canceled"),
+        ),
+      )
       .limit(1);
 
     if (internship.length > 0 && internship[0]!.companyId) {

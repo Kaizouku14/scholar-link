@@ -27,9 +27,9 @@ export function CSVImport({ onImportCompleteAction }: CSVImportProps) {
       const formData = new FormData();
       formData.append("file", file);
 
-      await importMutation.mutateAsync(formData);
+      const response = await importMutation.mutateAsync(formData);
 
-      toast.success("File imported successfully!");
+      toast.success("File imported successfully! " + response.message);
       setFile(null);
       onImportCompleteAction();
     } catch (error) {

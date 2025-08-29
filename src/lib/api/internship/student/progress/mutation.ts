@@ -1,4 +1,4 @@
-import { db, eq, and, sum, gte, lte } from "@/server/db";
+import { db, eq, and, sum, gte, lte, ne } from "@/server/db";
 import { TRPCError } from "@trpc/server";
 import {
   internship as InternshipTable,
@@ -29,7 +29,12 @@ export const insertStudentProgress = async ({
         ProgressLogTable,
         eq(InternshipTable.internshipId, ProgressLogTable.internshipId),
       )
-      .where(eq(InternshipTable.userId, userId))
+      .where(
+        and(
+          eq(InternshipTable.userId, userId),
+          ne(InternshipTable.status, "canceled"),
+        ),
+      )
       .groupBy(
         InternshipTable.internshipId,
         InternshipTable.totalOfHoursRequired,
