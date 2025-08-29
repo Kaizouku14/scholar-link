@@ -122,6 +122,7 @@ export const getReminderForDocuments = async ({
         .select({
           id: UserTable.id,
           name: UserTable.name,
+          contact: UserTable.contact,
           course: StudentTable.course,
           section: UserTable.section,
           supervisorContact: SupervisorTable.contactNo,
@@ -170,8 +171,8 @@ export const getReminderForDocuments = async ({
 
         if (missingDocuments.length > 0) {
           reminder.push({
-            id: student.id,
             name: student.name,
+            contact: student.contact,
             section: student.section,
             course: student.course,
             missingDocument: missingDocuments.map((doc) =>

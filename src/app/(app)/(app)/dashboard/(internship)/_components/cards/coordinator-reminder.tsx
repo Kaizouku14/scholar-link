@@ -5,30 +5,12 @@ import { Button } from "@/components/ui/button";
 import type { DocumentReminder } from "@/interfaces/internship/alert-card";
 import { COURSE_LABELS } from "@/constants/users/courses";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { api } from "@/trpc/react";
-import toast from "react-hot-toast";
 
 export const CoordinatorDocumentReminder = ({
   data,
 }: {
   data?: DocumentReminder[];
 }) => {
-  const { mutateAsync: sendReminder } = api.mail.sendMailTo.useMutation();
-  const handleRemindStudent = async ({
-    id,
-    missingDocument,
-  }: DocumentReminder) => {
-    try {
-      await sendReminder({
-        reciever: id,
-        subject: "Document Reminder",
-        content: `Please submit the following document: ${missingDocument.join(", ")}`,
-      });
-    } catch (error) {
-      toast.error((error as Error).message);
-    }
-  };
-
   return (
     <div className="border-border flex flex-col space-y-4 rounded-xl border p-6">
       <div className="flex flex-col">
@@ -88,9 +70,14 @@ export const CoordinatorDocumentReminder = ({
                           size="sm"
                           variant="outline"
                           className="border-primary text-primary hover:text-primary/90"
-                          onClick={() => handleRemindStudent(document)}
                         >
-                          Remind Student
+                          <a
+                            href={`tel:${document.contact}`}
+                            className="flex items-center"
+                          >
+                            <Phone className="mr-2 h-4 w-4" />
+                            Contact Student
+                          </a>
                         </Button>
                         {document.supervisorContactNo && (
                           <Button
