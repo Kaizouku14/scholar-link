@@ -58,11 +58,11 @@ export const CompanyCombobox = ({
               {CompanyRecords?.map((detail) => (
                 <CommandItem
                   key={detail.id}
-                  value={detail.name}
+                  value={detail.name!}
                   onSelect={() => {
                     onChange(detail.id);
                     setOpen(false);
-                    setAddress(detail.address);
+                    setAddress(detail.address!);
                   }}
                 >
                   <div>{detail.name}</div>

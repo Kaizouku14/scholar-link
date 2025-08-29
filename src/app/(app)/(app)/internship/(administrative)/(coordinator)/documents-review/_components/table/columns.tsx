@@ -90,7 +90,10 @@ export const DocumentReviewColumns: ColumnDef<DocumentSchema>[] = [
     accessorKey: "companyName",
     header: "Company",
     cell: ({ row }) => (
-      <div className="w-40 truncate text-base" title={row.original.companyName}>
+      <div
+        className="w-40 truncate text-base"
+        title={row.original.companyName!}
+      >
         {row.original.companyName}
       </div>
     ),
