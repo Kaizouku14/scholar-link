@@ -4,24 +4,17 @@ import type ExcelJS from "exceljs";
 export const groupByCoordinator = (rows: ReportSchema[]) => {
   const grouped: Record<string, ReportSchema[]> = {};
   rows.forEach((row) => {
-    const name = row.coordinatorName ?? "Unknown Coordinator";
+    if (
+      !row.coordinatorName ||
+      row.coordinatorName.trim() === "" ||
+      row.coordinatorName === "N/A"
+    ) {
+      return; // Skip row
+    }
+
+    const name = row.coordinatorName;
     grouped[name] ??= [];
     grouped[name].push(row);
-  });
-  return grouped;
-};
-
-export const groupBySection = (rows: ReportSchema[]) => {
-  const grouped: Record<string, ReportSchema[]> = {};
-  rows.forEach((row) => {
-    const sections = Array.isArray(row.section)
-      ? row.section
-      : [row.section].filter(Boolean);
-    sections.forEach((sec) => {
-      const section = sec ?? "Unknown Section";
-      grouped[section] ??= [];
-      grouped[section].push(row);
-    });
   });
   return grouped;
 };
@@ -29,7 +22,7 @@ export const groupBySection = (rows: ReportSchema[]) => {
 export const exportWorkbook = async (
   workbook: ExcelJS.Workbook,
   coordinatorName: string,
-  coordinatorCourse?: string,
+  coordinatorCourse?: string | null,
 ) => {
   const buffer = await workbook.xlsx.writeBuffer();
   const blob = new Blob([buffer], {
@@ -39,9 +32,19 @@ export const exportWorkbook = async (
   const url = window.URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
-  link.download = `SIPP_Report_${coordinatorName.replace(/\s+/g, "_")}_${coordinatorCourse?.replace(/\s+/g, "_")}_${
-    new Date().toISOString().split("T")[0]
-  }.xlsx`;
+
+  // Clean up the filename generation
+  const cleanCoordinatorName = coordinatorName
+    .replace(/\s+/g, "_")
+    .replace(/[^a-zA-Z0-9_]/g, "");
+  const cleanCoordinatorCourse =
+    coordinatorCourse?.replace(/\s+/g, "_").replace(/[^a-zA-Z0-9_]/g, "") ?? "";
+  const dateStr = new Date().toISOString().split("T")[0];
+
+  link.download = `SIPP_Report_${cleanCoordinatorName}${cleanCoordinatorCourse ? `_${cleanCoordinatorCourse}` : ""}_${dateStr}.xlsx`;
+
+  document.body.appendChild(link);
   link.click();
+  document.body.removeChild(link);
   window.URL.revokeObjectURL(url);
 };

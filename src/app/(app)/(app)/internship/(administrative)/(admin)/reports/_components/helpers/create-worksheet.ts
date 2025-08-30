@@ -3,21 +3,16 @@ import type ExcelJS from "exceljs";
 
 export const createWorksheet = (
   workbook: ExcelJS.Workbook,
-  section: string,
   students: ReportSchema[],
   coordinatorName: string,
-  coordinatorCourse: string,
 ) => {
-  const department = students[0]?.department ?? "Unknown Department";
-
-  const worksheetName = `${coordinatorCourse}-${section}`
+  const worksheetName = `${coordinatorName.toUpperCase()}`
     .substring(0, 31)
     .replace(/[\\\/\?\*\[\]]/g, "_");
-
   const ws = workbook.addWorksheet(worksheetName);
 
   // ---------- HEADER ----------
-  ws.mergeCells("A1:F1");
+  ws.mergeCells("A1:E1");
   ws.getCell("A1").value = 'Annex "D"';
   ws.getCell("A1").alignment = { horizontal: "right" };
   ws.getCell("A1").font = { bold: true, size: 12 };
@@ -44,8 +39,7 @@ export const createWorksheet = (
   });
 
   ws.addRow([]);
-  ws.getCell("A11").value =
-    `HEI: Bulacan State University - ${department} - ${coordinatorCourse} (${section})`;
+  ws.getCell("A11").value = `HEI: Bulacan State University`;
   ws.getCell("A11").font = { bold: true };
 
   ws.getCell("A12").value =

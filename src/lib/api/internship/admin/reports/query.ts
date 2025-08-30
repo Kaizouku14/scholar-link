@@ -22,15 +22,11 @@ export const getInternshipReports = async () => {
         sex: UserTable.gender,
         section: UserTable.section,
         department: UserTable.department,
-
         course: UserTable.course,
         studentNo: StudenTable.studentNo,
-
         duration: InternshipTable.duration,
-
         company: CompanyTable.name,
         companyAddress: CompanyTable.address,
-
         supervisorName: SupervisorTable.name,
         supervisorEmail: SupervisorTable.email,
         supervisorContactNo: SupervisorTable.contactNo,
@@ -46,7 +42,7 @@ export const getInternshipReports = async () => {
         SupervisorTable,
         eq(InternshipTable.supervisorId, SupervisorTable.supervisorId),
       )
-      .where(eq(InternshipTable.status, "pending"))
+      .where(eq(InternshipTable.status, "completed"))
       .execute();
 
     const coordinators = await db
@@ -60,21 +56,22 @@ export const getInternshipReports = async () => {
       .where(eq(UserTable.role, ROLE.INTERNSHIP_COORDINATOR))
       .execute();
 
-    //TODO: Check if need separated by course too
     const report = interns.map((intern) => {
       const coordinator = coordinators.find(
         (c) =>
           c.department === intern.department &&
           c.course === intern.course &&
-          c.section?.some((s) => intern.section?.includes(s)), // section overlap
+          intern.section?.some((studentSection) =>
+            c.section?.includes(studentSection),
+          ),
       );
 
       return {
         ...intern,
-        coordinatorName: coordinator?.coordinatorName ?? "N/A",
-        coordinatorCourse: coordinator?.course ?? "N/A",
-        coordinatorSections: coordinator?.section ?? [],
-        coordinatorDepartment: coordinator?.department ?? "N/A",
+        coordinatorName: coordinator?.coordinatorName,
+        coordinatorCourse: coordinator?.course,
+        coordinatorSections: coordinator?.section,
+        coordinatorDepartment: coordinator?.department,
       };
     });
 

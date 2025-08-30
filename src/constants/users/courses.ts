@@ -28,39 +28,6 @@ export const COURSES = [
   "Bachelor of Industrial Technology Major in Computer Technology",
   "Bachelor of Industrial Technology Major in Electronics Technology",
   "Bachelor of Industrial Technology Major in Food Processing Technology",
-
-  // ==============================
-  // TO REMOVE LATER
-  // ==============================
-  // IT & Computing
-  "BS in Information Technology",
-  "BS in Data Science",
-
-  // Hospitality & Tourism
-  "BS in Hospitality Management",
-  "Hospitality Management",
-  "BS in Tourism Management",
-  "Tourism Management",
-
-  // Education
-  "Bachelor of Elementary Education",
-  "BS in Elementary Education",
-  "BSEd Major in Filipino",
-  "BSEd Major in English (Mandarin)",
-  "BSEd Major in Mathematics",
-  "BSEd Major in Sciences",
-  "BSEd Major in Social Studies",
-
-  // Business & Entrepreneurship
-  "BS in Business Administration",
-  "BS in Administration",
-  "BS in Entrepreneurship",
-
-  // Industrial Technology
-  "BIT Major in Drafting Technology",
-  "BIT Major in Computer Technology",
-  "BIT Major in Electronics Technology",
-  "BIT Major in Food Processing Technology",
 ] as const;
 
 export const COURSE_LABELS: Record<(typeof COURSES)[number], string> = {
@@ -96,35 +63,6 @@ export const COURSE_LABELS: Record<(typeof COURSES)[number], string> = {
     "BIT-ELEX",
   "Bachelor of Industrial Technology Major in Food Processing Technology":
     "BIT-FOOD",
-
-  // ==============================
-  // TO REMOVE LATER
-  // ==============================
-  "BS in Information Technology": "BSIT",
-  "BS in Data Science": "BSDS",
-
-  // Hospitality & Tourism
-  "BS in Hospitality Management": "BSHM",
-  "BS in Tourism Management": "BSTM",
-
-  // Education
-  "BS in Elementary Education": "BEE",
-  "BSEd Major in Filipino": "BSEd-FIL",
-  "BSEd Major in English (Mandarin)": "BSEd-ENG(MAN)",
-  "BSEd Major in Mathematics": "BSEd-MATH",
-  "BSEd Major in Sciences": "BSEd-SCI",
-  "BSEd Major in Social Studies": "BSEd-SS",
-
-  // Business & Entrepreneurship
-  "BS in Administration": "BSBA",
-  "BS in Business Administration": "BSBA",
-  "BS in Entrepreneurship": "BSE",
-
-  // Industrial Technology
-  "BIT Major in Drafting Technology": "BIT-DRAFT",
-  "BIT Major in Computer Technology": "BIT-COMP",
-  "BIT Major in Electronics Technology": "BIT-ELEX",
-  "BIT Major in Food Processing Technology": "BIT-FOOD",
 };
 
 export const COURSE_FILTER = COURSES.map((course) => ({

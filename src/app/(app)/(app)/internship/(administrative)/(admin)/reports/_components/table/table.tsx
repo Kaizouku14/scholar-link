@@ -4,7 +4,6 @@ import { DataTable } from "@/components/table/data-table";
 import { api } from "@/trpc/react";
 import { DataTableSkeleton } from "@/components/table/table-skeleton";
 import { ReportsColumn } from "./column";
-import { DEPARMENT_FILTER } from "@/constants/users/departments";
 import { COURSE_FILTER } from "@/constants/users/courses";
 import type { Table } from "@tanstack/react-table";
 import type { ReportSchema } from "./column-schema";
@@ -24,15 +23,11 @@ const ReportsTable = () => {
       {!isLoading && data ? (
         <DataTable
           columns={ReportsColumn}
-          data={data.interns}
+          data={data}
           filteredTitle={"studentName"}
           columnVisibility={{ course: false }}
           onExport={handleExport}
           filters={[
-            {
-              column: "department",
-              options: DEPARMENT_FILTER,
-            },
             {
               column: "course",
               options: COURSE_FILTER,

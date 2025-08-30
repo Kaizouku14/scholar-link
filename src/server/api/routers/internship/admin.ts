@@ -1,4 +1,4 @@
-import { createTRPCRouter, protectedRoute, publicProcedure } from "../../trpc";
+import { createTRPCRouter, protectedRoute } from "../../trpc";
 import { getAllCompany } from "@/lib/api/internship/admin/company/query";
 import { getAdminDashboardStats } from "@/lib/api/internship/admin/dashboard/query";
 import { getAllInternshipDeparments } from "@/lib/api/internship/admin/deparments/query";
@@ -27,7 +27,7 @@ export const internshipAdminRouter = createTRPCRouter({
       return await getAdminSections();
     });
   }),
-  getInternshipReports: publicProcedure.query(() => {
+  getInternshipReports: protectedRoute.query(() => {
     return cacheData(
       "internship-reports",
       async () => await getInternshipReports(),
