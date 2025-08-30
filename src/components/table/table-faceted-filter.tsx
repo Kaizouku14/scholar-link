@@ -53,9 +53,9 @@ export function DataTableFacetedFilter<TData, TValue>({
               <Separator orientation="vertical" className="mx-2 h-4" />
               <Badge
                 variant="secondary"
-                className="rounded-sm px-1 font-normal lg:hidden"
+                className="hidden rounded-sm px-1 font-normal md:block"
               >
-                {totalSelected}
+                {selected}
               </Badge>
             </>
           )}

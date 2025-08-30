@@ -57,9 +57,14 @@ const CoordinatorDashboardStats = () => {
           <CoordinatorDocumentReminder data={coordinatorReminders} />
         </>
       ) : (
-        Array.from({ length: 5 }).map((_, index) => (
-          <Skeleton key={index} className="h-34 w-full rounded-xl" />
-        ))
+        <div className="flex flex-col space-y-4">
+          <div className="grid grid-cols-1 gap-2 md:grid-cols-5">
+            {Array.from({ length: 5 }).map((_, index) => (
+              <Skeleton key={index} className="h-34 w-full rounded-xl" />
+            ))}
+          </div>
+          <Skeleton className="h-100 w-full rounded-xl" />
+        </div>
       )}
     </div>
   );

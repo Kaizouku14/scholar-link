@@ -138,7 +138,7 @@ export const DocumentListColumns: ColumnDef<StudentDocuments>[] = [
   },
   {
     accessorKey: "actions",
-    header: "Actions",
+    header: "",
     cell: ({ row }) => <DataTableRowActions row={row} />,
   },
 ];
