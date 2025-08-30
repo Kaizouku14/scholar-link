@@ -39,7 +39,7 @@ export const accountFormSchema = z
     (data) => {
       // If role is internshipStudent, require student-specific fields
       if (data.role === "internshipStudent") {
-        return data.studentNo && data.course && data.section && data.yearLevel;
+        return data.studentNo && data.course && data.section;
       }
       return true;
     },
