@@ -1,9 +1,10 @@
-import { createTRPCRouter, protectedRoute } from "../../trpc";
+import { createTRPCRouter, protectedRoute, publicProcedure } from "../../trpc";
 import { getAllCompany } from "@/lib/api/internship/admin/company/query";
 import { getAdminDashboardStats } from "@/lib/api/internship/admin/dashboard/query";
 import { getAllInternshipDeparments } from "@/lib/api/internship/admin/deparments/query";
 import { cacheData } from "@/lib/redis";
 import { getAdminSections } from "@/lib/api/internship/admin/hei/query";
+import { getInternshipReports } from "@/lib/api/internship/admin/reports/query";
 
 export const internshipAdminRouter = createTRPCRouter({
   /******************************************
@@ -25,5 +26,11 @@ export const internshipAdminRouter = createTRPCRouter({
     return cacheData(`internships`, async () => {
       return await getAdminSections();
     });
+  }),
+  getInternshipReports: publicProcedure.query(() => {
+    return cacheData(
+      "internship-reports",
+      async () => await getInternshipReports(),
+    );
   }),
 });
