@@ -1,13 +1,14 @@
 "use client";
 
-import { type Table } from "@tanstack/react-table";
+import type { Table } from "@tanstack/react-table";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Import, X } from "lucide-react";
+import { Import, FileDown, X } from "lucide-react";
 import { DataTableFacetedFilter } from "./table-faceted-filter";
 import { DataTableViewOptions } from "./table-view-options";
 import { Search } from "lucide-react";
 import { formatText } from "@/lib/utils";
+
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
   filteredTitle: string;
@@ -19,6 +20,7 @@ interface DataTableToolbarProps<TData> {
     }[];
   }[];
   onImport?: () => void;
+  onExport?: (table: Table<TData>) => void;
   viewOptions?: boolean;
 }
 
@@ -27,6 +29,7 @@ export const DataTableToolbar = <TData,>({
   filteredTitle,
   filters,
   onImport,
+  onExport,
   viewOptions,
 }: DataTableToolbarProps<TData>) => {
   const isFiltered = table.getState().columnFilters.length > 0;
@@ -77,6 +80,16 @@ export const DataTableToolbar = <TData,>({
           <Button variant={"outline"} size={"lg"} onClick={onImport}>
             <Import className="size-4" />
             Import
+          </Button>
+        )}
+        {onExport && (
+          <Button
+            variant={"outline"}
+            size={"lg"}
+            onClick={() => onExport(table)}
+          >
+            <FileDown className="size-4" />
+            Export
           </Button>
         )}
         {viewOptions && <DataTableViewOptions table={table} />}

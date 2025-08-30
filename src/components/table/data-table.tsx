@@ -20,7 +20,9 @@ import {
   type SortingState,
   useReactTable,
   type VisibilityState,
+  type Table as DataTable,
 } from "@tanstack/react-table";
+
 import { useState } from "react";
 import { DataTableToolbar } from "./table-toolbar";
 import { DataTablePagination } from "./table-pagination";
@@ -41,6 +43,7 @@ interface DataTableProps<TData, TValue> {
   }[];
   refetch?: () => Promise<QueryObserverResult<TData[] | undefined, unknown>>;
   onImport?: () => void;
+  onExport?: (row: DataTable<TData>) => void;
   viewOptions?: boolean;
   className?: string;
 }
@@ -53,8 +56,9 @@ export function DataTable<TData, TValue>({
   filters,
   refetch,
   onImport,
+  onExport,
   viewOptions = true,
-  className = "container mx-auto",
+  className = "container w-full mx-auto",
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
 
@@ -99,76 +103,66 @@ export function DataTable<TData, TValue>({
         filteredTitle={filteredTitle}
         filters={filters}
         onImport={onImport}
+        onExport={onExport}
         viewOptions={viewOptions}
       />
-      <div>
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header, index) => {
-                  const isLastColumn = index === headerGroup.headers.length - 1;
-                  const selectedRows = table.getSelectedRowModel().rows ?? [];
-                  const showOptions = isLastColumn && selectedRows.length > 1;
+      <Table>
+        <TableHeader>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <TableRow key={headerGroup.id}>
+              {headerGroup.headers.map((header, index) => {
+                const isLastColumn = index === headerGroup.headers.length - 1;
+                const selectedRows = table.getSelectedRowModel().rows ?? [];
+                const showOptions = isLastColumn && selectedRows.length > 1;
 
-                  return (
-                    <TableHead
-                      key={header.id}
-                      className="border-border border-b"
-                    >
-                      {showOptions ? (
-                        <div className="flex items-center justify-between">
-                          {header.isPlaceholder
-                            ? null
-                            : flexRender(
-                                header.column.columnDef.header,
-                                header.getContext(),
-                              )}
-                          <ActionDialog table={table} />
-                        </div>
-                      ) : header.isPlaceholder ? null : (
-                        flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )
-                      )}
-                    </TableHead>
-                  );
-                })}
+                return (
+                  <TableHead key={header.id} className="border-border border-b">
+                    {showOptions ? (
+                      <div className="flex items-center justify-between">
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext(),
+                            )}
+                        <ActionDialog table={table} />
+                      </div>
+                    ) : header.isPlaceholder ? null : (
+                      flexRender(
+                        header.column.columnDef.header,
+                        header.getContext(),
+                      )
+                    )}
+                  </TableHead>
+                );
+              })}
+            </TableRow>
+          ))}
+        </TableHeader>
+        <TableBody>
+          {table.getRowModel().rows?.length ? (
+            table.getRowModel().rows.map((row) => (
+              <TableRow
+                key={row.id}
+                data-state={row.getIsSelected() && "selected"}
+                className="border-border border-y"
+              >
+                {row.getVisibleCells().map((cell) => (
+                  <TableCell key={cell.id} className="p-2.5">
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </TableCell>
+                ))}
               </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                  className="border-border border-y"
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="p-2.5">
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={columns.length} className="h-24 text-center">
+                No results.
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
       <div className="w-full py-1">
         <DataTablePagination table={table} />
       </div>

@@ -52,8 +52,6 @@ export const getInternshipReports = async () => {
     const coordinators = await db
       .select({
         coordinatorName: UserTable.name,
-        coordinatorEmail: UserTable.email,
-        coordinatorContact: UserTable.contact,
         section: UserTable.section,
         department: UserTable.department,
       })
@@ -72,8 +70,8 @@ export const getInternshipReports = async () => {
       return {
         ...intern,
         coordinatorName: coordinator?.coordinatorName ?? "N/A",
-        coordinatorEmail: coordinator?.coordinatorEmail ?? "N/A",
-        coordinatorContact: coordinator?.coordinatorContact ?? "N/A",
+        coordinatorSections: coordinator?.section ?? [],
+        coordinatorDepartment: coordinator?.department ?? "N/A",
       };
     });
 

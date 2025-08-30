@@ -43,11 +43,25 @@ export const ReportsColumn: ColumnDef<ReportSchema>[] = [
     },
   },
   {
+    accessorKey: "course",
+    enableHiding: true,
+  },
+  {
     accessorKey: "studentEmail",
     header: "Email",
     cell: ({ row }) => (
-      <div className="text-muted-foreground max-w-[10rem] truncate text-sm">
-        {row.getValue("studentEmail")}
+      <div className="flex items-center space-x-2">
+        <Mail className="text-muted-foreground h-4 w-4" />
+        {row.getValue("studentEmail") ? (
+          <a
+            href={`mailto:${row.original.studentEmail}`}
+            className="w-40 truncate text-sm text-blue-600 hover:text-blue-800 hover:underline"
+          >
+            {row.original.studentEmail}
+          </a>
+        ) : (
+          <span className="text-muted-foreground text-sm">No email</span>
+        )}
       </div>
     ),
   },
@@ -55,7 +69,19 @@ export const ReportsColumn: ColumnDef<ReportSchema>[] = [
     accessorKey: "contactNo",
     header: "Contact",
     cell: ({ row }) => (
-      <div className="font-mono text-sm">{row.getValue("contactNo")}</div>
+      <div className="flex items-center space-x-2">
+        <Phone className="text-muted-foreground h-4 w-4" />
+        {row.getValue("contactNo") ? (
+          <a
+            href={`tel:${row.original.contactNo}`}
+            className="font-mono text-sm text-blue-600 hover:text-blue-800 hover:underline"
+          >
+            {row.original.contactNo}
+          </a>
+        ) : (
+          <span className="text-muted-foreground text-sm">No phone</span>
+        )}
+      </div>
     ),
   },
   {
@@ -86,7 +112,12 @@ export const ReportsColumn: ColumnDef<ReportSchema>[] = [
     accessorKey: "company",
     header: "Company",
     cell: ({ row }) => (
-      <div className="font-medium">{row.getValue("company")}</div>
+      <div
+        className="max-w-[10rem] truncate font-medium"
+        title={row.getValue("company")}
+      >
+        {row.getValue("company")}
+      </div>
     ),
   },
   {
@@ -96,7 +127,7 @@ export const ReportsColumn: ColumnDef<ReportSchema>[] = [
       <div className="flex items-start space-x-2">
         <MapPin className="text-muted-foreground mt-0.5 h-4 w-4 flex-shrink-0" />
         <div
-          className="text-muted-foreground max-w-[10rem] truncate text-sm"
+          className="text-muted-foreground max-w-[8rem] truncate text-sm"
           title={row.original.companyAddress ?? "No address provided"}
         >
           {row.original.companyAddress ?? "No address"}
@@ -139,7 +170,7 @@ export const ReportsColumn: ColumnDef<ReportSchema>[] = [
         {row.getValue("supervisorContactNo") ? (
           <a
             href={`tel:${row.original.supervisorContactNo}`}
-            className="text-sm text-blue-600 hover:text-blue-800 hover:underline"
+            className="font-mono text-sm text-blue-600 hover:text-blue-800 hover:underline"
           >
             {row.original.supervisorContactNo}
           </a>

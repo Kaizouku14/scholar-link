@@ -24,7 +24,9 @@ export const COURSE_LABELS = {
   "BS in Information Technology": "BSIT",
   "BS in Data Science": "BSDS",
   "BS in Hospitality Management": "BSHM",
+  "Hospitality Management": "BSHM",
   "BS in Tourism Management": "BSTM",
+  "Tourism Management": "BSTM",
 
   "Bachelor of Elementary Education": "BEE",
   "BS in Elementary Education": "BEE",
