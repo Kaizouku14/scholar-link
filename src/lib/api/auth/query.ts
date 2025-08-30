@@ -17,6 +17,7 @@ export const gellAllInternshipAccounts = async ({
         role: UserTable.role,
         section: UserTable.section,
         department: UserTable.department,
+        course: UserTable.course,
       })
       .from(UserTable)
       .where(eq(UserTable.id, userId))
@@ -26,12 +27,14 @@ export const gellAllInternshipAccounts = async ({
     const role = user?.role;
     const assignedSections: SectionType[] = user?.section ?? [];
     const department = user?.department;
+    const course = user?.course;
 
     const conditions = [not(like(UserTable.role, "scholarship%"))];
 
     if (role === ROLE.INTERNSHIP_COORDINATOR) {
       conditions.push(
         eq(UserTable.department, department!),
+        eq(UserTable.course, course!),
         eq(UserTable.role, ROLE.INTERNSHIP_STUDENT),
         sql`EXISTS (
                 SELECT 1
@@ -51,7 +54,7 @@ export const gellAllInternshipAccounts = async ({
         email: UserTable.email,
         role: UserTable.role,
         section: UserTable.section,
-        course: StudentTable.course,
+        course: UserTable.course,
         yearLevel: StudentTable.yearLevel,
         status: sql<string>`CASE WHEN EXISTS (
         SELECT 1 FROM sl_authorized_email ae WHERE ae.email = ${UserTable.email}

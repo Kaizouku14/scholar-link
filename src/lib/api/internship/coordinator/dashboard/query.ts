@@ -13,6 +13,7 @@ import {
   supervisor as SupervisorTable,
 } from "@/server/db/schema/internship";
 import { TRPCError } from "@trpc/server";
+import { getCoordinatorInfo } from "../query";
 
 export const getCoordinatorDashboardStats = async ({
   userId,
@@ -94,19 +95,10 @@ export const getReminderForDocuments = async ({
   userId: string;
 }) => {
   try {
+    const { coordinatorSections, coordinatorDepartment, coordinatorCourse } =
+      await getCoordinatorInfo({ userId });
+
     const result = await db.transaction(async (tx) => {
-      const [coordinator] = await tx
-        .select({
-          section: UserTable.section,
-          department: UserTable.department,
-        })
-        .from(UserTable)
-        .where(eq(UserTable.id, userId))
-        .limit(1);
-
-      const coordinatorSections: SectionType[] = coordinator?.section ?? [];
-      const coordinatorDeparment = coordinator?.department;
-
       const requiredDocuments = await tx
         .select({
           documentType: DocumentTable.documentType,
@@ -123,7 +115,7 @@ export const getReminderForDocuments = async ({
           id: UserTable.id,
           name: UserTable.name,
           contact: UserTable.contact,
-          course: StudentTable.course,
+          course: UserTable.course,
           section: UserTable.section,
           supervisorContact: SupervisorTable.contactNo,
         })
@@ -136,7 +128,8 @@ export const getReminderForDocuments = async ({
         )
         .where(
           and(
-            eq(UserTable.department, coordinatorDeparment!),
+            eq(UserTable.course, coordinatorCourse!),
+            eq(UserTable.department, coordinatorDepartment!),
             sql`EXISTS (
                 SELECT 1
                 FROM json_each(${UserTable.section})

@@ -39,7 +39,7 @@ export const getAllInternshipDeparments = async () => {
                 'section', ${UserTable.section},
                 'role', ${UserTable.role},
                 'email', ${UserTable.email},
-                'course', ${StudentTable.course},
+                'course', ${UserTable.course},
                 'status', ${InternshipTable.status}
                 )
             )

@@ -1,4 +1,3 @@
-import type { SectionType } from "@/constants/users/sections";
 import { db, eq, and, sql, desc } from "@/server/db";
 import {
   user as UserTable,
@@ -10,33 +9,25 @@ import {
   company as CompanyTable,
 } from "@/server/db/schema/internship";
 import { TRPCError } from "@trpc/server";
+import { getCoordinatorInfo } from "../query";
 
 export const getStudentProgressBySection = async ({
   userId,
 }: {
   userId: string;
 }) => {
+  const { coordinatorSections, coordinatorDepartment, coordinatorCourse } =
+    await getCoordinatorInfo({ userId });
+
   return await db
     .transaction(async (tx) => {
-      const [coordinator] = await tx
-        .select({
-          section: UserTable.section,
-          department: UserTable.department,
-        })
-        .from(UserTable)
-        .where(eq(UserTable.id, userId))
-        .limit(1);
-
-      const coordinatorSections: SectionType[] = coordinator?.section ?? [];
-      const coordinatorDeparment = coordinator?.department;
-
-      const response = await db
+      const response = await tx
         .select({
           id: InternshipTable.internshipId,
           name: UserTable.name,
           profile: UserTable.profile,
           section: UserTable.section,
-          course: StudentTable.course,
+          course: UserTable.course,
           companyName: CompanyTable.name,
           progress: sql<string>`COALESCE(SUM(${ProgressTable.hours}), 0)`.as(
             "progress",
@@ -57,7 +48,8 @@ export const getStudentProgressBySection = async ({
         .innerJoin(UserTable, eq(UserTable.id, InternshipTable.userId))
         .where(
           and(
-            eq(UserTable.department, coordinatorDeparment!),
+            eq(UserTable.course, coordinatorCourse!),
+            eq(UserTable.department, coordinatorDepartment!),
             sql`EXISTS (
                 SELECT 1
                 FROM json_each(${UserTable.section})
@@ -70,7 +62,7 @@ export const getStudentProgressBySection = async ({
           UserTable.name,
           UserTable.profile,
           UserTable.section,
-          StudentTable.course,
+          UserTable.course,
           StudentTable.yearLevel,
           CompanyTable.name,
           InternshipTable.totalOfHoursRequired,

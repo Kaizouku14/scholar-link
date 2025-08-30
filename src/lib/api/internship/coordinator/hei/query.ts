@@ -12,6 +12,7 @@ import {
 } from "@/server/db/schema/internship";
 import { TRPCError } from "@trpc/server";
 import type { CoordinatorSectionData } from "@/interfaces/internship/hei";
+import { getCoordinatorInfo } from "../query";
 
 export const getCoordinatorSections = async (
   userId: string,
@@ -20,6 +21,7 @@ export const getCoordinatorSections = async (
     const [coordinator] = await tx
       .select({
         section: UserTable.section,
+        course: UserTable.course,
         department: UserTable.department,
       })
       .from(UserTable)
@@ -28,6 +30,7 @@ export const getCoordinatorSections = async (
 
     const coordinatorSections = coordinator?.section ?? [];
     const coordinatorDepartment = coordinator!.department;
+    const coordinatorCourse = coordinator?.course;
 
     const response = await tx
       .select({
@@ -37,7 +40,7 @@ export const getCoordinatorSections = async (
         name: UserTable.name,
         profile: UserTable.profile,
         email: UserTable.email,
-        course: StudentTable.course,
+        course: UserTable.course,
         status: InternshipTable.status,
         companyName: CompanyTable.name,
         companyAddress: CompanyTable.address,
@@ -68,6 +71,7 @@ export const getCoordinatorSections = async (
             FROM json_each(${UserTable.section})
             WHERE value IN (${sql.join(coordinatorSections, sql`,`)})
           )`,
+          eq(UserTable.course, coordinatorCourse!),
           eq(UserTable.department, coordinatorDepartment!),
         ),
       );
@@ -78,26 +82,16 @@ export const getCoordinatorSections = async (
 
 export const getAllUserAccount = async ({ userId }: { userId: string }) => {
   try {
+    const { coordinatorSections, coordinatorDepartment, coordinatorCourse } =
+      await getCoordinatorInfo({ userId });
+
     return await db
       .transaction(async (tx) => {
-        const coordinator = await tx
-          .select({
-            department: UserTable.department,
-            section: UserTable.section,
-          })
-          .from(UserTable)
-          .where(eq(UserTable.id, userId))
-          .limit(1)
-          .execute();
-
-        const department = coordinator[0]?.department;
-        const section = coordinator[0]?.section;
-
         const response = await tx
           .select({
             userId: UserTable.id,
             name: UserTable.name,
-            course: StudentTable.course,
+            course: UserTable.course,
             section: UserTable.section,
             yearLevel: StudentTable.yearLevel,
           })
@@ -111,12 +105,13 @@ export const getAllUserAccount = async ({ userId }: { userId: string }) => {
                 isNull(InternshipTable.userId),
                 eq(InternshipTable.status, "canceled"),
               ),
-              eq(UserTable.department, department!),
+              eq(UserTable.department, coordinatorDepartment!),
               sql`EXISTS (
                     SELECT 1
                     FROM json_each(${UserTable.section})
-                    WHERE value IN (${sql.join(section!, sql`,`)})
+                    WHERE value IN (${sql.join(coordinatorSections, sql`,`)})
                 )`,
+              eq(UserTable.course, coordinatorCourse!),
             ),
           )
           .execute();

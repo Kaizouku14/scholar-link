@@ -28,7 +28,7 @@ export const getAllCompany = async () => {
                 'name', ${UserTable.name},
                 'profile', ${UserTable.profile},
                 'email', ${UserTable.email},
-                'course', ${StudentTable.course},
+                'course', ${UserTable.course},
                 'section', ${UserTable.section},
                 'status', ${InternshipTable.status}
               )

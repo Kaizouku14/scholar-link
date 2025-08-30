@@ -10,27 +10,18 @@ import {
   user as UserTable,
   student as StudentTable,
 } from "@/server/db/schema/auth";
-import type { SectionType } from "@/constants/users/sections";
+import { getCoordinatorInfo } from "../query";
 
 export const getAllDocumentsToReviewBySection = async ({
   userId,
 }: {
   userId: string;
 }) => {
+  const { coordinatorSections, coordinatorDepartment, coordinatorCourse } =
+    await getCoordinatorInfo({ userId });
+
   return await db
     .transaction(async (tx) => {
-      const [coordinator] = await tx
-        .select({
-          section: UserTable.section,
-          department: UserTable.department,
-        })
-        .from(UserTable)
-        .where(eq(UserTable.id, userId))
-        .limit(1);
-
-      const coordinatorSections: SectionType[] = coordinator?.section ?? [];
-      const coordinatorDeparment = coordinator?.department;
-
       const documents = await tx
         .select({
           id: InternDocumentsTable.documentId,
@@ -42,7 +33,7 @@ export const getAllDocumentsToReviewBySection = async ({
           name: UserTable.name,
           profile: UserTable.profile,
           section: UserTable.section,
-          course: StudentTable.course,
+          course: UserTable.course,
           companyName: CompanyTable.name,
         })
         .from(InternDocumentsTable)
@@ -51,7 +42,8 @@ export const getAllDocumentsToReviewBySection = async ({
         .innerJoin(InternshipTable, eq(UserTable.id, InternshipTable.userId))
         .where(
           and(
-            eq(UserTable.department, coordinatorDeparment!),
+            eq(UserTable.department, coordinatorDepartment!),
+            eq(UserTable.course, coordinatorCourse!),
             sql`EXISTS (
                         SELECT 1
                         FROM json_each(${UserTable.section})

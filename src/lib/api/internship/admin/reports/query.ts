@@ -23,7 +23,7 @@ export const getInternshipReports = async () => {
         section: UserTable.section,
         department: UserTable.department,
 
-        course: StudenTable.course,
+        course: UserTable.course,
         studentNo: StudenTable.studentNo,
 
         duration: InternshipTable.duration,
@@ -53,6 +53,7 @@ export const getInternshipReports = async () => {
       .select({
         coordinatorName: UserTable.name,
         section: UserTable.section,
+        course: UserTable.course,
         department: UserTable.department,
       })
       .from(UserTable)
@@ -64,6 +65,7 @@ export const getInternshipReports = async () => {
       const coordinator = coordinators.find(
         (c) =>
           c.department === intern.department &&
+          c.course === intern.course &&
           c.section?.some((s) => intern.section?.includes(s)), // section overlap
       );
 

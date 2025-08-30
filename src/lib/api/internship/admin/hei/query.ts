@@ -19,7 +19,7 @@ export const getAdminSections = async (): Promise<AdminSectionData[]> => {
     const response = await tx
       .select({
         section: UserTable.section,
-        course: StudentTable.course,
+        course: UserTable.course,
         department: max(UserTable.department),
         studentCount: countDistinct(InternshipTable.userId),
         totalProgressHours: sum(ProgressTable.hours),
@@ -30,7 +30,7 @@ export const getAdminSections = async (): Promise<AdminSectionData[]> => {
               'profile', ${UserTable.profile},
               'email', ${UserTable.email},
               'section', ${UserTable.section},
-              'course', ${StudentTable.course},
+              'course', ${UserTable.course},
               'status', ${InternshipTable.status},
               'companyName', ${CompanyTable.name},
               'companyAddress', ${CompanyTable.address},
@@ -57,7 +57,7 @@ export const getAdminSections = async (): Promise<AdminSectionData[]> => {
         eq(ProgressTable.internshipId, InternshipTable.internshipId),
       )
       .where(isNotNull(InternshipTable.userId))
-      .groupBy(UserTable.section, StudentTable.course);
+      .groupBy(UserTable.section, UserTable.course);
 
     return response.map((row) => ({
       ...row,

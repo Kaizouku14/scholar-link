@@ -18,6 +18,7 @@ export const user = createTable("user", {
   address: text("address"),
   dateOfBirth: integer("date_of_birth", { mode: "timestamp" }),
   gender: text("gender", { enum: GENDERS }),
+  course: text("course", { enum: COURSES }),
   department: text("department", { enum: DEPARTMENTS }),
   section: text("section", { mode: "json" })
     .$type<SectionType[]>()
@@ -38,7 +39,6 @@ export const student = createTable("student", {
     .primaryKey()
     .references(() => user.id, { onDelete: "cascade" }),
   studentNo: text("student_no").unique(),
-  course: text("course", { enum: COURSES }),
   yearLevel: text("year_level", { enum: YEAR_LEVEL }),
   onboarded: integer("onboarded", { mode: "boolean" }).default(false),
 });

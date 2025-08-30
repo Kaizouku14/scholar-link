@@ -98,6 +98,9 @@ export const insertInternshipsXLSX = async ({
           email: row.EMAIL,
           contact: row["CONTACT NO."],
           gender: row.SEX as GenderType,
+          course: row[
+            "FULL TITLE OF THE PROGRAM ENROLLED IN (DO NOT ABBREVIATE)"
+          ].replace(/\s+/g, " ") as courseType,
           department: department as departmentType,
           section: [row.SECTION as SectionType],
           role: ROLE.INTERNSHIP_STUDENT,
@@ -106,9 +109,6 @@ export const insertInternshipsXLSX = async ({
         students.push({
           id: userId,
           studentNo: row["STUDENT NO."],
-          course: row[
-            "FULL TITLE OF THE PROGRAM ENROLLED IN (DO NOT ABBREVIATE)"
-          ].replace(/\s+/g, " ") as courseType,
           yearLevel: "4th",
         });
 
