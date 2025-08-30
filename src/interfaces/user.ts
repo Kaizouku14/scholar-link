@@ -3,7 +3,6 @@ import type { departmentType } from "@/constants/users/departments";
 import type { GenderType } from "@/constants/users/genders";
 import type { roleType } from "@/constants/users/roles";
 import type { SectionType } from "@/constants/users/sections";
-import type { YearLevelType } from "@/constants/users/year-level";
 
 export interface UserAccount {
   name: string;
@@ -15,9 +14,8 @@ export interface UserAccount {
   address: string;
   dateOfBirth: Date;
   gender: GenderType;
+  course?: courseType;
   department: departmentType;
   role: roleType;
   studentNo?: string;
-  course?: courseType;
-  yearLevel?: YearLevelType;
 }

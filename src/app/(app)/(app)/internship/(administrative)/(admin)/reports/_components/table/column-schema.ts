@@ -20,6 +20,9 @@ export const reportsSchema = z.object({
   supervisorName: z.string().nullish(),
   supervisorEmail: z.string().nullish(),
   supervisorContactNo: z.string().nullish(),
+
+  coordinatorName: z.string().nullish(),
+  coordinatorCourse: z.string().nullish(),
 });
 
 export type ReportSchema = z.infer<typeof reportsSchema>;

@@ -5,7 +5,6 @@ import {
   insertStudentInfo,
   insertStudentProfile,
 } from "@/lib/api/user/mutation";
-import { COURSES } from "@/constants/users/courses";
 import { GENDERS } from "@/constants/users/genders";
 import { YEAR_LEVEL } from "@/constants/users/year-level";
 
@@ -14,7 +13,6 @@ export const userRouter = createTRPCRouter({
     .input(
       z.object({
         id: z.string(),
-        course: z.enum(COURSES),
       }),
     )
     .mutation(async ({ input }) => {

@@ -72,6 +72,7 @@ const SignUpForm = () => {
       const { data, error } = await authClient.signUp.email({
         name: formatText(fullName),
         section,
+        course,
         department,
         email,
         password,
@@ -83,7 +84,6 @@ const SignUpForm = () => {
       } else {
         await createStudentInfo({
           id: data.user.id,
-          course,
         });
 
         toast.success(

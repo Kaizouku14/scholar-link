@@ -81,6 +81,7 @@ export const createUserAccount = async ({ data }: { data: UserAccount }) => {
         address: data.address,
         dateOfBirth: data.dateOfBirth,
         gender: data.gender,
+        course: data.course!,
         department: data.department,
         role: data.role,
       })
@@ -97,8 +98,7 @@ export const createUserAccount = async ({ data }: { data: UserAccount }) => {
         .values({
           id: generatedID,
           studentNo: data.studentNo!,
-          course: data.course!,
-          yearLevel: data.yearLevel!,
+          yearLevel: "4th",
           onboarded: true,
         })
         .execute();

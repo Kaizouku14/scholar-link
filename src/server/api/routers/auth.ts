@@ -13,7 +13,6 @@ import { DEPARTMENTS } from "@/constants/users/departments";
 import { GENDERS } from "@/constants/users/genders";
 import { ROLES } from "@/constants/users/roles";
 import { SECTIONS } from "@/constants/users/sections";
-import { YEAR_LEVEL } from "@/constants/users/year-level";
 
 export const authRouter = createTRPCRouter({
   isEmailAuthorized: publicProcedure
@@ -54,10 +53,9 @@ export const authRouter = createTRPCRouter({
         gender: z.enum(GENDERS),
         department: z.enum(DEPARTMENTS),
         role: z.enum(ROLES),
-        studentNo: z.string().optional(),
         course: z.enum(COURSES).optional(),
+        studentNo: z.string().optional(),
         section: z.array(z.enum(SECTIONS)),
-        yearLevel: z.enum(YEAR_LEVEL).optional(),
       }),
     )
     .mutation(async ({ input }) => {

@@ -22,12 +22,11 @@ import {
   FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { COURSES } from "@/constants/users/courses";
+import { COURSES, type courseType } from "@/constants/users/courses";
 import { DEPARTMENTS } from "@/constants/users/departments";
 import { GENDERS } from "@/constants/users/genders";
 import { ROLE, ROLES } from "@/constants/users/roles";
 import { SECTIONS } from "@/constants/users/sections";
-import { YEAR_LEVEL } from "@/constants/users/year-level";
 import { useMemo, useState } from "react";
 import { CalendarIcon, ChevronsUpDown } from "lucide-react";
 import {
@@ -51,6 +50,8 @@ const CreateAccountForm = () => {
   const [profilePreview, setProfilePreview] = useState<string>("");
   const { data: user } = authClient.useSession();
   const userRole = user?.user.role;
+  const course = user?.user.course as courseType;
+  const sections = user?.user.section;
 
   const defaultValues = useMemo(
     () => ({
@@ -66,9 +67,10 @@ const CreateAccountForm = () => {
           ? ROLE.INTERNSHIP_ADMIN
           : ROLE.INTERNSHIP_STUDENT,
       studentNo: "",
-      section: [],
+      section: [sections],
+      course: course,
     }),
-    [userRole],
+    [userRole, course, sections],
   );
 
   const form = useForm<Accounts>({
@@ -79,7 +81,6 @@ const CreateAccountForm = () => {
   const watchedRole = form.watch("role");
   const isStudent = watchedRole === ROLE.INTERNSHIP_STUDENT;
   const isCoordinator = watchedRole === ROLE.INTERNSHIP_COORDINATOR;
-  const isAdmin = watchedRole === ROLE.INTERNSHIP_ADMIN;
 
   const handleProfilePictureChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -384,7 +385,7 @@ const CreateAccountForm = () => {
               </div>
 
               <div className="mt-4 grid gap-4 md:grid-cols-2">
-                {isAdmin && (
+                {userRole === ROLE.INTERNSHIP_ADMIN && (
                   <FormField
                     control={form.control}
                     name="role"
@@ -540,100 +541,73 @@ const CreateAccountForm = () => {
                     )}
                   />
 
-                  <FormField
-                    control={form.control}
-                    name="course"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Course *</FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                        >
-                          <FormControl>
-                            <SelectTrigger className="w-full">
-                              <SelectValue placeholder="Select course" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {COURSES.map((course) => (
-                              <SelectItem key={course} value={course}>
-                                {course
-                                  .replace(/_/g, " ")
-                                  .replace(/\b\w/g, (l) => l.toUpperCase())}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FormDescription>
-                          Select the degree program of the student.
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                  {userRole === ROLE.INTERNSHIP_ADMIN && (
+                    <>
+                      <FormField
+                        control={form.control}
+                        name="course"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Course *</FormLabel>
+                            <Select
+                              onValueChange={field.onChange}
+                              defaultValue={field.value}
+                            >
+                              <FormControl>
+                                <SelectTrigger className="w-full">
+                                  <SelectValue placeholder="Select course" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {COURSES.map((course) => (
+                                  <SelectItem key={course} value={course}>
+                                    {course
+                                      .replace(/_/g, " ")
+                                      .replace(/\b\w/g, (l) => l.toUpperCase())}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <FormDescription>
+                              Select the degree program of the student.
+                            </FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
-                  <FormField
-                    control={form.control}
-                    name="section"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Section *</FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value[0]}
-                        >
-                          <FormControl>
-                            <SelectTrigger className="w-full">
-                              <SelectValue placeholder="Select section" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {SECTIONS.map((section) => (
-                              <SelectItem key={section} value={section}>
-                                {section}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FormDescription>
-                          Assign the student’s class section.
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="yearLevel"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Year Level *</FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                        >
-                          <FormControl>
-                            <SelectTrigger className="w-full">
-                              <SelectValue placeholder="Select year level" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {YEAR_LEVEL.map((year) => (
-                              <SelectItem key={year} value={year}>
-                                {year} Year
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FormDescription>
-                          Indicate the student’s current year level.
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                      <FormField
+                        control={form.control}
+                        name="section"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Section *</FormLabel>
+                            <Select
+                              onValueChange={field.onChange}
+                              defaultValue={field.value[0]}
+                            >
+                              <FormControl>
+                                <SelectTrigger className="w-full">
+                                  <SelectValue placeholder="Select section" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {SECTIONS.map((section) => (
+                                  <SelectItem key={section} value={section}>
+                                    {section}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <FormDescription>
+                              Assign the student’s class section.
+                            </FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </>
+                  )}
                 </div>
               </section>
             )}

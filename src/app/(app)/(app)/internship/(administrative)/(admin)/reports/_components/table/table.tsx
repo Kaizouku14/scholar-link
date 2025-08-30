@@ -24,7 +24,7 @@ const ReportsTable = () => {
       {!isLoading && data ? (
         <DataTable
           columns={ReportsColumn}
-          data={data}
+          data={data.interns}
           filteredTitle={"studentName"}
           columnVisibility={{ course: false }}
           onExport={handleExport}

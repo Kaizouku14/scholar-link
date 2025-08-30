@@ -20,7 +20,7 @@ export const getCoordinatorInfo = async ({ userId }: { userId: string }) => {
     });
 
   const coordinatorSections = coordinator?.section ?? [];
-  const coordinatorDepartment = coordinator!.department;
+  const coordinatorDepartment = coordinator.department;
   const coordinatorCourse = coordinator?.course;
 
   return { coordinatorSections, coordinatorDepartment, coordinatorCourse };

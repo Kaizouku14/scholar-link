@@ -29,7 +29,10 @@ export function CSVImport({ onImportCompleteAction }: CSVImportProps) {
 
       const response = await importMutation.mutateAsync(formData);
 
-      toast.success("File imported successfully! " + response.message);
+      toast.success("File imported successfully! " + response.message, {
+        duration: 5000,
+        className: "text-sm",
+      });
       setFile(null);
       onImportCompleteAction();
     } catch (error) {

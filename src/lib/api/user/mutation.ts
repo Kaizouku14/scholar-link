@@ -1,4 +1,3 @@
-import type { courseType } from "@/constants/users/courses";
 import type { StudentProfileType } from "@/interfaces/student-profile";
 import { db, eq } from "@/server/db";
 import {
@@ -28,13 +27,7 @@ export const checkStudentNoAvailability = async ({
   }
 };
 
-export const insertStudentInfo = async ({
-  id,
-  course,
-}: {
-  id: string;
-  course: courseType;
-}) => {
+export const insertStudentInfo = async ({ id }: { id: string }) => {
   try {
     const [createdUser] = await db
       .select()
@@ -51,7 +44,6 @@ export const insertStudentInfo = async ({
 
     await db.insert(studentTable).values({
       id: createdUser.id,
-      course,
     });
   } catch {
     throw new TRPCError({

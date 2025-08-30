@@ -72,6 +72,7 @@ export const getInternshipReports = async () => {
       return {
         ...intern,
         coordinatorName: coordinator?.coordinatorName ?? "N/A",
+        coordinatorCourse: coordinator?.course ?? "N/A",
         coordinatorSections: coordinator?.section ?? [],
         coordinatorDepartment: coordinator?.department ?? "N/A",
       };

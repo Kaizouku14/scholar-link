@@ -3,7 +3,6 @@ import { DEPARTMENTS } from "@/constants/users/departments";
 import { GENDERS } from "@/constants/users/genders";
 import { ROLE } from "@/constants/users/roles";
 import { SECTIONS } from "@/constants/users/sections";
-import { YEAR_LEVEL } from "@/constants/users/year-level";
 import z from "zod";
 
 export const accountFormSchema = z
@@ -35,7 +34,6 @@ export const accountFormSchema = z
     ),
     studentNo: z.string().optional(),
     course: z.enum(COURSES).optional(),
-    yearLevel: z.enum(YEAR_LEVEL).optional(),
   })
   .refine(
     (data) => {
