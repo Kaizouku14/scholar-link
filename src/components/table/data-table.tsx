@@ -25,6 +25,7 @@ import { useState } from "react";
 import { DataTableToolbar } from "./table-toolbar";
 import { DataTablePagination } from "./table-pagination";
 import { ActionDialog } from "../dropdown/actions-dialog";
+import { cn } from "@/lib/utils";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -41,6 +42,7 @@ interface DataTableProps<TData, TValue> {
   refetch?: () => Promise<QueryObserverResult<TData[] | undefined, unknown>>;
   onImport?: () => void;
   viewOptions?: boolean;
+  className?: string;
 }
 
 export function DataTable<TData, TValue>({
@@ -52,6 +54,7 @@ export function DataTable<TData, TValue>({
   refetch,
   onImport,
   viewOptions = true,
+  className = "container mx-auto",
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
 
@@ -90,7 +93,7 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div>
+    <div className={cn(className)}>
       <DataTableToolbar
         table={table}
         filteredTitle={filteredTitle}
@@ -98,8 +101,8 @@ export function DataTable<TData, TValue>({
         onImport={onImport}
         viewOptions={viewOptions}
       />
-      <div className="border-border w-auto max-w-[90rem] rounded-xl border">
-        <Table className="">
+      <div>
+        <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>

@@ -15,6 +15,7 @@ export const getInternshipReports = async () => {
   try {
     const interns = await db
       .select({
+        profile: UserTable.profile,
         studentName: UserTable.name,
         studentEmail: UserTable.email,
         contactNo: UserTable.contact,
@@ -45,7 +46,7 @@ export const getInternshipReports = async () => {
         SupervisorTable,
         eq(InternshipTable.supervisorId, SupervisorTable.supervisorId),
       )
-      .where(eq(InternshipTable.status, "on-going"))
+      .where(eq(InternshipTable.status, "pending"))
       .execute();
 
     const coordinators = await db
@@ -60,6 +61,7 @@ export const getInternshipReports = async () => {
       .where(eq(UserTable.role, ROLE.INTERNSHIP_COORDINATOR))
       .execute();
 
+    //TODO: Check if need separated by course too
     const report = interns.map((intern) => {
       const coordinator = coordinators.find(
         (c) =>

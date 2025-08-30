@@ -8,3 +8,26 @@ export const DEPARMENTS_LABELS = {
   HTM: "Hotel and Tourism Management",
   BA: "Business Administration",
 };
+
+export const DEPARMENT_FILTER = [
+  {
+    label: "ITDS",
+    value: "ITDS",
+  },
+  {
+    label: "GATE",
+    value: "GATE",
+  },
+  {
+    label: "BINDTECH",
+    value: "BINDTECH",
+  },
+  {
+    label: "HTM",
+    value: "HTM",
+  },
+  {
+    label: "BA",
+    value: "BA",
+  },
+];

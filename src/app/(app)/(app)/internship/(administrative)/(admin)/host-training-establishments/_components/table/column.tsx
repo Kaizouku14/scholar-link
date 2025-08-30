@@ -21,7 +21,12 @@ export const CompaniesColumns: ColumnDef<CompanySchema>[] = [
     cell: ({ row }) => (
       <div className="flex items-center space-x-2">
         <Building2 className="text-muted-foreground h-4 w-4" />
-        <div className="font-medium">{row.original.companyName ?? "N/A"}</div>
+        <div
+          className="max-w-[10rem] truncate font-medium"
+          title={row.original.companyName ?? "N/A"}
+        >
+          {row.original.companyName ?? "N/A"}
+        </div>
       </div>
     ),
   },
