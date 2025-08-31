@@ -9,7 +9,7 @@ export interface ScholarshipFormData {
   type: ScholarshipType;
   submissionType: submissionType;
   image?: string;
-  deadline: number;
+  deadline: Date;
 }
 export interface FormFieldProps {
   id: string;

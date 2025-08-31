@@ -19,7 +19,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import EmptyState from "./helper/no-selected";
 import { DeleteMail } from "./helper/delete-dialog";
-import type { EmailDetailProps } from "@/constants/email/email";
+import type { EmailDetailProps } from "@/interfaces/email/email";
 
 const EmailDetail = ({
   thread,

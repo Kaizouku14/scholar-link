@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import type { Email } from "@/types/email";
 import { formatDistanceToNow, differenceInSeconds } from "date-fns";
 import { RotateCw } from "lucide-react";
-import type { EmailListProps } from "@/constants/email/email-list";
+import type { EmailListProps } from "@/interfaces/email/email";
 
 const EmailList = ({
   threads,
