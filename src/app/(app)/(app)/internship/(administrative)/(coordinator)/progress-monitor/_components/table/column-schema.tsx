@@ -12,8 +12,14 @@ export const columnSchema = z.object({
   companyName: z.string().nullish(),
 
   status: z.enum(INTERNSHIP_STATUS).nullish(),
-  progress: z.string().nullish(),
   totalRequiredHours: z.number().nullish(),
+  logs: z.array(
+    z.object({
+      date: z.number(),
+      hours: z.number(),
+      activity: z.string(),
+    }),
+  ),
 });
 
 export type ColumnSchema = z.infer<typeof columnSchema>;

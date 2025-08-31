@@ -10,6 +10,7 @@ import {
 } from "@/server/db/schema/internship";
 import { TRPCError } from "@trpc/server";
 import { getCoordinatorInfo } from "../query";
+import type { ProgressLogs } from "@/interfaces/internship/progress";
 
 export const getStudentProgressBySection = async ({
   userId,
@@ -29,11 +30,17 @@ export const getStudentProgressBySection = async ({
           section: UserTable.section,
           course: UserTable.course,
           companyName: CompanyTable.name,
-          progress: sql<string>`COALESCE(SUM(${ProgressTable.hours}), 0)`.as(
-            "progress",
-          ),
           totalRequiredHours: InternshipTable.totalOfHoursRequired,
           status: InternshipTable.status,
+          logs: sql<string>`
+                json_group_array(
+                    json_object(
+                    'date', ${ProgressTable.logDate},
+                    'hours', ${ProgressTable.hours},
+                    'activity', ${ProgressTable.description}
+                    )
+                )
+                `.as("logs"),
         })
         .from(InternshipTable)
         .leftJoin(
@@ -57,21 +64,16 @@ export const getStudentProgressBySection = async ({
             )`,
           ),
         )
-        .groupBy(
-          InternshipTable.internshipId,
-          UserTable.name,
-          UserTable.profile,
-          UserTable.section,
-          UserTable.course,
-          StudentTable.yearLevel,
-          CompanyTable.name,
-          InternshipTable.totalOfHoursRequired,
-          InternshipTable.status,
-        )
+        .groupBy(InternshipTable.internshipId)
         .orderBy(desc(ProgressTable.hours))
         .execute();
 
-      return response;
+      const logs = response.map((r) => ({
+        ...r,
+        logs: JSON.parse(r.logs) as ProgressLogs[],
+      }));
+
+      return logs;
     })
     .catch((error) => {
       throw new TRPCError({

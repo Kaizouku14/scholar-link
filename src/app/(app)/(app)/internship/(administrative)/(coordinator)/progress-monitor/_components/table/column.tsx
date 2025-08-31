@@ -55,7 +55,7 @@ export const ProgressMonitoringColumns: ColumnDef<ColumnSchema>[] = [
     accessorKey: "companyName",
     header: "Company",
     cell: ({ row }) => (
-      <div className="w-20 truncate text-sm" title={row.original.companyName!}>
+      <div className="text-sm" title={row.original.companyName!}>
         {row.original.companyName}
       </div>
     ),
@@ -64,10 +64,12 @@ export const ProgressMonitoringColumns: ColumnDef<ColumnSchema>[] = [
     accessorKey: "hours",
     header: "Hours",
     cell: ({ row }) => {
-      const { progress, totalRequiredHours } = row.original;
+      const { logs, totalRequiredHours } = row.original;
+      const totalHours = logs.reduce((acc, log) => acc + log.hours, 0);
+
       return (
         <div className="flex items-center text-sm">
-          <span>{progress}</span>/
+          <span>{totalHours}</span>/
           <span className="text-muted-foreground">{totalRequiredHours}hrs</span>
         </div>
       );
@@ -101,8 +103,9 @@ export const ProgressMonitoringColumns: ColumnDef<ColumnSchema>[] = [
     accessorKey: "progress",
     header: "Progress",
     cell: ({ row }) => {
-      const { progress, totalRequiredHours } = row.original;
-      const progressNum = Number(progress) || 0;
+      const { logs, totalRequiredHours } = row.original;
+      const totalHours = logs.reduce((acc, log) => acc + log.hours, 0);
+      const progressNum = Number(totalHours) || 0;
       const totalHoursNum = Number(totalRequiredHours) || 0;
       const percentage =
         totalHoursNum > 0
@@ -119,7 +122,7 @@ export const ProgressMonitoringColumns: ColumnDef<ColumnSchema>[] = [
   },
   {
     id: "Actions",
-    header: "Actions",
+    header: "",
     cell: ({ row }) => {
       return <DataTableRowActions row={row} />;
     },
