@@ -56,12 +56,13 @@ const EmailComboBox = ({ value, onChange }: EmailListProps) => {
                 data.map((item) => (
                   <CommandItem
                     key={item.id}
-                    value={item.email}
+                    value={item.id}
                     onSelect={() => {
                       onChange(item.id);
                       setOpen(false);
                     }}
-                    className="p-2"
+                    onMouseEnter={() => console.log("FUCK YOU NIGGA")}
+                    className="z-100 p-2"
                   >
                     {item.email}
                     <Check

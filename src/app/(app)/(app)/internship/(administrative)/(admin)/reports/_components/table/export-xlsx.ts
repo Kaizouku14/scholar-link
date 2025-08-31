@@ -11,6 +11,12 @@ export const exportByCoordinator = async (rows: ReportSchema[]) => {
   }
 
   const groupedCoordinators = groupByCoordinator(rows);
+
+  if (!(groupByCoordinator.length > 0)) {
+    toast.error("No data to export.");
+    return;
+  }
+
   for (const [coordinatorName, coordinatorRows] of Object.entries(
     groupedCoordinators,
   )) {

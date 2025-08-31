@@ -89,7 +89,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
           <DialogHeader>
             <DialogTitle>{name}&apos;s Progress Logs</DialogTitle>
             <DialogDescription>
-              View all progress and activities
+              View logs and activities by clicking the days.
             </DialogDescription>
           </DialogHeader>
 
@@ -139,11 +139,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
                         </td>
                       </PopoverTrigger>
 
-                      <PopoverContent
-                        side="right"
-                        align="center"
-                        className="fixed top-1/2 w-70 -translate-y-65 border-0 p-0 md:left-[calc(100%+23rem)] md:w-80"
-                      >
+                      <PopoverContent className="border-0 p-0 md:w-80">
                         <div className="bg-card border-border overflow-hidden rounded-lg border">
                           <div className="from-primary to-primary/80 text-primary-foreground bg-gradient-to-r p-4">
                             <div className="flex items-center gap-2">

@@ -17,13 +17,10 @@ export const getInternshipReports = async () => {
       .select({
         profile: UserTable.profile,
         studentName: UserTable.name,
-        studentEmail: UserTable.email,
-        contactNo: UserTable.contact,
         sex: UserTable.gender,
         section: UserTable.section,
         department: UserTable.department,
         course: UserTable.course,
-        studentNo: StudenTable.studentNo,
         duration: InternshipTable.duration,
         company: CompanyTable.name,
         companyAddress: CompanyTable.address,
@@ -42,7 +39,7 @@ export const getInternshipReports = async () => {
         SupervisorTable,
         eq(InternshipTable.supervisorId, SupervisorTable.supervisorId),
       )
-      .where(eq(InternshipTable.status, "completed"))
+      .where(eq(InternshipTable.status, "pending"))
       .execute();
 
     const coordinators = await db
@@ -56,24 +53,29 @@ export const getInternshipReports = async () => {
       .where(eq(UserTable.role, ROLE.INTERNSHIP_COORDINATOR))
       .execute();
 
-    const report = interns.map((intern) => {
-      const coordinator = coordinators.find(
-        (c) =>
-          c.department === intern.department &&
-          c.course === intern.course &&
-          intern.section?.some((studentSection) =>
-            c.section?.includes(studentSection),
-          ),
-      );
+    const report = interns
+      .map((intern) => {
+        const coordinator = coordinators.find(
+          (c) =>
+            c.department === intern.department &&
+            c.course === intern.course &&
+            c.section?.some((studentSection) =>
+              intern.section?.includes(studentSection),
+            ),
+        );
 
-      return {
-        ...intern,
-        coordinatorName: coordinator?.coordinatorName,
-        coordinatorCourse: coordinator?.course,
-        coordinatorSections: coordinator?.section,
-        coordinatorDepartment: coordinator?.department,
-      };
-    });
+        // Only return if coordinator is found
+        if (!coordinator) return null;
+
+        return {
+          ...intern,
+          coordinatorName: coordinator.coordinatorName,
+          coordinatorCourse: coordinator.course,
+          coordinatorSections: coordinator.section,
+          coordinatorDepartment: coordinator.department,
+        };
+      })
+      .filter((item) => item !== null);
 
     return report;
   } catch (error) {

@@ -14,7 +14,8 @@ const ReportsTable = () => {
     api.internshipAdmin.getInternshipReports.useQuery();
 
   const handleExport = async (row: Table<ReportSchema>) => {
-    const rows = row.getRowModel().rows.map((r) => r.original);
+    const rows = row.getFilteredRowModel().rows.map((r) => r.original);
+
     await exportByCoordinator(rows);
   };
 

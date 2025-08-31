@@ -90,6 +90,7 @@ export const insertStudentProfile = async ({
       const [updatedStudent] = await tx
         .update(studentTable)
         .set({
+          studentNo: data.studentNo,
           yearLevel: data.yearLevel,
           onboarded: true,
         })

@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { formatDistanceToNow, differenceInSeconds, format } from "date-fns";
 import { useState } from "react";
 import ReplyForm from "./form/reply-form";
-import type { Email } from "@/types/email";
 import {
   Card,
   CardContent,

@@ -7,13 +7,10 @@ import z from "zod";
 export const reportsSchema = z.object({
   profile: z.string().nullish(),
   studentName: z.string(),
-  studentEmail: z.string(),
-  contactNo: z.string().nullish(),
   sex: z.enum(GENDERS).nullish(),
   section: z.array(z.enum(SECTIONS)).nullish(),
   department: z.enum(DEPARTMENTS).nullish(),
   course: z.enum(COURSES).nullish(),
-  studentNo: z.string().nullish(),
   duration: z.string().nullish(),
   company: z.string().nullish(),
   companyAddress: z.string().nullish(),

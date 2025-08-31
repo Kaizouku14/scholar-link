@@ -8,13 +8,6 @@ import { Mail, MapPin, Phone } from "lucide-react";
 
 export const ReportsColumn: ColumnDef<ReportSchema>[] = [
   {
-    accessorKey: "studentNo",
-    header: "Student No.",
-    cell: ({ row }) => (
-      <div className="font-mono text-sm">{row.getValue("studentNo")}</div>
-    ),
-  },
-  {
     accessorKey: "studentName",
     header: "Student",
     cell: ({ row }) => {
@@ -47,54 +40,9 @@ export const ReportsColumn: ColumnDef<ReportSchema>[] = [
     enableHiding: true,
   },
   {
-    accessorKey: "studentEmail",
-    header: "Email",
-    cell: ({ row }) => (
-      <div className="flex items-center space-x-2">
-        <Mail className="text-muted-foreground h-4 w-4" />
-        {row.getValue("studentEmail") ? (
-          <a
-            href={`mailto:${row.original.studentEmail}`}
-            className="w-40 truncate text-sm text-blue-600 hover:text-blue-800 hover:underline"
-          >
-            {row.original.studentEmail}
-          </a>
-        ) : (
-          <span className="text-muted-foreground text-sm">No email</span>
-        )}
-      </div>
-    ),
-  },
-  {
-    accessorKey: "contactNo",
-    header: "Contact",
-    cell: ({ row }) => (
-      <div className="flex items-center space-x-2">
-        <Phone className="text-muted-foreground h-4 w-4" />
-        {row.getValue("contactNo") ? (
-          <a
-            href={`tel:${row.original.contactNo}`}
-            className="font-mono text-sm text-blue-600 hover:text-blue-800 hover:underline"
-          >
-            {row.original.contactNo}
-          </a>
-        ) : (
-          <span className="text-muted-foreground text-sm">No phone</span>
-        )}
-      </div>
-    ),
-  },
-  {
     accessorKey: "sex",
     header: "Sex",
     cell: ({ row }) => <div className="text-sm">{row.getValue("sex")}</div>,
-  },
-  {
-    accessorKey: "department",
-    header: "Department",
-    cell: ({ row }) => (
-      <div className="text-sm font-medium">{row.getValue("department")}</div>
-    ),
   },
   {
     accessorKey: "duration",

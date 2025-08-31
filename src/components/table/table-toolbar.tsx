@@ -89,7 +89,7 @@ export const DataTableToolbar = <TData,>({
             onClick={() => onExport(table)}
           >
             <FileDown className="size-4" />
-            Export All
+            Export
           </Button>
         )}
         {viewOptions && <DataTableViewOptions table={table} />}
