@@ -205,7 +205,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
           />
         </DialogContent>
       </Dialog>
-      {!logForDay && (
+      {!logForDay && logs.length > 1 && (
         <AlertDialog>
           <Tooltip>
             <TooltipTrigger asChild>

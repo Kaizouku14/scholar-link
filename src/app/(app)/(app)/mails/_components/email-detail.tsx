@@ -20,17 +20,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import EmptyState from "./helper/no-selected";
 import { DeleteMail } from "./helper/delete-dialog";
-
-interface EmailDetailProps {
-  thread?: Email[];
-  setSelectedThread: (thread: Email[]) => void;
-  currentUserId?: string;
-  isfetching?: boolean;
-  refresh: () => void;
-  showBackButton?: boolean;
-  onBack?: () => void;
-  refetch: () => Promise<unknown>;
-}
+import type { EmailDetailProps } from "@/constants/email/email";
 
 const EmailDetail = ({
   thread,

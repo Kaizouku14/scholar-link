@@ -13,6 +13,7 @@ import {
   getCoordinatorSections,
 } from "@/lib/api/internship/coordinator/hei/query";
 import {
+  approvedDocument,
   postDocument,
   rejectDocument,
 } from "@/lib/api/internship/coordinator/document-review/mutation";
@@ -31,6 +32,7 @@ import {
   insertInternshipsXLSX,
 } from "@/lib/api/internship/coordinator/hei/mutation";
 import { markAsExcused } from "@/lib/api/internship/coordinator/progress-monitoring/mutation";
+import type { courseType } from "@/constants/users/courses";
 
 export const internshipCoordinatorRouter = createTRPCRouter({
   /******************************************
@@ -74,6 +76,15 @@ export const internshipCoordinatorRouter = createTRPCRouter({
     .mutation(async ({ input }) => {
       await deleteDocuments(input.documentType);
     }),
+  approvedInternDocument: protectedRoute
+    .input(
+      z.object({
+        documentId: z.string(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      return await approvedDocument(input);
+    }),
   rejectInternDocument: protectedRoute
     .input(
       z.object({
@@ -96,7 +107,12 @@ export const internshipCoordinatorRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const department = ctx.session!.user.department;
-      return await insertInternshipsXLSX({ file: input.file, department });
+      const course = ctx.session!.user.course as courseType;
+      return await insertInternshipsXLSX({
+        file: input.file,
+        department,
+        course,
+      });
     }),
   cancelStudentInternship: protectedRoute
     .input(

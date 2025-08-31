@@ -67,7 +67,7 @@ export const EmailStep = () => {
         {isLoading ? (
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
         ) : (
-          "Send verification code"
+          "Send verification link"
         )}
       </Button>
 

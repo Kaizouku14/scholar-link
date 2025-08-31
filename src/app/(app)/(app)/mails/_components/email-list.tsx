@@ -6,15 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import type { Email } from "@/types/email";
 import { formatDistanceToNow, differenceInSeconds } from "date-fns";
 import { RotateCw } from "lucide-react";
-
-interface EmailListProps {
-  threads: Email[][];
-  selectedThread?: Email[];
-  onThreadSelect?: (thread: Email[]) => void;
-  currentUserId?: string;
-  isfetching?: boolean;
-  isRefreshing?: boolean;
-}
+import type { EmailListProps } from "@/constants/email/email-list";
 
 const EmailList = ({
   threads,

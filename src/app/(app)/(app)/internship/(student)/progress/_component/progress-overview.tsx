@@ -40,7 +40,9 @@ const ProgressOverview = () => {
         ? Math.min(100, Math.round((completed / required) * 100))
         : 0;
     const uniqueDays = new Set(
-      data?.progress.map((log) => new Date(log.dateLogs).toDateString()),
+      data?.progress
+        .filter((log) => log.hoursLog > 0)
+        .map((log) => new Date(log.dateLogs).toDateString()),
     );
 
     const daysCompleted = uniqueDays.size;

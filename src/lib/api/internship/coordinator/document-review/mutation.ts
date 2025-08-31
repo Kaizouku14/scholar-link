@@ -45,6 +45,25 @@ export const postDocument = async ({
     });
 };
 
+export const approvedDocument = async ({
+  documentId,
+}: {
+  documentId: string;
+}) => {
+  try {
+    await db
+      .update(InternDocumentsTable)
+      .set({ reviewStatus: "approved" })
+      .where(eq(InternDocumentsTable.documentId, documentId))
+      .execute();
+  } catch (error) {
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "Failed to approved document," + (error as Error).message,
+    });
+  }
+};
+
 export const rejectDocument = async ({
   documentId,
   userId,

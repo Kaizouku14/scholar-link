@@ -31,9 +31,11 @@ import type { courseType } from "@/constants/users/courses";
 export const insertInternshipsXLSX = async ({
   file,
   department,
+  course,
 }: {
   file: File;
   department: string;
+  course: courseType;
 }) => {
   if (!file) {
     throw new TRPCError({ code: "BAD_REQUEST", message: "No file uploaded" });
@@ -98,9 +100,7 @@ export const insertInternshipsXLSX = async ({
           email: row.EMAIL,
           contact: row["CONTACT NO."],
           gender: row.SEX as GenderType,
-          course: row[
-            "FULL TITLE OF THE PROGRAM ENROLLED IN (DO NOT ABBREVIATE)"
-          ].replace(/\s+/g, " ") as courseType,
+          course,
           department: department as departmentType,
           section: [row.SECTION as SectionType],
           role: ROLE.INTERNSHIP_STUDENT,

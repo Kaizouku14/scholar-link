@@ -32,7 +32,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
   const { documents } = row.original;
 
   const noOfCompleted = documents.filter(
-    (doc) => doc.reviewStatus === "completed",
+    (doc) => doc.reviewStatus === "approved",
   ).length;
 
   return (

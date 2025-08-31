@@ -45,43 +45,48 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="h-[80vh] sm:max-w-[500px]">
-        <DialogHeader>
+      <DialogContent className="sm:max-w-[500px]">
+        <DialogHeader className="mb-0 pb-0">
           <DialogTitle>Internship Details</DialogTitle>
           <DialogDescription>
             List of interns in this company.
           </DialogDescription>
         </DialogHeader>
-        <div className="relative mx-1 mb-2">
-          <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform" />
-          <Input
-            placeholder="Search interns..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10"
-          />
+        <div className="space-y-4">
+          <div className="relative mx-1 h-10">
+            <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform" />
+            <Input
+              placeholder="Search interns..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="h-10 pl-10"
+            />
+          </div>
+          <ScrollArea className="h-90 px-1">
+            {filteredInterns.length > 0 ? (
+              <div className="space-y-3 pr-2">
+                {filteredInterns.map((intern, index) => (
+                  <InternCard
+                    intern={{
+                      name: intern.name,
+                      email: intern.email,
+                      profile: intern.profile,
+                      status: intern.status,
+                    }}
+                    key={index}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="flex h-76 items-center justify-center py-6">
+                <p className="text-muted-foreground text-sm">
+                  No interns found.
+                </p>
+              </div>
+            )}
+          </ScrollArea>
         </div>
-        <ScrollArea className="h-70 px-1">
-          {filteredInterns.length > 0 ? (
-            <div className="space-y-3 pr-2">
-              {filteredInterns.map((intern, index) => (
-                <InternCard
-                  intern={{
-                    name: intern.name,
-                    email: intern.email,
-                    profile: intern.profile,
-                    status: intern.status,
-                  }}
-                  key={index}
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="flex h-76 items-center justify-center py-6">
-              <p className="text-muted-foreground text-sm">No interns found.</p>
-            </div>
-          )}
-        </ScrollArea>
+
         <DialogFooter>
           <DialogClose asChild>
             <Button variant="outline">Close</Button>

@@ -8,6 +8,7 @@ import { sendEmail } from "@/services/email";
 import { linkVerificationTemplate } from "@/services/verfityEmailTemplate";
 import { siteConfig } from "@/types/site.config";
 import { env } from "@/env";
+import { SECTIONS } from "@/constants/users/sections";
 
 export const auth = betterAuth({
   trustedOrigins: [env.NEXT_PUBLIC_BETTER_AUTH_URL],
@@ -49,7 +50,7 @@ export const auth = betterAuth({
   user: {
     additionalFields: {
       course: { type: "string", required: true },
-      section: { type: ["A", "B", "C", "D", "E"], required: true },
+      section: { type: "string", enum: SECTIONS, required: true },
       department: { type: "string", required: true },
       profile: { type: "string", required: false },
     },

@@ -60,7 +60,7 @@ export function DataTableRowActions({ row, table }: DataTableRowActionsProps) {
           disabled={isLoading}
         >
           <XCircle className="text-primary" />
-          <span>Revoked</span>
+          <span>Revoke</span>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
       </DropdownMenuContent>

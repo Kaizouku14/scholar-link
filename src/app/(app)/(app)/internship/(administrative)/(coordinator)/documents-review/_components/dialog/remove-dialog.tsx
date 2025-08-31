@@ -12,6 +12,11 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { api } from "@/trpc/react";
 import { AlertTriangle, Trash2 } from "lucide-react";
 import { useState, type FormEvent } from "react";
@@ -40,17 +45,29 @@ export const RemoveDocumentAlert = ({
 
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
-      <AlertDialogTrigger asChild>
-        <Button className="mt-7 cursor-pointer" variant="outline" size="icon">
-          <Trash2 className="text-primary h-4 w-4" />
-        </Button>
-      </AlertDialogTrigger>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <AlertDialogTrigger asChild>
+            <Button
+              className="mt-7 cursor-pointer"
+              variant="outline"
+              size="icon"
+            >
+              <Trash2 className="text-primary h-4 w-4" />
+            </Button>
+          </AlertDialogTrigger>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>Delete document</p>
+        </TooltipContent>
+      </Tooltip>
+
       <AlertDialogContent>
         <form onSubmit={handleDeleteDocument}>
           <AlertDialogHeader>
             <AlertDialogTitle className="text-primary flex items-center gap-2">
               <AlertTriangle />
-              Are you absolutely sure?
+              Delete Document?
             </AlertDialogTitle>
             <AlertDialogDescription>
               This action cannot be undone. This will permanently delete the

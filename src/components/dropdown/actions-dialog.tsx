@@ -12,6 +12,17 @@ import { api } from "@/trpc/react";
 import type { Table } from "@tanstack/react-table";
 import { CircleX, MoreHorizontal, Trash2 } from "lucide-react";
 import { toast } from "react-hot-toast";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface DataTableRowActionsProps<TData> {
   table: Table<TData>;
@@ -66,24 +77,69 @@ export function ActionDialog<TData>({
           <span className="sr-only">Open menu</span>
         </Button>
       </DropdownMenuTrigger>
+
       <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuItem
-          className="flex justify-between"
-          disabled={isCancelPending || isDeletePending}
-          onClick={handleCancelMutation}
-        >
-          <span>Cancel</span>
-          <CircleX />
-        </DropdownMenuItem>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <DropdownMenuItem
+              className="flex justify-between"
+              onSelect={(e) => e.preventDefault()}
+            >
+              <span>Cancel</span>
+              <CircleX />
+            </DropdownMenuItem>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Cancel selected internships?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. The selected internships will be
+                canceled but not deleted from the system.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Back</AlertDialogCancel>
+              <AlertDialogAction
+                disabled={isCancelPending}
+                onClick={handleCancelMutation}
+              >
+                {isCancelPending ? "Canceling..." : "Confirm"}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
         <DropdownMenuSeparator />
-        <DropdownMenuItem
-          className="flex justify-between"
-          disabled={isCancelPending || isDeletePending}
-          onClick={handleDeleteMutation}
-        >
-          <span>Delete</span>
-          <Trash2 />
-        </DropdownMenuItem>
+
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <DropdownMenuItem
+              className="flex justify-between"
+              onSelect={(e) => e.preventDefault()}
+            >
+              <span>Delete</span>
+              <Trash2 />
+            </DropdownMenuItem>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Delete selected internships?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action is permanent. The selected internships will be
+                permanently removed from the system.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Back</AlertDialogCancel>
+              <AlertDialogAction
+                disabled={isDeletePending}
+                onClick={handleDeleteMutation}
+              >
+                {isDeletePending ? "Deleting..." : "Confirm"}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </DropdownMenuContent>
     </DropdownMenu>
   );

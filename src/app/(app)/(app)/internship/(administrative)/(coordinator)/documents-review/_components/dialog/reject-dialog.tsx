@@ -22,10 +22,12 @@ export const RejectDocumentDialog = ({
   documentId,
   receiverId,
   documentType,
+  reviewStatus,
 }: {
   documentId: string;
   receiverId: string;
   documentType: string;
+  reviewStatus?: string | null;
 }) => {
   const [open, setOpen] = useState(false);
   const [reason, setReason] = useState<string>("");
@@ -33,6 +35,10 @@ export const RejectDocumentDialog = ({
 
   const { mutateAsync: RejectDocument, isPending } =
     api.internshipCoordinator.rejectInternDocument.useMutation();
+  const { refetch } =
+    api.internshipCoordinator.getAllDocumentsToReview.useQuery(undefined, {
+      enabled: false,
+    });
   const handleRejectDocument = async (event: FormEvent) => {
     event.preventDefault();
     try {
@@ -44,6 +50,7 @@ export const RejectDocumentDialog = ({
         reason,
       });
 
+      await refetch();
       toast.success("Document rejected successfully.");
       setReason("");
       setOpen(false);
@@ -58,6 +65,7 @@ export const RejectDocumentDialog = ({
         <Button
           variant="outline"
           className="text-primary hover:text-primary/70 flex items-center"
+          disabled={reviewStatus === "rejected"}
           onClick={() => setOpen(true)}
         >
           <CircleX className="h-4 w-4" />
@@ -91,7 +99,7 @@ export const RejectDocumentDialog = ({
           />
 
           <DialogFooter className="flex justify-end gap-2">
-            <DialogClose>
+            <DialogClose asChild>
               <Button variant="outline" type="button">
                 Cancel
               </Button>

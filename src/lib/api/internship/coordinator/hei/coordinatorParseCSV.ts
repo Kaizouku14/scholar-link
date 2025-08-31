@@ -13,7 +13,6 @@ export const parseInternshipXLSX = async (fileBuffer: ArrayBuffer) => {
     "CONTACT NO.",
     "SEX",
     "SECTION",
-    "FULL TITLE OF THE PROGRAM ENROLLED IN (DO NOT ABBREVIATE)",
     "DATES OF DURATION OF THE INTERNSHIP",
     "PARTNER HOST TRAINING ESTABLISHMENTS (HTEs)",
     "ADDRESS",
