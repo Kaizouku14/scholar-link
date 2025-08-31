@@ -30,6 +30,7 @@ import {
   deleteInternship,
   insertInternshipsXLSX,
 } from "@/lib/api/internship/coordinator/hei/mutation";
+import { markAsExcused } from "@/lib/api/internship/coordinator/progress-monitoring/mutation";
 
 export const internshipCoordinatorRouter = createTRPCRouter({
   /******************************************
@@ -115,6 +116,16 @@ export const internshipCoordinatorRouter = createTRPCRouter({
     .mutation(async ({ input }) => {
       await deleteInternship(input.internshipId);
     }),
+  markStudenAsExcused: protectedRoute
+    .input(
+      z.object({
+        internshipId: z.string(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      await markAsExcused(input);
+    }),
+
   /******************************************
    *          Coordinator API Query         *
    ******************************************/

@@ -56,25 +56,28 @@ export default function ProgressLogs({
                             {format(log.dateLogs, "EEEE, MMMM dd")}{" "}
                           </div>
                           <div className="text-muted-foreground text-xs">
-                            {log.description}
+                            {log.hoursLog > 0
+                              ? log.description
+                              : "Absent (Excused)"}
                           </div>
                         </div>
                       </div>
-
-                      <div className="flex items-center gap-3">
-                        <Badge
-                          variant="secondary"
-                          className="bg-primary/10 text-primary border-primary/20 px-3 py-1.5 font-semibold"
-                        >
-                          <Clock className="mr-1.5 h-3 w-3" />
-                          {Math.round(log.hoursLog)}{" "}
-                          {log.hoursLog === 1 ? "hour" : "hours"}
-                        </Badge>
-                        {isEqual(
-                          startOfDay(log.dateLogs),
-                          startOfDay(new Date()),
-                        ) && <EditLog data={log} refetch={refetch} />}
-                      </div>
+                      {log.hoursLog > 0 && (
+                        <div className="flex items-center gap-3">
+                          <Badge
+                            variant="secondary"
+                            className="bg-primary/10 text-primary border-primary/20 px-3 py-1.5 font-semibold"
+                          >
+                            <Clock className="mr-1.5 h-3 w-3" />
+                            {Math.round(log.hoursLog)}{" "}
+                            {log.hoursLog === 1 ? "hour" : "hours"}
+                          </Badge>
+                          {isEqual(
+                            startOfDay(log.dateLogs),
+                            startOfDay(new Date()),
+                          ) && <EditLog data={log} refetch={refetch} />}
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>

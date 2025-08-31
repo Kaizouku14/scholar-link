@@ -91,6 +91,13 @@ export const insertStudentProgress = async ({
       )
       .limit(1);
 
+    if (existingLog.length > 0 && existingLog[0]!.hours <= 0) {
+      throw new TRPCError({
+        code: "CONFLICT",
+        message: "You've already been marked as absent for this day.",
+      });
+    }
+
     if (existingLog.length > 0) {
       throw new TRPCError({
         code: "CONFLICT",
@@ -111,6 +118,11 @@ export const insertStudentProgress = async ({
       await tx
         .update(InternshipTable)
         .set({ status: "completed" })
+        .where(eq(InternshipTable.internshipId, internshipId));
+    } else {
+      await tx
+        .update(InternshipTable)
+        .set({ status: "on-going" })
         .where(eq(InternshipTable.internshipId, internshipId));
     }
   });

@@ -8,7 +8,7 @@ import { INTERNSHIP_STATUS_LABELS } from "@/constants/users/status";
 import { SECTIONS_LABELS } from "@/constants/users/sections";
 
 const ProgressMonitoringTable = () => {
-  const { data, isLoading } =
+  const { data, isLoading, refetch } =
     api.internshipCoordinator.getAllStudentProgressByDept.useQuery();
 
   return (
@@ -18,6 +18,7 @@ const ProgressMonitoringTable = () => {
           columns={ProgressMonitoringColumns}
           data={data}
           filteredTitle={"name"}
+          refetch={refetch}
           filters={[
             {
               column: "status",

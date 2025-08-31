@@ -23,6 +23,7 @@ export function DataTableRowActions({
   row,
   disabled,
 }: DataTableRowActionsProps) {
+  const { internshipId } = row.original;
   const { mutateAsync: cancelInternship, isPending: isCancelPending } =
     api.internshipCoordinator.cancelStudentInternship.useMutation();
   const { mutateAsync: deleteInternship, isPending: isDeletePending } =
@@ -35,19 +36,31 @@ export function DataTableRowActions({
   );
 
   const handleCancelInternship = async () => {
-    const internshipId = row.original.internshipId;
-    await cancelInternship({ internshipId: [internshipId] });
+    const toastId = toast.loading("Cancelling internship...");
+    try {
+      await cancelInternship({ internshipId: [internshipId] });
 
-    toast.success("Internship canceled successfully!");
-    await refetch();
+      toast.success("Internship canceled successfully!", { id: toastId });
+      await refetch();
+    } catch (error) {
+      toast.error((error as Error).message);
+    } finally {
+      toast.dismiss(toastId);
+    }
   };
 
   const handleDeleteInternship = async () => {
-    const internshipId = row.original.internshipId;
-    await deleteInternship({ internshipId: [internshipId] });
+    const toastId = toast.loading("Deleting internship...");
+    try {
+      await deleteInternship({ internshipId: [internshipId] });
 
-    toast.success("Internship deleted successfully!");
-    await refetch();
+      toast.success("Internship deleted successfully!", { id: toastId });
+      await refetch();
+    } catch (error) {
+      toast.error((error as Error).message);
+    } finally {
+      toast.dismiss(toastId);
+    }
   };
 
   return (

@@ -122,7 +122,7 @@ export const ProgressMonitoringColumns: ColumnDef<ColumnSchema>[] = [
   },
   {
     id: "Actions",
-    header: "",
+    header: "Actions",
     cell: ({ row }) => {
       return <DataTableRowActions row={row} />;
     },
