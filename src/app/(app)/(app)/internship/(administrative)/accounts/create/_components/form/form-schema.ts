@@ -19,33 +19,26 @@ export const accountFormSchema = z
     address: z.string().min(1, "Address is required"),
     dateOfBirth: z.date({ required_error: "Date of birth is required" }),
     gender: z.enum(GENDERS, { required_error: "Gender is required" }),
-    department: z.enum(DEPARTMENTS, {
-      required_error: "Department is required",
+    department: z.enum(DEPARTMENTS).optional(),
+    role: z.enum([ROLE.INTERNSHIP_STUDENT, ROLE.INTERNSHIP_COORDINATOR], {
+      required_error: "Role is required",
     }),
-    role: z.enum(
-      [
-        ROLE.INTERNSHIP_STUDENT,
-        ROLE.INTERNSHIP_COORDINATOR,
-        ROLE.INTERNSHIP_ADMIN,
-      ],
-      {
-        required_error: "Role is required",
-      },
-    ),
     studentNo: z.string().optional(),
     course: z.enum(COURSES).optional(),
   })
   .refine(
     (data) => {
-      // If role is internshipStudent, require student-specific fields
-      if (data.role === "internshipStudent") {
-        return data.studentNo && data.course && data.section;
+      if (data.role === ROLE.INTERNSHIP_STUDENT) {
+        return data.studentNo && data.course && data.section.length > 0;
+      }
+      if (data.role === ROLE.INTERNSHIP_COORDINATOR) {
+        return data.department && data.course && data.section.length > 0;
       }
       return true;
     },
     {
-      message: "Student fields are required when role is student",
-      path: ["studentNo"],
+      message: "Required fields are missing for the selected role",
+      path: ["role"],
     },
   );
 

@@ -14,7 +14,7 @@ const FormHeader = () => {
   };
 
   return (
-    <div className="mt-6 flex items-center gap-4">
+    <div className="flex items-center gap-4">
       <Button
         variant="outline"
         size="icon"
