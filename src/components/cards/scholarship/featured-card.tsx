@@ -14,6 +14,7 @@ import Link from "next/link";
 import { ShareButton } from "../../dropdown/share-button";
 import { slugify } from "@/lib/utils";
 import { format } from "date-fns";
+import { env } from "@/env";
 
 interface FeaturedCardProps {
   programId: string;
@@ -111,7 +112,7 @@ const FeaturedCard = ({ data }: { data: FeaturedCardProps }) => {
           </Button>
         </Link>
         <ShareButton
-          url={`https://scholarlink.vercel.app${PageRoutes.SCHOLARSHIP_DETAILS}/${data.programId}/${slug}`}
+          url={`${env.NEXT_PUBLIC_BETTER_AUTH_URL}${PageRoutes.SCHOLARSHIP_DETAILS}/${data.programId}/${slug}`}
         />
       </CardFooter>
     </Card>

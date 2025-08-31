@@ -26,8 +26,7 @@ export const createScholarshipProgram = async ({
         programId: programId,
         ...basicInfo,
         requirements: JSON.stringify(formFields),
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        additionalInfo: JSON.parse(additionalInfo),
+        additionalInfo: JSON.stringify(additionalInfo),
       })
       .returning();
 

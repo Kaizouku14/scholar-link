@@ -26,7 +26,7 @@ const Section = ({ id }: { id: string }) => {
 
   if (!data) return <ScholarshipProgramNotFound />;
 
-  console.log(data.additionalInfo);
+  const parsedInfo = JSON.parse(data.additionalInfo!) as AdditionalInfo;
 
   return (
     <div className="w-full">
@@ -45,25 +45,17 @@ const Section = ({ id }: { id: string }) => {
               <About
                 name={data.name}
                 description={data.description}
-                data={data.additionalInfo as unknown as AdditionalInfo}
+                data={parsedInfo}
               />
             </TabsContent>
             <TabsContent value="eligibility" className="mx-1.5 space-y-6 pt-6">
-              <Eligibility
-                name={data.name}
-                data={data.additionalInfo as unknown as AdditionalInfo}
-              />
+              <Eligibility name={data.name} data={parsedInfo} />
             </TabsContent>
             <TabsContent value="requirements" className="mx-1.5 space-y-6 pt-6">
-              <Requirements
-                data={data.additionalInfo as unknown as AdditionalInfo}
-              />
+              <Requirements data={parsedInfo} />
             </TabsContent>
             <TabsContent value="process" className="mx-1.5 space-y-6 pt-6">
-              <Process
-                name={data.name}
-                data={data.additionalInfo as unknown as AdditionalInfo}
-              />
+              <Process name={data.name} data={parsedInfo} />
             </TabsContent>
             {/* { TODO: Announcement } */}
             <TabsContent

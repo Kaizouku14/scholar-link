@@ -7,13 +7,13 @@ import { format } from "date-fns";
 import {
   Calendar,
   Users,
-  MapPin,
   ArrowLeft,
   Clock,
   FileText,
   Globe,
   AlertTriangle,
   CheckCircle,
+  CloudUpload,
 } from "lucide-react";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
@@ -122,7 +122,7 @@ const ScholarshipHeader = ({ data }: { data: ScholarshipHeaderProps }) => {
                   <p
                     className={`font-semibold ${isDeadlineSoon || isDeadlinePassed ? "text-primary" : "text-foreground"}`}
                   >
-                    {format(new Date(data.deadline), "MMMM dd, yyyy")}
+                    {format(new Date(data.deadline), "MMM, dd yyyy")}
                   </p>
                   <p className="text-muted-foreground text-xs">
                     {isDeadlinePassed
@@ -157,17 +157,11 @@ const ScholarshipHeader = ({ data }: { data: ScholarshipHeaderProps }) => {
 
               <div className="bg-background/50 flex items-center gap-3 rounded-lg border p-4 sm:col-span-2 lg:col-span-1">
                 <div className="rounded-full bg-purple-100 p-2 text-purple-600">
-                  <MapPin className="h-4 w-4" />
+                  <CloudUpload className="h-4 w-4" />
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="text-muted-foreground text-sm font-medium">
-                    Location
-                  </p>
-                  <p
-                    className="text-foreground line-clamp-1 font-semibold"
-                    title={data.location}
-                  >
-                    {data.location}
+                    Submission
                   </p>
                   <p className="text-muted-foreground text-xs">
                     {data.submissionType === "online"
