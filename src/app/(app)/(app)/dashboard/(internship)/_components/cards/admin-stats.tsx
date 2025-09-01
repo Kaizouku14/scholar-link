@@ -13,30 +13,15 @@ import {
   GraduationCap,
   UserCheck,
 } from "lucide-react";
-import { useMemo } from "react";
 import { ManagementCard } from "./admin-management";
 
 const AdminDashboardStats = () => {
   const { data, isLoading } =
     api.internshipAdmin.getAdminDashboardStats.useQuery();
 
-  console.log(data);
-
-  const monthlyChange = useMemo(() => {
-    if (!data) return "N/A";
-    const current = data.overview?.monthlyLogs ?? 0;
-    const prev = data.overview?.prevMonthlyLogs ?? 0;
-
-    if (prev > 0) {
-      const change = ((current - prev) / prev) * 100;
-      return `${change >= 0 ? "+" : ""}${change.toFixed(1)}% from last month`;
-    }
-    return "N/A";
-  }, [data]);
-
   return (
     <div className="flex flex-col gap-4 py-2">
-      <div className="grid grid-cols-1 gap-2 md:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
         {!isLoading && data ? (
           <>
             <StatCard
@@ -52,9 +37,9 @@ const AdminDashboardStats = () => {
               icon={<UserCheck className="text-primary h-4 w-4" />}
             />
             <StatCard
-              title="Hours Logged (Month)"
-              value={data.overview?.monthlyLogs ?? 0}
-              subtitle={monthlyChange}
+              title="Pending Internships"
+              value={data.overview?.pendingInterns ?? 0}
+              subtitle={"Awaiting Start"}
               icon={<Clock className="text-primary h-4 w-4" />}
             />
             <StatCard
@@ -74,7 +59,7 @@ const AdminDashboardStats = () => {
         )}
       </div>
 
-      <div className="grid grid-cols-1 gap-2 md:grid-cols-3 md:gap-1.5">
+      <div className="grid grid-cols-1 gap-2 md:grid-cols-3 md:gap-5">
         {!isLoading && data ? (
           <>
             <ManagementCard

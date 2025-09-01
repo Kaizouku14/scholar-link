@@ -2,7 +2,6 @@ import { countDistinct, db, eq, sql } from "@/server/db";
 import { user as UserTable } from "@/server/db/schema/auth";
 import {
   internship as InternshipTable,
-  progressLog as ProgressLogTable,
   company as CompanyTable,
 } from "@/server/db/schema/internship";
 
@@ -14,31 +13,9 @@ export const getAdminDashboardStats = async () => {
           totalInternship: countDistinct(InternshipTable.userId),
           totalActiveInterns: sql<number>`COUNT(DISTINCT ${InternshipTable.userId}) FILTER (WHERE ${InternshipTable.status} = 'on-going')`,
           totalCompletedInterns: sql<number>`COUNT(DISTINCT ${InternshipTable.userId}) FILTER (WHERE ${InternshipTable.status} = 'completed')`,
-          monthlyLogs: sql<number>`
-            SUM(${ProgressLogTable.hours})
-            FILTER (
-                WHERE date(${ProgressLogTable.logDate}, 'unixepoch') >= date('now','start of month')
-            )`,
-          prevMonthlyLogs: sql<number>`
-            COALESCE(
-                SUM(
-                CASE
-                    WHEN date(${ProgressLogTable.logDate}, 'unixepoch')
-                    BETWEEN date('now','start of month','-1 month')
-                    AND date('now','start of month','-1 day')
-                    THEN ${ProgressLogTable.hours}
-                    ELSE 0
-                END
-                ),
-                0
-            )`,
+          pendingInterns: sql<number>`COUNT(DISTINCT ${InternshipTable.userId}) FILTER (WHERE ${InternshipTable.status} = 'pending')`,
         })
         .from(InternshipTable)
-        .leftJoin(
-          ProgressLogTable,
-          eq(InternshipTable.internshipId, ProgressLogTable.internshipId),
-        )
-
         .execute();
 
       const internshipStats = await tx
