@@ -23,9 +23,6 @@ export const getInternshipReports = async () => {
         course: UserTable.course,
         duration: InternshipTable.duration,
         company: CompanyTable.name,
-        companyAddress: CompanyTable.address,
-        supervisorName: SupervisorTable.name,
-        supervisorEmail: SupervisorTable.email,
         supervisorContactNo: SupervisorTable.contactNo,
       })
       .from(UserTable)

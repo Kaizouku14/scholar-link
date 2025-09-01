@@ -26,8 +26,8 @@ const ReportsTable = () => {
           columns={ReportsColumn}
           data={data}
           filteredTitle={"studentName"}
-          columnVisibility={{ course: false }}
           onExport={handleExport}
+          viewOptions={false}
           filters={[
             {
               column: "course",

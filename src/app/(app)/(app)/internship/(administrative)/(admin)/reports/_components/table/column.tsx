@@ -3,15 +3,26 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import type { ReportSchema } from "./column-schema";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { COURSE_LABELS } from "@/constants/users/courses";
-import { Mail, MapPin, Phone } from "lucide-react";
+import { Phone } from "lucide-react";
 
 export const ReportsColumn: ColumnDef<ReportSchema>[] = [
+  {
+    accessorKey: "company",
+    header: "HTEs",
+    cell: ({ row }) => (
+      <div
+        className="max-w-[10rem] truncate font-medium"
+        title={row.getValue("company")}
+      >
+        {row.getValue("company")}
+      </div>
+    ),
+  },
   {
     accessorKey: "studentName",
     header: "Student",
     cell: ({ row }) => {
-      const { studentName, course, section, profile } = row.original;
+      const { studentName, profile } = row.original;
 
       return (
         <div className="flex items-center gap-x-1.5">
@@ -22,14 +33,8 @@ export const ReportsColumn: ColumnDef<ReportSchema>[] = [
             </AvatarFallback>
           </Avatar>
 
-          <div className="flex flex-col">
-            <div className="text-foreground text-sm leading-tight font-medium">
-              {studentName}
-            </div>
-
-            <div className="text-muted-foreground text-xs">
-              {COURSE_LABELS[course!]} · {section}
-            </div>
+          <div className="text-foreground text-sm leading-tight font-medium">
+            {studentName}
           </div>
         </div>
       );
@@ -37,7 +42,8 @@ export const ReportsColumn: ColumnDef<ReportSchema>[] = [
   },
   {
     accessorKey: "course",
-    enableHiding: true,
+    header: "Program Enrolled",
+    cell: ({ row }) => <div className="text-sm">{row.getValue("course")}</div>,
   },
   {
     accessorKey: "sex",
@@ -57,61 +63,8 @@ export const ReportsColumn: ColumnDef<ReportSchema>[] = [
     ),
   },
   {
-    accessorKey: "company",
-    header: "Company",
-    cell: ({ row }) => (
-      <div
-        className="max-w-[10rem] truncate font-medium"
-        title={row.getValue("company")}
-      >
-        {row.getValue("company")}
-      </div>
-    ),
-  },
-  {
-    accessorKey: "companyAddress",
-    header: "Company Address",
-    cell: ({ row }) => (
-      <div className="flex items-start space-x-2">
-        <MapPin className="text-muted-foreground mt-0.5 h-4 w-4 flex-shrink-0" />
-        <div
-          className="text-muted-foreground max-w-[8rem] truncate text-sm"
-          title={row.original.companyAddress ?? "No address provided"}
-        >
-          {row.original.companyAddress ?? "No address"}
-        </div>
-      </div>
-    ),
-  },
-  {
-    accessorKey: "supervisorName",
-    header: "Supervisor",
-    cell: ({ row }) => (
-      <div className="font-medium">{row.getValue("supervisorName")}</div>
-    ),
-  },
-  {
-    accessorKey: "supervisorEmail",
-    header: "Supervisor Email",
-    cell: ({ row }) => (
-      <div className="flex items-center space-x-2">
-        <Mail className="text-muted-foreground h-4 w-4" />
-        {row.getValue("supervisorEmail") ? (
-          <a
-            href={`mailto:${row.original.supervisorEmail}`}
-            className="w-40 truncate text-sm text-blue-600 hover:text-blue-800 hover:underline"
-          >
-            {row.original.supervisorEmail}
-          </a>
-        ) : (
-          <span className="text-muted-foreground text-sm">No email</span>
-        )}
-      </div>
-    ),
-  },
-  {
     accessorKey: "supervisorContactNo",
-    header: "Supervisor Contact",
+    header: "Contact Info of CT",
     cell: ({ row }) => (
       <div className="flex items-center space-x-2">
         <Phone className="text-muted-foreground h-4 w-4" />

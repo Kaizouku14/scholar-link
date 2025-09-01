@@ -16,6 +16,7 @@ export const CoordinatorInternsColumns: ColumnDef<CoordinatorSectionData>[] = [
     id: "select",
     header: ({ table }) => (
       <Checkbox
+        className="mr-4"
         checked={
           table.getIsAllPageRowsSelected() ||
           (table.getIsSomePageRowsSelected() && "indeterminate")

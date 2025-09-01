@@ -13,9 +13,6 @@ export const reportsSchema = z.object({
   course: z.enum(COURSES).nullish(),
   duration: z.string().nullish(),
   company: z.string().nullish(),
-  companyAddress: z.string().nullish(),
-  supervisorName: z.string().nullish(),
-  supervisorEmail: z.string().nullish(),
   supervisorContactNo: z.string().nullish(),
 
   coordinatorName: z.string().nullish(),
