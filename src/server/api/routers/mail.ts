@@ -10,13 +10,14 @@ import { TRPCError } from "@trpc/server";
 import { generateUUID } from "@/lib/utils";
 import { getAllMails, getAllUserEmail } from "@/lib/api/mail/query";
 import { cacheData } from "@/lib/redis";
+import type { roleType } from "@/constants/users/roles";
 
 export const mailRouter = createTRPCRouter({
   getAllUserEmail: publicProcedure.query(async ({ ctx }) => {
     const session = ctx.session!;
-    const { email } = session.user;
+    const { email, role } = session.user;
 
-    return await getAllUserEmail({ email });
+    return await getAllUserEmail({ email, role: role as roleType });
   }),
   getAllUserMail: protectedRoute.query(({ ctx }) => {
     if (!ctx.session) {

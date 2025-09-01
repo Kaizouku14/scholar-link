@@ -1,4 +1,5 @@
-import { db, eq, or, desc, ne } from "@/server/db";
+import { roleVisibility, type roleType } from "@/constants/users/roles";
+import { db, eq, or, desc, ne, and, inArray } from "@/server/db";
 import { user } from "@/server/db/schema/auth";
 import { mailTable } from "@/server/db/schema/mail";
 import { TRPCError } from "@trpc/server";
@@ -47,16 +48,32 @@ export const getAllMails = async ({ userId }: { userId: string }) => {
   }
 };
 
-export const getAllUserEmail = async ({ email }: { email: string }) => {
+export const getAllUserEmail = async ({
+  email,
+  role,
+}: {
+  email: string;
+  role: roleType;
+}) => {
   try {
+    const allowedRoles = roleVisibility[role];
+
+    const conditions = [ne(user.email, email)];
+
+    if (allowedRoles.length === 1) {
+      conditions.push(eq(user.role, allowedRoles[0]!));
+    } else if (allowedRoles.length > 1) {
+      conditions.push(inArray(user.role, allowedRoles));
+    }
+
     const response = await db
       .select({
         id: user.id,
         email: user.email,
+        role: user.role,
       })
       .from(user)
-      .where(ne(user.email, email))
-      .execute();
+      .where(and(...conditions));
 
     if (!response) {
       throw new TRPCError({
@@ -69,7 +86,7 @@ export const getAllUserEmail = async ({ email }: { email: string }) => {
   } catch (error) {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
-      message: "Failed to get all user email," + (error as Error).message,
+      message: "Failed to get all user email, " + (error as Error).message,
     });
   }
 };

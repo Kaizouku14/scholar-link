@@ -30,7 +30,7 @@ const EmailComboBox = ({ value, onChange }: EmailListProps) => {
   const { data } = api.mail.getAllUserEmail.useQuery();
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover open={open} onOpenChange={setOpen} modal>
       <PopoverTrigger asChild>
         <Button
           variant="outline"
@@ -57,12 +57,12 @@ const EmailComboBox = ({ value, onChange }: EmailListProps) => {
                   <CommandItem
                     key={item.id}
                     value={item.id}
-                    onSelect={() => {
-                      onChange(item.id);
+                    onSelect={(val) => {
+                      onChange(val);
                       setOpen(false);
                     }}
                     onMouseEnter={() => console.log("FUCK YOU NIGGA")}
-                    className="z-100 p-2"
+                    className="p-2"
                   >
                     {item.email}
                     <Check
