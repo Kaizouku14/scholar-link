@@ -16,7 +16,10 @@ export const CompaniesColumns: ColumnDef<CompanySchema>[] = [
   {
     accessorKey: "companyName",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Company Name" />
+      <DataTableColumnHeader
+        column={column}
+        title="Host Training Establishments"
+      />
     ),
     cell: ({ row }) => (
       <div className="flex items-center space-x-2">
@@ -51,7 +54,10 @@ export const CompaniesColumns: ColumnDef<CompanySchema>[] = [
     cell: ({ row }) => (
       <div className="flex items-center space-x-2">
         <UserCheck className="text-muted-foreground h-4 w-4" />
-        <div className="font-medium">
+        <div
+          className="max-w-[8rem] truncate font-medium"
+          title={row.original.supervisor ?? "Not assigned"}
+        >
           {row.original.supervisor ?? "Not assigned"}
         </div>
       </div>
@@ -163,7 +169,7 @@ export const CompaniesColumns: ColumnDef<CompanySchema>[] = [
 
   {
     accessorKey: "Actions",
-    header: "Actions",
+    header: "",
     cell: ({ row }) => <DataTableRowActions row={row} />,
   },
 ];

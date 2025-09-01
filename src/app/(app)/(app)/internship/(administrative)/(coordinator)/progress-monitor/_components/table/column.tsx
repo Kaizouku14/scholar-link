@@ -53,7 +53,7 @@ export const ProgressMonitoringColumns: ColumnDef<ColumnSchema>[] = [
   },
   {
     accessorKey: "companyName",
-    header: "Company",
+    header: "Host Training Establishments",
     cell: ({ row }) => (
       <div className="text-sm" title={row.original.companyName!}>
         {row.original.companyName}

@@ -22,7 +22,7 @@ interface DataTableRowActionsProps {
 
 export function DataTableRowActions({ row, table }: DataTableRowActionsProps) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { email } = row.original;
+  const { email, status } = row.original;
 
   const { mutateAsync: revokedEmail } =
     api.auth.revokeAuthorizedEmail.useMutation();
@@ -57,7 +57,7 @@ export function DataTableRowActions({ row, table }: DataTableRowActionsProps) {
         <DropdownMenuItem
           className="text-primary hover:text-primary flex"
           onClick={handleRevokeEmail}
-          disabled={isLoading}
+          disabled={isLoading || status === "revoked"}
         >
           <XCircle className="text-primary" />
           <span>Revoke</span>

@@ -104,7 +104,6 @@ export function DataTable<TData, TValue>({
         viewOptions={viewOptions}
       />
 
-      {/* Responsive wrapper */}
       <div className="border-border bg-card overflow-x-auto rounded-lg border">
         <Table className="min-w-full table-auto">
           <TableHeader>

@@ -68,14 +68,17 @@ export const CoordinatorInternsColumns: ColumnDef<CoordinatorSectionData>[] = [
     },
     header: ({ column }) => (
       <div className="text-left">
-        <DataTableColumnHeader column={column} title="Section" />
+        <DataTableColumnHeader column={column} title="Course & Section" />
       </div>
     ),
     cell: ({ row }) => (
       <div className="flex flex-col gap-0.5">
         <div className="flex items-center gap-1.5">
           <GraduationCap className="text-muted-foreground h-4 w-4 flex-shrink-0" />
-          <span className="max-w-[150px] truncate tracking-wide">
+          <span
+            className="max-w-[150px] truncate tracking-wide"
+            title={row.original.course!}
+          >
             {row.original.course}
           </span>
         </div>
@@ -110,7 +113,10 @@ export const CoordinatorInternsColumns: ColumnDef<CoordinatorSectionData>[] = [
   {
     accessorKey: "companyName",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Company" />
+      <DataTableColumnHeader
+        column={column}
+        title="Host Training Establishments"
+      />
     ),
     cell: ({ row }) => (
       <div className="flex flex-col gap-0.5">

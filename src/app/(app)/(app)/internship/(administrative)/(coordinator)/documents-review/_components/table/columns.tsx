@@ -88,10 +88,10 @@ export const DocumentReviewColumns: ColumnDef<DocumentSchema>[] = [
   },
   {
     accessorKey: "companyName",
-    header: "Company",
+    header: "Host Training Establishments",
     cell: ({ row }) => (
       <div
-        className="w-40 truncate text-base"
+        className="max-w-[15rem] truncate text-base"
         title={row.original.companyName!}
       >
         {row.original.companyName}
