@@ -10,9 +10,6 @@ export const getEmailDisplayInfo = (email?: Email, currentUserId?: string) => {
       name: email?.receiverName ?? email?.receiverEmail,
       email: email?.receiverEmail,
       profile: email?.receiverProfile,
-      prefix: "To: ",
-      label: "To",
-      fallback: email?.receiverName?.charAt(0).toUpperCase() ?? "R",
       isSender: true,
     };
   } else {
@@ -20,9 +17,6 @@ export const getEmailDisplayInfo = (email?: Email, currentUserId?: string) => {
       name: email?.senderName ?? email?.senderEmail,
       email: email?.senderEmail,
       profile: email?.senderProfile,
-      prefix: "",
-      label: "From",
-      fallback: email?.senderName?.charAt(0).toUpperCase() ?? "S",
       isSender: false,
     };
   }
@@ -33,8 +27,6 @@ export const getEmailDisplayInfo = (email?: Email, currentUserId?: string) => {
  * @param mails List of emails to search through
  * @param searchQuery Query to search for
  * @returns Filtered list of emails
- * @example
- * searchMails(emails, "hello") // returns emails with sender/recipient name/email or subject containing "hello"
  */
 export const searchMails = (mails: Email[], searchQuery: string): Email[] => {
   const normalizedQuery = searchQuery?.toLowerCase().trim() || "";
@@ -46,14 +38,12 @@ export const searchMails = (mails: Email[], searchQuery: string): Email[] => {
     const senderEmail = mail.senderEmail?.toLowerCase() ?? "";
     const receiverName = mail.receiverName?.toLowerCase() ?? "";
     const receiverEmail = mail.receiverEmail?.toLowerCase() ?? "";
-    const subject = mail.subject?.toLowerCase() ?? "";
 
     return (
       senderName.includes(normalizedQuery) ||
       senderEmail.includes(normalizedQuery) ||
       receiverName.includes(normalizedQuery) ||
-      receiverEmail.includes(normalizedQuery) ||
-      subject.includes(normalizedQuery)
+      receiverEmail.includes(normalizedQuery)
     );
   });
 };

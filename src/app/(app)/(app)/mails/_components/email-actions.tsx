@@ -9,22 +9,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { RefreshCw, MoreVertical, ArrowUp, ArrowDown } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { SortOrder } from "./helper/email-utils";
-import { Separator } from "@/components/ui/separator";
-
-export interface EmailActionsProps {
-  onRefresh: () => void;
-  onMarkAllAsRead: () => void;
-  unreadCount: number;
-  onSort: (order: SortOrder) => void;
-  currentSort: SortOrder;
-  isRefreshing?: boolean;
-}
+import type { EmailActionsProps } from "@/interfaces/email/email";
 
 export default function EmailActions({
   onRefresh,
-  onMarkAllAsRead,
-  unreadCount,
   onSort,
   currentSort,
   isRefreshing = false,
@@ -52,14 +40,6 @@ export default function EmailActions({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuItem
-            onClick={onMarkAllAsRead}
-            disabled={unreadCount === 0}
-          >
-            Mark all read {unreadCount > 0 && `(${unreadCount})`}
-          </DropdownMenuItem>
-
-          <Separator />
           <div className="text-muted-foreground px-2 py-1.5 text-xs font-medium">
             Sort by
           </div>

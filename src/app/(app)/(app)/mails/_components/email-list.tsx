@@ -104,7 +104,7 @@ const EmailList = ({
                         {isFromCurrentUser ? (
                           <div className="flex flex-col">
                             <span className="flex gap-1">
-                              {`To: ${otherParticipant.name}`}
+                              {otherParticipant.name}
                             </span>
                             <span className="text-muted-foreground text-xs">
                               {otherParticipant.email}

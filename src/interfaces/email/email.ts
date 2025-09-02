@@ -17,14 +17,20 @@ export interface EmailDetailProps {
   refresh: () => void;
   showBackButton?: boolean;
   onBack?: () => void;
-  refetch: () => Promise<unknown>;
 }
 
 export interface EmailActionsProps {
   onRefresh: () => void;
-  onMarkAllAsRead: () => void;
-  unreadCount: number;
   onSort: (order: SortOrder) => void;
   currentSort: SortOrder;
   isRefreshing?: boolean;
+}
+
+export interface ReplyFormProps {
+  thread: Email[];
+  recipientName?: string | null;
+  recipientEmail?: string | null;
+  currentUserId: string;
+  isOpen: boolean;
+  onClose: () => void;
 }

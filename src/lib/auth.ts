@@ -44,7 +44,7 @@ export const auth = betterAuth({
         html: linkVerificationTemplate({ title: "Email Verification", url }),
       });
     },
-    sendOnSignUp: false,
+    sendOnSignUp: true,
     expiresIn: 10 * 60 * 1000, //10 minutes
   },
   user: {

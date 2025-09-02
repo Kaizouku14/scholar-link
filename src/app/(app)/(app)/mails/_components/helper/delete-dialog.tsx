@@ -15,30 +15,27 @@ import { Trash2, TriangleAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { api } from "@/trpc/react";
 import toast from "react-hot-toast";
-import { useState } from "react";
 import type { Email } from "@/types/email";
 
 export const DeleteMail = ({
   ids,
-  refetch,
   setSelectedThread,
 }: {
   ids?: string[];
-  refetch: () => Promise<unknown>;
   setSelectedThread: (thread: Email[]) => void;
 }) => {
-  const { mutateAsync: deleteMail } = api.mail.deleteMail.useMutation();
-  const [isDeleting, setIsDeleting] = useState(false);
+  const { mutateAsync: deleteMail, isPending } =
+    api.mail.deleteMail.useMutation();
+  const { refetch } = api.mail.getAllUserMail.useQuery(undefined, {
+    enabled: false,
+  });
   const handleDelete = async () => {
-    setIsDeleting(true);
     try {
       await deleteMail({ ids: ids! });
       await refetch();
       setSelectedThread([]);
     } catch (error) {
       toast.error((error as Error).message);
-    } finally {
-      setIsDeleting(false);
     }
   };
 
@@ -58,14 +55,13 @@ export const DeleteMail = ({
           <AlertDialogDescription>
             This action cannot be undone. This will permanently delete the mail.
           </AlertDialogDescription>
-          {ids}
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
             className="bg-primary flex items-center"
             onClick={handleDelete}
-            disabled={isDeleting}
+            disabled={isPending}
           >
             <TriangleAlert className="h-4 w-4" />
             <span>Delete</span>

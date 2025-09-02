@@ -28,14 +28,16 @@ const EmailDetail = ({
   isfetching,
   showBackButton = false,
   onBack,
-  refetch,
 }: EmailDetailProps) => {
   const [showReplyForm, setShowReplyForm] = useState(false);
   const ids = thread?.map((email) => email.id);
   const handleReplyClick = () => setShowReplyForm(true);
   const handleReplyClose = () => setShowReplyForm(false);
-
   const lastMessage = thread?.[thread.length - 1];
+  const recipientName =
+    lastMessage?.sender === currentUserId
+      ? lastMessage?.receiverName
+      : lastMessage?.senderName;
 
   return (
     <div className="bg-background border-border flex h-full flex-col rounded-r-xl border">
@@ -101,11 +103,7 @@ const EmailDetail = ({
                       )}
                     </div>
                   </div>
-                  <DeleteMail
-                    ids={ids}
-                    refetch={refetch}
-                    setSelectedThread={setSelectedThread}
-                  />
+                  <DeleteMail ids={ids} setSelectedThread={setSelectedThread} />
                 </div>
               </div>
             </div>
@@ -126,9 +124,6 @@ const EmailDetail = ({
                 })
                 .map((email, idx) => {
                   const isSenderCurrentUser = email.sender === currentUserId;
-                  const senderName = email.senderName ?? "Unknown User";
-                  const senderEmail = email.senderEmail;
-                  const senderProfile = email.senderProfile;
                   const isLastMessage = idx === thread.length - 1;
                   const isFirstMessage = idx === 0;
 
@@ -146,18 +141,20 @@ const EmailDetail = ({
                             <div className="relative">
                               <Avatar className="h-12 w-12">
                                 <AvatarImage
-                                  src={senderProfile ?? undefined}
-                                  alt={senderName}
+                                  src={email.senderProfile ?? undefined}
+                                  alt={email.senderName ?? "unknown"}
                                 />
                                 <AvatarFallback className="bg-primary/10 text-primary text-sm font-medium">
-                                  {senderName.charAt(0).toUpperCase()}
+                                  {email.senderName?.charAt(0).toUpperCase()}
                                 </AvatarFallback>
                               </Avatar>
                             </div>
                             <div className="space-y-1">
                               <div className="flex items-center space-x-2">
                                 <CardTitle className="text-foreground text-base font-semibold">
-                                  {isSenderCurrentUser ? "You" : senderName}
+                                  {isSenderCurrentUser
+                                    ? "You"
+                                    : email.senderName}
                                 </CardTitle>
                                 {isLastMessage && (
                                   <Badge
@@ -177,7 +174,7 @@ const EmailDetail = ({
                                 )}
                               </div>
                               <CardDescription className="text-muted-foreground text-sm">
-                                {senderEmail}
+                                {email.senderEmail}
                               </CardDescription>
                             </div>
                           </div>
@@ -238,20 +235,11 @@ const EmailDetail = ({
           {showReplyForm && lastMessage && (
             <ReplyForm
               thread={thread}
-              recipientName={
-                lastMessage.sender === currentUserId
-                  ? (lastMessage.receiverName ?? "")
-                  : (lastMessage.senderName ?? "")
-              }
-              recipientEmail={
-                lastMessage.sender === currentUserId
-                  ? (lastMessage.receiverEmail ?? "")
-                  : (lastMessage.senderEmail ?? "")
-              }
+              recipientName={recipientName}
+              recipientEmail={recipientName}
               currentUserId={currentUserId!}
               isOpen={showReplyForm}
               onClose={handleReplyClose}
-              refetch={refetch}
             />
           )}
         </>

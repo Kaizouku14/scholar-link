@@ -17,7 +17,6 @@ import { toast } from "react-hot-toast";
 const Mail = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [isMarkingRead, setIsMarkingRead] = useState(false);
   const [sortOrder, setSortOrder] = useState<SortOrder>("newest");
   const { data: session } = authClient.useSession();
   const currentUserId = session?.user.id;
@@ -26,11 +25,8 @@ const Mail = () => {
     isLoading: FetchingMails,
     refetch: refetchMails,
   } = api.mail.getAllUserMail.useQuery();
-
   const { mutateAsync: markThreadAsRead } =
     api.mail.markMailAsRead.useMutation();
-  const { mutateAsync: markAllAsRead } =
-    api.mail.markAllMailAsRead.useMutation();
 
   const groupedThreads = useMemo(() => {
     if (!Mails) return [];
@@ -66,16 +62,8 @@ const Mail = () => {
 
   const [selectedThread, setSelectedThread] = useState<Email[] | undefined>();
 
-  const unreadCount = useMemo(() => {
-    return groupedThreads.reduce(
-      (total, thread) => total + thread.filter((mail) => !mail.isRead).length,
-      0,
-    );
-  }, [groupedThreads]);
-
   const handleSelectedThread = async (thread: Email[]) => {
-    if (!currentUserId || isMarkingRead) return;
-
+    if (!currentUserId) return;
     const unreadMails = thread.filter(
       (email) => email.sender !== currentUserId && !email.isRead,
     );
@@ -92,8 +80,6 @@ const Mail = () => {
     );
 
     setSelectedThread(updatedThread);
-    setIsMarkingRead(true);
-
     try {
       await markThreadAsRead({
         ids: unreadMails.map((email) => email.id),
@@ -101,29 +87,11 @@ const Mail = () => {
       await refetchMails();
     } catch {
       setSelectedThread(thread);
-    } finally {
-      setIsMarkingRead(false);
-    }
-  };
-
-  const handleMarkAllAsRead = async () => {
-    setIsRefreshing(true);
-
-    try {
-      await markAllAsRead();
-      void refetchMails();
-    } catch {
-      toast.error("Unexpected error occurred. Please try again.", {
-        position: "top-center",
-      });
-    } finally {
-      setIsRefreshing(false);
     }
   };
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
-
     try {
       await refetchMails();
       await new Promise((resolve) => setTimeout(resolve, 500));
@@ -152,8 +120,6 @@ const Mail = () => {
               <ComposeEmail refetch={refetchMails} />
               <EmailActions
                 onRefresh={handleRefresh}
-                onMarkAllAsRead={handleMarkAllAsRead}
-                unreadCount={unreadCount}
                 onSort={handleSort}
                 currentSort={sortOrder}
                 isRefreshing={isRefreshing}
@@ -191,11 +157,9 @@ const Mail = () => {
           currentUserId={currentUserId}
           isfetching={FetchingMails || isRefreshing}
           refresh={handleRefresh}
-          refetch={refetchMails}
         />
       </div>
 
-      {/* Mobile: Overlay Detail */}
       {selectedThread && (
         <div className="bg-background fixed inset-0 z-50 flex flex-col md:hidden">
           <EmailDetail
@@ -206,7 +170,6 @@ const Mail = () => {
             currentUserId={currentUserId}
             isfetching={FetchingMails || isRefreshing}
             refresh={handleRefresh}
-            refetch={refetchMails}
           />
         </div>
       )}

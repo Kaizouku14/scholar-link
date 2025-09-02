@@ -1,4 +1,4 @@
-import { db, type InferSelectModel, eq, inArray } from "@/server/db";
+import { db, type InferSelectModel, inArray } from "@/server/db";
 import { mailTable } from "@/server/db/schema/mail";
 import { TRPCError } from "@trpc/server";
 
@@ -54,28 +54,6 @@ export const markAsRead = async ({ ids }: { ids: string[] }) => {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
       message: "Failed to send mail," + (error as Error).message,
-    });
-  }
-};
-
-export const markAllAsRead = async () => {
-  try {
-    const response = await db
-      .update(mailTable)
-      .set({ isRead: true })
-      .where(eq(mailTable.isRead, false))
-      .execute();
-
-    if (!response) {
-      throw new TRPCError({
-        code: "INTERNAL_SERVER_ERROR",
-        message: "Unexpected Error happened.",
-      });
-    }
-  } catch (error) {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: "Failed to mark as read," + (error as Error).message,
     });
   }
 };
