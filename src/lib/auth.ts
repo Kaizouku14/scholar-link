@@ -44,13 +44,13 @@ export const auth = betterAuth({
         html: linkVerificationTemplate({ title: "Email Verification", url }),
       });
     },
-    sendOnSignUp: true,
+    sendOnSignUp: false,
     expiresIn: 10 * 60 * 1000, //10 minutes
   },
   user: {
     additionalFields: {
       course: { type: "string", required: true },
-      section: { type: "string", enum: SECTIONS, required: true },
+      section: { type: "string[]", enum: SECTIONS, required: true },
       department: { type: "string", required: true },
       profile: { type: "string", required: false },
     },

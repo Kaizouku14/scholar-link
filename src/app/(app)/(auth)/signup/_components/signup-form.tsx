@@ -71,7 +71,7 @@ const SignUpForm = () => {
       const fullName = `${name} ${middleName} ${surname}`;
       const { data, error } = await authClient.signUp.email({
         name: formatText(fullName),
-        section,
+        section: [section],
         course,
         department,
         email,
