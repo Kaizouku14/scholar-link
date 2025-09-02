@@ -9,5 +9,3 @@ export type Email = InferSelectModel<typeof mailTable> & {
   receiverEmail?: string | null;
   receiverProfile?: string | null;
 };
-
-export type SortOrder = "newest" | "oldest";

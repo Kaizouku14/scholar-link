@@ -5,19 +5,19 @@ import EmailDetail from "./email-detail";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useState, useMemo } from "react";
-import ComposeEmail from "./compose-email";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import type { Email } from "@/types/email";
 import { api } from "@/trpc/react";
 import { authClient } from "@/lib/auth-client";
-import { filterAndSortMails, type SortOrder } from "./helper/email-utils";
-import EmailActions from "./email-actions";
 import { toast } from "react-hot-toast";
+import { searchMails } from "./helper/email-utils";
+import ComposeEmail from "./compose-email";
+import EmailActions from "./email-actions";
 
 const Mail = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [sortOrder, setSortOrder] = useState<SortOrder>("newest");
+  const [selectedThread, setSelectedThread] = useState<Email[] | undefined>();
   const { data: session } = authClient.useSession();
   const currentUserId = session?.user.id;
   const {
@@ -32,7 +32,7 @@ const Mail = () => {
     if (!Mails) return [];
 
     const normalizedQuery = searchQuery?.toLowerCase() || "";
-    const filtered = filterAndSortMails(Mails, normalizedQuery, sortOrder);
+    const filtered = searchMails(Mails, normalizedQuery);
 
     const grouped = filtered.reduce(
       (acc, email) => {
@@ -44,23 +44,15 @@ const Mail = () => {
     );
 
     const threads = Object.values(grouped).map((thread) =>
-      thread.sort((a, b) => {
-        const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
-        const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-        return dateA - dateB; // always oldest to newest inside thread
-      }),
+      [...thread].sort(
+        (a, b) =>
+          new Date(a.createdAt ?? 0).getTime() -
+          new Date(b.createdAt ?? 0).getTime(),
+      ),
     );
 
-    return threads.sort((a, b) => {
-      const lastA = a[a.length - 1];
-      const lastB = b[b.length - 1];
-      const dateA = lastA?.createdAt ? new Date(lastA.createdAt).getTime() : 0;
-      const dateB = lastB?.createdAt ? new Date(lastB.createdAt).getTime() : 0;
-      return sortOrder === "newest" ? dateB - dateA : dateA - dateB;
-    });
-  }, [Mails, searchQuery, sortOrder]);
-
-  const [selectedThread, setSelectedThread] = useState<Email[] | undefined>();
+    return threads;
+  }, [Mails, searchQuery]);
 
   const handleSelectedThread = async (thread: Email[]) => {
     if (!currentUserId) return;
@@ -105,10 +97,6 @@ const Mail = () => {
     }
   };
 
-  const handleSort = (order: SortOrder) => {
-    setSortOrder(order);
-  };
-
   return (
     <div className="flex">
       <div className="bg-background flex w-full flex-col border-r md:w-96 lg:w-80 xl:w-96">
@@ -117,11 +105,9 @@ const Mail = () => {
             <h1 className="text-xl font-semibold">Inbox</h1>
 
             <div className="flex items-center space-x-1">
-              <ComposeEmail refetch={refetchMails} />
+              <ComposeEmail />
               <EmailActions
                 onRefresh={handleRefresh}
-                onSort={handleSort}
-                currentSort={sortOrder}
                 isRefreshing={isRefreshing}
               />
             </div>

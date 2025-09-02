@@ -47,27 +47,3 @@ export const searchMails = (mails: Email[], searchQuery: string): Email[] => {
     );
   });
 };
-
-/**
- * Sorts a list of emails by their creation date.
- * @param mails Array of emails to be sorted
- * @param sortOrder Specifies the order of sorting: "newest" for descending order and "oldest" for ascending order
- * @returns A new array of emails sorted by the specified order
- */
-export const sortMails = (mails: Email[], sortOrder: SortOrder): Email[] => {
-  return [...mails].sort((a, b) => {
-    const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
-    const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-
-    return sortOrder === "newest" ? dateB - dateA : dateA - dateB;
-  });
-};
-
-export const filterAndSortMails = (
-  mails: Email[],
-  searchQuery: string,
-  sortOrder: SortOrder,
-): Email[] => {
-  const searched = searchMails(mails, searchQuery);
-  return sortMails(searched, sortOrder);
-};

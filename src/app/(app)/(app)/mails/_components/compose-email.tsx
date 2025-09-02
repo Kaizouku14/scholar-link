@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import ComposeForm from "./form/compose-form";
 import { PenSquare } from "lucide-react";
 
-const ComposeEmail = ({ refetch }: { refetch: () => Promise<unknown> }) => {
+const ComposeEmail = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleSuccess = () => {
@@ -31,7 +31,7 @@ const ComposeEmail = ({ refetch }: { refetch: () => Promise<unknown> }) => {
         <DialogHeader>
           <DialogTitle>Compose Email</DialogTitle>
         </DialogHeader>
-        <ComposeForm onSuccess={handleSuccess} refetch={refetch} />
+        <ComposeForm onSuccess={handleSuccess} />
       </DialogContent>
     </Dialog>
   );

@@ -1,4 +1,4 @@
-import type { Email, SortOrder } from "@/types/email";
+import type { Email } from "@/types/email";
 
 export interface EmailListProps {
   threads: Email[][];
@@ -21,8 +21,6 @@ export interface EmailDetailProps {
 
 export interface EmailActionsProps {
   onRefresh: () => void;
-  onSort: (order: SortOrder) => void;
-  currentSort: SortOrder;
   isRefreshing?: boolean;
 }
 

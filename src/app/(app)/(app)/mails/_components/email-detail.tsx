@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, RotateCw, Reply, Mail, Clock } from "lucide-react";
+import { ArrowLeft, Reply, Mail, Clock } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
@@ -52,7 +52,6 @@ const EmailDetail = ({
               )}
               <Skeleton className="h-6 w-64" />
             </div>
-            <RotateCw className="text-muted-foreground h-4 w-4 animate-spin" />
           </div>
           <Skeleton className="mx-6 mb-6 h-full" />
         </>

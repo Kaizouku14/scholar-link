@@ -22,9 +22,8 @@ import { api } from "@/trpc/react";
 
 interface ComposeFormProps {
   onSuccess?: () => void;
-  refetch: () => Promise<unknown>;
 }
-const ComposeForm = ({ onSuccess, refetch }: ComposeFormProps) => {
+const ComposeForm = ({ onSuccess }: ComposeFormProps) => {
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -33,7 +32,9 @@ const ComposeForm = ({ onSuccess, refetch }: ComposeFormProps) => {
       content: "",
     },
   });
-
+  const { refetch } = api.mail.getAllUserMail.useQuery(undefined, {
+    enabled: false,
+  });
   const { mutateAsync: sendMailToMutation, isPending } =
     api.mail.sendMailTo.useMutation();
   const handleSubmit = async (values: FormSchema) => {
