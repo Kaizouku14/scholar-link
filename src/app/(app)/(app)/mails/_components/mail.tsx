@@ -86,7 +86,6 @@ const Mail = () => {
     setIsRefreshing(true);
     try {
       await refetchMails();
-      await new Promise((resolve) => setTimeout(resolve, 500));
       setSelectedThread(undefined);
     } catch {
       toast.error("Unexpected error occurred. Please try again.", {

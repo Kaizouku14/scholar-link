@@ -94,7 +94,7 @@ const ProgressOverview = () => {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <Building2 className="text-muted-foreground h-4 w-4" />
-                        <h3 className="text-card-foreground font-medium">
+                        <h3 className="text-card-foreground">
                           {internship?.company?.companyName ??
                             "Company Name Not Provided"}
                         </h3>

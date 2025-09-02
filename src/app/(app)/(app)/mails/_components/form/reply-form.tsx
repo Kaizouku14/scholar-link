@@ -19,7 +19,6 @@ import type { ReplyFormProps } from "@/interfaces/email/email";
 const ReplyForm = ({
   thread,
   recipientName,
-  recipientEmail,
   currentUserId,
   isOpen,
   onClose,
@@ -69,12 +68,10 @@ const ReplyForm = ({
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="flex max-h-[80vh] flex-col sm:max-w-[600px]">
         <form onSubmit={handleSendReply}>
-          <DialogHeader className="flex-shrink-0">
+          <DialogHeader className="mb-2 flex-shrink-0">
             <DialogTitle className="flex items-center gap-2">
               <span>Reply to :</span>
-              <span className="font-medium">
-                {recipientName ?? recipientEmail}
-              </span>
+              <span className="font-medium">{recipientName}</span>
             </DialogTitle>
           </DialogHeader>
 
@@ -98,7 +95,7 @@ const ReplyForm = ({
               <Textarea
                 value={replyContent}
                 onChange={(e) => setReplyContent(e.target.value)}
-                placeholder={`Write your reply to ${recipientName ?? recipientEmail}...`}
+                placeholder={`Write your reply to ${recipientName}...`}
                 className="min-h-[200px] resize-none"
                 disabled={isPending}
                 autoFocus

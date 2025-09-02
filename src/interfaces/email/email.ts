@@ -27,8 +27,16 @@ export interface EmailActionsProps {
 export interface ReplyFormProps {
   thread: Email[];
   recipientName?: string | null;
-  recipientEmail?: string | null;
   currentUserId: string;
   isOpen: boolean;
   onClose: () => void;
+}
+
+export interface EmailMessageCardProps {
+  email: Email;
+  isNewest: boolean;
+  isOldest: boolean;
+  isSenderCurrentUser: boolean;
+  threadLength: number;
+  onReplyClick: () => void;
 }

@@ -1,25 +1,16 @@
 "use client";
 
-import { ArrowLeft, Reply, Mail, Clock } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ArrowLeft, Mail, Clock } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
-import { formatDistanceToNow, differenceInSeconds, format } from "date-fns";
-import { useState } from "react";
+import { formatDistanceToNow } from "date-fns";
+import { useMemo, useState } from "react";
 import ReplyForm from "./form/reply-form";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Badge } from "@/components/ui/badge";
 import EmptyState from "./helper/no-selected";
 import { DeleteMail } from "./helper/delete-dialog";
 import type { EmailDetailProps } from "@/interfaces/email/email";
+import EmailMessageCard from "./message-card";
 
 const EmailDetail = ({
   thread,
@@ -38,6 +29,14 @@ const EmailDetail = ({
     lastMessage?.sender === currentUserId
       ? lastMessage?.receiverName
       : lastMessage?.senderName;
+
+  const sortedThread = useMemo(() => {
+    return [...(thread ?? [])].sort((a, b) => {
+      const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+      const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+      return dateB - dateA;
+    });
+  }, [thread]);
 
   return (
     <div className="bg-background border-border flex h-full flex-col rounded-r-xl border">
@@ -110,124 +109,23 @@ const EmailDetail = ({
 
           <ScrollArea className="h-[700px]">
             <div className="space-y-4 px-6 py-6">
-              {thread
-                .slice()
-                .sort((a, b) => {
-                  const dateA = a.createdAt
-                    ? new Date(a.createdAt).getTime()
-                    : 0;
-                  const dateB = b.createdAt
-                    ? new Date(b.createdAt).getTime()
-                    : 0;
-                  return dateB - dateA; // descending: newest to oldest
-                })
-                .map((email, idx) => {
-                  const isSenderCurrentUser = email.sender === currentUserId;
-                  const isLastMessage = idx === thread.length - 1;
-                  const isFirstMessage = idx === 0;
+              {sortedThread.map((email, idx) => {
+                const isSenderCurrentUser = email.sender === currentUserId;
+                const isNewest = idx === 0;
+                const isOldest = idx === thread.length - 1;
 
-                  return (
-                    <Card
-                      key={email.id}
-                      className={cn(
-                        "shadow-sm transition-all duration-200 hover:shadow-md",
-                        isLastMessage && "ring-primary/20 ring-2",
-                      )}
-                    >
-                      <CardHeader className="pb-3">
-                        <div className="flex items-start justify-between">
-                          <div className="flex items-start space-x-4">
-                            <div className="relative">
-                              <Avatar className="h-12 w-12">
-                                <AvatarImage
-                                  src={email.senderProfile ?? undefined}
-                                  alt={email.senderName ?? "unknown"}
-                                />
-                                <AvatarFallback className="bg-primary/10 text-primary text-sm font-medium">
-                                  {email.senderName?.charAt(0).toUpperCase()}
-                                </AvatarFallback>
-                              </Avatar>
-                            </div>
-                            <div className="space-y-1">
-                              <div className="flex items-center space-x-2">
-                                <CardTitle className="text-foreground text-base font-semibold">
-                                  {isSenderCurrentUser
-                                    ? "You"
-                                    : email.senderName}
-                                </CardTitle>
-                                {isLastMessage && (
-                                  <Badge
-                                    variant="secondary"
-                                    className="px-2 py-0 text-xs"
-                                  >
-                                    Original
-                                  </Badge>
-                                )}
-                                {isFirstMessage && (
-                                  <Badge
-                                    variant="secondary"
-                                    className="px-2 py-0 text-xs"
-                                  >
-                                    New
-                                  </Badge>
-                                )}
-                              </div>
-                              <CardDescription className="text-muted-foreground text-sm">
-                                {email.senderEmail}
-                              </CardDescription>
-                            </div>
-                          </div>
-
-                          <div className="space-y-1 text-right">
-                            <div className="text-foreground text-sm font-medium">
-                              {email.date &&
-                                format(new Date(email.date), "MMM dd, yyyy")}
-                            </div>
-                            <div className="text-muted-foreground text-xs">
-                              {email.createdAt
-                                ? differenceInSeconds(
-                                    new Date(),
-                                    new Date(email.createdAt),
-                                  ) < 60
-                                  ? "Just now"
-                                  : formatDistanceToNow(
-                                      new Date(email.createdAt),
-                                      { addSuffix: true },
-                                    )
-                                : ""}
-                            </div>
-                          </div>
-                        </div>
-                      </CardHeader>
-
-                      <CardContent className="space-y-4">
-                        <div className="from-border via-border/50 h-px bg-gradient-to-r to-transparent" />
-                        <div className="h-52 overflow-auto">
-                          <p className="text-foreground text-sm leading-relaxed whitespace-pre-wrap">
-                            {email.content}
-                          </p>
-                        </div>
-
-                        <div className="bg-muted/20 -mx-6 mt-6 -mb-6 flex items-center justify-between border-t px-6 py-4">
-                          <div className="text-muted-foreground text-xs">
-                            {thread.length > 1
-                              ? `${thread.length} messages in this thread`
-                              : "Start of conversation"}
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <Button
-                              onClick={handleReplyClick}
-                              className="flex cursor-pointer items-center space-x-2 shadow-sm"
-                            >
-                              <Reply className="h-4 w-4" />
-                              Reply
-                            </Button>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  );
-                })}
+                return (
+                  <EmailMessageCard
+                    key={email.id}
+                    email={email}
+                    isNewest={isNewest}
+                    isOldest={isOldest}
+                    isSenderCurrentUser={isSenderCurrentUser}
+                    threadLength={thread.length}
+                    onReplyClick={handleReplyClick}
+                  />
+                );
+              })}
             </div>
           </ScrollArea>
 
@@ -235,7 +133,6 @@ const EmailDetail = ({
             <ReplyForm
               thread={thread}
               recipientName={recipientName}
-              recipientEmail={recipientName}
               currentUserId={currentUserId!}
               isOpen={showReplyForm}
               onClose={handleReplyClose}
