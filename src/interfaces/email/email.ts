@@ -26,6 +26,8 @@ export interface EmailActionsProps {
 
 export interface ReplyFormProps {
   thread: Email[];
+  setSelectedThread: (thread: Email[]) => void;
+
   recipientName?: string | null;
   currentUserId: string;
   isOpen: boolean;

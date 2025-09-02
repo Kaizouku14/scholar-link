@@ -132,6 +132,7 @@ const EmailDetail = ({
           {showReplyForm && lastMessage && (
             <ReplyForm
               thread={thread}
+              setSelectedThread={setSelectedThread}
               recipientName={recipientName}
               currentUserId={currentUserId!}
               isOpen={showReplyForm}

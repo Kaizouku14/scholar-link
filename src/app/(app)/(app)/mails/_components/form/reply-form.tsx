@@ -15,9 +15,11 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { toast } from "react-hot-toast";
 import type { ReplyFormProps } from "@/interfaces/email/email";
+import type { Email } from "@/types/email";
 
 const ReplyForm = ({
   thread,
+  setSelectedThread,
   recipientName,
   currentUserId,
   isOpen,
@@ -26,9 +28,6 @@ const ReplyForm = ({
   const [replyContent, setReplyContent] = useState("");
   const { mutateAsync: sendMailToMutation, isPending } =
     api.mail.replyToMail.useMutation();
-  const { refetch } = api.mail.getAllUserMail.useQuery(undefined, {
-    enabled: false,
-  });
   const lastMessage = thread[thread.length - 1];
   const recipientId =
     lastMessage?.sender === currentUserId
@@ -37,23 +36,24 @@ const ReplyForm = ({
   const handleSendReply = async (e: FormEvent) => {
     e.preventDefault();
     if (!replyContent.trim() || !thread) return;
-
     try {
       if (!lastMessage) return;
-      await sendMailToMutation({
+      const newMessage = {
         threadId: lastMessage.threadId,
         parentId: lastMessage.id,
         sender: currentUserId,
         receiver: recipientId!,
         subject: lastMessage.subject,
         content: replyContent,
-      });
+      };
 
-      await refetch();
+      await sendMailToMutation(newMessage);
+      setSelectedThread([newMessage as Email, ...thread]);
       setReplyContent("");
       handleClose?.();
     } catch {
       toast.error("Failed to send reply. Please try again.");
+      setSelectedThread([...thread]);
     }
   };
 
