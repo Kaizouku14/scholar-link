@@ -1,4 +1,4 @@
-import { CSVImport } from "@/components/forms/csv-import";
+import { XLSXImport } from "@/components/forms/xlsx-import";
 import {
   Dialog,
   DialogContent,
@@ -20,9 +20,9 @@ const ImportDialog = ({
     <Dialog open={isImportDialogOpen} onOpenChange={setIsImportDialogOpen}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Import CSV</DialogTitle>
+          <DialogTitle>Import XLSX</DialogTitle>
         </DialogHeader>
-        <CSVImport onImportCompleteAction={handleImportComplete} />
+        <XLSXImport onImportCompleteAction={handleImportComplete} />
       </DialogContent>
     </Dialog>
   );

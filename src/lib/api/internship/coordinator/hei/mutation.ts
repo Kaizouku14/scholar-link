@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import { db, inArray } from "@/server/db";
-import { parseInternshipXLSX } from "./coordinatorParseCSV";
+import { parseInternshipXLSX } from "./coordinatorParseXLSX";
 import {
   internship as InternshipTable,
   company as CompanyTable,
@@ -23,7 +23,7 @@ import type {
   NewStudent,
   NewSupervisor,
   NewUser,
-} from "@/interfaces/internship/csv-headers";
+} from "@/interfaces/internship/xlsx-headers";
 import type { SectionType } from "@/constants/users/sections";
 import type { GenderType } from "@/constants/users/genders";
 import type { courseType } from "@/constants/users/courses";
@@ -31,11 +31,9 @@ import type { courseType } from "@/constants/users/courses";
 export const insertInternshipsXLSX = async ({
   file,
   department,
-  course,
 }: {
   file: File;
   department: string;
-  course: courseType;
 }) => {
   if (!file) {
     throw new TRPCError({ code: "BAD_REQUEST", message: "No file uploaded" });
@@ -100,7 +98,9 @@ export const insertInternshipsXLSX = async ({
           email: row.EMAIL,
           contact: row["CONTACT NO."],
           gender: row.SEX as GenderType,
-          course,
+          course: row[
+            "FULL TITLE OF THE PROGRAM ENROLLED IN (DO NOT ABBREVIATE)"
+          ] as courseType,
           department: department as departmentType,
           section: [row.SECTION as SectionType],
           role: ROLE.INTERNSHIP_STUDENT,

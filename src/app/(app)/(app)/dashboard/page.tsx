@@ -7,6 +7,7 @@ import InternshipStudentDashboard from "./(internship)/internshipStudent-dashboa
 import { ROLE, type roleType } from "@/constants/users/roles";
 import AdminDashboard from "./(internship)/internshipAdmin-dashboard";
 
+export const dynamic = "force-dynamic"; // disables static caching for this page
 export const metadata: Metadata = {
   title: "Dashboard",
 };

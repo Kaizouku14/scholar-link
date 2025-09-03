@@ -32,7 +32,6 @@ import {
   insertInternshipsXLSX,
 } from "@/lib/api/internship/coordinator/hei/mutation";
 import { markAsExcused } from "@/lib/api/internship/coordinator/progress-monitoring/mutation";
-import type { courseType } from "@/constants/users/courses";
 
 export const internshipCoordinatorRouter = createTRPCRouter({
   /******************************************
@@ -99,7 +98,7 @@ export const internshipCoordinatorRouter = createTRPCRouter({
       const id = ctx.session!.user.id;
       await rejectDocument({ ...input, userId: id });
     }),
-  uploadInternshipCSV: protectedRoute
+  uploadInternshipXLSX: protectedRoute
     .input(
       zfd.formData({
         file: zfd.file(),
@@ -107,11 +106,9 @@ export const internshipCoordinatorRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const department = ctx.session!.user.department;
-      const course = ctx.session!.user.course as courseType;
       return await insertInternshipsXLSX({
         file: input.file,
         department,
-        course,
       });
     }),
   cancelStudentInternship: protectedRoute

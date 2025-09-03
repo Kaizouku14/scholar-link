@@ -2,7 +2,7 @@ import * as ExcelJS from "exceljs";
 import {
   manualHeaderMap,
   type CoordinatorInternshipHeaders,
-} from "@/interfaces/internship/csv-headers";
+} from "@/interfaces/internship/xlsx-headers";
 import { TRPCError } from "@trpc/server";
 
 export const parseInternshipXLSX = async (fileBuffer: ArrayBuffer) => {
@@ -13,6 +13,7 @@ export const parseInternshipXLSX = async (fileBuffer: ArrayBuffer) => {
     "CONTACT NO.",
     "SEX",
     "SECTION",
+    "FULL TITLE OF THE PROGRAM ENROLLED IN (DO NOT ABBREVIATE)",
     "DATES OF DURATION OF THE INTERNSHIP",
     "PARTNER HOST TRAINING ESTABLISHMENTS (HTEs)",
     "ADDRESS",

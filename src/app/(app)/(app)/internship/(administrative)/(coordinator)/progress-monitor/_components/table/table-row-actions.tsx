@@ -114,9 +114,6 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
                   );
                 const isToday =
                   date.toDateString() === new Date().toDateString();
-                const outsideStyle = day.outside
-                  ? "text-muted-foreground"
-                  : "text-foreground";
                 const isFirstLog =
                   logForDay &&
                   firstLog &&
@@ -191,7 +188,9 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
 
                 return (
                   <td
-                    className={`${outsideStyle} ml-3 w-full rounded p-2 ${isToday && "border-border bg-background hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 border shadow-xs"}`}
+                    className={`${
+                      day.outside ? "text-muted-foreground" : "text-foreground"
+                    } ml-3 w-full rounded p-2 ${isToday && "border-border bg-background hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 border shadow-xs"}`}
                   >
                     {day.date.getDate()}
                   </td>

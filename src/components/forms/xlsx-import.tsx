@@ -7,14 +7,14 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { FileDropArea } from "./file-drop-area";
 
-interface CSVImportProps {
+interface XLSXImportProps {
   onImportCompleteAction: () => void;
 }
 
-export function CSVImport({ onImportCompleteAction }: CSVImportProps) {
+export function XLSXImport({ onImportCompleteAction }: XLSXImportProps) {
   const [file, setFile] = useState<File | null>(null);
   const importMutation =
-    api.internshipCoordinator.uploadInternshipCSV.useMutation();
+    api.internshipCoordinator.uploadInternshipXLSX.useMutation();
 
   const handleFileSelect = (selectedFile: File) => {
     setFile(selectedFile);
