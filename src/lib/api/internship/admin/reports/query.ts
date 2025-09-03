@@ -36,7 +36,7 @@ export const getInternshipReports = async () => {
         SupervisorTable,
         eq(InternshipTable.supervisorId, SupervisorTable.supervisorId),
       )
-      .where(eq(InternshipTable.status, "pending"))
+      .where(eq(InternshipTable.status, "completed"))
       .execute();
 
     const coordinators = await db

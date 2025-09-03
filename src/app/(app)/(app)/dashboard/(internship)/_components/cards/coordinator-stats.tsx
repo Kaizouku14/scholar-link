@@ -32,7 +32,7 @@ const CoordinatorDashboardStats = () => {
             <StatCard
               title="Intern's Document"
               value={dashboardStats.counts?.documentsCompletedCount ?? 0}
-              subtitle="All documents completed"
+              subtitle="Documents completed"
               icon={<Folders className="text-primary h-4 w-4" />}
             />
             <StatCard

@@ -53,8 +53,6 @@ const CreateAccountForm = () => {
       section: [],
       course: undefined,
       department: undefined,
-      gender: undefined,
-      dateOfBirth: undefined,
     };
 
     return baseValues;

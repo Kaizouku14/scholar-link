@@ -1,6 +1,5 @@
 import type { courseType } from "@/constants/users/courses";
 import type { departmentType } from "@/constants/users/departments";
-import type { GenderType } from "@/constants/users/genders";
 import type { roleType } from "@/constants/users/roles";
 import type { SectionType } from "@/constants/users/sections";
 
@@ -12,8 +11,6 @@ export interface UserAccount {
   profileKey?: string;
   contact: string;
   address: string;
-  dateOfBirth: Date;
-  gender: GenderType;
   course?: courseType;
   department: departmentType;
   role: roleType;

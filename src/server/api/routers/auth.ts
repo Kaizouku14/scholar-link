@@ -10,7 +10,6 @@ import {
 import { gellAllInternshipAccounts } from "@/lib/api/auth/query";
 import { COURSES } from "@/constants/users/courses";
 import { DEPARTMENTS } from "@/constants/users/departments";
-import { GENDERS } from "@/constants/users/genders";
 import { ROLES } from "@/constants/users/roles";
 import { SECTIONS } from "@/constants/users/sections";
 
@@ -49,8 +48,6 @@ export const authRouter = createTRPCRouter({
         profileKey: z.string().optional(),
         contact: z.string().min(1, "Contact is required"),
         address: z.string().min(1, "Address is required"),
-        dateOfBirth: z.date({ required_error: "Date of birth is required" }),
-        gender: z.enum(GENDERS),
         department: z.enum(DEPARTMENTS),
         role: z.enum(ROLES),
         course: z.enum(COURSES).optional(),

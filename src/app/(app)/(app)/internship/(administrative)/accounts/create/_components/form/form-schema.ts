@@ -1,6 +1,5 @@
 import { COURSES } from "@/constants/users/courses";
 import { DEPARTMENTS } from "@/constants/users/departments";
-import { GENDERS } from "@/constants/users/genders";
 import { ROLE } from "@/constants/users/roles";
 import { SECTIONS } from "@/constants/users/sections";
 import z from "zod";
@@ -17,8 +16,6 @@ export const accountFormSchema = z
       required_error: "Section is required",
     }),
     address: z.string().min(1, "Address is required"),
-    dateOfBirth: z.date({ required_error: "Date of birth is required" }),
-    gender: z.enum(GENDERS, { required_error: "Gender is required" }),
     department: z.enum(DEPARTMENTS).optional(),
     role: z.enum([ROLE.INTERNSHIP_STUDENT, ROLE.INTERNSHIP_COORDINATOR], {
       required_error: "Role is required",

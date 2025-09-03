@@ -96,7 +96,7 @@ export const CoordinatorFields = ({
       control={form.control}
       name="section"
       render={({ field }) => (
-        <FormItem className="md:col-span-2">
+        <FormItem>
           <FormLabel>Assigned Sections *</FormLabel>
           <Popover>
             <PopoverTrigger asChild>

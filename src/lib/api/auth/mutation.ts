@@ -79,8 +79,6 @@ export const createUserAccount = async ({ data }: { data: UserAccount }) => {
         profileKey: data.profileKey,
         contact: data.contact,
         address: data.address,
-        dateOfBirth: data.dateOfBirth,
-        gender: data.gender,
         course: data.course!,
         department: data.department,
         role: data.role,
