@@ -29,7 +29,7 @@ export const ProfilePictureField = ({
       <FormItem className="flex flex-col">
         <div className="flex items-center gap-4">
           {profilePreview ? (
-            <Avatar className="h-16 w-30">
+            <Avatar className="h-16 w-16">
               <AvatarImage
                 src={profilePreview || "/placeholder.svg"}
                 alt="Profile"

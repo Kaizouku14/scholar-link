@@ -26,7 +26,7 @@ export const EditLog = ({
   data: {
     progressId: string;
     hoursLog: number;
-    description: string;
+    description?: string;
   };
   refetch: () => Promise<unknown>;
 }) => {
@@ -89,7 +89,7 @@ export const EditLog = ({
           <div className="flex flex-col gap-1">
             <Label className="flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
               <FileText className="h-4 w-4 text-green-500" />
-              Description of Activities
+              Issues / Concerns
             </Label>
             <Textarea
               id="description"

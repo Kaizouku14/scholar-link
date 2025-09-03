@@ -13,7 +13,7 @@ export default function ProgressLogs({
         progressId: string;
         hoursLog: number;
         dateLogs: Date;
-        description: string;
+        description?: string | null;
       }[]
     | undefined;
   refetch: () => Promise<unknown>;

@@ -34,7 +34,7 @@ export const internshipStudentRouter = createTRPCRouter({
       z.object({
         logDate: z.date(),
         hours: z.number(),
-        description: z.string(),
+        description: z.string().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -48,7 +48,7 @@ export const internshipStudentRouter = createTRPCRouter({
       z.object({
         id: z.string(),
         hoursLog: z.number(),
-        description: z.string(),
+        description: z.string().optional(),
       }),
     )
     .mutation(async ({ input }) => {

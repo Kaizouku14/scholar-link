@@ -39,7 +39,14 @@ const DocumentForm = () => {
   });
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-
+  const { refetch: refetchUploadedDocuments } =
+    api.internshipStudent.getUserUploadedDocuments.useQuery(undefined, {
+      enabled: false,
+    });
+  const { refetch: refetchDeadlines } =
+    api.internshipUsers.getAllUpcomingDeadlines.useQuery(undefined, {
+      enabled: false,
+    });
   const { data } = api.internshipUsers.getAllDocuments.useQuery();
   const { mutateAsync: uploadDocument } =
     api.internshipStudent.insertStudentDocument.useMutation();
@@ -58,6 +65,8 @@ const DocumentForm = () => {
         documentKey: uploadedDocument.key,
       });
 
+      await refetchUploadedDocuments();
+      await refetchDeadlines();
       toast.success("Document uploaded successfully!");
     } catch (error) {
       toast.error((error as Error).message);
@@ -126,7 +135,11 @@ const DocumentForm = () => {
                       <Input
                         id="document-file-input"
                         type="file"
-                        accept="application/pdf"
+                        accept="application/pdf,
+                        application/msword,
+                        application/vnd.openxmlformats-officedocument.wordprocessingml.document,
+                        application/vnd.ms-excel,
+                        application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                         {...rest}
                         onChange={(e) => {
                           onChange(e.target.files?.[0] ?? null);
@@ -170,7 +183,7 @@ const DocumentForm = () => {
                     </FormMessage>
                   )}
                   <FormDescription className="text-xs">
-                    Upload a PDF file (up to 5 MB).
+                    Upload a file (up to 5 MB).
                   </FormDescription>
                 </FormItem>
               )}

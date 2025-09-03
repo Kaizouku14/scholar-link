@@ -15,6 +15,7 @@ import React from "react";
 
 const DocumentList = ({ documents }: { documents: DocumentCardProps }) => {
   const color = getStatusColor(documents.status);
+
   return (
     <Card className="group from-card to-card/95 border-border/60 relative w-full max-w-sm overflow-hidden rounded-xl border bg-gradient-to-br">
       <div

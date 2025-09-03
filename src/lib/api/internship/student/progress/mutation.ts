@@ -15,7 +15,7 @@ export const insertStudentProgress = async ({
   userId: string;
   logDate: Date;
   hours: number;
-  description: string;
+  description?: string;
 }) => {
   await db.transaction(async (tx) => {
     const internship = await tx
@@ -135,7 +135,7 @@ export const updateStudentLogProgress = async ({
 }: {
   id: string;
   hoursLog: number;
-  description: string;
+  description?: string;
 }) => {
   try {
     await db

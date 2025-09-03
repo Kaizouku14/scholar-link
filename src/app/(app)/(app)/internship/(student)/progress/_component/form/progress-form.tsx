@@ -162,13 +162,13 @@ const ProgressForm = ({ refetch }: { refetch: () => Promise<unknown> }) => {
                   <FormItem>
                     <FormLabel className="flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
                       <FileText className="h-4 w-4 text-green-500" />
-                      Desciption of Activities
+                      Issues / Concerns
                     </FormLabel>
                     <FormControl>
                       <Textarea
                         {...field}
                         className="max-h-20"
-                        placeholder="Describe what you worked on during this day"
+                        placeholder="Provide details about the problem you experienced"
                       />
                     </FormControl>
                     <FormMessage className="text-xs" />

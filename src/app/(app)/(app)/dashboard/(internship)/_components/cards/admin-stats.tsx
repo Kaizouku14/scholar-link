@@ -31,13 +31,13 @@ const AdminDashboardStats = () => {
               icon={<GraduationCap className="text-primary h-4 w-4" />}
             />
             <StatCard
-              title="Active Internships"
+              title="Active"
               value={data.overview?.totalActiveInterns ?? 0}
               subtitle="Currently in Internships"
               icon={<UserCheck className="text-primary h-4 w-4" />}
             />
             <StatCard
-              title="Pending Internships"
+              title="Pending"
               value={data.overview?.pendingInterns ?? 0}
               subtitle={"Awaiting Start"}
               icon={<Clock className="text-primary h-4 w-4" />}

@@ -141,7 +141,7 @@ const Documents = () => {
             ) : (
               <ScrollArea className="h-74">
                 <div className="grid grid-cols-3 gap-2">
-                  {filteredDocuments.pending.map((doc) => (
+                  {filteredDocuments.approved.map((doc) => (
                     <DocumentList key={doc.documentId} documents={doc} />
                   ))}
                 </div>
