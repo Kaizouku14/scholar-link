@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/tooltip";
 
 interface SimpleCalendarProps {
-  events?: { dateLogs: Date; description: string }[];
+  events?: { dateLogs: Date; description?: string | null }[];
 }
 
 const EventCalendar = ({ events = [] }: SimpleCalendarProps) => {
@@ -150,7 +150,7 @@ const EventCalendar = ({ events = [] }: SimpleCalendarProps) => {
                   </span>
                 ) : dayEvent ? (
                   <span className="mx-1 line-clamp-2 w-20 truncate text-center text-[10px] leading-tight text-wrap text-white sm:text-xs">
-                    {formatText(dayEvent.description)}
+                    {dayEvent.description && formatText(dayEvent.description)}
                   </span>
                 ) : null}
               </div>
@@ -164,7 +164,10 @@ const EventCalendar = ({ events = [] }: SimpleCalendarProps) => {
                     {formatText(dayEvent.description ?? "First log entry")}
                   </>
                 ) : (
-                  formatText(dayEvent.description)
+                  <>
+                    {" "}
+                    {dayEvent.description && formatText(dayEvent.description)}
+                  </>
                 )}
               </TooltipContent>
             )}

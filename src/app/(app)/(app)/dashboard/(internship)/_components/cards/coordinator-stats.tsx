@@ -18,41 +18,47 @@ const CoordinatorDashboardStats = () => {
   const { data: coordinatorReminders } =
     api.internshipCoordinator.getAllDocumentReminders.useQuery();
 
+  const stats = [
+    {
+      title: "Assigned Students",
+      value: dashboardStats?.counts?.studentCount ?? 0,
+      subtitle: `${dashboardStats?.coordinatorDeparment} Department`,
+      icon: <Clipboard className="text-primary h-4 w-4" />,
+    },
+    {
+      title: "Intern's Document",
+      value: dashboardStats?.counts?.documentsCompletedCount ?? 0,
+      subtitle: "Documents completed",
+      icon: <Folders className="text-primary h-4 w-4" />,
+    },
+    {
+      title: "Pending",
+      value: dashboardStats?.counts?.pendingCount ?? 0,
+      subtitle: "Requires your attention",
+      icon: <Clock className="text-primary h-4 w-4" />,
+    },
+    {
+      title: "On Going",
+      value: dashboardStats?.counts?.inProgressCount ?? 0,
+      subtitle: "Work in progress",
+      icon: <Hourglass className="text-primary h-4 w-4" />,
+    },
+    {
+      title: "Completed",
+      value: dashboardStats?.counts?.completedCount ?? 0,
+      subtitle: "Successfully completed",
+      icon: <CheckCircle className="text-primary h-4 w-4" />,
+    },
+  ];
+
   return (
     <div className="flex flex-col space-y-4">
       {!isLoadingStats && dashboardStats ? (
         <>
           <div className="grid grid-cols-1 gap-2 md:grid-cols-5">
-            <StatCard
-              title="Assigned Students"
-              value={dashboardStats.counts?.studentCount ?? 0}
-              subtitle={`${dashboardStats.coordinatorDeparment} Department`}
-              icon={<Clipboard className="text-primary h-4 w-4" />}
-            />
-            <StatCard
-              title="Intern's Document"
-              value={dashboardStats.counts?.documentsCompletedCount ?? 0}
-              subtitle="Documents completed"
-              icon={<Folders className="text-primary h-4 w-4" />}
-            />
-            <StatCard
-              title="Pending"
-              value={dashboardStats.counts?.pendingCount ?? 0}
-              subtitle="Requires your attention"
-              icon={<Clock className="text-primary h-4 w-4" />}
-            />
-            <StatCard
-              title="On Going"
-              value={dashboardStats.counts?.inProgressCount ?? 0}
-              subtitle="Requires your attention"
-              icon={<Hourglass className="text-primary h-4 w-4" />}
-            />
-            <StatCard
-              title="Completed"
-              value={dashboardStats.counts?.completedCount ?? 0}
-              subtitle="Successfully completed"
-              icon={<CheckCircle className="text-primary h-4 w-4" />}
-            />
+            {stats.map((stat) => (
+              <StatCard key={stat.title} {...stat} />
+            ))}
           </div>
           <CoordinatorDocumentReminder data={coordinatorReminders} />
         </>

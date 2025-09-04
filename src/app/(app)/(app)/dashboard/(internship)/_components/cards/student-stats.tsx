@@ -4,27 +4,12 @@ import { StatCard } from "@/components/cards/status-card";
 import { format } from "date-fns";
 import { CalendarDays, ChartColumn, Hourglass } from "lucide-react";
 import { useMemo } from "react";
-
-interface DashboardStats {
-  internshipDetails:
-    | {
-        companyName: string | null;
-        companyAddress: string | null;
-        totalHoursRequired: number;
-        duration: string;
-      }
-    | undefined;
-  progress: {
-    hoursLog: number;
-    dateLogs: Date;
-    description: string;
-  }[];
-}
+import type { InternsStats } from "@/interfaces/internship/dashboard";
 
 export const InternsDashboardStats = ({
   dashboard,
 }: {
-  dashboard: DashboardStats;
+  dashboard: InternsStats;
 }) => {
   const statistic = useMemo(() => {
     const progress = dashboard?.progress;
@@ -52,30 +37,34 @@ export const InternsDashboardStats = ({
     };
   }, [dashboard]);
 
+  const stats = [
+    {
+      title: "Total Hours Required",
+      value: statistic.totalHoursRequired,
+      subtitle: "To complete internship",
+      icon: <Hourglass className="text-primary h-4 w-4" />,
+    },
+    {
+      title: "Hours Logged",
+      value: statistic.totalHoursLog,
+      subtitle: `Across ${statistic.noProgress} sessions Logged`,
+      icon: <ChartColumn className="text-primary h-4 w-4" />,
+    },
+    {
+      title: "Latest Session",
+      value: statistic.latestHoursLog + "h",
+      subtitle: statistic.latestDate
+        ? format(statistic.latestDate, "MMM dd")
+        : "N/A",
+      icon: <CalendarDays className="text-primary h-4 w-4" />,
+    },
+  ];
+
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-      <StatCard
-        title="Total Hours Required"
-        value={statistic.totalHoursRequired}
-        subtitle="To complete internship"
-        icon={<Hourglass className="text-primary h-4 w-4" />}
-      />
-      <StatCard
-        title="Hours Logged"
-        value={statistic.totalHoursLog}
-        subtitle={`Across ${statistic.noProgress} sessions Logged`}
-        icon={<ChartColumn className="text-primary h-4 w-4" />}
-      />
-      <StatCard
-        title="Latest Session"
-        value={statistic.latestHoursLog + "h"}
-        subtitle={
-          statistic.latestDate
-            ? format(statistic?.latestDate ?? "", "MMM dd")
-            : "N/A"
-        }
-        icon={<CalendarDays className="text-primary h-4 w-4" />}
-      />
+      {stats.map((stat) => (
+        <StatCard key={stat.title} {...stat} />
+      ))}
     </div>
   );
 };

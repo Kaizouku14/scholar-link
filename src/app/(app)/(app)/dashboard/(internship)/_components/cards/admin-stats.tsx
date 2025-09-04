@@ -19,35 +19,41 @@ const AdminDashboardStats = () => {
   const { data, isLoading } =
     api.internshipAdmin.getAdminDashboardStats.useQuery();
 
+  const stats = [
+    {
+      title: "Total Internships",
+      value: data?.overview?.totalInternship ?? 0,
+      subtitle: "Across All Departments",
+      icon: <GraduationCap className="text-primary h-4 w-4" />,
+    },
+    {
+      title: "Active",
+      value: data?.overview?.totalActiveInterns ?? 0,
+      subtitle: "Currently in Internships",
+      icon: <UserCheck className="text-primary h-4 w-4" />,
+    },
+    {
+      title: "Pending",
+      value: data?.overview?.pendingInterns ?? 0,
+      subtitle: "Awaiting Start",
+      icon: <Clock className="text-primary h-4 w-4" />,
+    },
+    {
+      title: "Completed",
+      value: data?.overview?.totalCompletedInterns ?? 0,
+      subtitle: "Successfully completed",
+      icon: <CheckCircle className="text-primary h-4 w-4" />,
+    },
+  ];
+
   return (
     <div className="flex flex-col gap-4 py-2">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
         {!isLoading && data ? (
           <>
-            <StatCard
-              title="Total Internships"
-              value={data.overview?.totalInternship ?? 0}
-              subtitle="Across All Departments"
-              icon={<GraduationCap className="text-primary h-4 w-4" />}
-            />
-            <StatCard
-              title="Active"
-              value={data.overview?.totalActiveInterns ?? 0}
-              subtitle="Currently in Internships"
-              icon={<UserCheck className="text-primary h-4 w-4" />}
-            />
-            <StatCard
-              title="Pending"
-              value={data.overview?.pendingInterns ?? 0}
-              subtitle={"Awaiting Start"}
-              icon={<Clock className="text-primary h-4 w-4" />}
-            />
-            <StatCard
-              title="Completed"
-              value={data.overview?.totalCompletedInterns ?? 0}
-              subtitle="Successfully completed"
-              icon={<CheckCircle className="text-primary h-4 w-4" />}
-            />
+            {stats.map((stat) => (
+              <StatCard key={stat.title} {...stat} />
+            ))}
           </>
         ) : (
           Array.from({ length: 4 }).map((_, index) => (
