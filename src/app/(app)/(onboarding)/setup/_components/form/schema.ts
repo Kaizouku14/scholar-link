@@ -4,8 +4,8 @@ import { YEAR_LEVEL } from "@/constants/users/year-level";
 import z from "zod";
 
 export const profileSetupSchema = z.object({
-  profile: z.instanceof(File).optional(),
-  gender: z.enum(GENDERS),
+  profile: z.instanceof(File),
+  gender: z.enum(GENDERS, { message: "sex is required" }),
   address: z.string().min(1, { message: "Address is required" }),
   contact: z
     .string()
@@ -16,8 +16,8 @@ export const profileSetupSchema = z.object({
 
 export const studentSetupSchema = z.object({
   studentNo: z.string().min(1, { message: "Student number is required" }),
-  yearLevel: z.enum(YEAR_LEVEL),
-  course: z.enum(COURSES),
+  yearLevel: z.enum(YEAR_LEVEL, { message: "Year level is required" }),
+  course: z.enum(COURSES, { message: "Course is required" }),
 });
 
 export const combinedSetupSchema = profileSetupSchema.and(studentSetupSchema);

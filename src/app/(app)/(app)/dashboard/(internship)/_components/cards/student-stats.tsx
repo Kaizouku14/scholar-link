@@ -2,7 +2,7 @@
 
 import { StatCard } from "@/components/cards/status-card";
 import { format } from "date-fns";
-import { CalendarDays, ChartColumn, Hourglass } from "lucide-react";
+import { CalendarDays, ChartColumn, Clock, Hourglass } from "lucide-react";
 import { useMemo } from "react";
 import type { InternsStats } from "@/interfaces/internship/dashboard";
 
@@ -27,6 +27,7 @@ export const InternsDashboardStats = ({
       progress?.reduce((latest, curr) => {
         return new Date(curr.dateLogs) > new Date(latestDate!) ? curr : latest;
       }, progress[0])?.hoursLog ?? 0;
+    const remainingHours = Math.max(totalHoursRequired - totalHoursLog, 0);
 
     return {
       totalHoursRequired,
@@ -34,6 +35,7 @@ export const InternsDashboardStats = ({
       totalHoursLog,
       latestDate,
       latestHoursLog,
+      remainingHours,
     };
   }, [dashboard]);
 
@@ -42,8 +44,9 @@ export const InternsDashboardStats = ({
       title: "Total Hours Required",
       value: statistic.totalHoursRequired,
       subtitle: "To complete internship",
-      icon: <Hourglass className="text-primary h-4 w-4" />,
+      icon: <Clock className="text-primary h-4 w-4" />,
     },
+
     {
       title: "Hours Logged",
       value: statistic.totalHoursLog,
@@ -58,10 +61,16 @@ export const InternsDashboardStats = ({
         : "N/A",
       icon: <CalendarDays className="text-primary h-4 w-4" />,
     },
+    {
+      title: "Remaining Hours",
+      value: statistic.remainingHours,
+      subtitle: "Hours left to finish",
+      icon: <Hourglass className="text-primary h-4 w-4" />,
+    },
   ];
 
   return (
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
       {stats.map((stat) => (
         <StatCard key={stat.title} {...stat} />
       ))}

@@ -73,7 +73,7 @@ const ProfileSetupForm = ({
             <FormItem>
               <FormLabel className="flex items-center gap-2">
                 <User className="h-4 w-4" />
-                Gender
+                Sex
               </FormLabel>
               <Select onValueChange={field.onChange} value={field.value}>
                 <FormControl>

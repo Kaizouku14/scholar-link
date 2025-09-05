@@ -100,7 +100,6 @@ const CombinedSetupForm = ({
   const onSubmit = async (values: CombinedSetupSchema) => {
     try {
       setIsLoading(true);
-
       const uploadedImage = await uploadFile(values.profile);
       if (!uploadedImage?.url || !uploadedImage?.key) {
         toast.error("Failed to upload image. Please try again.");
