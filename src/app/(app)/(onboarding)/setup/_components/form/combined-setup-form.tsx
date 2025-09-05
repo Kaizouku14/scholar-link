@@ -3,12 +3,11 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type CombinedSetupSchema, combinedSetupSchema } from "./schema";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import ProfileSetupForm from "./profile-setup";
 import StudentSetupForm from "./student-setup";
 import { Form } from "@/components/ui/form";
-import { authClient } from "@/lib/auth-client";
 import { api } from "@/trpc/react";
 import { uploadFile } from "@/lib/uploadthing";
 import { useRouter } from "next/navigation";
@@ -26,9 +25,9 @@ const CombinedSetupForm = ({
   setIsLoading,
 }: CombinedSetupFormProps) => {
   const [profilePreview, setProfilePreview] = useState<string>("");
-  const { data: session } = authClient.useSession();
-  const userId = session?.user.id;
   const router = useRouter();
+  const { data: userInfo } = api.user.getUserInformation.useQuery();
+
   const form = useForm<CombinedSetupSchema>({
     resolver: zodResolver(combinedSetupSchema),
     defaultValues: {
@@ -39,10 +38,32 @@ const CombinedSetupForm = ({
       dateOfBirth: undefined,
       studentNo: "",
       yearLevel: "4th",
+      course: undefined,
     },
     mode: "onChange", // Validate on change to enable/disable next button
     shouldUnregister: false,
   });
+
+  useEffect(() => {
+    if (userInfo) {
+      form.reset({
+        profile: undefined,
+        gender: userInfo.gender ?? undefined,
+        address: userInfo.address ?? "",
+        contact: userInfo.contactNo ?? "",
+        dateOfBirth: userInfo.dateOfBirth
+          ? new Date(userInfo.dateOfBirth)
+          : undefined,
+        studentNo: userInfo.studentNo ?? "",
+        yearLevel: userInfo.yearLevel ?? "4th",
+        course: userInfo.course ?? undefined,
+      });
+
+      if (userInfo.profile) {
+        setProfilePreview(userInfo.profile);
+      }
+    }
+  }, [userInfo, form]);
 
   const handleFileSelect = (file: File) => {
     if (file.name === "") {
@@ -74,24 +95,11 @@ const CombinedSetupForm = ({
     }
   };
 
-  const { mutateAsync: checkStudentNoAvailability } =
-    api.user.checkStudentNoAvailability.useMutation();
   const { mutateAsync: insertStudentProfile } =
     api.user.insertStudentProfile.useMutation();
   const onSubmit = async (values: CombinedSetupSchema) => {
     try {
-      if (!userId) throw new Error("User not found");
       setIsLoading(true);
-
-      const isStudentExist = await checkStudentNoAvailability({
-        studentNo: values.studentNo,
-      });
-
-      if (isStudentExist) {
-        toast.error("Student no is already taken. Please try again.");
-        setCurrentStep(1);
-        return;
-      }
 
       const uploadedImage = await uploadFile(values.profile);
       if (!uploadedImage?.url || !uploadedImage?.key) {
@@ -100,7 +108,6 @@ const CombinedSetupForm = ({
       }
 
       await insertStudentProfile({
-        id: userId,
         profileKey: uploadedImage.key,
         ...values,
         profile: uploadedImage.url,

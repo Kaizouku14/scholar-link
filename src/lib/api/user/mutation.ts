@@ -6,26 +6,26 @@ import {
 } from "@/server/db/schema/auth";
 import { TRPCError } from "@trpc/server";
 
-export const checkStudentNoAvailability = async ({
-  studentNo,
-}: {
-  studentNo: string;
-}) => {
-  try {
-    const [studentNoAvailability] = await db
-      .select()
-      .from(studentTable)
-      .where(eq(studentTable.studentNo, studentNo))
-      .limit(1);
+// export const checkStudentNoAvailability = async ({
+//   studentNo,
+// }: {
+//   studentNo: string;
+// }) => {
+//   try {
+//     const [studentNoAvailability] = await db
+//       .select()
+//       .from(studentTable)
+//       .where(eq(studentTable.studentNo, studentNo))
+//       .limit(1);
 
-    return !!studentNoAvailability;
-  } catch {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: "Failed to check student no availability,",
-    });
-  }
-};
+//     return !!studentNoAvailability;
+//   } catch {
+//     throw new TRPCError({
+//       code: "INTERNAL_SERVER_ERROR",
+//       message: "Failed to check student no availability,",
+//     });
+//   }
+// };
 
 export const insertStudentInfo = async ({ id }: { id: string }) => {
   try {
@@ -54,17 +54,12 @@ export const insertStudentInfo = async ({ id }: { id: string }) => {
 };
 
 export const insertStudentProfile = async ({
+  userId,
   data,
 }: {
   data: StudentProfileType;
+  userId: string;
 }) => {
-  if (!data.id) {
-    throw new TRPCError({
-      code: "BAD_REQUEST",
-      message: "Student ID is required.",
-    });
-  }
-
   try {
     return await db.transaction(async (tx) => {
       const [updatedUser] = await tx
@@ -76,8 +71,9 @@ export const insertStudentProfile = async ({
           dateOfBirth: data.dateOfBirth,
           contact: data.contact,
           address: data.address,
+          course: data.course,
         })
-        .where(eq(userTable.id, data.id))
+        .where(eq(userTable.id, userId))
         .returning();
 
       if (!updatedUser) {
@@ -94,7 +90,7 @@ export const insertStudentProfile = async ({
           yearLevel: data.yearLevel,
           onboarded: true,
         })
-        .where(eq(studentTable.id, data.id))
+        .where(eq(studentTable.id, userId))
         .returning();
 
       if (!updatedStudent) {

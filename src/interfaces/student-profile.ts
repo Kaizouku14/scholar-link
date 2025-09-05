@@ -1,8 +1,8 @@
+import type { courseType } from "@/constants/users/courses";
 import type { GenderType } from "@/constants/users/genders";
 import type { YearLevelType } from "@/constants/users/year-level";
 
 export interface StudentProfileType {
-  id: string;
   profile: string;
   profileKey: string;
   gender: GenderType;
@@ -11,4 +11,5 @@ export interface StudentProfileType {
   dateOfBirth: Date;
   studentNo: string;
   yearLevel: YearLevelType;
+  course: courseType;
 }

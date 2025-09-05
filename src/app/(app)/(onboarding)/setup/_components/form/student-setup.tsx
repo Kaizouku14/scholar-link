@@ -21,6 +21,7 @@ import type { CombinedSetupSchema } from "./schema";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, GraduationCap } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { COURSES } from "@/constants/users/courses";
 
 interface StudentSetupFormProps {
   control: Control<CombinedSetupSchema>;
@@ -37,37 +38,23 @@ const StudentSetupForm = ({
     <div className="space-y-4">
       <FormField
         control={control}
-        name="studentNo"
-        render={({ field }) => (
-          <FormItem className="grid gap-2">
-            <FormLabel>Student No.</FormLabel>
-            <FormControl>
-              <Input placeholder="e.g 2022123456" {...field} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-
-      <FormField
-        control={control}
-        name="yearLevel"
+        name="course"
         render={({ field }) => (
           <FormItem>
             <FormLabel className="flex items-center gap-2">
               <GraduationCap className="h-4 w-4" />
-              Year Level
+              Course
             </FormLabel>
-            <Select onValueChange={field.onChange} value={field.value} disabled>
+            <Select onValueChange={field.onChange} value={field.value}>
               <FormControl>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select your year level" />
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
-                {YEAR_LEVEL.map((yearLevel) => (
-                  <SelectItem key={yearLevel} value={yearLevel}>
-                    {yearLevel}
+                {COURSES.map((course) => (
+                  <SelectItem key={course} value={course}>
+                    {course}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -76,6 +63,50 @@ const StudentSetupForm = ({
           </FormItem>
         )}
       />
+
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <FormField
+          control={control}
+          name="studentNo"
+          render={({ field }) => (
+            <FormItem className="grid gap-2">
+              <FormLabel>Student No.</FormLabel>
+              <FormControl>
+                <Input placeholder="e.g 2022123456" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={control}
+          name="yearLevel"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="flex items-center gap-2">
+                <GraduationCap className="h-4 w-4" />
+                Year Level
+              </FormLabel>
+              <Select onValueChange={field.onChange} value={field.value}>
+                <FormControl>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select your year level" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {YEAR_LEVEL.map((yearLevel) => (
+                    <SelectItem key={yearLevel} value={yearLevel}>
+                      {yearLevel}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </div>
 
       <div className="mt-4 flex justify-between gap-4">
         <Button
