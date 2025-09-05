@@ -1,4 +1,4 @@
-import { adminRoute, createTRPCRouter, publicProcedure } from "../trpc";
+import { adminRoute, createTRPCRouter, publicProcedure } from "../../trpc";
 import z from "zod";
 import { SUBMISSION_TYPE } from "@/constants/scholarship/submittion-type";
 import { SCHOLARSHIP_TYPES } from "@/constants/scholarship/scholarship-types";

@@ -18,7 +18,7 @@ const Layout = async ({ children }: PropsWithChildren) => {
   const isOnboarded = await checkStudentOnBoarded({ id });
   if (!isOnboarded) redirect(PageRoutes.SETUP);
 
-  return <main>{children}</main>;
+  return <main className="mx-auto w-full">{children}</main>;
 };
 
 export default Layout;

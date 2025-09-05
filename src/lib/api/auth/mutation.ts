@@ -12,7 +12,11 @@ import { TRPCError } from "@trpc/server";
 
 export const checkStudentOnBoarded = async ({ id }: { id: string }) => {
   try {
-    const allowedRoles = ROLE.INTERNSHIP_STUDENT;
+    const allowedRoles = [
+      ROLE.INTERNSHIP_STUDENT,
+      ROLE.SCHOLARSHIP_STUDENT,
+    ] as const;
+
     const [studentOnBoarded] = await db
       .select({
         onboarded: studentTable.onboarded,
@@ -23,8 +27,8 @@ export const checkStudentOnBoarded = async ({ id }: { id: string }) => {
       .where(eq(studentTable.id, id))
       .limit(1);
 
-    if (!studentOnBoarded || !allowedRoles.includes(studentOnBoarded.role!))
-      return true;
+    const userRole = studentOnBoarded?.role as (typeof allowedRoles)[number];
+    if (!studentOnBoarded || !allowedRoles.includes(userRole)) return true;
 
     return studentOnBoarded.onboarded;
   } catch (error) {
