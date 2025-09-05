@@ -10,6 +10,7 @@ export const accountFormSchema = z
     surname: z.string().min(1, "Surname is required"),
     middleName: z.string().min(1, "Middle name is required"),
     email: z.string().email("Invalid email address"),
+    password: z.string().optional(),
     profile: z.instanceof(File).optional(),
     contact: z.string().min(1, "Contact is required"),
     section: z.array(z.enum(SECTIONS), {
@@ -29,7 +30,12 @@ export const accountFormSchema = z
         return data.studentNo && data.course && data.section.length > 0;
       }
       if (data.role === ROLE.INTERNSHIP_COORDINATOR) {
-        return data.department && data.course && data.section.length > 0;
+        return (
+          data.password &&
+          data.department &&
+          data.course &&
+          data.section.length > 0
+        );
       }
       return true;
     },

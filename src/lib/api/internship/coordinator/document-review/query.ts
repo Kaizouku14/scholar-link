@@ -17,11 +17,11 @@ export const getAllDocumentsToReviewBySection = async ({
 }: {
   userId: string;
 }) => {
-  const { coordinatorSections, coordinatorDepartment, coordinatorCourse } =
-    await getCoordinatorInfo({ userId });
-
   return await db
     .transaction(async (tx) => {
+      const { coordinatorSections, coordinatorDepartment, coordinatorCourse } =
+        await getCoordinatorInfo({ userId });
+
       const documents = await tx
         .select({
           id: InternDocumentsTable.documentId,

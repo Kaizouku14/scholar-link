@@ -39,7 +39,7 @@ export const PersonalInfoSection = ({
         control={form.control}
         name="name"
         render={({ field }) => (
-          <FormItem className="md:mt-5.5">
+          <FormItem className="md:mt-4.5">
             <FormLabel>First Name *</FormLabel>
             <FormControl>
               <Input placeholder="John" {...field} />
@@ -74,7 +74,7 @@ export const PersonalInfoSection = ({
       control={form.control}
       name="surname"
       render={({ field }) => (
-        <FormItem className="mt-3.5 w-full md:mt-0 md:w-94">
+        <FormItem className="mt-3.5 w-full md:w-94">
           <FormLabel>Surname *</FormLabel>
           <FormControl>
             <Input placeholder="Doe" {...field} />

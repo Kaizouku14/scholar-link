@@ -1,4 +1,3 @@
-import type { SectionType } from "@/constants/users/sections";
 import type { DocumentReminder } from "@/interfaces/internship/alert-card";
 import { formatText } from "@/lib/utils";
 import { and, countDistinct, db, eq, sql, lt } from "@/server/db";
@@ -22,17 +21,8 @@ export const getCoordinatorDashboardStats = async ({
 }) => {
   return await db
     .transaction(async (tx) => {
-      const [coordinator] = await tx
-        .select({
-          section: UserTable.section,
-          department: UserTable.department,
-        })
-        .from(UserTable)
-        .where(eq(UserTable.id, userId))
-        .limit(1);
-
-      const coordinatorSections: SectionType[] = coordinator?.section ?? [];
-      const coordinatorDeparment = coordinator?.department;
+      const { coordinatorSections, coordinatorDepartment, coordinatorCourse } =
+        await getCoordinatorInfo({ userId });
 
       const requiredDocuments = await tx
         .select({ documentType: DocumentTable.documentType })
@@ -66,7 +56,8 @@ export const getCoordinatorDashboardStats = async ({
         )
         .where(
           and(
-            eq(UserTable.department, coordinatorDeparment!),
+            eq(UserTable.department, coordinatorDepartment!),
+            eq(UserTable.course, coordinatorCourse!),
             sql`EXISTS (
                 SELECT 1
                 FROM json_each(${UserTable.section})
@@ -78,7 +69,7 @@ export const getCoordinatorDashboardStats = async ({
 
       return {
         counts,
-        coordinatorDeparment,
+        coordinatorDepartment,
       };
     })
     .catch((error) => {

@@ -27,6 +27,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { SECTIONS } from "@/constants/users/sections";
+import PasswordInput from "@/components/forms/password-input";
 
 export const CoordinatorFields = ({
   form,
@@ -142,6 +143,21 @@ export const CoordinatorFields = ({
           <FormDescription>
             Assign the coordinator to one or more sections.
           </FormDescription>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+
+    <FormField
+      control={form.control}
+      name="password"
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Password *</FormLabel>
+          <FormControl>
+            <PasswordInput type="password" {...field} />
+          </FormControl>
+          <FormDescription>Set the coordinator password.</FormDescription>
           <FormMessage />
         </FormItem>
       )}

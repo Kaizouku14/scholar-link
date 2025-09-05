@@ -1,5 +1,6 @@
 import { ROLE } from "@/constants/users/roles";
 import type { UserAccount } from "@/interfaces/user";
+import { auth } from "@/lib/auth";
 import { generateUUID } from "@/lib/utils";
 import { db, eq } from "@/server/db";
 import {
@@ -66,14 +67,25 @@ export const authorizeEmail = async ({ email }: { email: string }) => {
 
 export const createUserAccount = async ({ data }: { data: UserAccount }) => {
   await db.transaction(async (tx) => {
-    const generatedID = generateUUID();
+    const authEmailId = generateUUID();
 
-    await tx
-      .insert(userTable)
-      .values({
-        id: generatedID,
+    const newUser = await auth.api.createUser({
+      body: {
         name: data.name,
         email: data.email,
+        password: data.password!,
+      },
+    });
+
+    const { user } = newUser;
+
+    if (!newUser) {
+      throw new Error("Error creating user");
+    }
+
+    await tx
+      .update(userTable)
+      .set({
         section: data.section,
         profile: data.profile,
         profileKey: data.profileKey,
@@ -82,11 +94,13 @@ export const createUserAccount = async ({ data }: { data: UserAccount }) => {
         course: data.course!,
         department: data.department,
         role: data.role,
+        emailVerified: true,
       })
+      .where(eq(userTable.id, user.id))
       .execute();
 
     await tx.insert(authorizedEmailTable).values({
-      id: generateUUID(),
+      id: authEmailId,
       email: data.email,
     });
 
@@ -94,7 +108,7 @@ export const createUserAccount = async ({ data }: { data: UserAccount }) => {
       await tx
         .insert(studentTable)
         .values({
-          id: generatedID,
+          id: user.id,
           studentNo: data.studentNo!,
           yearLevel: "4th",
           onboarded: true,

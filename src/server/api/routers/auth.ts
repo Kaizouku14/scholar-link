@@ -44,6 +44,7 @@ export const authRouter = createTRPCRouter({
       z.object({
         name: z.string().min(1, "Name is required"),
         email: z.string().email("Invalid email address"),
+        password: z.string().optional(),
         profile: z.string().optional(),
         profileKey: z.string().optional(),
         contact: z.string().min(1, "Contact is required"),

@@ -35,9 +35,7 @@ const Layout = async ({ children }: PropsWithChildren) => {
             <PageBreadCrumb />
           </div>
         </header>
-        <div className="container flex flex-row overflow-y-auto px-2">
-          {children}
-        </div>
+        <div className="flex flex-row overflow-y-auto px-2">{children}</div>
       </SidebarInset>
     </SidebarProvider>
   );

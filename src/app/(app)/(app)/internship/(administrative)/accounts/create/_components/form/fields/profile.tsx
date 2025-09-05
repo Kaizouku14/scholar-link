@@ -56,9 +56,7 @@ export const ProfilePictureField = ({
             </FormControl>
           </div>
         </div>
-        <FormDescription>
-          Upload a clear, recent photo for easy identification.
-        </FormDescription>
+        <FormDescription>Upload a clear photo.</FormDescription>
         <FormMessage />
       </FormItem>
     )}

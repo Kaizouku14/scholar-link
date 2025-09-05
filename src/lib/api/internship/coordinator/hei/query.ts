@@ -1,5 +1,4 @@
-import { ROLE } from "@/constants/users/roles";
-import { db, eq, and, sql, isNotNull, isNull, or } from "@/server/db";
+import { db, eq, and, sql, isNotNull } from "@/server/db";
 import {
   user as UserTable,
   student as StudentTable,
@@ -18,19 +17,8 @@ export const getCoordinatorSections = async (
   userId: string,
 ): Promise<CoordinatorSectionData[]> => {
   return await db.transaction(async (tx) => {
-    const [coordinator] = await tx
-      .select({
-        section: UserTable.section,
-        course: UserTable.course,
-        department: UserTable.department,
-      })
-      .from(UserTable)
-      .where(eq(UserTable.id, userId))
-      .limit(1);
-
-    const coordinatorSections = coordinator?.section ?? [];
-    const coordinatorDepartment = coordinator!.department;
-    const coordinatorCourse = coordinator?.course;
+    const { coordinatorSections, coordinatorDepartment, coordinatorCourse } =
+      await getCoordinatorInfo({ userId });
 
     const response = await tx
       .select({
@@ -82,36 +70,33 @@ export const getCoordinatorSections = async (
 
 export const getAllUserAccount = async ({ userId }: { userId: string }) => {
   try {
-    const { coordinatorSections, coordinatorDepartment, coordinatorCourse } =
-      await getCoordinatorInfo({ userId });
-
     return await db
       .transaction(async (tx) => {
+        const {
+          coordinatorSections,
+          coordinatorDepartment,
+          coordinatorCourse,
+        } = await getCoordinatorInfo({ userId });
+
         const response = await tx
-          .select({
+          .selectDistinct({
             userId: UserTable.id,
             name: UserTable.name,
             course: UserTable.course,
             section: UserTable.section,
-            yearLevel: StudentTable.yearLevel,
           })
           .from(UserTable)
-          .leftJoin(StudentTable, eq(UserTable.id, StudentTable.id))
-          .leftJoin(InternshipTable, eq(UserTable.id, InternshipTable.userId))
+          .innerJoin(StudentTable, eq(StudentTable.id, UserTable.id))
+          .innerJoin(InternshipTable, eq(InternshipTable.userId, UserTable.id))
           .where(
             and(
-              eq(UserTable.role, ROLE.INTERNSHIP_STUDENT),
-              or(
-                isNull(InternshipTable.userId),
-                eq(InternshipTable.status, "canceled"),
-              ),
               eq(UserTable.department, coordinatorDepartment!),
-              sql`EXISTS (
-                    SELECT 1
-                    FROM json_each(${UserTable.section})
-                    WHERE value IN (${sql.join(coordinatorSections, sql`,`)})
-                )`,
               eq(UserTable.course, coordinatorCourse!),
+              sql`EXISTS (
+                SELECT 1
+                FROM json_each(${UserTable.section})
+                WHERE value IN (${sql.join(coordinatorSections, sql`,`)})
+            )`,
             ),
           )
           .execute();

@@ -18,11 +18,11 @@ export const getAllInternsDocumentsBySection = async ({
 }: {
   userId: string;
 }) => {
-  const { coordinatorSections, coordinatorDepartment, coordinatorCourse } =
-    await getCoordinatorInfo({ userId });
-
   const response = await db
     .transaction(async (tx) => {
+      const { coordinatorSections, coordinatorDepartment, coordinatorCourse } =
+        await getCoordinatorInfo({ userId });
+
       const requiredDocuments = await tx
         .select({ documentType: DocumentTable.documentType })
         .from(DocumentTable);

@@ -22,7 +22,7 @@ const CoordinatorDashboardStats = () => {
     {
       title: "Assigned Students",
       value: dashboardStats?.counts?.studentCount ?? 0,
-      subtitle: `${dashboardStats?.coordinatorDeparment} Department`,
+      subtitle: `${dashboardStats?.coordinatorDepartment} Department`,
       icon: <Clipboard className="text-primary h-4 w-4" />,
     },
     {

@@ -7,6 +7,7 @@ export interface UserAccount {
   name: string;
   section?: SectionType[];
   email: string;
+  password?: string;
   profile?: string;
   profileKey?: string;
   contact: string;

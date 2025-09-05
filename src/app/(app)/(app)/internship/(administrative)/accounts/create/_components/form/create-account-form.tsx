@@ -45,6 +45,7 @@ const CreateAccountForm = () => {
       surname: "",
       middleName: "",
       email: "",
+      password: "",
       profile: undefined,
       contact: "",
       address: "",
@@ -112,6 +113,8 @@ const CreateAccountForm = () => {
       toast.dismiss(toastId);
     }
   };
+
+  console.log(form.formState.errors);
 
   return (
     <Card className="mx-auto w-full shadow-none">

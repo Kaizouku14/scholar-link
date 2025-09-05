@@ -17,11 +17,11 @@ export const getStudentProgressBySection = async ({
 }: {
   userId: string;
 }) => {
-  const { coordinatorSections, coordinatorDepartment, coordinatorCourse } =
-    await getCoordinatorInfo({ userId });
-
   return await db
     .transaction(async (tx) => {
+      const { coordinatorSections, coordinatorDepartment, coordinatorCourse } =
+        await getCoordinatorInfo({ userId });
+
       const response = await tx
         .select({
           id: InternshipTable.internshipId,
