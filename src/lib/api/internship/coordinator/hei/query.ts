@@ -6,7 +6,6 @@ import {
 import {
   internship as InternshipTable,
   company as CompanyTable,
-  progressLog as ProgressTable,
   supervisor as SupervisorTable,
 } from "@/server/db/schema/internship";
 import { TRPCError } from "@trpc/server";
@@ -47,10 +46,6 @@ export const getCoordinatorSections = async (
         SupervisorTable,
         eq(InternshipTable.supervisorId, SupervisorTable.supervisorId),
       )
-      .leftJoin(
-        ProgressTable,
-        eq(ProgressTable.internshipId, InternshipTable.internshipId),
-      )
       .where(
         and(
           isNotNull(InternshipTable.userId),
@@ -63,7 +58,6 @@ export const getCoordinatorSections = async (
           eq(UserTable.department, coordinatorDepartment!),
         ),
       );
-
     return response;
   });
 };
@@ -86,8 +80,8 @@ export const getAllUserAccount = async ({ userId }: { userId: string }) => {
             section: UserTable.section,
           })
           .from(UserTable)
-          .innerJoin(StudentTable, eq(StudentTable.id, UserTable.id))
-          .innerJoin(InternshipTable, eq(InternshipTable.userId, UserTable.id))
+          .leftJoin(StudentTable, eq(StudentTable.id, UserTable.id))
+          .leftJoin(InternshipTable, eq(InternshipTable.userId, UserTable.id))
           .where(
             and(
               eq(UserTable.department, coordinatorDepartment!),

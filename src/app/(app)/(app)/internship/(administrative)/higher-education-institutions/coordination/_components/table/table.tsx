@@ -23,7 +23,6 @@ const InternshipTable = () => {
     await refetch();
   };
 
-  console.log(data);
   return (
     <>
       <div className="w-full">

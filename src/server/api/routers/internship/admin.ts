@@ -1,36 +1,40 @@
-import { createTRPCRouter, protectedRoute } from "../../trpc";
+import { createTRPCRouter, adminRoute } from "../../trpc";
 import { getAllCompany } from "@/lib/api/internship/admin/company/query";
 import { getAdminDashboardStats } from "@/lib/api/internship/admin/dashboard/query";
 import { getAllInternshipDeparments } from "@/lib/api/internship/admin/deparments/query";
 import { cacheData } from "@/lib/redis";
 import { getAdminSections } from "@/lib/api/internship/admin/hei/query";
 import { getInternshipReports } from "@/lib/api/internship/admin/reports/query";
+import { getInternsMoa } from "@/lib/api/internship/admin/moa/query";
 
 export const internshipAdminRouter = createTRPCRouter({
   /******************************************
    *             Admin API Query            *
    ******************************************/
-  getAdminDashboardStats: protectedRoute.query(() => {
+  getAdminDashboardStats: adminRoute.query(() => {
     return cacheData(
       "admin-dashboard",
       async () => await getAdminDashboardStats(),
     );
   }),
-  getAllCompany: protectedRoute.query(async () => {
+  getAllCompany: adminRoute.query(async () => {
     return await cacheData("company", async () => await getAllCompany());
   }),
-  getAllInternshipDeparments: protectedRoute.query(() => {
+  getAllInternshipDeparments: adminRoute.query(() => {
     return cacheData("departments", async () => getAllInternshipDeparments());
   }),
-  getAllInternships: protectedRoute.query(() => {
+  getAllInternships: adminRoute.query(() => {
     return cacheData(`internships`, async () => {
       return await getAdminSections();
     });
   }),
-  getInternshipReports: protectedRoute.query(() => {
+  getInternshipReports: adminRoute.query(() => {
     return cacheData(
       "internship-reports",
       async () => await getInternshipReports(),
     );
+  }),
+  getAllInternsMoa: adminRoute.query(() => {
+    return cacheData("internships-moa", async () => await getInternsMoa());
   }),
 });

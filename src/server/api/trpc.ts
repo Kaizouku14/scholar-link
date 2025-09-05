@@ -123,10 +123,8 @@ const isAdmin = t.middleware(async ({ ctx, next }) => {
   }
 
   if (
-    ctx.session.user.role?.toLowerCase() !== ROLE.SCHOLARSHIP_ADMIN ||
-    ctx.session.user.role?.toLowerCase() !== ROLE.SCHOLARSHIP_COORDINATOR ||
-    ctx.session.user.role?.toLowerCase() !== ROLE.INTERNSHIP_ADMIN ||
-    ctx.session.user.role?.toLowerCase() !== ROLE.INTERNSHIP_COORDINATOR
+    ctx.session.user.role === ROLE.SCHOLARSHIP_STUDENT ||
+    ctx.session.user.role === ROLE.INTERNSHIP_STUDENT
   ) {
     throw new TRPCError({
       code: "UNAUTHORIZED",

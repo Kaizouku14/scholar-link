@@ -53,6 +53,12 @@ export const NAVIGATION_DATA: NavigationData = {
             icon: Building,
             description: "Academic departments",
           },
+          {
+            title: "MOA",
+            url: PageRoutes.INTERNSHIPS_MOAS,
+            icon: FileText,
+            description: "Department agreements and collaborations",
+          },
         ],
       },
       {
