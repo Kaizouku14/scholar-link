@@ -18,7 +18,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { api } from "@/trpc/react";
-import { YEAR_LEVEL_LABELS } from "@/constants/users/year-level";
 import { COURSE_LABELS } from "@/constants/users/courses";
 
 type AccountListProps = {
@@ -63,9 +62,7 @@ export const InternsComboBox = ({ value, onChange }: AccountListProps) => {
                   <div className="flex w-full flex-col text-xs">
                     <span>{detail.name}</span>
                     <div className="text-muted-foreground flex gap-1">
-                      {COURSE_LABELS[detail.course!]} ·{" "}
-                      {YEAR_LEVEL_LABELS[detail.yearLevel!]}
-                      {detail.section}
+                      {COURSE_LABELS[detail.course!]} · {detail.section}
                     </div>
                   </div>
                   <Check

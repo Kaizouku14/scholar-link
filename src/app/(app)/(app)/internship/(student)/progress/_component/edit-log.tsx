@@ -26,7 +26,7 @@ export const EditLog = ({
   data: {
     progressId: string;
     hoursLog: number;
-    description?: string;
+    description?: string | null;
   };
   refetch: () => Promise<unknown>;
 }) => {
@@ -44,7 +44,7 @@ export const EditLog = ({
       await updateLogs({
         id: progressId,
         hoursLog: newHours,
-        description: newDescription,
+        description: newDescription ?? "",
       });
 
       await refetch();
@@ -94,7 +94,7 @@ export const EditLog = ({
             <Textarea
               id="description"
               className="min-h-20"
-              value={newDescription}
+              value={newDescription ?? undefined}
               onChange={(e) => setNewDescription(e.target.value)}
             />
           </div>
