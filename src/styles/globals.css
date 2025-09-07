@@ -168,6 +168,22 @@ html {
 
 @layer components {
   /* TipTap Editor Styles */
+  .ProseMirror p.is-editor-empty:first-child::before {
+    color: #adb5bd;
+    content: attr(data-placeholder);
+    float: left;
+    height: 0;
+    pointer-events: none;
+  }
+
+  .scholarship-content {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
+    max-width: 100%;
+  }
+
   .ProseMirror {
     @apply outline-none;
   }

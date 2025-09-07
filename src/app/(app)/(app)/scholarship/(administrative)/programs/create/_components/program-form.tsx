@@ -39,11 +39,11 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import TiptapEditor from "./titap/editor";
+import { RequirementsForm } from "./requirements-form";
 
 const ProgramForm = () => {
   const form = useForm<ScholarshipFormData>({
     resolver: zodResolver(scholarshipFormSchema),
-    defaultValues: {},
   });
 
   const onSubmit = (values: ScholarshipFormData) => {
@@ -56,7 +56,7 @@ const ProgramForm = () => {
         onSubmit={form.handleSubmit(onSubmit)}
         className="mx-auto w-full space-y-4"
       >
-        <Card>
+        <Card className="shadow-none">
           <CardHeader className="space-y-4">
             <div>
               <h1 className="text-3xl font-bold">Create Scholarship Program</h1>
@@ -69,14 +69,13 @@ const ProgramForm = () => {
 
             <Tabs defaultValue="program" className="w-full">
               <TabsList>
-                <TabsTrigger value="program">Program Information</TabsTrigger>
-                <TabsTrigger value="description">
-                  Program Description
-                </TabsTrigger>
+                <TabsTrigger value="program">Program</TabsTrigger>
+                <TabsTrigger value="description">Description</TabsTrigger>
+                <TabsTrigger value="requirements">Requirements</TabsTrigger>
               </TabsList>
 
               <TabsContent value="program">
-                <CardContent className="grid grid-cols-2 gap-6">
+                <CardContent className="mt-4 grid grid-cols-1 gap-6 md:grid-cols-2">
                   <FormField
                     control={form.control}
                     name="name"
@@ -121,8 +120,7 @@ const ProgramForm = () => {
                           </SelectContent>
                         </Select>
                         <FormDescription>
-                          Choose the type of scholarship (e.g. Academic,
-                          Financial Aid, Grant).
+                          Choose the type of scholarship
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -176,7 +174,6 @@ const ProgramForm = () => {
                         </Select>
                         <FormDescription>
                           Define how students should submit their applications
-                          (e.g. Online, In-person).
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -255,7 +252,7 @@ const ProgramForm = () => {
               </TabsContent>
 
               <TabsContent value="description">
-                <CardContent>
+                <CardContent className="mt-4">
                   <FormField
                     control={form.control}
                     name="description"
@@ -274,6 +271,12 @@ const ProgramForm = () => {
                       </FormItem>
                     )}
                   />
+                </CardContent>
+              </TabsContent>
+
+              <TabsContent value="requirements">
+                <CardContent className="mt-4">
+                  <RequirementsForm />
                 </CardContent>
               </TabsContent>
             </Tabs>

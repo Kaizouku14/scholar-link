@@ -4,6 +4,7 @@ import { createTable } from "../schema";
 import { SUBMISSION_TYPE } from "@/constants/scholarship/submittion-type";
 import { SCHOLARSHIP_TYPES } from "@/constants/scholarship/scholarship-types";
 import { STATUS } from "@/constants/users/status";
+import { REQUIREMENT_TYPES } from "@/constants/scholarship/requirements";
 
 export const scholarshipProgram = createTable("programs", {
   programId: text("program_id").primaryKey(),
@@ -27,7 +28,7 @@ export const requirements = createTable("requirements", {
     .notNull()
     .references(() => scholarshipProgram.programId, { onDelete: "cascade" }),
   label: text("label").notNull(),
-  type: text("type", { enum: ["file", "text", "number", "boolean"] }).notNull(),
+  type: text("type", { enum: REQUIREMENT_TYPES }).notNull(),
   isOptional: integer("is_optional", { mode: "boolean" }).default(false),
 });
 

@@ -6,6 +6,7 @@ import Blockquote from "@tiptap/extension-blockquote";
 import Link from "@tiptap/extension-link";
 import TextAlign from "@tiptap/extension-text-align";
 import Underline from "@tiptap/extension-underline";
+import Placeholder from "@tiptap/extension-placeholder";
 import {
   Bold,
   Italic,
@@ -15,7 +16,6 @@ import {
   Heading2,
   Heading3,
   Quote,
-  Link as LinkIcon,
   AlignLeft,
   AlignCenter,
   AlignRight,
@@ -23,10 +23,7 @@ import {
   Strikethrough,
 } from "lucide-react";
 import { ToggleGroup } from "@/components/ui/toggle-group";
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { cn } from "@/lib/utils";
-import { useCallback } from "react";
 import { ToolbarButton } from "./tool-bar-button";
 
 interface ScholarshipEditorProps {
@@ -45,6 +42,10 @@ export default function ScholarshipEditor({
       Underline,
       Link.configure({ openOnClick: false }),
       TextAlign.configure({ types: ["heading", "paragraph"] }),
+      Placeholder.configure({
+        placeholder:
+          "Describe your scholarship program, eligibility requirements, application process, and deadlines...",
+      }),
     ],
     content: value,
     onUpdate: ({ editor }) => onChange?.(editor.getHTML()),
@@ -52,23 +53,9 @@ export default function ScholarshipEditor({
     editorProps: {
       attributes: {
         class: "focus:outline-none min-h-[200px] scholarship-content",
-        placeholder: "Start writing your scholarship details here...",
       },
     },
   });
-
-  const addLink = useCallback(() => {
-    if (!editor) return;
-    const url = window.prompt("Enter the URL:");
-    if (url) {
-      editor
-        .chain()
-        .focus()
-        .extendMarkRange("link")
-        .setLink({ href: url })
-        .run();
-    }
-  }, [editor]);
 
   if (!editor) return null;
 
@@ -170,7 +157,7 @@ export default function ScholarshipEditor({
 
   return (
     <div className="w-full space-y-4">
-      <div className="bg-muted/20 flex flex-col gap-2 rounded-lg border p-3">
+      <div className="bg-muted/20 flex flex-wrap gap-2 rounded-lg border p-3">
         <ToggleGroup
           type="multiple"
           className="flex flex-wrap"
@@ -181,37 +168,27 @@ export default function ScholarshipEditor({
           ))}
           <Separator orientation="vertical" className="h-8" />
 
-          {headingActions.map((action) => (
-            <ToolbarButton key={action.value} {...action} />
-          ))}
-
           {listAndQuoteActions.map((action) => (
             <ToolbarButton key={action.value} {...action} />
           ))}
-          <Separator orientation="vertical" className="h-8" />
+        </ToggleGroup>
 
+        <ToggleGroup type="single" variant="outline">
+          {headingActions.map((action) => (
+            <ToolbarButton key={action.value} {...action} />
+          ))}
+        </ToggleGroup>
+
+        <ToggleGroup type="single" variant="outline">
           {alignActions.map((action) => (
             <ToolbarButton key={action.value} {...action} />
           ))}
-
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={addLink}
-            className={cn(
-              "h-8 w-8 p-0",
-              editor.isActive("link") && "bg-accent text-accent-foreground",
-            )}
-            aria-label="Add link"
-          >
-            <LinkIcon className="h-4 w-4" />
-          </Button>
         </ToggleGroup>
       </div>
 
       <EditorContent
         editor={editor}
-        className="bg-background focus-within:ring-ring min-h-[300px] w-full rounded-lg border p-4 focus-within:ring-2 focus-within:ring-offset-2"
+        className="bg-background focus-within:ring-ring border-border min-h-[300px] w-full rounded-lg border p-4 focus-within:ring-2 focus-within:ring-offset-2"
       />
     </div>
   );

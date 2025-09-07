@@ -1,3 +1,4 @@
+import { REQUIREMENT_TYPES } from "@/constants/scholarship/requirements";
 import { SCHOLARSHIP_TYPES } from "@/constants/scholarship/scholarship-types";
 import { SUBMISSION_TYPE } from "@/constants/scholarship/submittion-type";
 import z from "zod";
@@ -18,6 +19,12 @@ export const scholarshipFormSchema = z.object({
   deadline: z.date({
     required_error: "Deadline is required",
   }),
+  requirements: z.array(
+    z.object({
+      name: z.string().min(1, "Requirement name is required"),
+      type: z.enum(REQUIREMENT_TYPES),
+    }),
+  ),
 });
 
 export type ScholarshipFormData = z.infer<typeof scholarshipFormSchema>;
