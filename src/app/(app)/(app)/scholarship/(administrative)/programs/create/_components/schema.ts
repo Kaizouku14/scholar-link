@@ -2,7 +2,7 @@ import { SCHOLARSHIP_TYPES } from "@/constants/scholarship/scholarship-types";
 import { SUBMISSION_TYPE } from "@/constants/scholarship/submittion-type";
 import z from "zod";
 
-export const ScholarshipFormSchema = z.object({
+export const scholarshipFormSchema = z.object({
   name: z.string().min(1, "Program name is required"),
   type: z.enum(SCHOLARSHIP_TYPES),
   description: z.string().min(1, "Program description is required"),
@@ -13,7 +13,6 @@ export const ScholarshipFormSchema = z.object({
     })
     .int()
     .positive(),
-  location: z.string().min(1, "Location is required"),
   submissionType: z.enum(SUBMISSION_TYPE),
   image: z.instanceof(File).optional(),
   deadline: z.date({
@@ -21,4 +20,4 @@ export const ScholarshipFormSchema = z.object({
   }),
 });
 
-export type ScholarshipFormData = z.infer<typeof ScholarshipFormSchema>;
+export type ScholarshipFormData = z.infer<typeof scholarshipFormSchema>;

@@ -11,7 +11,7 @@ const FormHeader = () => {
   const handleBackButton = () => router.push(PageRoutes.SCHOLARSHIPS_PROGRAMS);
 
   return (
-    <div className="mt-6 flex items-center gap-4">
+    <div className="flex items-center gap-4">
       <Button
         variant="outline"
         size="icon"
@@ -23,9 +23,7 @@ const FormHeader = () => {
       <div>
         <small className="text-muted-foreground">Back to Programs</small>
 
-        <h2 className="text-lg leading-tight font-semibold">
-          Create Scholarship Program
-        </h2>
+        <h2 className="text-lg leading-tight font-semibold">Add Program</h2>
       </div>
     </div>
   );

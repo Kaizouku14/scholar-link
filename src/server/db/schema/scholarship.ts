@@ -10,7 +10,6 @@ export const scholarshipProgram = createTable("programs", {
   name: text("name").notNull(),
   description: text("description").notNull(),
   slots: integer("slots").notNull(),
-  location: text("location").notNull(),
   type: text("type", { enum: SCHOLARSHIP_TYPES }).notNull(),
   submissionType: text("submission_type", { enum: SUBMISSION_TYPE })
     .default("online")
@@ -19,8 +18,17 @@ export const scholarshipProgram = createTable("programs", {
   imageKey: text("image_key"),
   isActive: integer("is_active", { mode: "boolean" }).notNull().default(false),
   deadline: integer("deadline", { mode: "timestamp" }).notNull(),
-  requirements: text("requirements"),
-  additionalInfo: text("additional_info"),
+  announcements: text("announcements"),
+});
+
+export const requirements = createTable("requirements", {
+  requirementId: text("requirement_id").primaryKey(),
+  programId: text("program_id")
+    .notNull()
+    .references(() => scholarshipProgram.programId, { onDelete: "cascade" }),
+  label: text("label").notNull(),
+  type: text("type", { enum: ["file", "text", "number", "boolean"] }).notNull(),
+  isOptional: integer("is_optional", { mode: "boolean" }).default(false),
 });
 
 export const applicants = createTable("applicants", {

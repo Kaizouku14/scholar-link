@@ -1,0 +1,218 @@
+"use client";
+
+import { useEditor, EditorContent } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import Blockquote from "@tiptap/extension-blockquote";
+import Link from "@tiptap/extension-link";
+import TextAlign from "@tiptap/extension-text-align";
+import Underline from "@tiptap/extension-underline";
+import {
+  Bold,
+  Italic,
+  List,
+  ListOrdered,
+  Heading1,
+  Heading2,
+  Heading3,
+  Quote,
+  Link as LinkIcon,
+  AlignLeft,
+  AlignCenter,
+  AlignRight,
+  Underline as UnderlineIcon,
+  Strikethrough,
+} from "lucide-react";
+import { ToggleGroup } from "@/components/ui/toggle-group";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
+import { useCallback } from "react";
+import { ToolbarButton } from "./tool-bar-button";
+
+interface ScholarshipEditorProps {
+  value?: string;
+  onChange?: (content: string) => void;
+}
+
+export default function ScholarshipEditor({
+  value,
+  onChange,
+}: ScholarshipEditorProps) {
+  const editor = useEditor({
+    extensions: [
+      StarterKit.configure({ heading: { levels: [1, 2, 3] } }),
+      Blockquote,
+      Underline,
+      Link.configure({ openOnClick: false }),
+      TextAlign.configure({ types: ["heading", "paragraph"] }),
+    ],
+    content: value,
+    onUpdate: ({ editor }) => onChange?.(editor.getHTML()),
+    immediatelyRender: false,
+    editorProps: {
+      attributes: {
+        class: "focus:outline-none min-h-[200px] scholarship-content",
+        placeholder: "Start writing your scholarship details here...",
+      },
+    },
+  });
+
+  const addLink = useCallback(() => {
+    if (!editor) return;
+    const url = window.prompt("Enter the URL:");
+    if (url) {
+      editor
+        .chain()
+        .focus()
+        .extendMarkRange("link")
+        .setLink({ href: url })
+        .run();
+    }
+  }, [editor]);
+
+  if (!editor) return null;
+
+  const formattingActions = [
+    {
+      value: "bold",
+      icon: Bold,
+      command: () => editor.chain().focus().toggleBold().run(),
+      isActive: () => editor.isActive("bold"),
+    },
+    {
+      value: "italic",
+      icon: Italic,
+      command: () => editor.chain().focus().toggleItalic().run(),
+      isActive: () => editor.isActive("italic"),
+    },
+    {
+      value: "underline",
+      icon: UnderlineIcon,
+      command: () => editor.chain().focus().toggleUnderline().run(),
+      isActive: () => editor.isActive("underline"),
+    },
+    {
+      value: "strike",
+      icon: Strikethrough,
+      command: () => editor.chain().focus().toggleStrike().run(),
+      isActive: () => editor.isActive("strike"),
+    },
+  ];
+
+  const headingActions = [
+    {
+      value: "h1",
+      icon: Heading1,
+      command: () => editor.chain().focus().toggleHeading({ level: 1 }).run(),
+      isActive: () => editor.isActive("heading", { level: 1 }),
+    },
+    {
+      value: "h2",
+      icon: Heading2,
+      command: () => editor.chain().focus().toggleHeading({ level: 2 }).run(),
+      isActive: () => editor.isActive("heading", { level: 2 }),
+    },
+    {
+      value: "h3",
+      icon: Heading3,
+      command: () => editor.chain().focus().toggleHeading({ level: 3 }).run(),
+      isActive: () => editor.isActive("heading", { level: 3 }),
+    },
+  ];
+
+  const listAndQuoteActions = [
+    {
+      value: "bulletList",
+      icon: List,
+      command: () => editor.chain().focus().toggleBulletList().run(),
+      isActive: () => editor.isActive("bulletList"),
+    },
+    {
+      value: "orderedList",
+      icon: ListOrdered,
+      command: () => editor.chain().focus().toggleOrderedList().run(),
+      isActive: () => editor.isActive("orderedList"),
+    },
+    {
+      value: "blockquote",
+      icon: Quote,
+      command: () => editor.chain().focus().toggleBlockquote().run(),
+      isActive: () => editor.isActive("blockquote"),
+    },
+  ];
+
+  const alignActions = [
+    {
+      value: "alignLeft",
+      icon: AlignLeft,
+      command: () => editor.chain().focus().setTextAlign("left").run(),
+      isActive: () =>
+        editor.isActive("paragraph", { textAlign: "left" }) ||
+        editor.isActive("heading", { textAlign: "left" }),
+    },
+    {
+      value: "alignCenter",
+      icon: AlignCenter,
+      command: () => editor.chain().focus().setTextAlign("center").run(),
+      isActive: () =>
+        editor.isActive("paragraph", { textAlign: "center" }) ||
+        editor.isActive("heading", { textAlign: "center" }),
+    },
+    {
+      value: "alignRight",
+      icon: AlignRight,
+      command: () => editor.chain().focus().setTextAlign("right").run(),
+      isActive: () =>
+        editor.isActive("paragraph", { textAlign: "right" }) ||
+        editor.isActive("heading", { textAlign: "right" }),
+    },
+  ];
+
+  return (
+    <div className="w-full space-y-4">
+      <div className="bg-muted/20 flex flex-col gap-2 rounded-lg border p-3">
+        <ToggleGroup
+          type="multiple"
+          className="flex flex-wrap"
+          variant="outline"
+        >
+          {formattingActions.map((action) => (
+            <ToolbarButton key={action.value} {...action} />
+          ))}
+          <Separator orientation="vertical" className="h-8" />
+
+          {headingActions.map((action) => (
+            <ToolbarButton key={action.value} {...action} />
+          ))}
+
+          {listAndQuoteActions.map((action) => (
+            <ToolbarButton key={action.value} {...action} />
+          ))}
+          <Separator orientation="vertical" className="h-8" />
+
+          {alignActions.map((action) => (
+            <ToolbarButton key={action.value} {...action} />
+          ))}
+
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={addLink}
+            className={cn(
+              "h-8 w-8 p-0",
+              editor.isActive("link") && "bg-accent text-accent-foreground",
+            )}
+            aria-label="Add link"
+          >
+            <LinkIcon className="h-4 w-4" />
+          </Button>
+        </ToggleGroup>
+      </div>
+
+      <EditorContent
+        editor={editor}
+        className="bg-background focus-within:ring-ring min-h-[300px] w-full rounded-lg border p-4 focus-within:ring-2 focus-within:ring-offset-2"
+      />
+    </div>
+  );
+}

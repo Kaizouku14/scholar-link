@@ -165,3 +165,64 @@ html {
     @apply scroll-smooth;
   }
 }
+
+@layer components {
+  /* TipTap Editor Styles */
+  .ProseMirror {
+    @apply outline-none;
+  }
+
+  .ProseMirror h1 {
+    @apply my-4 text-3xl leading-tight font-bold;
+  }
+
+  .ProseMirror h2 {
+    @apply my-3 text-2xl leading-tight font-bold;
+  }
+
+  .ProseMirror h3 {
+    @apply my-2 text-xl leading-tight font-bold;
+  }
+
+  .ProseMirror ul {
+    @apply my-4 list-disc space-y-1 pl-6;
+  }
+
+  .ProseMirror ol {
+    @apply my-4 list-decimal space-y-1 pl-6;
+  }
+
+  .ProseMirror li {
+    @apply my-1;
+  }
+
+  .ProseMirror ul li,
+  .ProseMirror ol li {
+    @apply block;
+    display: list-item !important;
+  }
+
+  .ProseMirror blockquote {
+    @apply border-muted-foreground/30 text-muted-foreground my-4 border-l-4 pl-4 italic;
+  }
+
+  .ProseMirror p {
+    @apply my-2;
+  }
+
+  .ProseMirror p:first-child {
+    @apply mt-0;
+  }
+
+  .ProseMirror p:last-child {
+    @apply mb-0;
+  }
+
+  /* Ensure lists render properly */
+  .ProseMirror ul ul,
+  .ProseMirror ol ol,
+  .ProseMirror ul ol,
+  .ProseMirror ol ul {
+    @apply mt-1 mb-1;
+  }
+}

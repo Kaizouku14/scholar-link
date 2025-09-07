@@ -3,6 +3,8 @@
 import { ShareButton } from "@/components/dropdown/share-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { env } from "@/env";
+import { calculateDaysLeft, isDeadlineApproaching } from "@/lib/utils";
 import { format } from "date-fns";
 import {
   Calendar,
@@ -33,11 +35,8 @@ const ScholarshipHeader = ({ data }: { data: ScholarshipHeaderProps }) => {
   const router = useRouter();
   const pathname = usePathname();
 
-  const daysUntilDeadline = Math.ceil(
-    (new Date(data.deadline).getTime() - new Date().getTime()) /
-      (1000 * 60 * 60 * 24),
-  );
-  const isDeadlineSoon = daysUntilDeadline <= 7 && daysUntilDeadline > 0;
+  const daysUntilDeadline = calculateDaysLeft(data.deadline);
+  const isDeadlineSoon = isDeadlineApproaching(data.deadline);
   const isDeadlinePassed = daysUntilDeadline < 0;
   const isSlotsAvailable = data.slots > 0;
 
@@ -184,8 +183,9 @@ const ScholarshipHeader = ({ data }: { data: ScholarshipHeaderProps }) => {
                     ? "No Slots Available"
                     : "Apply Now"}
               </Button>
-              {/* {TODO: Replace this with actual URL} */}
-              <ShareButton url={`https://scholarlink.vercel.app${pathname}`} />
+              <ShareButton
+                url={`${env.NEXT_PUBLIC_BETTER_AUTH_URL}${pathname}`}
+              />
             </div>
           </div>
 

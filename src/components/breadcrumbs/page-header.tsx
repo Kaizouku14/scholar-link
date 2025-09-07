@@ -19,7 +19,7 @@ export const PageBreadCrumb = () => {
   // break into segments → [internship, accounts, create]
   const parts = pathname.split("/").filter(Boolean);
 
-  // skip first segment if it's just "internship"
+  // skip first segment if it's just "internship" or "scholarship"
   let relevant = ["internship", "scholarship"].includes(parts[0]!)
     ? parts.slice(1)
     : parts;
@@ -28,7 +28,7 @@ export const PageBreadCrumb = () => {
     (part) => part.toLowerCase() !== "higher-education-institutions",
   );
 
-  // build cumulative paths like /internship/accounts, /internship/accounts/create
+  // build cumulative paths like /internship/accounts, /scholarship/students/create
   const pathSegments = relevant.map((_, i) => {
     return "/" + [parts[0], ...relevant.slice(0, i + 1)].join("/");
   });

@@ -5,7 +5,6 @@ import About from "@/components/scholarship-details/tabs/about";
 import Eligibility from "@/components/scholarship-details/tabs/eligibility";
 import Requirements from "@/components/scholarship-details/tabs/requirement";
 import Process from "@/components/scholarship-details/tabs/process";
-import type { AdditionalInfo } from "@/interfaces/scholarship/scholarship-form";
 import ScholarshipHeader from "./scholarship-header";
 import { api } from "@/trpc/react";
 import ScholarshipProgramNotFound from "./not-found";
@@ -26,7 +25,7 @@ const Section = ({ id }: { id: string }) => {
 
   if (!data) return <ScholarshipProgramNotFound />;
 
-  const parsedInfo = JSON.parse(data.additionalInfo!) as AdditionalInfo;
+  const parsedInfo = JSON.parse(data.additionalInfo!) as unknown;
 
   return (
     <div className="w-full">
@@ -42,20 +41,20 @@ const Section = ({ id }: { id: string }) => {
               <TabsTrigger value="announcement">Announcement</TabsTrigger>
             </TabsList>
             <TabsContent value="about" className="mx-1.5 space-y-6 pt-6">
-              <About
+              {/* <About
                 name={data.name}
                 description={data.description}
                 data={parsedInfo}
-              />
+              /> */}
             </TabsContent>
             <TabsContent value="eligibility" className="mx-1.5 space-y-6 pt-6">
-              <Eligibility name={data.name} data={parsedInfo} />
+              {/* <Eligibility name={data.name} data={parsedInfo} /> */}
             </TabsContent>
             <TabsContent value="requirements" className="mx-1.5 space-y-6 pt-6">
-              <Requirements data={parsedInfo} />
+              {/* <Requirements data={parsedInfo} /> */}
             </TabsContent>
             <TabsContent value="process" className="mx-1.5 space-y-6 pt-6">
-              <Process name={data.name} data={parsedInfo} />
+              {/* <Process name={data.name} data={parsedInfo} /> */}
             </TabsContent>
             {/* { TODO: Announcement } */}
             <TabsContent
