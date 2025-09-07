@@ -19,12 +19,14 @@ export const scholarshipFormSchema = z.object({
   deadline: z.date({
     required_error: "Deadline is required",
   }),
-  requirements: z.array(
-    z.object({
-      name: z.string().min(1, "Requirement name is required"),
-      type: z.enum(REQUIREMENT_TYPES),
-    }),
-  ),
+  requirements: z
+    .array(
+      z.object({
+        label: z.string().min(1, "Requirement label is required"),
+        type: z.enum(REQUIREMENT_TYPES),
+      }),
+    )
+    .optional(),
 });
 
 export type ScholarshipFormData = z.infer<typeof scholarshipFormSchema>;

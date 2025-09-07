@@ -29,7 +29,6 @@ export const requirements = createTable("requirements", {
     .references(() => scholarshipProgram.programId, { onDelete: "cascade" }),
   label: text("label").notNull(),
   type: text("type", { enum: REQUIREMENT_TYPES }).notNull(),
-  isOptional: integer("is_optional", { mode: "boolean" }).default(false),
 });
 
 export const applicants = createTable("applicants", {

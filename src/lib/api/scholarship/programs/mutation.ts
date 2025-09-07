@@ -1,50 +1,45 @@
 import type { submissionType } from "@/constants/scholarship/submittion-type";
+import type { ScholarshipPrograms } from "@/interfaces/scholarship/create-program";
 import { generateUUID } from "@/lib/utils";
 import { db, eq } from "@/server/db";
-import { scholarshipProgram } from "@/server/db/schema/scholarship";
-import type {
-  FormFieldProps,
-  ScholarshipFormData,
-} from "@/interfaces/scholarship/scholarship-form";
+import {
+  scholarshipProgram as ProgramTable,
+  requirements as RequirementsTable,
+} from "@/server/db/schema/scholarship";
 import { TRPCError } from "@trpc/server";
 
 export const createScholarshipProgram = async ({
-  basicInfo,
-  formFields,
-  additionalInfo,
+  data,
 }: {
-  basicInfo: ScholarshipFormData;
-  formFields: FormFieldProps[];
-  additionalInfo: string;
+  data: ScholarshipPrograms;
 }) => {
-  const programId = generateUUID();
+  await db.transaction(async (tx) => {
+    const programId = generateUUID();
 
-  try {
-    const [scholarshipResponse] = await db
-      .insert(scholarshipProgram)
-      .values({
-        programId: programId,
-        ...basicInfo,
-        requirements: JSON.stringify(formFields),
-        additionalInfo: JSON.stringify(additionalInfo),
-      })
-      .returning();
-
-    console.log(scholarshipResponse);
-
-    if (!scholarshipResponse) {
-      throw new TRPCError({
-        code: "BAD_REQUEST",
-        message: "Failed to create scholarship program!",
-      });
-    }
-  } catch (error) {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message:
-        "Failed to create scholarship program," + (error as Error).message,
+    await tx.insert(ProgramTable).values({
+      programId: programId,
+      name: data.name,
+      description: data.description,
+      slots: data.slots,
+      type: data.type,
+      submissionType: data.submissionType,
+      imageUrl: data.imageUrl,
+      imageKey: data.imageKey,
+      deadline: data.deadline,
+      isActive: true,
     });
-  }
+
+    if (data.requirements && data.requirements?.length > 0) {
+      for (const requirement of data.requirements) {
+        await tx.insert(RequirementsTable).values({
+          requirementId: generateUUID(),
+          programId: programId,
+          label: requirement.label,
+          type: requirement.type,
+        });
+      }
+    }
+  });
 };
 
 export const disableScholarshipProgram = async ({
@@ -54,9 +49,9 @@ export const disableScholarshipProgram = async ({
 }) => {
   try {
     const response = await db
-      .update(scholarshipProgram)
+      .update(ProgramTable)
       .set({ isActive: false })
-      .where(eq(scholarshipProgram.programId, programId));
+      .where(eq(ProgramTable.programId, programId));
 
     if (!response) {
       throw new TRPCError({
@@ -87,14 +82,14 @@ export const updateProgramAvailability = async ({
 }) => {
   try {
     const response = await db
-      .update(scholarshipProgram)
+      .update(ProgramTable)
       .set({
         deadline,
         submissionType,
         slots,
         isActive: true,
       })
-      .where(eq(scholarshipProgram.programId, programId));
+      .where(eq(ProgramTable.programId, programId));
 
     if (!response) {
       throw new TRPCError({

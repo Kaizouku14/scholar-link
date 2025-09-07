@@ -40,15 +40,41 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import TiptapEditor from "./titap/editor";
 import { RequirementsForm } from "./requirements-form";
+import { api } from "@/trpc/react";
+import toast from "react-hot-toast";
+import SubmitButton from "@/components/forms/submit-button";
+import { uploadFile } from "@/lib/uploadthing";
 
 const ProgramForm = () => {
   const form = useForm<ScholarshipFormData>({
     resolver: zodResolver(scholarshipFormSchema),
   });
+  const { mutateAsync: createProgram } =
+    api.scholarshipCoordinator.createProgram.useMutation();
 
-  const onSubmit = (values: ScholarshipFormData) => {
-    console.log("Form Submitted ✅", values);
+  const onSubmit = async (values: ScholarshipFormData) => {
+    const toastId = toast.loading("Creating scholarship program...");
+    try {
+      let profile;
+      if (values.image) {
+        profile = await uploadFile(values.image);
+      }
+
+      await createProgram({
+        ...values,
+        imageUrl: profile?.url,
+        imageKey: profile?.key,
+      });
+      toast.success("Scholarship program created successfully!");
+      //form.reset();
+    } catch (error) {
+      toast.error((error as Error).message);
+    } finally {
+      toast.dismiss(toastId);
+    }
   };
+
+  console.log(form.formState.errors);
 
   return (
     <Form {...form}>
@@ -236,7 +262,10 @@ const ProgramForm = () => {
                             <Input
                               type="file"
                               accept="image/*"
-                              onChange={field.onChange}
+                              onChange={(e) => {
+                                const file = e.target.files?.[0]; // get first file
+                                field.onChange(file); // pass File object to RHF
+                              }}
                             />
                             <Upload className="text-muted-foreground h-5 w-5" />
                           </div>
@@ -278,23 +307,22 @@ const ProgramForm = () => {
                 <CardContent className="mt-4">
                   <RequirementsForm />
                 </CardContent>
+                <CardFooter className="mt-4 flex w-full justify-end gap-2">
+                  <Button
+                    type="button"
+                    className="w-40"
+                    variant="outline"
+                    onClick={() => form.reset()}
+                  >
+                    Discard
+                  </Button>
+                  <SubmitButton formState={form.formState} className="w-40">
+                    Create Program
+                  </SubmitButton>
+                </CardFooter>
               </TabsContent>
             </Tabs>
           </CardHeader>
-
-          <CardFooter className="flex w-full justify-end gap-2">
-            <Button
-              type="button"
-              className="w-40"
-              variant="outline"
-              onClick={() => form.reset()}
-            >
-              Discard
-            </Button>
-            <Button type="submit" className="w-40">
-              Create Program
-            </Button>
-          </CardFooter>
         </Card>
       </form>
     </Form>

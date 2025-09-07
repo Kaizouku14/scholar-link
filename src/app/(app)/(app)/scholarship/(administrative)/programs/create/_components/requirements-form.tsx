@@ -53,7 +53,7 @@ export const RequirementsForm = () => {
           <div key={field.id} className="flex items-center gap-3">
             <FormField
               control={control}
-              name={`requirements.${index}.name`}
+              name={`requirements.${index}.label`}
               render={({ field }) => (
                 <FormItem className="flex-1">
                   <FormLabel>Requirement {index + 1}</FormLabel>

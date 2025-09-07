@@ -3,6 +3,7 @@ export const REQUIREMENT_TYPES = [
   "text", // applicant writes short answer
   "essay", // long text field
   "checkbox", // applicant confirms something
+  "image",
 ] as const;
 
 export type RequirementType = (typeof REQUIREMENT_TYPES)[number];
