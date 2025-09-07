@@ -169,7 +169,7 @@ html {
 @layer components {
   /* TipTap Editor Styles */
   .ProseMirror p.is-editor-empty:first-child::before {
-    color: #adb5bd;
+    color: var(--color-muted-foreground);
     content: attr(data-placeholder);
     float: left;
     height: 0;
@@ -188,8 +188,16 @@ html {
     @apply outline-none;
   }
 
+  .ProseMirror a {
+    @apply text-blue-500 underline;
+  }
+
   .ProseMirror h1 {
     @apply my-4 text-3xl leading-tight font-bold;
+  }
+
+  .ProseMirror hr {
+    @apply border-muted-foreground my-4 border-t;
   }
 
   .ProseMirror h2 {

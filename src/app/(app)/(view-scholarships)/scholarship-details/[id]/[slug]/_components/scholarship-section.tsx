@@ -1,6 +1,5 @@
 "use client";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { api } from "@/trpc/react";
 import ScholarshipProgramNotFound from "./not-found";
 import HeaderSkeleton from "./skeleton/header-skeleton";
@@ -27,20 +26,12 @@ const Section = ({ id }: { id: string }) => {
       <ScholarshipHeader data={data} />
       <div className="container mx-auto">
         <div className="space-y-6 py-6 md:py-8">
-          <Tabs defaultValue="about" className="w-full">
-            <TabsList className="grid w-full grid-cols-5">
-              <TabsTrigger value="about">About</TabsTrigger>
-              <TabsTrigger value="announcement">Announcement</TabsTrigger>
-            </TabsList>
-            <TabsContent value="about" className="mx-1.5 space-y-6 pt-6">
+          <div className="flex justify-evenly">
+            <div className="flex-1 flex-col gap-1">
               <ScholarshipDetails content={data.section} />
-            </TabsContent>
-            {/* { TODO: Announcement } */}
-            <TabsContent
-              value="announcement"
-              className="space-y-6 pt-6"
-            ></TabsContent>
-          </Tabs>
+            </div>
+            <div className="border-border size-96 rounded-xl border"></div>
+          </div>
 
           <div id="apply" className="scroll-mt-20 pt-6">
             <div className="overflow-hidden rounded-lg border">

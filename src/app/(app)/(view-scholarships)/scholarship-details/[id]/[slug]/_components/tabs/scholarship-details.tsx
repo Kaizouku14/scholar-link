@@ -1,24 +1,16 @@
-import { cn } from "@/lib/utils";
-import DOMPurify from "dompurify";
+"use client";
 
-interface HTMLContentProps {
-  content: string;
-}
+import { useEditor, EditorContent } from "@tiptap/react";
+import type { JSONContent } from "@tiptap/core";
+import { extensions } from "@/lib/titap-extenstions";
 
-export default function ScholarshipDetails({ content }: HTMLContentProps) {
-  const sanitizedContent = DOMPurify.sanitize(content);
+export default function ScholarshipDetails({ content }: { content: string }) {
+  const editor = useEditor({
+    extensions,
+    content: JSON.parse(content) as JSONContent,
+    editable: false, // read-only
+    immediatelyRender: false,
+  });
 
-  return (
-    <div
-      className={cn(
-        "prose prose-sm sm:prose-base lg:prose-lg xl:prose-xl max-w-none",
-        "prose-headings:text-foreground prose-p:text-foreground prose-li:text-foreground",
-        "prose-blockquote:border-l-primary prose-blockquote:text-muted-foreground",
-        "prose-strong:text-foreground prose-code:text-foreground",
-        "prose-ul:list-disc prose-ol:list-decimal",
-        "prose-li:marker:text-muted-foreground",
-      )}
-      dangerouslySetInnerHTML={{ __html: sanitizedContent }}
-    />
-  );
+  return <EditorContent editor={editor} />;
 }
