@@ -1,10 +1,7 @@
 import { adminRoute, createTRPCRouter, publicProcedure } from "../../trpc";
 import z from "zod";
 import { SUBMISSION_TYPE } from "@/constants/scholarship/submittion-type";
-import { SCHOLARSHIP_TYPES } from "@/constants/scholarship/scholarship-types";
-import { FIELD_TYPES } from "@/constants/scholarship/field-type";
 import {
-  createScholarshipProgram,
   disableScholarshipProgram,
   updateProgramAvailability,
 } from "@/lib/api/scholarship/programs/mutation";
@@ -14,43 +11,9 @@ import {
   getAllScholarshipType,
   getProgramById,
 } from "@/lib/api/scholarship/programs/query";
+import { cacheData } from "@/lib/redis";
 
 export const scholarshipRouter = createTRPCRouter({
-  createScholarshipProgram: adminRoute
-    .input(
-      z.object({
-        //Basic Information
-        basicInfo: z.object({
-          name: z.string(),
-          description: z.string(),
-          slots: z.number(),
-          location: z.string(),
-          type: z.enum(SCHOLARSHIP_TYPES),
-          submissionType: z.enum(SUBMISSION_TYPE),
-          deadline: z.date(),
-          imageUrl: z.string().optional(),
-          imageKey: z.string().optional(),
-        }),
-        //form fields
-        formFields: z.array(
-          z.object({
-            id: z.string(),
-            type: z.enum(FIELD_TYPES),
-            label: z.string(),
-            placeholder: z.string(),
-            description: z.string(),
-            required: z.boolean(),
-          }),
-        ),
-        // Additional Info (stored in JSONB)
-        additionalInfo: z.string(),
-      }),
-    )
-    .mutation(async ({ input }) => {
-      await createScholarshipProgram({
-        ...input,
-      });
-    }),
   disableScholarshipProgram: adminRoute
     .input(
       z.object({
@@ -74,8 +37,11 @@ export const scholarshipRouter = createTRPCRouter({
     }),
 
   //Query Routes
-  getAllActivePrograms: publicProcedure.query(async () => {
-    return await getAllActivePrograms();
+  getAllActivePrograms: publicProcedure.query(() => {
+    return cacheData(
+      "active-programs",
+      async () => await getAllActivePrograms(),
+    );
   }),
   getAllPrograms: publicProcedure.query(async () => {
     return await getAllPrograms();
@@ -85,7 +51,10 @@ export const scholarshipRouter = createTRPCRouter({
   }),
   getScholarshipProgramById: publicProcedure
     .input(z.object({ id: z.string() }))
-    .query(async ({ input }) => {
-      return await getProgramById(input.id);
+    .query(({ input }) => {
+      return cacheData(
+        `program-${input.id}`,
+        async () => await getProgramById(input.id),
+      );
     }),
 });

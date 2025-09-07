@@ -7,6 +7,7 @@ export const scholarshipFormSchema = z.object({
   name: z.string().min(1, "Program name is required"),
   type: z.enum(SCHOLARSHIP_TYPES),
   description: z.string().min(1, "Program description is required"),
+  section: z.string().min(1, "Section is required"),
   slots: z.coerce
     .number({
       required_error: "slots is required",

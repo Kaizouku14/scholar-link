@@ -1,15 +1,12 @@
 "use client";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import About from "@/components/scholarship-details/tabs/about";
-import Eligibility from "@/components/scholarship-details/tabs/eligibility";
-import Requirements from "@/components/scholarship-details/tabs/requirement";
-import Process from "@/components/scholarship-details/tabs/process";
-import ScholarshipHeader from "./scholarship-header";
 import { api } from "@/trpc/react";
 import ScholarshipProgramNotFound from "./not-found";
 import HeaderSkeleton from "./skeleton/header-skeleton";
 import SectionSkeleton from "./skeleton/section-skeleton";
+import ScholarshipDetails from "./tabs/scholarship-details";
+import ScholarshipHeader from "./scholarship-header";
 
 const Section = ({ id }: { id: string }) => {
   const { data, isLoading } =
@@ -25,8 +22,6 @@ const Section = ({ id }: { id: string }) => {
 
   if (!data) return <ScholarshipProgramNotFound />;
 
-  const parsedInfo = JSON.parse(data.additionalInfo!) as unknown;
-
   return (
     <div className="w-full">
       <ScholarshipHeader data={data} />
@@ -35,26 +30,10 @@ const Section = ({ id }: { id: string }) => {
           <Tabs defaultValue="about" className="w-full">
             <TabsList className="grid w-full grid-cols-5">
               <TabsTrigger value="about">About</TabsTrigger>
-              <TabsTrigger value="eligibility">Eligibility</TabsTrigger>
-              <TabsTrigger value="requirements">Requirements</TabsTrigger>
-              <TabsTrigger value="process">Process</TabsTrigger>
               <TabsTrigger value="announcement">Announcement</TabsTrigger>
             </TabsList>
             <TabsContent value="about" className="mx-1.5 space-y-6 pt-6">
-              {/* <About
-                name={data.name}
-                description={data.description}
-                data={parsedInfo}
-              /> */}
-            </TabsContent>
-            <TabsContent value="eligibility" className="mx-1.5 space-y-6 pt-6">
-              {/* <Eligibility name={data.name} data={parsedInfo} /> */}
-            </TabsContent>
-            <TabsContent value="requirements" className="mx-1.5 space-y-6 pt-6">
-              {/* <Requirements data={parsedInfo} /> */}
-            </TabsContent>
-            <TabsContent value="process" className="mx-1.5 space-y-6 pt-6">
-              {/* <Process name={data.name} data={parsedInfo} /> */}
+              <ScholarshipDetails content={data.section} />
             </TabsContent>
             {/* { TODO: Announcement } */}
             <TabsContent

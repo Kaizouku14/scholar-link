@@ -12,6 +12,7 @@ export const scholarshipCoordinatorRouter = createTRPCRouter({
         name: z.string(),
         type: z.enum(SCHOLARSHIP_TYPES),
         description: z.string(),
+        section: z.string(),
         slots: z.number(),
         submissionType: z.enum(SUBMISSION_TYPE),
         deadline: z.date(),

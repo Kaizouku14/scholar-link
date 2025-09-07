@@ -44,10 +44,21 @@ import { api } from "@/trpc/react";
 import toast from "react-hot-toast";
 import SubmitButton from "@/components/forms/submit-button";
 import { uploadFile } from "@/lib/uploadthing";
+import { Textarea } from "@/components/ui/textarea";
 
 const ProgramForm = () => {
   const form = useForm<ScholarshipFormData>({
     resolver: zodResolver(scholarshipFormSchema),
+    defaultValues: {
+      name: "",
+      type: "Government",
+      description: "",
+      section: "",
+      slots: 0,
+      submissionType: "online",
+      deadline: undefined,
+      requirements: [],
+    },
   });
   const { mutateAsync: createProgram } =
     api.scholarshipCoordinator.createProgram.useMutation();
@@ -66,15 +77,13 @@ const ProgramForm = () => {
         imageKey: profile?.key,
       });
       toast.success("Scholarship program created successfully!");
-      //form.reset();
+      form.reset();
     } catch (error) {
       toast.error((error as Error).message);
     } finally {
       toast.dismiss(toastId);
     }
   };
-
-  console.log(form.formState.errors);
 
   return (
     <Form {...form}>
@@ -208,6 +217,27 @@ const ProgramForm = () => {
 
                   <FormField
                     control={form.control}
+                    name="description"
+                    render={({ field }) => (
+                      <FormItem className="mt-4 md:col-span-2">
+                        <FormLabel>Program Description *</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            {...field}
+                            className="max-h-[120px]"
+                            placeholder="brief description for this program"
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          Provide details about this program
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
                     name="deadline"
                     render={({ field }) => (
                       <FormItem>
@@ -284,10 +314,10 @@ const ProgramForm = () => {
                 <CardContent className="mt-4">
                   <FormField
                     control={form.control}
-                    name="description"
+                    name="section"
                     render={({ field }) => (
                       <FormItem className="mt-4">
-                        <FormLabel>Program Description *</FormLabel>
+                        <FormLabel>Program Overview *</FormLabel>
                         <FormControl>
                           <TiptapEditor {...field} />
                         </FormControl>
@@ -304,7 +334,7 @@ const ProgramForm = () => {
               </TabsContent>
 
               <TabsContent value="requirements">
-                <CardContent className="mt-4">
+                <CardContent className="mt-6">
                   <RequirementsForm />
                 </CardContent>
                 <CardFooter className="mt-4 flex w-full justify-end gap-2">

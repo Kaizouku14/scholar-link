@@ -5,6 +5,7 @@ import type { submissionType } from "@/constants/scholarship/submittion-type";
 export interface ScholarshipPrograms {
   name: string;
   description: string;
+  section: string;
   slots: number;
   type: ScholarshipType;
   submissionType: submissionType;

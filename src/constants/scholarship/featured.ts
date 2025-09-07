@@ -1,13 +1,11 @@
-import type { submissionType } from "@/constants/scholarship/submittion-type";
+import type { submissionType } from "./submittion-type";
 
-export interface ScholarshipCardProps {
+export interface FeaturedCardProps {
   programId: string;
   name: string;
   imageUrl: string | null;
   slots: number;
   deadline: Date;
-  isActive: boolean;
-  type: string;
   description: string;
   submissionType: submissionType;
 }

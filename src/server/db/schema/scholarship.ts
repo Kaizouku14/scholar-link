@@ -10,6 +10,7 @@ export const scholarshipProgram = createTable("programs", {
   programId: text("program_id").primaryKey(),
   name: text("name").notNull(),
   description: text("description").notNull(),
+  section: text("section").notNull(),
   slots: integer("slots").notNull(),
   type: text("type", { enum: SCHOLARSHIP_TYPES }).notNull(),
   submissionType: text("submission_type", { enum: SUBMISSION_TYPE })

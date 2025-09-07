@@ -12,7 +12,6 @@ export const getAllActivePrograms = async () => {
         imageUrl: scholarshipProgram.imageUrl,
         slots: scholarshipProgram.slots,
         deadline: scholarshipProgram.deadline,
-        location: scholarshipProgram.location,
         description: scholarshipProgram.description,
         submissionType: scholarshipProgram.submissionType,
       })
@@ -41,7 +40,6 @@ export const getAllPrograms = async () => {
         isActive: scholarshipProgram.isActive,
         slots: scholarshipProgram.slots,
         deadline: scholarshipProgram.deadline,
-        location: scholarshipProgram.location,
         type: scholarshipProgram.type,
         description: scholarshipProgram.description,
         submissionType: scholarshipProgram.submissionType,
@@ -62,14 +60,14 @@ export const getAllPrograms = async () => {
 
 export const getProgramById = async (programId: string) => {
   try {
-    const response = await db
+    const [response] = await db
       .select()
       .from(scholarshipProgram)
       .where(eq(scholarshipProgram.programId, programId))
       .limit(1)
       .execute();
 
-    return response[0] ?? null;
+    return response;
   } catch (error) {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",

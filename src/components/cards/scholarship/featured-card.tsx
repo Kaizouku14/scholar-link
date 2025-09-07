@@ -8,24 +8,21 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
 import { Button } from "../../ui/button";
 import { Badge } from "../../ui/badge";
-import { CalendarDays, UsersRound, MapPin, FileText } from "lucide-react";
+import {
+  CalendarDays,
+  UsersRound,
+  MapPin,
+  FileText,
+  Globe,
+  Workflow,
+} from "lucide-react";
 import { PageRoutes } from "@/constants/page-routes";
 import Link from "next/link";
 import { ShareButton } from "../../dropdown/share-button";
 import { slugify } from "@/lib/utils";
 import { format } from "date-fns";
 import { env } from "@/env";
-
-interface FeaturedCardProps {
-  programId: string;
-  name: string;
-  imageUrl: string | null;
-  slots: number;
-  deadline: Date;
-  location: string;
-  description: string;
-  submissionType: string;
-}
+import type { FeaturedCardProps } from "@/constants/scholarship/featured";
 
 const FeaturedCard = ({ data }: { data: FeaturedCardProps }) => {
   const slug = slugify(data.name);
@@ -35,7 +32,7 @@ const FeaturedCard = ({ data }: { data: FeaturedCardProps }) => {
       <CardHeader className="flex flex-row items-start gap-x-3 pb-3">
         <Avatar className="border-background size-12 border-2">
           <AvatarImage
-            src={data.imageUrl ?? "https://github.com/shadcn.png"}
+            src={data.imageUrl ?? undefined}
             alt="scholarship-logo"
           />
           <AvatarFallback className="bg-primary text-primary-foreground">
@@ -79,13 +76,19 @@ const FeaturedCard = ({ data }: { data: FeaturedCardProps }) => {
           </div>
         </div>
 
-        {data.location && (
+        {data.submissionType && (
           <div className="flex items-start gap-2">
-            <MapPin className="text-muted-foreground mt-0.5 h-4 w-4 flex-shrink-0" />
+            {data.submissionType === "online" ? (
+              <Globe className="text-muted-foreground mt-0.5 h-4 w-4 flex-shrink-0" />
+            ) : data.submissionType === "on-site" ? (
+              <MapPin className="text-muted-foreground mt-0.5 h-4 w-4 flex-shrink-0" />
+            ) : (
+              <Workflow className="text-muted-foreground mt-0.5 h-4 w-4 flex-shrink-0" />
+            )}
             <div className="min-w-0 flex-1">
-              <span className="text-muted-foreground text-xs">Location</span>
+              <span className="text-muted-foreground text-xs">Submission</span>
               <p className="text-foreground line-clamp-1 text-sm font-medium">
-                {data.location}
+                {data.submissionType}
               </p>
             </div>
           </div>

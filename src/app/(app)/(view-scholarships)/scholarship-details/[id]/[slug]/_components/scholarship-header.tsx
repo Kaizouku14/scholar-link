@@ -4,6 +4,7 @@ import { ShareButton } from "@/components/dropdown/share-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { env } from "@/env";
+import type { ScholarshipCardProps } from "@/interfaces/scholarship/scholarship-card";
 import { calculateDaysLeft, isDeadlineApproaching } from "@/lib/utils";
 import { format } from "date-fns";
 import {
@@ -20,18 +21,7 @@ import {
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 
-interface ScholarshipHeaderProps {
-  name: string;
-  description: string;
-  slots: number;
-  location: string;
-  type: string;
-  submissionType: string;
-  imageUrl?: string | null;
-  deadline: Date;
-}
-
-const ScholarshipHeader = ({ data }: { data: ScholarshipHeaderProps }) => {
+const ScholarshipHeader = ({ data }: { data: ScholarshipCardProps }) => {
   const router = useRouter();
   const pathname = usePathname();
 
@@ -165,7 +155,9 @@ const ScholarshipHeader = ({ data }: { data: ScholarshipHeaderProps }) => {
                   <p className="text-muted-foreground text-xs">
                     {data.submissionType === "online"
                       ? "Remote application"
-                      : "Physical location"}
+                      : data.submissionType === "on-site"
+                        ? "Physical location"
+                        : "Hybrid application"}
                   </p>
                 </div>
               </div>
@@ -174,14 +166,10 @@ const ScholarshipHeader = ({ data }: { data: ScholarshipHeaderProps }) => {
             <div className="flex items-center gap-3 pt-2">
               <Button
                 size="lg"
-                disabled={isDeadlinePassed || data.slots === 0}
+                disabled={isDeadlinePassed}
                 className="flex-1 cursor-pointer py-2.5 sm:flex-none md:py-1"
               >
-                {isDeadlinePassed
-                  ? "Application Closed"
-                  : data.slots === 0
-                    ? "No Slots Available"
-                    : "Apply Now"}
+                {isDeadlinePassed ? "Application Closed" : "Apply Now"}
               </Button>
               <ShareButton
                 url={`${env.NEXT_PUBLIC_BETTER_AUTH_URL}${pathname}`}

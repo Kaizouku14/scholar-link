@@ -1,5 +1,5 @@
 import { GraduationCap, Search } from "lucide-react";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { PageRoutes } from "@/constants/page-routes";
 

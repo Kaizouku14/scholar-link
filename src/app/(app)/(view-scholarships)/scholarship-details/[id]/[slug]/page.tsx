@@ -1,5 +1,5 @@
-import Section from "@/components/scholarship-details/scholarship-section";
 import type { Metadata } from "next";
+import Section from "./_components/scholarship-section";
 
 export const metadata: Metadata = {
   title: "Scholarship Details",

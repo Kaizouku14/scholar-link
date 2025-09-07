@@ -20,6 +20,7 @@ export const createScholarshipProgram = async ({
       programId: programId,
       name: data.name,
       description: data.description,
+      section: data.section,
       slots: data.slots,
       type: data.type,
       submissionType: data.submissionType,
