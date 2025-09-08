@@ -12,5 +12,9 @@ export interface ScholarshipPrograms {
   deadline: Date;
   imageUrl?: string | null;
   imageKey?: string | null;
-  requirements?: { label: string; type: RequirementType }[];
+  requirements?: {
+    label: string;
+    type: RequirementType;
+    description?: string;
+  }[];
 }

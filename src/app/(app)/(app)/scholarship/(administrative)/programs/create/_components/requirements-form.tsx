@@ -19,6 +19,7 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { REQUIREMENT_TYPES } from "@/constants/scholarship/requirements";
+import { Textarea } from "@/components/ui/textarea";
 
 export const RequirementsForm = () => {
   const { control } = useFormContext();
@@ -36,7 +37,9 @@ export const RequirementsForm = () => {
           type="button"
           variant="outline"
           size="sm"
-          onClick={() => append({ name: "", type: "document" })}
+          onClick={() =>
+            append({ name: "", type: "document", description: "" })
+          }
         >
           <Plus className="mr-2 h-4 w-4" /> Add Requirement
         </Button>
@@ -48,28 +51,51 @@ export const RequirementsForm = () => {
         </p>
       )}
 
-      <div className="space-y-3">
+      <div className="space-y-6">
         {fields.map((field, index) => (
-          <div key={field.id} className="flex items-center gap-3">
-            <FormField
-              control={control}
-              name={`requirements.${index}.label`}
-              render={({ field }) => (
-                <FormItem className="flex-1">
-                  <FormLabel>Requirement {index + 1}</FormLabel>
-                  <FormControl>
-                    <Input placeholder="e.g. Copy of Transcript" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+          <div
+            key={field.id}
+            className="flex flex-col gap-4 rounded-lg border p-4 md:flex-row md:items-start md:gap-6"
+          >
+            <div className="flex-1 space-y-3">
+              <FormField
+                control={control}
+                name={`requirements.${index}.label`}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Requirement {index + 1}</FormLabel>
+                    <FormControl>
+                      <Input placeholder="e.g. Copy of Transcript" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={control}
+                name={`requirements.${index}.description`}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Description (optional)</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Provide extra instructions (e.g., must be signed and stamped)..."
+                        rows={2}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
             <FormField
               control={control}
               name={`requirements.${index}.type`}
               render={({ field }) => (
-                <FormItem className="w-40">
+                <FormItem className="w-full md:w-40">
                   <FormLabel>Type</FormLabel>
                   <Select
                     onValueChange={field.onChange}
@@ -97,7 +123,8 @@ export const RequirementsForm = () => {
               type="button"
               size="icon"
               onClick={() => remove(index)}
-              className="mt-5.5"
+              variant="destructive"
+              className="self-start md:mt-5.5"
             >
               <Trash2 className="h-4 w-4" />
             </Button>

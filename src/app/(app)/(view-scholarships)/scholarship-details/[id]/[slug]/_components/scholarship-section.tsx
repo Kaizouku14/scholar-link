@@ -8,7 +8,7 @@ import ScholarshipDetails from "./tabs/scholarship-details";
 import ScholarshipHeader from "./scholarship-header";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState, useRef } from "react";
-import { Button } from "@/components/ui/button";
+import { ApplicationForm } from "./form/flexible-form";
 
 const Section = ({ id }: { id: string }) => {
   const [tab, setTab] = useState("program-overview");
@@ -45,7 +45,11 @@ const Section = ({ id }: { id: string }) => {
               <TabsTrigger value="program-overview">
                 Program Overview
               </TabsTrigger>
-              <TabsTrigger value="application">Application</TabsTrigger>
+              {data.program.submissionType === "online" &&
+                data.requirements &&
+                data.requirements.length > 0 && (
+                  <TabsTrigger value="application">Application</TabsTrigger>
+                )}
             </TabsList>
             <TabsContent value="program-overview">
               <div className="flex flex-col space-y-6 max-md:items-center md:flex-row md:justify-evenly md:space-y-0 md:space-x-6">
@@ -77,37 +81,33 @@ const Section = ({ id }: { id: string }) => {
                     Always check your inbox and spam folder to make sure you
                     don&apos;t miss it.
                   </p>
-
-                  <div className="mt-4 flex w-full justify-end">
-                    <Button
-                      size="lg"
-                      className="cursor-pointer py-2.5"
-                      onClick={() => setTab("application")}
-                    >
-                      Apply Now
-                    </Button>
-                  </div>
                 </div>
               </div>
             </TabsContent>
-            <TabsContent value="application">
-              <div
-                id="apply"
-                className="scroll-mt-20 pt-6"
-                ref={applicationRef}
-              >
-                <div className="overflow-hidden rounded-lg border">
-                  <div className="bg-primary/10 border-b p-4">
-                    <h2 className="text-2xl font-bold">Apply Now</h2>
-                    <p className="text-muted-foreground">
-                      Complete the application form below and upload all
-                      required documents to apply for the scholarship.
-                    </p>
+            {(data.program.submissionType === "online" ||
+              data.program.submissionType === "hybrid") &&
+              data.requirements.length > 0 && (
+                <TabsContent value="application">
+                  <div
+                    id="apply"
+                    className="scroll-mt-20 pt-6"
+                    ref={applicationRef}
+                  >
+                    <div className="overflow-hidden rounded-lg border">
+                      <div className="bg-primary/10 border-b p-4">
+                        <h2 className="text-2xl font-bold">Apply Now</h2>
+                        <p className="text-muted-foreground">
+                          Complete the application form below and upload all
+                          required documents to apply for the scholarship.
+                        </p>
+                      </div>
+                      <div className="p-6">
+                        <ApplicationForm requirements={data.requirements} />
+                      </div>
+                    </div>
                   </div>
-                  <div className="p-6">{/* <ApplicationForm /> */}</div>
-                </div>
-              </div>
-            </TabsContent>
+                </TabsContent>
+              )}
           </Tabs>
         </div>
       </div>
