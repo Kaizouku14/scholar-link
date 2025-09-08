@@ -305,10 +305,7 @@ export const renderPersonalInfoFields = <T extends FieldValues>({
           render={({ field }) => (
             <FormItem>
               <FormLabel>Section</FormLabel>
-              <Select
-                onValueChange={field.onChange}
-                defaultValue={field.value as string}
-              >
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select your section" />

@@ -14,18 +14,32 @@ import {
 import { cacheData } from "@/lib/redis";
 import { GENDERS } from "@/constants/users/genders";
 import { COURSES } from "@/constants/users/courses";
+import { DEPARTMENTS } from "@/constants/users/departments";
+import { SECTIONS } from "@/constants/users/sections";
+import { YEAR_LEVEL } from "@/constants/users/year-level";
 
 export const scholarshipRouter = createTRPCRouter({
   sendApplication: publicProcedure
     .input(
       z.object({
         name: z.string(),
-        email: z.string(),
         sex: z.enum(GENDERS),
         dateOfBirth: z.date(),
+        email: z.string(),
         contact: z.string(),
         address: z.string(),
         course: z.enum(COURSES),
+        yearLevel: z.enum(YEAR_LEVEL),
+        section: z.enum(SECTIONS),
+        department: z.enum(DEPARTMENTS),
+        studentNo: z.string(),
+        requirements: z.record(
+          z.string(),
+          z.object({
+            key: z.string(),
+            url: z.string().url(),
+          }),
+        ),
       }),
     )
     .mutation(async ({ input }) => {

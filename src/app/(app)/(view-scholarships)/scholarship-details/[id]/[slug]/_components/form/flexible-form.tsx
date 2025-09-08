@@ -2,7 +2,6 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -26,6 +25,10 @@ import { createFormSchema } from "./flexible-form-schema";
 import type z from "zod";
 import { uploadFile } from "@/lib/uploadthing";
 import { renderPersonalInfoFields } from "./personal-field";
+import toast from "react-hot-toast";
+import { api } from "@/trpc/react";
+import type { Application } from "@/interfaces/scholarship/create-program";
+import SubmitButton from "@/components/forms/submit-button";
 
 export const ApplicationForm = ({
   requirements,
@@ -46,6 +49,9 @@ export const ApplicationForm = ({
       address: "",
       course: undefined,
       yearLevel: undefined,
+      department: "",
+      section: undefined,
+      studentNo: "",
       requirements: [
         {
           name: "",
@@ -57,29 +63,47 @@ export const ApplicationForm = ({
     },
   });
 
-  const handleSubmittedRequirements = async (
-    requirements: Record<string, FileList>,
-  ) => {
+  const handleSubmittedRequirements = async (data: FormData) => {
     const uploadedRequirements: Record<string, { key: string; url: string }> =
       {};
 
-    for (const [requirementId, fileList] of Object.entries(requirements)) {
-      const file = fileList?.[0]; // take first file
-      if (!file) continue;
+    for (const [requirementId, value] of Object.entries(data)) {
+      if (value instanceof FileList) {
+        const file = value[0];
+        if (!file) continue;
 
-      const uploaded = await uploadFile(file);
-      if (uploaded?.key && uploaded?.url) {
-        uploadedRequirements[requirementId] = {
-          key: uploaded.key,
-          url: uploaded.url,
-        };
+        const uploaded = await uploadFile(file);
+        if (uploaded?.key && uploaded?.url) {
+          uploadedRequirements[requirementId] = {
+            key: uploaded.key,
+            url: uploaded.url,
+          };
+        }
       }
     }
+
     return uploadedRequirements;
   };
 
+  const { mutateAsync: sendApplication } =
+    api.scholarships.sendApplication.useMutation();
   const onSubmit = async (data: FormData) => {
-    console.log(data);
+    const toastId = toast.loading("Submitting application...");
+    try {
+      const uploadedRequirements = await handleSubmittedRequirements(data);
+
+      const formData = {
+        ...data,
+        requirements: uploadedRequirements,
+      } as Application;
+
+      await sendApplication(formData);
+      toast.success("Application submitted successfully!");
+    } catch (error) {
+      toast.error((error as Error).message);
+    } finally {
+      toast.dismiss(toastId);
+    }
   };
 
   const renderField = (requirement: Requirement) => {
@@ -212,9 +236,9 @@ export const ApplicationForm = ({
               </div>
             )}
             <div className="flex justify-end pt-4">
-              <Button type="submit" size="lg">
+              <SubmitButton formState={form.formState} className="w-52 px-2">
                 Submit Requirements
-              </Button>
+              </SubmitButton>
             </div>
           </form>
         </Form>

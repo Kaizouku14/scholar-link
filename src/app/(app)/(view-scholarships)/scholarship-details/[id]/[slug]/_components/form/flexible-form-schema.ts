@@ -28,9 +28,9 @@ export const createFormSchema = (requirements: Requirement[]) => {
       .min(10, "Please provide a complete address"),
     course: z.enum(COURSES, { message: "Course is required" }),
     yearLevel: z.enum(YEAR_LEVEL, { message: "Year level is required" }),
-    section: z.array(z.enum(SECTIONS)),
-    department: z.enum(DEPARTMENTS),
-    studentNo: z.string(),
+    section: z.enum(SECTIONS, { message: "Section is required" }),
+    department: z.enum(DEPARTMENTS, { message: "Department is required" }),
+    studentNo: z.string().min(1, "Student No. is required"),
   };
 
   requirements.forEach((req) => {
