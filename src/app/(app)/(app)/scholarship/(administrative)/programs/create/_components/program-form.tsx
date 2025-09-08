@@ -53,7 +53,8 @@ const ProgramForm = () => {
       name: "",
       type: "Government",
       description: "",
-      section: "",
+      section:
+        "🎓 Welcome to ScholarLink! Start typing your scholarship details here. Use the toolbar to format text, add links, or highlight key info.",
       slots: 0,
       submissionType: "online",
       deadline: undefined,

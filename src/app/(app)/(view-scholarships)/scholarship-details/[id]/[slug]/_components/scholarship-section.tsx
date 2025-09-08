@@ -6,8 +6,13 @@ import HeaderSkeleton from "./skeleton/header-skeleton";
 import SectionSkeleton from "./skeleton/section-skeleton";
 import ScholarshipDetails from "./tabs/scholarship-details";
 import ScholarshipHeader from "./scholarship-header";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useState, useRef } from "react";
+import { Button } from "@/components/ui/button";
 
 const Section = ({ id }: { id: string }) => {
+  const [tab, setTab] = useState("program-overview");
+  const applicationRef = useRef<HTMLDivElement | null>(null);
   const { data, isLoading } =
     api.scholarships.getScholarshipProgramById.useQuery({ id });
 
@@ -19,32 +24,91 @@ const Section = ({ id }: { id: string }) => {
       </>
     );
 
-  if (!data) return <ScholarshipProgramNotFound />;
+  if (!data?.program) return <ScholarshipProgramNotFound />;
 
   return (
     <div className="w-full">
-      <ScholarshipHeader data={data} />
+      <ScholarshipHeader
+        data={data.program}
+        setTab={setTab}
+        applicationRef={applicationRef}
+      />
       <div className="container mx-auto">
         <div className="space-y-6 py-6 md:py-8">
-          <div className="flex justify-evenly">
-            <div className="flex-1 flex-col gap-1">
-              <ScholarshipDetails content={data.section} />
-            </div>
-            <div className="border-border size-96 rounded-xl border"></div>
-          </div>
+          <Tabs
+            defaultValue={"program-overview"}
+            value={tab}
+            onValueChange={setTab}
+            className="w-full"
+          >
+            <TabsList>
+              <TabsTrigger value="program-overview">
+                Program Overview
+              </TabsTrigger>
+              <TabsTrigger value="application">Application</TabsTrigger>
+            </TabsList>
+            <TabsContent value="program-overview">
+              <div className="flex flex-col space-y-6 max-md:items-center md:flex-row md:justify-evenly md:space-y-0 md:space-x-6">
+                <div className="flex flex-1 flex-col gap-4 px-6">
+                  <ScholarshipDetails content={data.program.section} />
+                </div>
 
-          <div id="apply" className="scroll-mt-20 pt-6">
-            <div className="overflow-hidden rounded-lg border">
-              <div className="bg-primary/10 border-b p-4">
-                <h2 className="text-2xl font-bold">Apply Now</h2>
-                <p className="text-muted-foreground">
-                  Complete the application form below and upload all required
-                  documents to apply for the scholarship.
-                </p>
+                <div className="border-border bg-background h-fit w-full max-w-md flex-shrink-0 rounded-xl border p-6">
+                  <div className="mb-4">
+                    <h2 className="text-primary mb-2 text-2xl font-bold">
+                      Requirements
+                    </h2>
+                    <p className="text-muted-foreground text-sm">
+                      Prepare the following requirements before applying:
+                    </p>
+                  </div>
+
+                  <ol className="text-foreground list-inside list-decimal space-y-2">
+                    {data?.requirements.map((r, index) => (
+                      <li key={index} className="px-3 py-1 text-sm font-medium">
+                        {r.label}
+                      </li>
+                    ))}
+                  </ol>
+
+                  <p className="text-muted-foreground mt-6 text-sm">
+                    📧 After submitting all the requirements, please wait for
+                    our email. <br />
+                    Always check your inbox and spam folder to make sure you
+                    don&apos;t miss it.
+                  </p>
+
+                  <div className="mt-4 flex w-full justify-end">
+                    <Button
+                      size="lg"
+                      className="cursor-pointer py-2.5"
+                      onClick={() => setTab("application")}
+                    >
+                      Apply Now
+                    </Button>
+                  </div>
+                </div>
               </div>
-              <div className="p-6">{/* <ApplicationForm /> */}</div>
-            </div>
-          </div>
+            </TabsContent>
+            <TabsContent value="application">
+              <div
+                id="apply"
+                className="scroll-mt-20 pt-6"
+                ref={applicationRef}
+              >
+                <div className="overflow-hidden rounded-lg border">
+                  <div className="bg-primary/10 border-b p-4">
+                    <h2 className="text-2xl font-bold">Apply Now</h2>
+                    <p className="text-muted-foreground">
+                      Complete the application form below and upload all
+                      required documents to apply for the scholarship.
+                    </p>
+                  </div>
+                  <div className="p-6">{/* <ApplicationForm /> */}</div>
+                </div>
+              </div>
+            </TabsContent>
+          </Tabs>
         </div>
       </div>
     </div>

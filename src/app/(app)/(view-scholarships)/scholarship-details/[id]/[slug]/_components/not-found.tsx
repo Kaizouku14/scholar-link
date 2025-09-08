@@ -32,7 +32,7 @@ const ScholarshipProgramNotFound = () => {
 
             <Button asChild>
               <Link
-                href={PageRoutes.SCHOLARSHIPS}
+                href={PageRoutes.SCHOLARSHIPS_PUBLIC}
                 className="flex items-center gap-2"
               >
                 <Search className="h-4 w-4" />

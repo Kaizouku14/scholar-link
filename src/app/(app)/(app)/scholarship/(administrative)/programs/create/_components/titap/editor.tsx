@@ -18,7 +18,7 @@ import {
   LinkIcon,
   Trash,
   MinusIcon,
-  Brush,
+  Palette,
   Ban,
 } from "lucide-react";
 import { ToggleGroup } from "@/components/ui/toggle-group";
@@ -165,7 +165,7 @@ export default function ScholarshipEditor({
         <Popover key="textColor">
           <PopoverTrigger asChild>
             <Button variant="ghost" className="h-full" size="icon">
-              <Brush className="h-4 w-4" />
+              <Palette className="h-4 w-4" />
             </Button>
           </PopoverTrigger>
           <PopoverContent className="flex w-fit items-center gap-2 p-2">

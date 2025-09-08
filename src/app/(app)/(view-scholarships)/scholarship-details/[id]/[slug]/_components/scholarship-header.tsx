@@ -20,8 +20,17 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
+import type { RefObject } from "react";
 
-const ScholarshipHeader = ({ data }: { data: ScholarshipCardProps }) => {
+const ScholarshipHeader = ({
+  data,
+  setTab,
+  applicationRef,
+}: {
+  data: ScholarshipCardProps;
+  setTab: (tab: string) => void;
+  applicationRef?: RefObject<HTMLDivElement | null>;
+}) => {
   const router = useRouter();
   const pathname = usePathname();
 
@@ -83,14 +92,14 @@ const ScholarshipHeader = ({ data }: { data: ScholarshipCardProps }) => {
             </div>
 
             <div className="space-y-4">
-              <h1 className="text-foreground text-3xl font-bold tracking-tight md:text-4xl lg:text-5xl">
+              <h1 className="text-foreground text-2xl font-bold tracking-tight md:text-4xl lg:text-5xl">
                 {data.name}
               </h1>
 
               {data.description && (
                 <div className="flex items-start gap-3">
                   <FileText className="text-muted-foreground mt-1 h-5 w-5 flex-shrink-0" />
-                  <p className="text-muted-foreground text-lg leading-relaxed">
+                  <p className="text-muted-foreground text-sm leading-relaxed md:text-lg">
                     {data.description}
                   </p>
                 </div>
@@ -168,6 +177,15 @@ const ScholarshipHeader = ({ data }: { data: ScholarshipCardProps }) => {
                 size="lg"
                 disabled={isDeadlinePassed}
                 className="flex-1 cursor-pointer py-2.5 sm:flex-none md:py-1"
+                onClick={() => {
+                  setTab("application");
+                  setTimeout(() => {
+                    applicationRef?.current?.scrollIntoView({
+                      behavior: "smooth",
+                      block: "start",
+                    });
+                  }, 100);
+                }}
               >
                 {isDeadlinePassed ? "Application Closed" : "Apply Now"}
               </Button>
@@ -178,7 +196,7 @@ const ScholarshipHeader = ({ data }: { data: ScholarshipCardProps }) => {
           </div>
 
           <div className="flex-shrink-0 lg:w-80">
-            <div className="bg-background relative overflow-hidden rounded-xl border shadow-lg">
+            <div className="bg-background relative hidden overflow-hidden rounded-xl border shadow-lg md:block">
               {/* {TODO: Replace this with actual image placeholder} */}
               <Image
                 src={data.imageUrl ?? "/placeholder.svg?height=320&width=400"}

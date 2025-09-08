@@ -1,5 +1,8 @@
 import { db } from "@/server/db";
-import { scholarshipProgram } from "@/server/db/schema/scholarship";
+import {
+  scholarshipProgram as ProgramTable,
+  requirements as RequirementsTable,
+} from "@/server/db/schema/scholarship";
 import { TRPCError } from "@trpc/server";
 import { desc, eq } from "drizzle-orm";
 
@@ -7,17 +10,17 @@ export const getAllActivePrograms = async () => {
   try {
     const response = await db
       .select({
-        programId: scholarshipProgram.programId,
-        name: scholarshipProgram.name,
-        imageUrl: scholarshipProgram.imageUrl,
-        slots: scholarshipProgram.slots,
-        deadline: scholarshipProgram.deadline,
-        description: scholarshipProgram.description,
-        submissionType: scholarshipProgram.submissionType,
+        programId: ProgramTable.programId,
+        name: ProgramTable.name,
+        imageUrl: ProgramTable.imageUrl,
+        slots: ProgramTable.slots,
+        deadline: ProgramTable.deadline,
+        description: ProgramTable.description,
+        submissionType: ProgramTable.submissionType,
       })
-      .from(scholarshipProgram)
-      .where(eq(scholarshipProgram.isActive, true))
-      .orderBy(desc(scholarshipProgram.deadline))
+      .from(ProgramTable)
+      .where(eq(ProgramTable.isActive, true))
+      .orderBy(desc(ProgramTable.deadline))
       .execute();
 
     return response;
@@ -34,18 +37,18 @@ export const getAllPrograms = async () => {
   try {
     const response = await db
       .select({
-        programId: scholarshipProgram.programId,
-        name: scholarshipProgram.name,
-        imageUrl: scholarshipProgram.imageUrl,
-        isActive: scholarshipProgram.isActive,
-        slots: scholarshipProgram.slots,
-        deadline: scholarshipProgram.deadline,
-        type: scholarshipProgram.type,
-        description: scholarshipProgram.description,
-        submissionType: scholarshipProgram.submissionType,
+        programId: ProgramTable.programId,
+        name: ProgramTable.name,
+        imageUrl: ProgramTable.imageUrl,
+        isActive: ProgramTable.isActive,
+        slots: ProgramTable.slots,
+        deadline: ProgramTable.deadline,
+        type: ProgramTable.type,
+        description: ProgramTable.description,
+        submissionType: ProgramTable.submissionType,
       })
-      .from(scholarshipProgram)
-      .orderBy(desc(scholarshipProgram.deadline))
+      .from(ProgramTable)
+      .orderBy(desc(ProgramTable.deadline))
       .execute();
 
     return response;
@@ -60,14 +63,23 @@ export const getAllPrograms = async () => {
 
 export const getProgramById = async (programId: string) => {
   try {
-    const [response] = await db
+    const [program] = await db
       .select()
-      .from(scholarshipProgram)
-      .where(eq(scholarshipProgram.programId, programId))
+      .from(ProgramTable)
+      .where(eq(ProgramTable.programId, programId))
       .limit(1)
       .execute();
 
-    return response;
+    const requirements = await db
+      .select()
+      .from(RequirementsTable)
+      .where(eq(RequirementsTable.programId, programId))
+      .execute();
+
+    return {
+      program,
+      requirements,
+    };
   } catch (error) {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
@@ -80,8 +92,8 @@ export const getProgramById = async (programId: string) => {
 export const getAllScholarshipType = async () => {
   try {
     const response = await db
-      .select({ type: scholarshipProgram.type })
-      .from(scholarshipProgram)
+      .select({ type: ProgramTable.type })
+      .from(ProgramTable)
       .execute();
 
     return response.map((type) => type.type);
