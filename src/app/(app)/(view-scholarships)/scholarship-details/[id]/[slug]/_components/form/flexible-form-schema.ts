@@ -1,8 +1,30 @@
+import { COURSES } from "@/constants/users/courses";
+import { GENDERS } from "@/constants/users/genders";
 import type { Requirement } from "@/interfaces/scholarship/requirements";
 import * as z from "zod";
 
 export const createFormSchema = (requirements: Requirement[]) => {
-  const schemaFields: Record<string, z.ZodTypeAny> = {};
+  const schemaFields: Record<string, z.ZodTypeAny> = {
+    name: z
+      .string()
+      .min(1, "Name is required")
+      .min(2, "Name must be at least 2 characters"),
+    sex: z.enum(GENDERS, { message: "sex is required" }),
+    dateOfBirth: z.date({ message: "Date of birth is required" }),
+    email: z
+      .string()
+      .min(1, "Email is required")
+      .email("Please enter a valid email address"),
+    contact: z
+      .string()
+      .min(1, "Contact number is required")
+      .min(10, "Contact number must be at least 10 digits"),
+    address: z
+      .string()
+      .min(1, "Address is required")
+      .min(10, "Please provide a complete address"),
+    course: z.enum(COURSES, { message: "Course is required" }),
+  };
 
   requirements.forEach((req) => {
     switch (req.type) {
@@ -15,12 +37,6 @@ export const createFormSchema = (requirements: Requirement[]) => {
             (files) => files?.[0] && files[0].size <= 5000000,
             "File size should be less than 5MB",
           );
-        break;
-      case "essay":
-        schemaFields[req.requirementId] = z
-          .string()
-          .min(1, "Essay is required")
-          .min(50, "Essay should be at least 50 characters");
         break;
       case "text":
         schemaFields[req.requirementId] = z
