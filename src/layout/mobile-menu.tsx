@@ -14,7 +14,7 @@ import Image from "next/image";
 import { MENU_OPTIONS } from "@/constants/header-menu";
 import { PageRoutes } from "@/constants/page-routes";
 
-const MobileMenu = () => {
+const MobileMenu = ({ isLogged }: { isLogged: boolean }) => {
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -71,7 +71,7 @@ const MobileMenu = () => {
           <SheetClose asChild>
             <Link href={PageRoutes.LOGIN} title="Sign In">
               <Button variant="default" title="Sign In" className="w-full">
-                Sign In
+                {isLogged ? "Dashboard" : "Sign In"}
               </Button>
             </Link>
           </SheetClose>

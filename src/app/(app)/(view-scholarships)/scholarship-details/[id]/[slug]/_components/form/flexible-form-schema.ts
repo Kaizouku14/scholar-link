@@ -1,5 +1,8 @@
 import { COURSES } from "@/constants/users/courses";
+import { DEPARTMENTS } from "@/constants/users/departments";
 import { GENDERS } from "@/constants/users/genders";
+import { SECTIONS } from "@/constants/users/sections";
+import { YEAR_LEVEL } from "@/constants/users/year-level";
 import type { Requirement } from "@/interfaces/scholarship/requirements";
 import * as z from "zod";
 
@@ -24,6 +27,10 @@ export const createFormSchema = (requirements: Requirement[]) => {
       .min(1, "Address is required")
       .min(10, "Please provide a complete address"),
     course: z.enum(COURSES, { message: "Course is required" }),
+    yearLevel: z.enum(YEAR_LEVEL, { message: "Year level is required" }),
+    section: z.array(z.enum(SECTIONS)),
+    department: z.enum(DEPARTMENTS),
+    studentNo: z.string(),
   };
 
   requirements.forEach((req) => {
@@ -42,7 +49,7 @@ export const createFormSchema = (requirements: Requirement[]) => {
               .instanceof(FileList)
               .optional()
               .refine(
-                (files) => !files || files?.[0]?.size <= 5_000_000,
+                (files) => !files || (files?.[0] && files[0].size <= 5_000_000),
                 "File size should be less than 5MB",
               );
         break;

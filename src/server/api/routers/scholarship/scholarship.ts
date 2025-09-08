@@ -12,8 +12,27 @@ import {
   getProgramById,
 } from "@/lib/api/scholarship/programs/query";
 import { cacheData } from "@/lib/redis";
+import { GENDERS } from "@/constants/users/genders";
+import { COURSES } from "@/constants/users/courses";
 
 export const scholarshipRouter = createTRPCRouter({
+  sendApplication: publicProcedure
+    .input(
+      z.object({
+        name: z.string(),
+        email: z.string(),
+        sex: z.enum(GENDERS),
+        dateOfBirth: z.date(),
+        contact: z.string(),
+        address: z.string(),
+        course: z.enum(COURSES),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      console.log(input);
+    }),
+
+  //Move in scholarship Coordinator
   disableScholarshipProgram: adminRoute
     .input(
       z.object({

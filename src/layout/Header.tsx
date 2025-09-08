@@ -17,6 +17,7 @@ import {
   NavigationMenuLink,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
+import { authClient } from "@/lib/auth-client";
 
 const Header = () => {
   const [activeSection, setActiveSection] = useState<string>("#home");
@@ -24,6 +25,7 @@ const Header = () => {
   const pathname = usePathname();
   const router = useRouter();
   const scrollThreshold = 50;
+  const { data } = authClient.useSession();
 
   useEffect(() => {
     const updatePathSection = () => {
@@ -145,11 +147,11 @@ const Header = () => {
                   variant="default"
                   title="Sign In"
                 >
-                  Sign In
+                  {data?.session ? "Dashboard" : "Sign In"}
                 </Button>
               </Link>
               <ModeToggle />
-              <MobileMenu />
+              <MobileMenu isLogged={!!data?.session} />
             </div>
           </div>
         </div>

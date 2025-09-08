@@ -196,7 +196,7 @@ const ScholarshipHeader = ({
           </div>
 
           <div className="flex-shrink-0 lg:w-80">
-            <div className="bg-background relative hidden overflow-hidden rounded-xl border shadow-lg md:block">
+            <div className="bg-background relative hidden overflow-hidden rounded-xl border shadow-lg lg:block">
               {/* {TODO: Replace this with actual image placeholder} */}
               <Image
                 src={data.imageUrl ?? "/placeholder.svg?height=320&width=400"}

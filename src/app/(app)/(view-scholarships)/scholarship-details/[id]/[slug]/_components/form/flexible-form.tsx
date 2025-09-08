@@ -20,27 +20,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { FileText, ImageIcon, Type, User, CalendarIcon } from "lucide-react";
+import { FileText, ImageIcon, Type } from "lucide-react";
 import type { Requirement } from "@/interfaces/scholarship/requirements";
 import { createFormSchema } from "./flexible-form-schema";
 import type z from "zod";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { GENDERS } from "@/constants/users/genders";
-import { COURSES } from "@/constants/users/courses";
-import { format } from "date-fns";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
+import { uploadFile } from "@/lib/uploadthing";
+import { renderPersonalInfoFields } from "./personal-field";
 
 export const ApplicationForm = ({
   requirements,
@@ -54,12 +39,13 @@ export const ApplicationForm = ({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      sex: "",
+      sex: undefined,
       dateOfBirth: undefined,
       email: "",
       contact: "",
       address: "",
-      course: "",
+      course: undefined,
+      yearLevel: undefined,
       requirements: [
         {
           name: "",
@@ -71,199 +57,30 @@ export const ApplicationForm = ({
     },
   });
 
-  const onSubmit = (data: FormData) => {
-    console.log("Form submitted:", data);
-    // Handle form submission here
+  const handleSubmittedRequirements = async (
+    requirements: Record<string, FileList>,
+  ) => {
+    const uploadedRequirements: Record<string, { key: string; url: string }> =
+      {};
+
+    for (const [requirementId, fileList] of Object.entries(requirements)) {
+      const file = fileList?.[0]; // take first file
+      if (!file) continue;
+
+      const uploaded = await uploadFile(file);
+      if (uploaded?.key && uploaded?.url) {
+        uploadedRequirements[requirementId] = {
+          key: uploaded.key,
+          url: uploaded.url,
+        };
+      }
+    }
+    return uploadedRequirements;
   };
 
-  const renderPersonalInfoFields = () => (
-    <div className="space-y-6">
-      <div className="flex items-center gap-2 border-b pb-2">
-        <User className="h-5 w-5" />
-        <h3 className="text-lg font-semibold">Personal Information</h3>
-      </div>
-
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Full Name</FormLabel>
-              <FormControl>
-                <Input placeholder="Juan Dela Cruz" {...field} />
-              </FormControl>
-              <FormDescription>Enter your complete legal name.</FormDescription>
-
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email Address</FormLabel>
-
-              <FormControl>
-                <Input type="email" placeholder="you@example.com" {...field} />
-              </FormControl>
-              <FormDescription>
-                We&apos;ll use this to send updates about your application.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="sex"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Sex</FormLabel>
-
-              <Select
-                onValueChange={field.onChange}
-                defaultValue={field.value as string}
-              >
-                <FormControl>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select your sex" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {GENDERS.map((gender) => (
-                    <SelectItem key={gender} value={gender}>
-                      {gender}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormDescription>
-                Select the gender listed on your official documents.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="dateOfBirth"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="flex items-center gap-2">
-                <CalendarIcon className="h-4 w-4" />
-                Date of Birth
-              </FormLabel>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <FormControl>
-                    <Button
-                      variant="outline"
-                      className={`w-full pl-3 text-left font-normal ${!field.value ? "text-muted-foreground" : ""}`}
-                    >
-                      {field.value ? (
-                        format(field.value as Date, "PPP")
-                      ) : (
-                        <span>Pick a date</span>
-                      )}
-                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                    </Button>
-                  </FormControl>
-                </PopoverTrigger>
-                <PopoverContent className="z-100 w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={field.value as Date}
-                    onSelect={field.onChange}
-                    disabled={(date) =>
-                      date > new Date() || date < new Date("1900-01-01")
-                    }
-                    captionLayout="dropdown"
-                  />
-                </PopoverContent>
-              </Popover>
-              <FormDescription>Select your date of birth.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="contact"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Contact Number</FormLabel>
-
-              <FormControl>
-                <Input placeholder="+63 912 345 6789" {...field} />
-              </FormControl>
-              <FormDescription>Provide a valid mobile.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="course"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Course</FormLabel>
-              <Select
-                onValueChange={field.onChange}
-                defaultValue={field.value as string}
-              >
-                <FormControl>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select your Course" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {COURSES.map((course) => (
-                    <SelectItem key={course} value={course}>
-                      {course}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormDescription>
-                Enter your current course or program.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      </div>
-
-      <FormField
-        control={form.control}
-        name="address"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Complete Address</FormLabel>
-
-            <FormControl>
-              <Textarea
-                placeholder="123 Main St, Barangay Example, Quezon City, Metro Manila"
-                className="min-h-[80px]"
-                {...field}
-              />
-            </FormControl>
-            <FormDescription>
-              Include house number, street, barangay, city, and province.
-            </FormDescription>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-    </div>
-  );
+  const onSubmit = async (data: FormData) => {
+    console.log(data);
+  };
 
   const renderField = (requirement: Requirement) => {
     switch (requirement.type) {
@@ -380,7 +197,7 @@ export const ApplicationForm = ({
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            {renderPersonalInfoFields()}
+            {renderPersonalInfoFields({ form })}
 
             {requirements.length > 0 && (
               <div className="space-y-6">
