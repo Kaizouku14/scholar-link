@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/select";
 import { REQUIREMENT_TYPES } from "@/constants/scholarship/requirements";
 import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
 
 export const RequirementsForm = () => {
   const { control } = useFormContext();
@@ -38,7 +39,12 @@ export const RequirementsForm = () => {
           variant="outline"
           size="sm"
           onClick={() =>
-            append({ name: "", type: "document", description: "" })
+            append({
+              name: "",
+              type: "document",
+              description: "",
+              isRequired: true,
+            })
           }
         >
           <Plus className="mr-2 h-4 w-4" /> Add Requirement
@@ -91,33 +97,53 @@ export const RequirementsForm = () => {
               />
             </div>
 
-            <FormField
-              control={control}
-              name={`requirements.${index}.type`}
-              render={({ field }) => (
-                <FormItem className="w-full md:w-40">
-                  <FormLabel>Type</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value as string}
-                  >
+            <div className="flex flex-col space-y-8">
+              <FormField
+                control={control}
+                name={`requirements.${index}.type`}
+                render={({ field }) => (
+                  <FormItem className="w-full md:w-40">
+                    <FormLabel>Type</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value as string}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Select type" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {REQUIREMENT_TYPES.map((type) => (
+                          <SelectItem key={type} value={type}>
+                            {type.charAt(0).toUpperCase() + type.slice(1)}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={control}
+                name={`requirements.${index}.isRequired`}
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-start space-y-0 space-x-3">
                     <FormControl>
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select type" />
-                      </SelectTrigger>
+                      <Switch
+                        checked={field.value as boolean}
+                        onCheckedChange={field.onChange}
+                      />
                     </FormControl>
-                    <SelectContent>
-                      {REQUIREMENT_TYPES.map((type) => (
-                        <SelectItem key={type} value={type}>
-                          {type.charAt(0).toUpperCase() + type.slice(1)}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                    <div className="space-y-1 leading-none">
+                      <FormLabel>Required</FormLabel>
+                    </div>
+                  </FormItem>
+                )}
+              />
+            </div>
 
             <Button
               type="button"

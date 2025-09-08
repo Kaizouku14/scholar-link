@@ -30,13 +30,21 @@ export const createFormSchema = (requirements: Requirement[]) => {
     switch (req.type) {
       case "document":
       case "image":
-        schemaFields[req.requirementId] = z
-          .instanceof(FileList)
-          .refine((files) => files?.length > 0, "File is required")
-          .refine(
-            (files) => files?.[0] && files[0].size <= 5000000,
-            "File size should be less than 5MB",
-          );
+        schemaFields[req.requirementId] = req.isRequired
+          ? z
+              .instanceof(FileList)
+              .refine((files) => files?.length > 0, "File is required")
+              .refine(
+                (files) => files?.[0] && files[0].size <= 5_000_000,
+                "File size should be less than 5MB",
+              )
+          : z
+              .instanceof(FileList)
+              .optional()
+              .refine(
+                (files) => !files || files?.[0]?.size <= 5_000_000,
+                "File size should be less than 5MB",
+              );
         break;
       case "text":
         schemaFields[req.requirementId] = z

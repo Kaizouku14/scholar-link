@@ -38,6 +38,7 @@ export const createScholarshipProgram = async ({
           label: requirement.label,
           type: requirement.type,
           description: requirement.description,
+          isRequired: requirement.isRequired,
         });
       }
     }

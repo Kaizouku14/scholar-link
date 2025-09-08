@@ -24,6 +24,7 @@ export const scholarshipCoordinatorRouter = createTRPCRouter({
               label: z.string(),
               type: z.enum(REQUIREMENT_TYPES),
               description: z.string().optional(),
+              isRequired: z.boolean(),
             }),
           )
           .optional(),

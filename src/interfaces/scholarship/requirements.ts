@@ -5,4 +5,5 @@ export interface Requirement {
   label: string;
   type: RequirementType;
   description?: string | null;
+  isRequired: boolean;
 }

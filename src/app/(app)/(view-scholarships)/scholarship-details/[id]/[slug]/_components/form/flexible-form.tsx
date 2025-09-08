@@ -52,6 +52,23 @@ export const ApplicationForm = ({
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      sex: "",
+      dateOfBirth: undefined,
+      email: "",
+      contact: "",
+      address: "",
+      course: "",
+      requirements: [
+        {
+          name: "",
+          type: "document",
+          description: "",
+          isRequired: true,
+        },
+      ],
+    },
   });
 
   const onSubmit = (data: FormData) => {
@@ -256,7 +273,7 @@ export const ApplicationForm = ({
             key={requirement.requirementId}
             control={form.control}
             name={requirement.requirementId}
-            render={({ field: { onChange, ...field } }) => (
+            render={({ field: { onChange, ref } }) => (
               <FormItem className="space-y-1">
                 <FormLabel className="flex items-center gap-2 text-sm font-medium">
                   <FileText className="text-muted-foreground h-4 w-4" />
@@ -270,10 +287,10 @@ export const ApplicationForm = ({
                 <FormControl>
                   <Input
                     type="file"
-                    accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                    accept=".pdf,.doc,.docx,.xlsx,.csv"
                     onChange={(e) => onChange(e.target.files)}
+                    ref={ref}
                     className="cursor-pointer text-sm"
-                    {...field}
                   />
                 </FormControl>
                 <FormMessage />
@@ -288,7 +305,7 @@ export const ApplicationForm = ({
             key={requirement.requirementId}
             control={form.control}
             name={requirement.requirementId}
-            render={({ field: { onChange, ...field } }) => (
+            render={({ field: { onChange, ref } }) => (
               <FormItem className="space-y-1">
                 <FormLabel className="flex items-center gap-2 text-sm font-medium">
                   <ImageIcon className="text-muted-foreground h-4 w-4" />
@@ -305,7 +322,7 @@ export const ApplicationForm = ({
                     accept="image/*"
                     onChange={(e) => onChange(e.target.files)}
                     className="cursor-pointer text-sm"
-                    {...field}
+                    ref={ref}
                   />
                 </FormControl>
                 <FormMessage />

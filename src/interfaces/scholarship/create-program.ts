@@ -16,5 +16,6 @@ export interface ScholarshipPrograms {
     label: string;
     type: RequirementType;
     description?: string;
+    isRequired: boolean;
   }[];
 }

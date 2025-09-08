@@ -31,6 +31,9 @@ export const requirements = createTable("requirements", {
   label: text("label").notNull(),
   type: text("type", { enum: REQUIREMENT_TYPES }).notNull(),
   description: text("description"),
+  isRequired: integer("is_required", { mode: "boolean" })
+    .notNull()
+    .default(true),
 });
 
 export const applicants = createTable("applicants", {
