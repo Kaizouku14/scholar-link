@@ -15,15 +15,14 @@ import {
 } from "@/server/db/schema/internship";
 
 export const getAdminSections = async (): Promise<AdminSectionData[]> => {
-  return await db.transaction(async (tx) => {
-    const response = await tx
-      .select({
-        section: UserTable.section,
-        course: UserTable.course,
-        department: max(UserTable.department),
-        studentCount: countDistinct(InternshipTable.userId),
-        totalProgressHours: sum(ProgressTable.hours),
-        interns: sql<string>`
+  const response = await db
+    .select({
+      section: UserTable.section,
+      course: UserTable.course,
+      department: max(UserTable.department),
+      studentCount: countDistinct(InternshipTable.userId),
+      totalProgressHours: sum(ProgressTable.hours),
+      interns: sql<string>`
           json_group_array(
             DISTINCT json_object(
               'name', ${UserTable.name},
@@ -40,28 +39,27 @@ export const getAdminSections = async (): Promise<AdminSectionData[]> => {
             )
           )
         `.as("interns"),
-      })
-      .from(UserTable)
-      .innerJoin(InternshipTable, eq(UserTable.id, InternshipTable.userId))
-      .innerJoin(StudentTable, eq(InternshipTable.userId, StudentTable.id))
-      .leftJoin(
-        CompanyTable,
-        eq(InternshipTable.companyId, CompanyTable.companyId),
-      )
-      .leftJoin(
-        SupervisorTable,
-        eq(InternshipTable.supervisorId, SupervisorTable.supervisorId),
-      )
-      .leftJoin(
-        ProgressTable,
-        eq(ProgressTable.internshipId, InternshipTable.internshipId),
-      )
-      .where(isNotNull(InternshipTable.userId))
-      .groupBy(UserTable.section, UserTable.course);
+    })
+    .from(UserTable)
+    .innerJoin(InternshipTable, eq(UserTable.id, InternshipTable.userId))
+    .innerJoin(StudentTable, eq(InternshipTable.userId, StudentTable.id))
+    .leftJoin(
+      CompanyTable,
+      eq(InternshipTable.companyId, CompanyTable.companyId),
+    )
+    .leftJoin(
+      SupervisorTable,
+      eq(InternshipTable.supervisorId, SupervisorTable.supervisorId),
+    )
+    .leftJoin(
+      ProgressTable,
+      eq(ProgressTable.internshipId, InternshipTable.internshipId),
+    )
+    .where(isNotNull(InternshipTable.userId))
+    .groupBy(UserTable.section, UserTable.course);
 
-    return response.map((row) => ({
-      ...row,
-      interns: row.interns ? (JSON.parse(row.interns) as AdminIntern[]) : [],
-    }));
-  });
+  return response.map((row) => ({
+    ...row,
+    interns: row.interns ? (JSON.parse(row.interns) as AdminIntern[]) : [],
+  }));
 };

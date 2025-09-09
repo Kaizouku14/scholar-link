@@ -1,5 +1,5 @@
 import z from "zod";
-import { createTRPCRouter, adminRoute } from "../../trpc";
+import { createTRPCRouter, adminRoute, publicProcedure } from "../../trpc";
 import { SCHOLARSHIP_TYPES } from "@/constants/scholarship/scholarship-types";
 import { REQUIREMENT_TYPES } from "@/constants/scholarship/requirements";
 import { SUBMISSION_TYPE } from "@/constants/scholarship/submittion-type";
@@ -8,6 +8,7 @@ import {
   disableScholarshipProgram,
   updateProgramAvailability,
 } from "@/lib/api/scholarship/coordinator/program/mutation";
+import { getCoordProgramApplications } from "@/lib/api/scholarship/coordinator/program/query";
 
 export const scholarshipCoordinatorRouter = createTRPCRouter({
   createProgram: adminRoute
@@ -60,4 +61,12 @@ export const scholarshipCoordinatorRouter = createTRPCRouter({
     .mutation(async ({ input }) => {
       return await updateProgramAvailability(input);
     }),
+
+  //Queries
+  getAllScholarsApplications: publicProcedure.query(async () => {
+    // const userId = ctx.session!.user.id;
+    return await getCoordProgramApplications({
+      userId: "6MWFRTgSQIyGp7bj0w9kCKqYzPAS1bzu",
+    });
+  }),
 });

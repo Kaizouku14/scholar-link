@@ -17,54 +17,50 @@ export const getAllDocumentsToReviewBySection = async ({
 }: {
   userId: string;
 }) => {
-  return await db
-    .transaction(async (tx) => {
-      const { coordinatorSections, coordinatorDepartment, coordinatorCourse } =
-        await getCoordinatorInfo({ userId });
+  try {
+    const { coordinatorSections, coordinatorDepartment, coordinatorCourse } =
+      await getCoordinatorInfo({ userId });
 
-      const documents = await tx
-        .select({
-          id: InternDocumentsTable.documentId,
-          documentType: InternDocumentsTable.documentType,
-          documentUrl: InternDocumentsTable.documentUrl,
-          reviewStatus: InternDocumentsTable.reviewStatus,
-          submittedAt: InternDocumentsTable.submittedAt,
-          studentId: UserTable.id,
-          name: UserTable.name,
-          profile: UserTable.profile,
-          section: UserTable.section,
-          course: UserTable.course,
-          companyName: CompanyTable.name,
-        })
-        .from(InternDocumentsTable)
-        .innerJoin(UserTable, eq(InternDocumentsTable.internId, UserTable.id))
-        .innerJoin(StudentTable, eq(UserTable.id, StudentTable.id))
-        .innerJoin(InternshipTable, eq(UserTable.id, InternshipTable.userId))
-        .where(
-          and(
-            eq(UserTable.department, coordinatorDepartment!),
-            eq(UserTable.course, coordinatorCourse!),
-            sql`EXISTS (
+    return await db
+      .select({
+        id: InternDocumentsTable.documentId,
+        documentType: InternDocumentsTable.documentType,
+        documentUrl: InternDocumentsTable.documentUrl,
+        reviewStatus: InternDocumentsTable.reviewStatus,
+        submittedAt: InternDocumentsTable.submittedAt,
+        studentId: UserTable.id,
+        name: UserTable.name,
+        profile: UserTable.profile,
+        section: UserTable.section,
+        course: UserTable.course,
+        companyName: CompanyTable.name,
+      })
+      .from(InternDocumentsTable)
+      .innerJoin(UserTable, eq(InternDocumentsTable.internId, UserTable.id))
+      .innerJoin(StudentTable, eq(UserTable.id, StudentTable.id))
+      .innerJoin(InternshipTable, eq(UserTable.id, InternshipTable.userId))
+      .where(
+        and(
+          eq(UserTable.department, coordinatorDepartment!),
+          eq(UserTable.course, coordinatorCourse!),
+          sql`EXISTS (
                         SELECT 1
                         FROM json_each(${UserTable.section})
                         WHERE value IN (${sql.join(coordinatorSections, sql`,`)})
                     )`,
-          ),
-        )
-        .innerJoin(
-          CompanyTable,
-          eq(InternshipTable.companyId, CompanyTable.companyId),
-        )
-        .orderBy(InternDocumentsTable.submittedAt, UserTable.section);
-
-      return documents;
-    })
-    .catch((error) => {
-      throw new TRPCError({
-        code: "INTERNAL_SERVER_ERROR",
-        message: "Failed to get documents: " + (error as Error).message,
-      });
+        ),
+      )
+      .innerJoin(
+        CompanyTable,
+        eq(InternshipTable.companyId, CompanyTable.companyId),
+      )
+      .orderBy(InternDocumentsTable.submittedAt, UserTable.section);
+  } catch (error) {
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "Failed to get documents: " + (error as Error).message,
     });
+  }
 };
 
 export const getDocuments = async () => {

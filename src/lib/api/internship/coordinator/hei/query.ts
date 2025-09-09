@@ -15,11 +15,11 @@ import { getCoordinatorInfo } from "../query";
 export const getCoordinatorSections = async (
   userId: string,
 ): Promise<CoordinatorSectionData[]> => {
-  return await db.transaction(async (tx) => {
+  try {
     const { coordinatorSections, coordinatorDepartment, coordinatorCourse } =
       await getCoordinatorInfo({ userId });
 
-    const response = await tx
+    return await db
       .select({
         internshipId: InternshipTable.internshipId,
         section: UserTable.section,
@@ -58,51 +58,41 @@ export const getCoordinatorSections = async (
           eq(UserTable.department, coordinatorDepartment!),
         ),
       );
-    return response;
-  });
+  } catch (error) {
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: (error as Error).message,
+    });
+  }
 };
 
 export const getAllUserAccount = async ({ userId }: { userId: string }) => {
   try {
-    return await db
-      .transaction(async (tx) => {
-        const {
-          coordinatorSections,
-          coordinatorDepartment,
-          coordinatorCourse,
-        } = await getCoordinatorInfo({ userId });
+    const { coordinatorSections, coordinatorDepartment, coordinatorCourse } =
+      await getCoordinatorInfo({ userId });
 
-        const response = await tx
-          .selectDistinct({
-            userId: UserTable.id,
-            name: UserTable.name,
-            course: UserTable.course,
-            section: UserTable.section,
-          })
-          .from(UserTable)
-          .leftJoin(StudentTable, eq(StudentTable.id, UserTable.id))
-          .leftJoin(InternshipTable, eq(InternshipTable.userId, UserTable.id))
-          .where(
-            and(
-              eq(UserTable.department, coordinatorDepartment!),
-              eq(UserTable.course, coordinatorCourse!),
-              sql`EXISTS (
+    return await db
+      .selectDistinct({
+        userId: UserTable.id,
+        name: UserTable.name,
+        course: UserTable.course,
+        section: UserTable.section,
+      })
+      .from(UserTable)
+      .leftJoin(StudentTable, eq(StudentTable.id, UserTable.id))
+      .leftJoin(InternshipTable, eq(InternshipTable.userId, UserTable.id))
+      .where(
+        and(
+          eq(UserTable.department, coordinatorDepartment!),
+          eq(UserTable.course, coordinatorCourse!),
+          sql`EXISTS (
                 SELECT 1
                 FROM json_each(${UserTable.section})
                 WHERE value IN (${sql.join(coordinatorSections, sql`,`)})
             )`,
-            ),
-          )
-          .execute();
-
-        return response;
-      })
-      .catch((error) => {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: (error as Error).message,
-        });
-      });
+        ),
+      )
+      .execute();
   } catch (error) {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
