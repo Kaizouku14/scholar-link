@@ -94,7 +94,10 @@ const Section = ({ id }: { id: string }) => {
                     ref={applicationRef}
                   >
                     <div className="overflow-hidden rounded-lg border">
-                      <ApplicationForm requirements={data.requirements} />
+                      <ApplicationForm
+                        requirements={data.requirements}
+                        programId={id}
+                      />
                     </div>
                   </div>
                 </TabsContent>

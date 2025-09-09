@@ -26,6 +26,7 @@ export interface ScholarshipPrograms {
 }
 
 export interface Application {
+  programId: string;
   name: string;
   sex: GenderType;
   dateOfBirth: Date;

@@ -12,11 +12,13 @@ import { COURSES } from "@/constants/users/courses";
 import { DEPARTMENTS } from "@/constants/users/departments";
 import { SECTIONS } from "@/constants/users/sections";
 import { YEAR_LEVEL } from "@/constants/users/year-level";
+import { createApplication } from "@/lib/api/scholarship/programs/mutation";
 
 export const scholarshipRouter = createTRPCRouter({
   sendApplication: publicProcedure
     .input(
       z.object({
+        programId: z.string(),
         name: z.string(),
         sex: z.enum(GENDERS),
         dateOfBirth: z.date(),
@@ -38,7 +40,7 @@ export const scholarshipRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ input }) => {
-      console.log(input);
+      await createApplication({ application: input });
     }),
 
   //Query Routes

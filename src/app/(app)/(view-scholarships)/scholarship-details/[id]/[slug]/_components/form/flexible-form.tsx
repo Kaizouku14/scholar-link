@@ -32,8 +32,10 @@ import SubmitButton from "@/components/forms/submit-button";
 
 export const ApplicationForm = ({
   requirements,
+  programId,
 }: {
   requirements: Requirement[];
+  programId: string;
 }) => {
   const formSchema = createFormSchema(requirements);
   type FormData = z.infer<typeof formSchema>;
@@ -93,6 +95,7 @@ export const ApplicationForm = ({
       const uploadedRequirements = await handleSubmittedRequirements(data);
 
       const formData = {
+        programId,
         ...data,
         requirements: uploadedRequirements,
       } as Application;
