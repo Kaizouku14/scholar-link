@@ -9,14 +9,7 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import {
-  ShieldX,
-  MapPin,
-  Calendar,
-  Users,
-  FileText,
-  FolderMinus,
-} from "lucide-react";
+import { ShieldX, Calendar, Users, FileText, FolderMinus } from "lucide-react";
 import { api } from "@/trpc/react";
 import { toast } from "react-hot-toast";
 import type { QueryObserverResult } from "@tanstack/react-query";
@@ -35,7 +28,7 @@ const ScholarshipCard = ({
   >;
 }) => {
   const { mutateAsync: disableProgram } =
-    api.scholarships.disableScholarshipProgram.useMutation();
+    api.scholarshipCoordinator.disableScholarshipProgram.useMutation();
 
   const handleDisableProgram = async () => {
     await toast.promise(
@@ -151,16 +144,6 @@ const ScholarshipCard = ({
               className={`font-medium ${data.slots < 50 ? "text-primary" : "text-foreground"}`}
             >
               {data.slots.toLocaleString()}
-            </span>
-          </div>
-
-          <div className="flex items-center justify-between py-1">
-            <div className="text-muted-foreground flex items-center gap-2">
-              <MapPin className="h-4 w-4" />
-              <span>Location:</span>
-            </div>
-            <span className="line-clamp-1 max-w-[60%] text-right font-medium">
-              {data.location}
             </span>
           </div>
         </div>

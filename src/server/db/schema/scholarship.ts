@@ -5,6 +5,7 @@ import { SUBMISSION_TYPE } from "@/constants/scholarship/submittion-type";
 import { SCHOLARSHIP_TYPES } from "@/constants/scholarship/scholarship-types";
 import { STATUS } from "@/constants/users/status";
 import { REQUIREMENT_TYPES } from "@/constants/scholarship/requirements";
+import { sql } from "drizzle-orm";
 
 export const scholarshipProgram = createTable("programs", {
   programId: text("program_id").primaryKey(),
@@ -23,6 +24,19 @@ export const scholarshipProgram = createTable("programs", {
   announcements: text("announcements"),
 });
 
+export const programCoodinators = createTable("program_coordinators", {
+  id: text("id").primaryKey(),
+  programId: text("program_id")
+    .notNull()
+    .references(() => scholarshipProgram.programId, { onDelete: "cascade" }),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  assignedAt: integer("assigned_at", { mode: "timestamp" }).default(
+    sql`(unixepoch())`,
+  ),
+});
+
 export const requirements = createTable("requirements", {
   requirementId: text("requirement_id").primaryKey(),
   programId: text("program_id")
@@ -36,8 +50,8 @@ export const requirements = createTable("requirements", {
     .default(true),
 });
 
-export const applicants = createTable("applicants", {
-  applicantId: text("applicant_id").primaryKey(),
+export const applications = createTable("applications", {
+  applicationsId: text("applications_id").primaryKey(),
   userId: text("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
@@ -48,12 +62,13 @@ export const applicants = createTable("applicants", {
   status: text("status", { enum: STATUS }).default("pending"),
 });
 
-export const submissions = createTable("submissions", {
-  submissions: text("submissions").primaryKey(),
+export const scholars_documents = createTable("scholars_documents", {
+  id: text("document_id").primaryKey(),
   applicantId: text("applicant_id")
     .notNull()
-    .references(() => applicants.applicantId, { onDelete: "cascade" }),
+    .references(() => applications.applicationsId, { onDelete: "cascade" }),
   submittedAt: integer("submitted_at", { mode: "timestamp" }).notNull(),
-  submissionData: text("submission_data"),
-  reviewNotes: text("review_notes"),
+  documentUrl: text("document_url"),
+  documentKey: text("document_key"),
+  reviewStatus: text("review_status", { enum: STATUS }).default("pending"),
 });

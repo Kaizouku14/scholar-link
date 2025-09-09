@@ -87,7 +87,7 @@ const ActivateProgram = ({
     },
   });
   const { mutateAsync: activateProgram } =
-    api.scholarships.updateProgramAvailability.useMutation();
+    api.scholarshipCoordinator.updateProgramAvailability.useMutation();
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     await toast.promise(

@@ -2,8 +2,12 @@ import z from "zod";
 import { createTRPCRouter, adminRoute } from "../../trpc";
 import { SCHOLARSHIP_TYPES } from "@/constants/scholarship/scholarship-types";
 import { REQUIREMENT_TYPES } from "@/constants/scholarship/requirements";
-import { createScholarshipProgram } from "@/lib/api/scholarship/programs/mutation";
 import { SUBMISSION_TYPE } from "@/constants/scholarship/submittion-type";
+import {
+  createScholarshipProgram,
+  disableScholarshipProgram,
+  updateProgramAvailability,
+} from "@/lib/api/scholarship/coordinator/program/mutation";
 
 export const scholarshipCoordinatorRouter = createTRPCRouter({
   createProgram: adminRoute
@@ -30,7 +34,30 @@ export const scholarshipCoordinatorRouter = createTRPCRouter({
           .optional(),
       }),
     )
+    .mutation(async ({ input, ctx }) => {
+      const userId = ctx.session!.user.id;
+      await createScholarshipProgram({ data: input, userId });
+    }),
+
+  disableScholarshipProgram: adminRoute
+    .input(
+      z.object({
+        programId: z.string(),
+      }),
+    )
     .mutation(async ({ input }) => {
-      await createScholarshipProgram({ data: input });
+      return await disableScholarshipProgram(input);
+    }),
+  updateProgramAvailability: adminRoute
+    .input(
+      z.object({
+        programId: z.string(),
+        deadline: z.date(),
+        submissionType: z.enum(SUBMISSION_TYPE),
+        slots: z.number(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      return await updateProgramAvailability(input);
     }),
 });

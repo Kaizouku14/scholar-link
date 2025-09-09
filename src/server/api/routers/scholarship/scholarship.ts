@@ -1,10 +1,5 @@
-import { adminRoute, createTRPCRouter, publicProcedure } from "../../trpc";
+import { createTRPCRouter, publicProcedure } from "../../trpc";
 import z from "zod";
-import { SUBMISSION_TYPE } from "@/constants/scholarship/submittion-type";
-import {
-  disableScholarshipProgram,
-  updateProgramAvailability,
-} from "@/lib/api/scholarship/programs/mutation";
 import {
   getAllActivePrograms,
   getAllPrograms,
@@ -44,29 +39,6 @@ export const scholarshipRouter = createTRPCRouter({
     )
     .mutation(async ({ input }) => {
       console.log(input);
-    }),
-
-  //Move in scholarship Coordinator
-  disableScholarshipProgram: adminRoute
-    .input(
-      z.object({
-        programId: z.string(),
-      }),
-    )
-    .mutation(async ({ input }) => {
-      return await disableScholarshipProgram(input);
-    }),
-  updateProgramAvailability: adminRoute
-    .input(
-      z.object({
-        programId: z.string(),
-        deadline: z.date(),
-        submissionType: z.enum(SUBMISSION_TYPE),
-        slots: z.number(),
-      }),
-    )
-    .mutation(async ({ input }) => {
-      return await updateProgramAvailability(input);
     }),
 
   //Query Routes
