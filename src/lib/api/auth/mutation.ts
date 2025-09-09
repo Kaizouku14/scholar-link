@@ -39,6 +39,17 @@ export const checkStudentOnBoarded = async ({ id }: { id: string }) => {
   }
 };
 
+export const checkEmailIfExists = async ({ email }: { email: string }) => {
+  const [emailExist] = await db
+    .select()
+    .from(userTable)
+    .where(eq(userTable.email, email))
+    .limit(1)
+    .execute();
+
+  return !!emailExist;
+};
+
 export const isEmailAuthorized = async ({ email }: { email: string }) => {
   const [authorizedEmail] = await db
     .select()

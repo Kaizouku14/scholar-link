@@ -2,6 +2,7 @@ import z from "zod";
 import { createTRPCRouter, protectedRoute, publicProcedure } from "../trpc";
 import {
   authorizeEmail,
+  checkEmailIfExists,
   checkStudentOnBoarded,
   createUserAccount,
   isEmailAuthorized,
@@ -38,7 +39,11 @@ export const authRouter = createTRPCRouter({
     .mutation(async ({ input }) => {
       return await checkStudentOnBoarded(input);
     }),
-
+  checkEmailIfExists: publicProcedure
+    .input(z.object({ email: z.string() }))
+    .mutation(async ({ input }) => {
+      return await checkEmailIfExists(input);
+    }),
   register: protectedRoute
     .input(
       z.object({

@@ -89,11 +89,18 @@ export const ApplicationForm = ({
 
   const { mutateAsync: sendApplication } =
     api.scholarships.sendApplication.useMutation();
+  const { mutateAsync: isEmailExist } =
+    api.auth.checkEmailIfExists.useMutation();
   const onSubmit = async (data: FormData) => {
-    const toastId = toast.loading("Submitting application...");
-    try {
-      const uploadedRequirements = await handleSubmittedRequirements(data);
+    const toastId = toast.loading(
+      "Hang tight! We’re processing your application...",
+    );
 
+    try {
+      const emailExists = await isEmailExist({ email: data.email as string });
+      if (emailExists) throw new Error("This email is already in use.");
+
+      const uploadedRequirements = await handleSubmittedRequirements(data);
       const formData = {
         programId,
         ...data,
@@ -102,6 +109,7 @@ export const ApplicationForm = ({
 
       await sendApplication(formData);
       toast.success("Application submitted successfully!");
+      form.reset();
     } catch (error) {
       toast.error((error as Error).message);
     } finally {

@@ -58,9 +58,7 @@ export const applications = createTable("applications", {
   programId: text("program_id")
     .notNull()
     .references(() => scholarshipProgram.programId, { onDelete: "cascade" }),
-  appliedAt: integer("appliedAt", { mode: "timestamp" }).default(
-    sql`(unixepoch())`,
-  ),
+  appliedAt: integer("appliedAt", { mode: "timestamp" }).notNull(),
   status: text("status", { enum: STATUS }).default("pending"),
 });
 
@@ -69,9 +67,7 @@ export const scholars_documents = createTable("scholars_documents", {
   applicantId: text("applicant_id")
     .notNull()
     .references(() => applications.applicationsId, { onDelete: "cascade" }),
-  submittedAt: integer("submitted_at", { mode: "timestamp" }).default(
-    sql`(unixepoch())`,
-  ),
+  submittedAt: integer("submitted_at", { mode: "timestamp" }).notNull(),
   documentUrl: text("document_url"),
   documentKey: text("document_key"),
   reviewStatus: text("review_status", { enum: STATUS }).default("pending"),

@@ -22,7 +22,14 @@ export const createApplication = async ({
 
     await tx.insert(UserTable).values({
       id: userId,
-      ...application,
+      name: application.name,
+      email: application.email,
+      gender: application.sex,
+      dateOfBirth: application.dateOfBirth,
+      contact: application.contact,
+      address: application.address,
+      course: application.course,
+      department: application.department,
       section: [application.section],
       role: ROLE.SCHOLARSHIP_STUDENT,
     });
