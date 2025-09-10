@@ -9,6 +9,7 @@ import {
   updateProgramAvailability,
 } from "@/lib/api/scholarship/coordinator/program/mutation";
 import { getCoordProgramApplications } from "@/lib/api/scholarship/coordinator/program/query";
+import { ee, Events } from "@/lib/event";
 
 export const scholarshipCoordinatorRouter = createTRPCRouter({
   createProgram: adminRoute
@@ -63,10 +64,34 @@ export const scholarshipCoordinatorRouter = createTRPCRouter({
     }),
 
   //Queries
-  getAllScholarsApplications: publicProcedure.query(async () => {
+  getAllScholarsApplications: adminRoute.query(async ({ ctx }) => {
     const userId = ctx.session!.user.id;
     return await getCoordProgramApplications({
       userId,
     });
+  }),
+
+  testSubscription: publicProcedure
+    .input(z.object({ count: z.number() }))
+    .mutation(async ({ input }) => {
+      ee.emit(Events.NEW_APPLICATION, input.count);
+    }),
+
+  getNewApplicationsSimple: publicProcedure.subscription(async function* () {
+    try {
+      while (true) {
+        const message = await new Promise<number>((resolve) => {
+          const onApply = (msg: number) => {
+            ee.off(Events.NEW_APPLICATION, onApply);
+            resolve(msg);
+          };
+          ee.on(Events.NEW_APPLICATION, onApply);
+        });
+
+        yield message;
+      }
+    } catch (error) {
+      throw error;
+    }
   }),
 });
