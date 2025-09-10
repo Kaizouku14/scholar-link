@@ -133,6 +133,7 @@ export const NAVIGATION_DATA: NavigationData = {
             title: "Document Review",
             url: PageRoutes.INTERNSHIPS_DOCUMENTS_REVIEW,
             icon: FileCheck,
+            badgeType: "messages",
             description: "Pending document reviews",
           },
           {
@@ -152,6 +153,7 @@ export const NAVIGATION_DATA: NavigationData = {
             title: "Mails",
             url: PageRoutes.MAILS,
             icon: Mail,
+            badgeType: "messages",
             description: "Student communications",
           },
         ],
@@ -279,6 +281,7 @@ export const NAVIGATION_DATA: NavigationData = {
             title: "Applications",
             url: PageRoutes.SCHOLARSHIPS_APPLICATIONS,
             icon: FileText,
+            badgeType: "applications",
             description: "Review applications",
           },
           {
@@ -298,6 +301,7 @@ export const NAVIGATION_DATA: NavigationData = {
             title: "Mails",
             url: PageRoutes.MAILS,
             icon: Mail,
+            badgeType: "messages",
             description: "Student communications",
           },
         ],
@@ -343,6 +347,7 @@ export const NAVIGATION_DATA: NavigationData = {
             title: "Applications",
             url: PageRoutes.SCHOLARSHIPS_APPLICATIONS,
             icon: FileText,
+            badgeType: "applications",
             description: "Review applications",
           },
           {

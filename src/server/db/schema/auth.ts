@@ -7,6 +7,7 @@ import { DEPARTMENTS } from "@/constants/users/departments";
 import { type SectionType } from "@/constants/users/sections";
 import { YEAR_LEVEL } from "@/constants/users/year-level";
 import { GENDERS } from "@/constants/users/genders";
+import { NOTIFICATIONS } from "@/constants/notification";
 
 export const user = createTable("user", {
   id: text("id").primaryKey(),
@@ -41,6 +42,18 @@ export const student = createTable("student", {
   studentNo: text("student_no").unique(),
   yearLevel: text("year_level", { enum: YEAR_LEVEL }),
   onboarded: integer("onboarded", { mode: "boolean" }).default(false),
+});
+
+export const notification = createTable("notification", {
+  id: text("id")
+    .notNull()
+    .primaryKey()
+    .references(() => user.id, { onDelete: "cascade" }),
+  type: text("type", { enum: NOTIFICATIONS }).notNull(),
+  count: integer("count").notNull().default(0),
+  updatedAt: integer("updated_at", { mode: "timestamp" })
+    .notNull()
+    .$onUpdateFn(() => new Date()),
 });
 
 export const session = createTable("session", {
