@@ -57,6 +57,19 @@ const t = initTRPC.context<Context>().create({
       },
     };
   },
+  sse: {
+    // Maximum duration of a single SSE connection in milliseconds
+    // maxDurationMs: 60_00,
+    ping: {
+      // Enable periodic ping messages to keep connection alive
+      enabled: true,
+      // Send ping message every 2s
+      intervalMs: 2_000,
+    },
+    client: {
+      reconnectAfterInactivityMs: 3_000,
+    },
+  },
 });
 
 /**

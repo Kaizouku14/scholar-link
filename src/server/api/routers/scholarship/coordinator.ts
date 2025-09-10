@@ -64,9 +64,9 @@ export const scholarshipCoordinatorRouter = createTRPCRouter({
 
   //Queries
   getAllScholarsApplications: publicProcedure.query(async () => {
-    // const userId = ctx.session!.user.id;
+    const userId = ctx.session!.user.id;
     return await getCoordProgramApplications({
-      userId: "6MWFRTgSQIyGp7bj0w9kCKqYzPAS1bzu",
+      userId,
     });
   }),
 });
