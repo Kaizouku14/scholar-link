@@ -9,6 +9,7 @@ import {
   updateProgramAvailability,
 } from "@/lib/api/scholarship/coordinator/program/mutation";
 import { getCoordProgramApplications } from "@/lib/api/scholarship/coordinator/program/query";
+import { cacheData } from "@/lib/redis";
 
 export const scholarshipCoordinatorRouter = createTRPCRouter({
   createProgram: adminRoute
@@ -63,10 +64,14 @@ export const scholarshipCoordinatorRouter = createTRPCRouter({
     }),
 
   //Queries
-  getAllScholarsApplications: adminRoute.query(async ({ ctx }) => {
+  getAllScholarsApplications: adminRoute.query(({ ctx }) => {
     const userId = ctx.session!.user.id;
-    return await getCoordProgramApplications({
-      userId,
-    });
+    return cacheData(
+      `${userId}-applications`,
+      async () =>
+        await getCoordProgramApplications({
+          userId,
+        }),
+    );
   }),
 });

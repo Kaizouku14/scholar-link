@@ -10,6 +10,7 @@ import {
   student as StudentTable,
 } from "@/server/db/schema/auth";
 import type { ScholarDocument } from "@/interfaces/scholarship/documents";
+import type { Applications } from "@/interfaces/scholarship/application";
 
 //Coordinator Program
 export const getCoordProgramApplications = async ({
@@ -29,18 +30,22 @@ export const getCoordProgramApplications = async ({
   const applicants = await db
     .selectDistinct({
       //Program
-      programId: ProgramTable.programId,
       programName: ProgramTable.name,
 
       //Application
       applicationId: ApplicationsTable.applicationsId,
       appliedAt: ApplicationsTable.appliedAt,
-      applicationStatus: ApplicationsTable.status,
+      status: ApplicationsTable.status,
 
       //User
       name: UserTable.name,
-      email: UserTable.email,
       profile: UserTable.profile,
+      yearlevel: StudentTable.yearLevel,
+      course: UserTable.course,
+      section: UserTable.section,
+
+      email: UserTable.email,
+
       contactNo: UserTable.contact,
       address: UserTable.address,
       dateOfBirth: UserTable.dateOfBirth,
@@ -48,10 +53,7 @@ export const getCoordProgramApplications = async ({
 
       //StudentInfo
       studentNo: StudentTable.studentNo,
-      yearlevel: StudentTable.yearLevel,
-      course: UserTable.course,
       department: UserTable.department,
-      section: UserTable.section,
 
       //Document Submitted
       documents: sql<string>`
@@ -86,5 +88,5 @@ export const getCoordProgramApplications = async ({
     documents: app.documents
       ? (JSON.parse(app.documents) as ScholarDocument)
       : [],
-  }));
+  })) as Applications[];
 };

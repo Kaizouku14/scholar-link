@@ -1,5 +1,5 @@
 import type { submissionType } from "@/constants/scholarship/submittion-type";
-import type { ScholarshipPrograms } from "@/interfaces/scholarship/create-program";
+import type { ScholarshipPrograms } from "@/interfaces/scholarship/program";
 import { generateUUID } from "@/lib/utils";
 import { db, eq } from "@/server/db";
 import {

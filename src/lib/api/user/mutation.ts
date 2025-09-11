@@ -114,14 +114,19 @@ export const insertStudentProfile = async ({
   }
 };
 
-export const createNotification = async (
+export const createNotification = (
   userId: string,
   type: notificationType,
   message: string,
 ) => {
-  await db
-    .insert(NotificationTable)
-    .values({ id: generateUUID(), userId, type, message });
-
-  ee.emit(Events.NEW_NOTIFICATION, userId);
+  void (async () => {
+    try {
+      await db
+        .insert(NotificationTable)
+        .values({ id: generateUUID(), userId, type, message });
+      ee.emit(Events.NEW_NOTIFICATION, userId);
+    } catch (err) {
+      console.error("Failed to create notification:", err);
+    }
+  })();
 };

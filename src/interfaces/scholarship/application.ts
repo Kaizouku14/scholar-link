@@ -1,31 +1,11 @@
-import type { RequirementType } from "@/constants/scholarship/requirements";
-import type { ScholarshipType } from "@/constants/scholarship/scholarship-types";
-import type { submissionType } from "@/constants/scholarship/submittion-type";
 import type { courseType } from "@/constants/users/courses";
 import type { departmentType } from "@/constants/users/departments";
 import type { GenderType } from "@/constants/users/genders";
 import type { SectionType } from "@/constants/users/sections";
 import type { YearLevelType } from "@/constants/users/year-level";
+import type { ScholarDocument } from "./documents";
 
-export interface ScholarshipPrograms {
-  name: string;
-  description: string;
-  section: string;
-  slots: number;
-  type: ScholarshipType;
-  submissionType: submissionType;
-  deadline: Date;
-  imageUrl?: string | null;
-  imageKey?: string | null;
-  requirements?: {
-    label: string;
-    type: RequirementType;
-    description?: string;
-    isRequired: boolean;
-  }[];
-}
-
-export interface Application {
+export interface newApplication {
   programId: string;
   name: string;
   sex: GenderType;
@@ -45,4 +25,24 @@ export interface Application {
       url: string;
     }
   >;
+}
+
+export interface Applications {
+  programName: string;
+  applicationId: string;
+  appliedAt: Date;
+  status: string;
+  name: string;
+  email: string;
+  contactNo: string;
+  address: string;
+  sex: GenderType;
+  dateOfBirth: Date;
+  profile?: string;
+  yearlevel: YearLevelType;
+  course: courseType;
+  department: departmentType;
+  section: SectionType[];
+  studentNo: string;
+  documents: ScholarDocument[];
 }
