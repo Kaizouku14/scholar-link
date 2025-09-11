@@ -1,4 +1,4 @@
-import { text, integer } from "drizzle-orm/sqlite-core";
+import { text, integer, index } from "drizzle-orm/sqlite-core";
 import { user } from "./auth";
 import { createTable } from "../schema";
 import { SUBMISSION_TYPE } from "@/constants/scholarship/submittion-type";
@@ -23,18 +23,22 @@ export const scholarshipProgram = createTable("programs", {
   announcements: text("announcements"),
 });
 
-export const programCoodinators = createTable("program_coordinators", {
-  id: text("id").primaryKey(),
-  programId: text("program_id")
-    .notNull()
-    .references(() => scholarshipProgram.programId, { onDelete: "cascade" }),
-  userId: text("user_id")
-    .notNull()
-    .references(() => user.id, { onDelete: "cascade" }),
-  assignedAt: integer("assigned_at", { mode: "timestamp" }).default(
-    sql`(unixepoch())`,
-  ),
-});
+export const programCoodinators = createTable(
+  "program_coordinators",
+  {
+    id: text("id").primaryKey(),
+    programId: text("program_id")
+      .notNull()
+      .references(() => scholarshipProgram.programId, { onDelete: "cascade" }),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    assignedAt: integer("assigned_at", { mode: "timestamp" }).default(
+      sql`(unixepoch())`,
+    ),
+  },
+  (table) => [index("idx_coordinators_program").on(table.programId)],
+);
 
 export const requirements = createTable("requirements", {
   requirementId: text("requirement_id").primaryKey(),
@@ -48,26 +52,37 @@ export const requirements = createTable("requirements", {
     .default(true),
 });
 
-export const applications = createTable("applications", {
-  applicationsId: text("applications_id").primaryKey(),
-  userId: text("user_id")
-    .notNull()
-    .references(() => user.id, { onDelete: "cascade" }),
-  programId: text("program_id")
-    .notNull()
-    .references(() => scholarshipProgram.programId, { onDelete: "cascade" }),
-  appliedAt: integer("appliedAt", { mode: "timestamp" }).notNull(),
-  status: text("status", { enum: SCHOLARSHIP_STATUS }).default("pending"),
-});
+export const applications = createTable(
+  "applications",
+  {
+    applicationsId: text("applications_id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    programId: text("program_id")
+      .notNull()
+      .references(() => scholarshipProgram.programId, { onDelete: "cascade" }),
+    appliedAt: integer("appliedAt", { mode: "timestamp" }).notNull(),
+    status: text("status", { enum: SCHOLARSHIP_STATUS }).default("pending"),
+  },
+  (table) => [
+    index("idx_applications_user_status").on(table.userId, table.status),
+    index("idx_applications_program").on(table.programId),
+  ],
+);
 
-export const scholars_documents = createTable("scholars_documents", {
-  id: text("document_id").primaryKey(),
-  applicantId: text("applicant_id")
-    .notNull()
-    .references(() => applications.applicationsId, { onDelete: "cascade" }),
-  submittedAt: integer("submitted_at", { mode: "timestamp" }).notNull(),
-  documentUrl: text("document_url"),
-  documentKey: text("document_key"),
-  documentName: text("document_name"),
-  reviewStatus: text("review_status", { enum: STATUS }).default("pending"),
-});
+export const scholars_documents = createTable(
+  "scholars_documents",
+  {
+    id: text("document_id").primaryKey(),
+    applicantId: text("applicant_id")
+      .notNull()
+      .references(() => applications.applicationsId, { onDelete: "cascade" }),
+    submittedAt: integer("submitted_at", { mode: "timestamp" }).notNull(),
+    documentUrl: text("document_url"),
+    documentKey: text("document_key"),
+    documentName: text("document_name"),
+    reviewStatus: text("review_status", { enum: STATUS }).default("pending"),
+  },
+  (table) => [index("idx_documents_applicant").on(table.applicantId)],
+);

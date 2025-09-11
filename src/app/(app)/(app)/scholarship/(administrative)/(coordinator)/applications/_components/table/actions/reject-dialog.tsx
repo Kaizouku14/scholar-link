@@ -24,20 +24,20 @@ interface DataTableRowActionsProps {
 }
 
 export function RejectApplication({ row }: DataTableRowActionsProps) {
-  const id = row.original.applicationId;
+  const { applicationId, email } = row.original;
   const [open, setOpen] = useState<boolean>(false);
   const [reason, setReason] = useState<string>("");
 
   const handleRejection = async () => {
     console.log(reason);
-
+    console.log(applicationId, email);
     setOpen(false);
   };
 
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        <Button size={"sm"}>
+        <Button>
           <XCircle className="h-4 w-4" />
           <span>Reject</span>
         </Button>

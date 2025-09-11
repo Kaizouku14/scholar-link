@@ -1,7 +1,7 @@
 import { ROLE } from "@/constants/users/roles";
 import type { NewApplication } from "@/interfaces/scholarship/application";
 import { generateUUID } from "@/lib/utils";
-import { db, eq } from "@/server/db";
+import { db, eq, and, or } from "@/server/db";
 import {
   user as UserTable,
   student as StudentTable,
@@ -23,28 +23,61 @@ export const createApplication = async ({
   const fileKeys = Object.values(application.requirements).map((r) => r.key);
   try {
     const [coordinator] = await db.transaction(async (tx) => {
-      const userId = generateUUID();
+      let userId: string;
+
+      const existingUser = await tx
+        .select({
+          id: UserTable.id,
+          activeAppId: ApplicationTable.applicationsId,
+        })
+        .from(UserTable)
+        .where(eq(UserTable.email, application.email))
+        .leftJoin(
+          ApplicationTable,
+          and(
+            eq(ApplicationTable.userId, UserTable.id),
+            or(
+              eq(ApplicationTable.status, "qualified"),
+              eq(ApplicationTable.status, "active"),
+            ),
+          ),
+        )
+        .limit(1);
+
+      if (existingUser.length > 0 && existingUser[0]?.id) {
+        userId = existingUser[0].id;
+
+        if (existingUser[0].activeAppId) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "You already have an active scholarship.",
+          });
+        }
+      } else {
+        userId = generateUUID();
+
+        await tx.insert(UserTable).values({
+          id: userId,
+          name: application.name,
+          email: application.email,
+          gender: application.sex,
+          dateOfBirth: application.dateOfBirth,
+          contact: application.contact,
+          address: application.address,
+          course: application.course,
+          department: application.department,
+          section: application.section,
+          role: ROLE.SCHOLARSHIP_STUDENT,
+        });
+
+        await tx.insert(StudentTable).values({
+          id: userId,
+          studentNo: application.studentNo,
+          yearLevel: application.yearLevel,
+        });
+      }
+
       const applicationsId = generateUUID();
-
-      await tx.insert(UserTable).values({
-        id: userId,
-        name: application.name,
-        email: application.email,
-        gender: application.sex,
-        dateOfBirth: application.dateOfBirth,
-        contact: application.contact,
-        address: application.address,
-        course: application.course,
-        department: application.department,
-        section: application.section,
-        role: ROLE.SCHOLARSHIP_STUDENT,
-      });
-
-      await tx.insert(StudentTable).values({
-        id: userId,
-        studentNo: application.studentNo,
-        yearLevel: application.yearLevel,
-      });
 
       await tx.insert(ApplicationTable).values({
         applicationsId,
@@ -53,16 +86,16 @@ export const createApplication = async ({
         appliedAt: new Date(),
       });
 
-      for (const value of Object.values(application.requirements)) {
-        await tx.insert(ScholarsDocumentTable).values({
+      await tx.insert(ScholarsDocumentTable).values(
+        Object.values(application.requirements).map((value) => ({
           id: generateUUID(),
           applicantId: applicationsId,
           documentName: value.label,
           documentUrl: value.url,
           documentKey: value.key,
           submittedAt: new Date(),
-        });
-      }
+        })),
+      );
 
       return await tx
         .select({ id: ProgramCoordinatorTable.userId })

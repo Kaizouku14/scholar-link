@@ -1,5 +1,5 @@
 import { createTable } from "../schema";
-import { text, integer } from "drizzle-orm/sqlite-core";
+import { text, integer, index } from "drizzle-orm/sqlite-core";
 import { sql } from "drizzle-orm";
 import { ROLES } from "@/constants/users/roles";
 import { COURSES } from "@/constants/users/courses";
@@ -9,30 +9,38 @@ import { YEAR_LEVEL } from "@/constants/users/year-level";
 import { GENDERS } from "@/constants/users/genders";
 import { NOTIFICATIONS } from "@/constants/notification";
 
-export const user = createTable("user", {
-  id: text("id").primaryKey(),
-  name: text("name").notNull(),
-  email: text("email").unique().notNull(),
-  profile: text("profile"),
-  profileKey: text("profile_key"),
-  contact: text("contact"),
-  address: text("address"),
-  dateOfBirth: integer("date_of_birth", { mode: "timestamp" }),
-  gender: text("gender", { enum: GENDERS }),
-  course: text("course", { enum: COURSES }),
-  department: text("department", { enum: DEPARTMENTS }),
-  section: text("section", { mode: "json" })
-    .$type<SectionType[]>()
-    .default(sql`(json_array())`),
-  role: text("role", { enum: ROLES }),
-  emailVerified: integer("email_verified", { mode: "boolean" }),
-  createdAt: integer("created_at", { mode: "timestamp" }).default(
-    sql`(unixepoch())`,
-  ),
-  updatedAt: integer("updated_at", { mode: "timestamp" }).$onUpdateFn(
-    () => new Date(),
-  ),
-});
+export const user = createTable(
+  "user",
+  {
+    id: text("id").primaryKey(),
+    name: text("name").notNull(),
+    email: text("email").unique().notNull(),
+    profile: text("profile"),
+    profileKey: text("profile_key"),
+    contact: text("contact"),
+    address: text("address"),
+    dateOfBirth: integer("date_of_birth", { mode: "timestamp" }),
+    gender: text("gender", { enum: GENDERS }),
+    course: text("course", { enum: COURSES }),
+    department: text("department", { enum: DEPARTMENTS }),
+    section: text("section", { mode: "json" })
+      .$type<SectionType[]>()
+      .default(sql`(json_array())`),
+    role: text("role", { enum: ROLES }),
+    emailVerified: integer("email_verified", { mode: "boolean" }),
+    createdAt: integer("created_at", { mode: "timestamp" }).default(
+      sql`(unixepoch())`,
+    ),
+    updatedAt: integer("updated_at", { mode: "timestamp" }).$onUpdateFn(
+      () => new Date(),
+    ),
+  },
+  (table) => [
+    index("idx_user_role").on(table.role),
+    index("idx_user_course").on(table.course),
+    index("idx_user_section").on(table.section),
+  ],
+);
 
 export const student = createTable("student", {
   id: text("id")
@@ -57,18 +65,22 @@ export const notifications = createTable("notifications", {
     .$defaultFn(() => new Date()),
 });
 
-export const session = createTable("session", {
-  id: text("id").primaryKey(),
-  userId: text("user_id")
-    .notNull()
-    .references(() => user.id, { onDelete: "cascade" }),
-  token: text("token").notNull().unique(),
-  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
-  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
-  expiresAt: integer("expires_at", { mode: "timestamp" }).notNull(),
-  ipAddress: text("ipAddress"),
-  userAgent: text("user_agent"),
-});
+export const session = createTable(
+  "session",
+  {
+    id: text("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    token: text("token").notNull().unique(),
+    createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+    updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
+    expiresAt: integer("expires_at", { mode: "timestamp" }).notNull(),
+    ipAddress: text("ipAddress"),
+    userAgent: text("user_agent"),
+  },
+  (table) => [index("idx_session_user").on(table.userId)],
+);
 
 export const account = createTable("account", {
   id: text("id").primaryKey(),

@@ -1,26 +1,33 @@
-import { integer, text } from "drizzle-orm/sqlite-core";
+import { index, integer, text } from "drizzle-orm/sqlite-core";
 import { user } from "./auth";
 import { createTable } from "../schema";
 import { STATUS, INTERNSHIP_STATUS } from "@/constants/users/status";
 import { sql } from "drizzle-orm";
 
-export const internship = createTable("internship", {
-  internshipId: text("internship_id").primaryKey(),
-  userId: text("user_id")
-    .notNull()
-    .references(() => user.id, { onDelete: "cascade" }),
-  companyId: text("company_id")
-    .notNull()
-    .references(() => company.companyId, { onDelete: "cascade" }),
-  supervisorId: text("supervisor_id")
-    .notNull()
-    .references(() => supervisor.supervisorId, { onDelete: "cascade" }),
-  duration: text("duration").notNull(),
-  totalOfHoursRequired: integer("total_of_hours_required").notNull(), //Values i.e(450, 600)
-  status: text("status", { enum: INTERNSHIP_STATUS })
-    .notNull()
-    .default("pending"),
-});
+export const internship = createTable(
+  "internship",
+  {
+    internshipId: text("internship_id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    companyId: text("company_id")
+      .notNull()
+      .references(() => company.companyId, { onDelete: "cascade" }),
+    supervisorId: text("supervisor_id")
+      .notNull()
+      .references(() => supervisor.supervisorId, { onDelete: "cascade" }),
+    duration: text("duration").notNull(),
+    totalOfHoursRequired: integer("total_of_hours_required").notNull(), //Values i.e(450, 600)
+    status: text("status", { enum: INTERNSHIP_STATUS })
+      .notNull()
+      .default("pending"),
+  },
+  (table) => [
+    index("idx_internship_user_status").on(table.userId, table.status),
+    index("idx_internship_company").on(table.companyId),
+  ],
+);
 
 export const progressLog = createTable("student_progress", {
   progressId: text("progress_id").primaryKey(),
@@ -50,24 +57,31 @@ export const document = createTable("document", {
   deadline: integer("deadline", { mode: "timestamp" }).notNull(),
 });
 
-export const internDocuments = createTable("intern_documents", {
-  documentId: text("documents_id").primaryKey(),
-  internId: text("intern_id")
-    .notNull()
-    .references(() => user.id, {
-      onDelete: "cascade",
-    }),
-  documentType: text("document_type")
-    .notNull()
-    .references(() => document.documentType, { onDelete: "cascade" }),
-  submittedAt: integer("submitted_at", { mode: "timestamp" }),
-  documentUrl: text("document_url"),
-  documentKey: text("document_key"),
-  reviewStatus: text("review_status", { enum: STATUS }).default("pending"),
-  createdAt: integer("created_at", { mode: "timestamp" }).default(
-    sql`(unixepoch())`,
-  ),
-  updatedAt: integer("updated_at", { mode: "timestamp" }).$onUpdateFn(
-    () => new Date(),
-  ),
-});
+export const internDocuments = createTable(
+  "intern_documents",
+  {
+    documentId: text("documents_id").primaryKey(),
+    internId: text("intern_id")
+      .notNull()
+      .references(() => user.id, {
+        onDelete: "cascade",
+      }),
+    documentType: text("document_type")
+      .notNull()
+      .references(() => document.documentType, { onDelete: "cascade" }),
+    submittedAt: integer("submitted_at", { mode: "timestamp" }),
+    documentUrl: text("document_url"),
+    documentKey: text("document_key"),
+    reviewStatus: text("review_status", { enum: STATUS }).default("pending"),
+    createdAt: integer("created_at", { mode: "timestamp" }).default(
+      sql`(unixepoch())`,
+    ),
+    updatedAt: integer("updated_at", { mode: "timestamp" }).$onUpdateFn(
+      () => new Date(),
+    ),
+  },
+  (table) => [
+    index("idx_documents_intern").on(table.internId),
+    index("idx_documents_status").on(table.reviewStatus),
+  ],
+);

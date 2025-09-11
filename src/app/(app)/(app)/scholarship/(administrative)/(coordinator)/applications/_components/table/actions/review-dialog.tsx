@@ -38,8 +38,8 @@ export function ViewDocuments({ row }: DataTableRowActionsProps) {
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="h-120 max-w-md">
-        <form onSubmit={handleMarkAsQualified}>
+      <DialogContent className="h-117 max-w-md">
+        <form onSubmit={handleMarkAsQualified} className="space-y-4">
           <DialogHeader>
             <DialogTitle>Review Documents</DialogTitle>
             <DialogDescription>
@@ -95,7 +95,7 @@ export function ViewDocuments({ row }: DataTableRowActionsProps) {
                 <Button
                   type="submit"
                   //    disabled={isPending}
-                  className="w-32"
+                  className="w-38"
                 >
                   {false ? (
                     <LoaderCircle className="text-primary-foreground h-6 w-6 animate-spin" />
