@@ -8,23 +8,24 @@ import type { statusType } from "@/constants/users/status";
 
 interface BaseApplication {
   name: string;
-  sex: GenderType;
-  dateOfBirth: Date;
   email: string;
   contact: string;
   address: string;
   course: courseType;
   yearLevel: YearLevelType;
-  department: departmentType;
   section: SectionType[];
-  studentNo: string;
 }
 
 export interface NewApplication extends BaseApplication {
   programId: string;
+  sex: GenderType;
+  dateOfBirth: Date;
+  department: departmentType;
+  studentNo: string;
   requirements: Record<
     string,
     {
+      label: string;
       key: string;
       url: string;
     }
@@ -33,7 +34,6 @@ export interface NewApplication extends BaseApplication {
 
 export interface Applications extends BaseApplication {
   applicationId: string;
-  programName: string;
   appliedAt: Date;
   status: statusType;
   profile?: string;

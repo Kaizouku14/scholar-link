@@ -18,7 +18,7 @@ export const createFormSchema = (requirements: Requirement[]) => {
       .string()
       .min(1, "Email is required")
       .email("Please enter a valid email address"),
-    contactNo: z
+    contact: z
       .string()
       .min(1, "Contact number is required")
       .min(10, "Contact number must be at least 10 digits"),
@@ -34,31 +34,17 @@ export const createFormSchema = (requirements: Requirement[]) => {
   };
 
   requirements.forEach((req) => {
-    switch (req.type) {
-      case "document":
-      case "image":
-        schemaFields[req.requirementId] = req.isRequired
-          ? z
-              .instanceof(FileList)
-              .refine((files) => files?.length > 0, "File is required")
-              .refine(
-                (files) => files?.[0] && files[0].size <= 5_000_000,
-                "File size should be less than 5MB",
-              )
-          : z
-              .instanceof(FileList)
-              .optional()
-              .refine(
-                (files) => !files || (files?.[0] && files[0].size <= 5_000_000),
-                "File size should be less than 5MB",
-              );
-        break;
-      case "text":
-        schemaFields[req.requirementId] = z
-          .string()
-          .min(1, "This field is required");
-        break;
-    }
+    const baseFileSchema = z
+      .instanceof(FileList)
+      .refine((files) => files[0] && files?.[0]?.size <= 5_000_000, {
+        message: "File size should be less than 5MB",
+      });
+
+    schemaFields[req.requirementId] = req.isRequired
+      ? baseFileSchema.refine((files) => files?.length > 0, {
+          message: `${req.label} is required`,
+        })
+      : baseFileSchema.optional();
   });
 
   return z.object(schemaFields);

@@ -33,6 +33,7 @@ export const scholarshipRouter = createTRPCRouter({
         requirements: z.record(
           z.string(),
           z.object({
+            label: z.string(),
             key: z.string(),
             url: z.string().url(),
           }),

@@ -1,6 +1,5 @@
 import { db, desc, eq, inArray, sql, and } from "@/server/db";
 import {
-  scholarshipProgram as ProgramTable,
   programCoodinators as ProgramCoordinatorTable,
   applications as ApplicationsTable,
   scholars_documents as ScholarsDocumentTable,
@@ -29,9 +28,6 @@ export const getCoordProgramApplications = async ({
   const programIds = program.map((program) => program.programId);
   const applicants = await db
     .selectDistinct({
-      //Program
-      programName: ProgramTable.name,
-
       //Application
       applicationId: ApplicationsTable.applicationsId,
       appliedAt: ApplicationsTable.appliedAt,
@@ -45,15 +41,8 @@ export const getCoordProgramApplications = async ({
       section: UserTable.section,
 
       email: UserTable.email,
-
       contact: UserTable.contact,
       address: UserTable.address,
-      dateOfBirth: UserTable.dateOfBirth,
-      sex: UserTable.gender,
-
-      //StudentInfo
-      studentNo: StudentTable.studentNo,
-      department: UserTable.department,
 
       //Document Submitted
       documents: sql<string>`
@@ -70,10 +59,6 @@ export const getCoordProgramApplications = async ({
     .from(ApplicationsTable)
     .leftJoin(UserTable, eq(UserTable.id, ApplicationsTable.userId))
     .leftJoin(StudentTable, eq(StudentTable.id, ApplicationsTable.userId))
-    .leftJoin(
-      ProgramTable,
-      eq(ProgramTable.programId, ApplicationsTable.programId),
-    )
     .leftJoin(
       ScholarsDocumentTable,
       eq(ScholarsDocumentTable.applicantId, ApplicationsTable.applicationsId),

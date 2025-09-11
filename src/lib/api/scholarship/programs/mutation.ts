@@ -57,6 +57,7 @@ export const createApplication = async ({
         await tx.insert(ScholarsDocumentTable).values({
           id: generateUUID(),
           applicantId: applicationsId,
+          documentName: value.label,
           documentUrl: value.url,
           documentKey: value.key,
           submittedAt: new Date(),

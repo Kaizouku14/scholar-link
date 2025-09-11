@@ -45,7 +45,6 @@ export const createScholarshipProgram = async ({
           requirementId: generateUUID(),
           programId: programId,
           label: requirement.label,
-          type: requirement.type,
           description: requirement.description,
           isRequired: requirement.isRequired,
         });

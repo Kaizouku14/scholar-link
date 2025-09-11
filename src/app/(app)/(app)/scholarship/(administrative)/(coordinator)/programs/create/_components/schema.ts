@@ -1,4 +1,3 @@
-import { REQUIREMENT_TYPES } from "@/constants/scholarship/requirements";
 import { SCHOLARSHIP_TYPES } from "@/constants/scholarship/scholarship-types";
 import { SUBMISSION_TYPE } from "@/constants/scholarship/submittion-type";
 import z from "zod";
@@ -24,7 +23,6 @@ export const scholarshipFormSchema = z.object({
     .array(
       z.object({
         label: z.string().min(1, "Requirement label is required"),
-        type: z.enum(REQUIREMENT_TYPES),
         description: z.string().optional(),
         isRequired: z.boolean(),
       }),

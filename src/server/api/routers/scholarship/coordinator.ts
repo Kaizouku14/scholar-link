@@ -1,7 +1,6 @@
 import z from "zod";
 import { createTRPCRouter, adminRoute } from "../../trpc";
 import { SCHOLARSHIP_TYPES } from "@/constants/scholarship/scholarship-types";
-import { REQUIREMENT_TYPES } from "@/constants/scholarship/requirements";
 import { SUBMISSION_TYPE } from "@/constants/scholarship/submittion-type";
 import {
   createScholarshipProgram,
@@ -29,7 +28,6 @@ export const scholarshipCoordinatorRouter = createTRPCRouter({
           .array(
             z.object({
               label: z.string(),
-              type: z.enum(REQUIREMENT_TYPES),
               description: z.string().optional(),
               isRequired: z.boolean(),
             }),

@@ -11,14 +11,6 @@ import {
   FormControl,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
-import { REQUIREMENT_TYPES } from "@/constants/scholarship/requirements";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 
@@ -41,7 +33,6 @@ export const RequirementsForm = () => {
           onClick={() =>
             append({
               name: "",
-              type: "document",
               description: "",
               isRequired: true,
             })
@@ -97,40 +88,12 @@ export const RequirementsForm = () => {
               />
             </div>
 
-            <div className="flex flex-col space-y-8">
-              <FormField
-                control={control}
-                name={`requirements.${index}.type`}
-                render={({ field }) => (
-                  <FormItem className="w-full md:w-40">
-                    <FormLabel>Type</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value as string}
-                    >
-                      <FormControl>
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Select type" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {REQUIREMENT_TYPES.map((type) => (
-                          <SelectItem key={type} value={type}>
-                            {type.charAt(0).toUpperCase() + type.slice(1)}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
+            <div className="flex justify-evenly gap-4">
               <FormField
                 control={control}
                 name={`requirements.${index}.isRequired`}
                 render={({ field }) => (
-                  <FormItem className="flex flex-row items-start space-y-0 space-x-3">
+                  <FormItem className="mt-8 flex flex-row items-start space-y-0 space-x-3">
                     <FormControl>
                       <Switch
                         checked={field.value as boolean}
@@ -143,17 +106,17 @@ export const RequirementsForm = () => {
                   </FormItem>
                 )}
               />
-            </div>
 
-            <Button
-              type="button"
-              size="icon"
-              onClick={() => remove(index)}
-              variant="destructive"
-              className="self-start md:mt-5.5"
-            >
-              <Trash2 className="h-4 w-4" />
-            </Button>
+              <Button
+                type="button"
+                size="icon"
+                onClick={() => remove(index)}
+                variant="destructive"
+                className="self-start md:mt-5.5"
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
         ))}
       </div>

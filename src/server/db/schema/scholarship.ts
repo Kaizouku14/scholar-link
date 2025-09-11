@@ -4,7 +4,6 @@ import { createTable } from "../schema";
 import { SUBMISSION_TYPE } from "@/constants/scholarship/submittion-type";
 import { SCHOLARSHIP_TYPES } from "@/constants/scholarship/scholarship-types";
 import { STATUS } from "@/constants/users/status";
-import { REQUIREMENT_TYPES } from "@/constants/scholarship/requirements";
 import { sql } from "drizzle-orm";
 
 export const scholarshipProgram = createTable("programs", {
@@ -43,7 +42,6 @@ export const requirements = createTable("requirements", {
     .notNull()
     .references(() => scholarshipProgram.programId, { onDelete: "cascade" }),
   label: text("label").notNull(),
-  type: text("type", { enum: REQUIREMENT_TYPES }).notNull(),
   description: text("description"),
   isRequired: integer("is_required", { mode: "boolean" })
     .notNull()
@@ -70,5 +68,6 @@ export const scholars_documents = createTable("scholars_documents", {
   submittedAt: integer("submitted_at", { mode: "timestamp" }).notNull(),
   documentUrl: text("document_url"),
   documentKey: text("document_key"),
+  documentName: text("document_name"),
   reviewStatus: text("review_status", { enum: STATUS }).default("pending"),
 });

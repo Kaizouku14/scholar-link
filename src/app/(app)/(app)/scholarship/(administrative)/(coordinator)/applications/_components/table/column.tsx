@@ -16,13 +16,14 @@ import { Badge } from "@/components/ui/badge";
 import React from "react";
 import { format } from "date-fns";
 import { Mail, Phone } from "lucide-react";
+import { DataTableRowActions } from "./table-row-actions";
 
 export const ApplicationsColumn: ColumnDef<Applications>[] = [
   {
     accessorKey: "name",
     header: (header) => (
       <div className="text-left">
-        <DataTableColumnHeader column={header.column} title="Name" />
+        <DataTableColumnHeader column={header.column} title="Applicant" />
       </div>
     ),
     cell: ({ row }) => {
@@ -52,7 +53,7 @@ export const ApplicationsColumn: ColumnDef<Applications>[] = [
   },
   {
     accessorKey: "email",
-    header: "Email",
+    header: "Email Address",
     cell: ({ row }) => (
       <div className="flex items-center gap-1.5">
         <Mail className="text-muted-foreground h-4 w-4 flex-shrink-0" />
@@ -64,6 +65,10 @@ export const ApplicationsColumn: ColumnDef<Applications>[] = [
         </a>
       </div>
     ),
+  },
+  {
+    accessorKey: "address",
+    header: "Address",
   },
   {
     accessorKey: "contact",
@@ -79,10 +84,6 @@ export const ApplicationsColumn: ColumnDef<Applications>[] = [
         </a>
       </div>
     ),
-  },
-  {
-    accessorKey: "programName",
-    header: "Program",
   },
   {
     accessorKey: "appliedAt",
@@ -116,5 +117,6 @@ export const ApplicationsColumn: ColumnDef<Applications>[] = [
   {
     accessorKey: "actions",
     header: "Actions",
+    cell: ({ row }) => <DataTableRowActions row={row} />,
   },
 ];
