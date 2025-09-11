@@ -5,6 +5,13 @@ export const INTERNSHIP_STATUS = [
   "completed",
   "canceled",
 ] as const;
+export const SCHOLARSHIP_STATUS = [
+  "pending",
+  "rejected",
+  "qualified",
+  "active",
+  "unactive",
+] as const;
 
 export const STATUS_LABELS = [
   {
@@ -42,3 +49,4 @@ export const INTERNSHIP_STATUS_LABELS = [
 
 export type statusType = (typeof STATUS)[number];
 export type internshipStatusType = (typeof INTERNSHIP_STATUS)[number];
+export type scholarshipStatusType = (typeof SCHOLARSHIP_STATUS)[number];

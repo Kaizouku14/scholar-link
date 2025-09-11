@@ -3,7 +3,7 @@ import { user } from "./auth";
 import { createTable } from "../schema";
 import { SUBMISSION_TYPE } from "@/constants/scholarship/submittion-type";
 import { SCHOLARSHIP_TYPES } from "@/constants/scholarship/scholarship-types";
-import { STATUS } from "@/constants/users/status";
+import { SCHOLARSHIP_STATUS, STATUS } from "@/constants/users/status";
 import { sql } from "drizzle-orm";
 
 export const scholarshipProgram = createTable("programs", {
@@ -57,7 +57,7 @@ export const applications = createTable("applications", {
     .notNull()
     .references(() => scholarshipProgram.programId, { onDelete: "cascade" }),
   appliedAt: integer("appliedAt", { mode: "timestamp" }).notNull(),
-  status: text("status", { enum: STATUS }).default("pending"),
+  status: text("status", { enum: SCHOLARSHIP_STATUS }).default("pending"),
 });
 
 export const scholars_documents = createTable("scholars_documents", {

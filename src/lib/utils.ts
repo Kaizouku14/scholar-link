@@ -1,7 +1,13 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import z from "zod";
-import { CheckCircle, Clock, Hourglass, XCircle } from "lucide-react";
+import {
+  CheckCircle,
+  Clock,
+  Hourglass,
+  MinusCircle,
+  XCircle,
+} from "lucide-react";
 import type { departmentType } from "@/constants/users/departments";
 import { departmentHoursMap } from "@/constants/internship/hours";
 
@@ -115,13 +121,18 @@ export const getStatusColor = (status: string) => {
     case "pending":
       return "bg-yellow-50 text-yellow-700 border-yellow-200";
     case "on-going":
+    case "in-progress":
       return "bg-blue-50 text-blue-700 border-blue-200";
     case "approved":
     case "completed":
+    case "qualified":
+    case "active":
       return "bg-green-100 text-green-800 border-green-200";
     case "rejected":
     case "canceled":
-      return "bg-red-200 text-red-800 border-red-300";
+      return "bg-red-50 text-red-700 border-red-200";
+    case "unactive":
+      return "bg-gray-100 text-gray-700 border-gray-200";
     default:
       return "bg-gray-50 text-gray-700 border-gray-200";
   }
@@ -134,17 +145,20 @@ export const getStatusIcon = (status: string) => {
     case "on-going":
     case "in-progress":
       return Hourglass;
+    case "qualified":
     case "approved":
     case "completed":
+    case "active":
       return CheckCircle;
     case "rejected":
     case "canceled":
       return XCircle;
+    case "unactive":
+      return MinusCircle;
     default:
       return Clock;
   }
 };
-
 /**
  * Format a string by trimming, normalizing camelCase to spaces, and capitalizing
  * the first letter of each word.

@@ -49,6 +49,7 @@ export const getCoordProgramApplications = async ({
         json_group_array(
           json_object(
             'id', ${ScholarsDocumentTable.id},
+            'label', ${ScholarsDocumentTable.documentName},
             'url', ${ScholarsDocumentTable.documentUrl},
             'reviewStatus', ${ScholarsDocumentTable.reviewStatus},
             'submittedAt', ${ScholarsDocumentTable.submittedAt}

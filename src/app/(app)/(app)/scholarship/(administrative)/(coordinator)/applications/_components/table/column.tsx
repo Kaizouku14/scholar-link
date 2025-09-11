@@ -16,7 +16,8 @@ import { Badge } from "@/components/ui/badge";
 import React from "react";
 import { format } from "date-fns";
 import { Mail, Phone } from "lucide-react";
-import { DataTableRowActions } from "./table-row-actions";
+import { ViewDocuments } from "./actions/review-dialog";
+import { RejectApplication } from "./actions/reject-dialog";
 
 export const ApplicationsColumn: ColumnDef<Applications>[] = [
   {
@@ -117,6 +118,11 @@ export const ApplicationsColumn: ColumnDef<Applications>[] = [
   {
     accessorKey: "actions",
     header: "Actions",
-    cell: ({ row }) => <DataTableRowActions row={row} />,
+    cell: ({ row }) => (
+      <div className="space-x-2">
+        <ViewDocuments row={row} />
+        <RejectApplication row={row} />
+      </div>
+    ),
   },
 ];
