@@ -21,7 +21,6 @@ export const userRouter = createTRPCRouter({
     .mutation(async ({ input }) => {
       return await insertStudentInfo(input);
     }),
-
   //   checkStudentNoAvailability: publicProcedure
   //     .input(
   //       z.object({

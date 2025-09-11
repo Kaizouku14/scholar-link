@@ -1,5 +1,5 @@
 import { ROLE } from "@/constants/users/roles";
-import type { newApplication } from "@/interfaces/scholarship/application";
+import type { NewApplication } from "@/interfaces/scholarship/application";
 import { generateUUID } from "@/lib/utils";
 import { db, eq } from "@/server/db";
 import {
@@ -18,11 +18,11 @@ import { deleteFilesIfExist } from "@/server/api/uploadthing";
 export const createApplication = async ({
   application,
 }: {
-  application: newApplication;
+  application: NewApplication;
 }) => {
   const fileKeys = Object.values(application.requirements).map((r) => r.key);
   try {
-    const coordinators = await db.transaction(async (tx) => {
+    const [coordinator] = await db.transaction(async (tx) => {
       const userId = generateUUID();
       const applicationsId = generateUUID();
 
@@ -36,7 +36,7 @@ export const createApplication = async ({
         address: application.address,
         course: application.course,
         department: application.department,
-        section: [application.section],
+        section: application.section,
         role: ROLE.SCHOLARSHIP_STUDENT,
       });
 
@@ -67,12 +67,11 @@ export const createApplication = async ({
         .select({ id: ProgramCoordinatorTable.userId })
         .from(ProgramCoordinatorTable)
         .where(eq(ProgramCoordinatorTable.programId, application.programId))
+        .limit(1)
         .execute();
     });
 
-    coordinators.forEach(({ id }) => {
-      void createNotification(id, "applications", "New Application");
-    });
+    void createNotification(coordinator!.id, "applications", "New Application");
   } catch (error) {
     if (fileKeys.length > 0) {
       await deleteFilesIfExist(fileKeys);

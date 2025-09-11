@@ -27,7 +27,7 @@ export const scholarshipRouter = createTRPCRouter({
         address: z.string(),
         course: z.enum(COURSES),
         yearLevel: z.enum(YEAR_LEVEL),
-        section: z.enum(SECTIONS),
+        section: z.array(z.enum(SECTIONS)),
         department: z.enum(DEPARTMENTS),
         studentNo: z.string(),
         requirements: z.record(

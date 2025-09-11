@@ -16,7 +16,6 @@ const ApplicantionsTable = () => {
           columns={ApplicationsColumn}
           data={data}
           filteredTitle={"name"}
-          viewOptions={false}
         />
       ) : (
         <DataTableSkeleton />

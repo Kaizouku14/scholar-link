@@ -1,4 +1,4 @@
-import { db, desc, eq, inArray, sql } from "@/server/db";
+import { db, desc, eq, inArray, sql, and } from "@/server/db";
 import {
   scholarshipProgram as ProgramTable,
   programCoodinators as ProgramCoordinatorTable,
@@ -40,13 +40,13 @@ export const getCoordProgramApplications = async ({
       //User
       name: UserTable.name,
       profile: UserTable.profile,
-      yearlevel: StudentTable.yearLevel,
+      yearLevel: StudentTable.yearLevel,
       course: UserTable.course,
       section: UserTable.section,
 
       email: UserTable.email,
 
-      contactNo: UserTable.contact,
+      contact: UserTable.contact,
       address: UserTable.address,
       dateOfBirth: UserTable.dateOfBirth,
       sex: UserTable.gender,
@@ -78,7 +78,12 @@ export const getCoordProgramApplications = async ({
       ScholarsDocumentTable,
       eq(ScholarsDocumentTable.applicantId, ApplicationsTable.applicationsId),
     )
-    .where(inArray(ApplicationsTable.programId, programIds))
+    .where(
+      and(
+        inArray(ApplicationsTable.programId, programIds),
+        eq(ApplicationsTable.status, "pending"),
+      ),
+    )
     .orderBy(desc(ApplicationsTable.appliedAt))
     .groupBy(ApplicationsTable.applicationsId)
     .execute();

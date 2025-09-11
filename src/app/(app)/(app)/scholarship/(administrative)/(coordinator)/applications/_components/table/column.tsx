@@ -15,7 +15,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import React from "react";
 import { format } from "date-fns";
-import { Mail } from "lucide-react";
+import { Mail, Phone } from "lucide-react";
 
 export const ApplicationsColumn: ColumnDef<Applications>[] = [
   {
@@ -26,7 +26,7 @@ export const ApplicationsColumn: ColumnDef<Applications>[] = [
       </div>
     ),
     cell: ({ row }) => {
-      const { name, profile, course, section, yearlevel } = row.original;
+      const { name, profile, course, section, yearLevel } = row.original;
       return (
         <div className="flex items-center gap-x-1.5">
           <Avatar className="h-10 w-10">
@@ -42,7 +42,7 @@ export const ApplicationsColumn: ColumnDef<Applications>[] = [
             </div>
 
             <div className="text-muted-foreground text-xs">
-              {COURSE_LABELS[course]} · {YEAR_LEVEL_LABELS[yearlevel]}
+              {COURSE_LABELS[course]} · {YEAR_LEVEL_LABELS[yearLevel]}
               {section}
             </div>
           </div>
@@ -61,6 +61,21 @@ export const ApplicationsColumn: ColumnDef<Applications>[] = [
           className="py-0 text-blue-500 hover:text-blue-800 hover:underline"
         >
           {row.original.email}
+        </a>
+      </div>
+    ),
+  },
+  {
+    accessorKey: "contact",
+    header: "Contact No.",
+    cell: ({ row }) => (
+      <div className="flex items-center gap-1.5">
+        <Phone className="text-muted-foreground h-4 w-4 flex-shrink-0" />
+        <a
+          href={`tel:${row.original.contact}`}
+          className="py-0 text-blue-500 hover:text-blue-800 hover:underline"
+        >
+          {row.original.contact}
         </a>
       </div>
     ),

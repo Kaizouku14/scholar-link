@@ -4,9 +4,9 @@ import type { GenderType } from "@/constants/users/genders";
 import type { SectionType } from "@/constants/users/sections";
 import type { YearLevelType } from "@/constants/users/year-level";
 import type { ScholarDocument } from "./documents";
+import type { statusType } from "@/constants/users/status";
 
-export interface newApplication {
-  programId: string;
+interface BaseApplication {
   name: string;
   sex: GenderType;
   dateOfBirth: Date;
@@ -16,8 +16,12 @@ export interface newApplication {
   course: courseType;
   yearLevel: YearLevelType;
   department: departmentType;
-  section: SectionType;
+  section: SectionType[];
   studentNo: string;
+}
+
+export interface NewApplication extends BaseApplication {
+  programId: string;
   requirements: Record<
     string,
     {
@@ -27,22 +31,11 @@ export interface newApplication {
   >;
 }
 
-export interface Applications {
-  programName: string;
+export interface Applications extends BaseApplication {
   applicationId: string;
+  programName: string;
   appliedAt: Date;
-  status: string;
-  name: string;
-  email: string;
-  contactNo: string;
-  address: string;
-  sex: GenderType;
-  dateOfBirth: Date;
+  status: statusType;
   profile?: string;
-  yearlevel: YearLevelType;
-  course: courseType;
-  department: departmentType;
-  section: SectionType[];
-  studentNo: string;
   documents: ScholarDocument[];
 }

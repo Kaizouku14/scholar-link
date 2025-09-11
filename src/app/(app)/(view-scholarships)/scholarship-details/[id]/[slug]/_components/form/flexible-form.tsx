@@ -27,7 +27,7 @@ import { uploadFile } from "@/lib/uploadthing";
 import { renderPersonalInfoFields } from "./personal-field";
 import toast from "react-hot-toast";
 import { api } from "@/trpc/react";
-import type { newApplication } from "@/interfaces/scholarship/application";
+import type { NewApplication } from "@/interfaces/scholarship/application";
 import SubmitButton from "@/components/forms/submit-button";
 
 export const ApplicationForm = ({
@@ -47,7 +47,7 @@ export const ApplicationForm = ({
       sex: undefined,
       dateOfBirth: undefined,
       email: "",
-      contact: "",
+      contactNo: "",
       address: "",
       course: undefined,
       yearLevel: undefined,
@@ -105,7 +105,7 @@ export const ApplicationForm = ({
         programId,
         ...data,
         requirements: uploadedRequirements,
-      } as newApplication;
+      } as NewApplication;
 
       await sendApplication(formData);
       toast.success("Application submitted successfully!");

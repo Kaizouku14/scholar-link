@@ -124,9 +124,23 @@ export const createNotification = (
       await db
         .insert(NotificationTable)
         .values({ id: generateUUID(), userId, type, message });
+
       ee.emit(Events.NEW_NOTIFICATION, userId);
     } catch (err) {
       console.error("Failed to create notification:", err);
     }
   })();
+};
+
+export const clearNotifications = async (userId: string) => {
+  try {
+    await db
+      .update(NotificationTable)
+      .set({ isRead: true })
+      .where(eq(NotificationTable.userId, userId));
+
+    ee.emit(Events.NEW_NOTIFICATION, userId);
+  } catch (err) {
+    console.error("Failed to clear notifications:", err);
+  }
 };

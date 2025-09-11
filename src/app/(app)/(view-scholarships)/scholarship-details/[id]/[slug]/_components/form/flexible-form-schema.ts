@@ -18,7 +18,7 @@ export const createFormSchema = (requirements: Requirement[]) => {
       .string()
       .min(1, "Email is required")
       .email("Please enter a valid email address"),
-    contact: z
+    contactNo: z
       .string()
       .min(1, "Contact number is required")
       .min(10, "Contact number must be at least 10 digits"),
