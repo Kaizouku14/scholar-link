@@ -44,16 +44,17 @@ export const student = createTable("student", {
   onboarded: integer("onboarded", { mode: "boolean" }).default(false),
 });
 
-export const notification = createTable("notification", {
-  id: text("id")
+export const notifications = createTable("notifications", {
+  id: text("id").primaryKey(),
+  userId: text("user_id")
     .notNull()
-    .primaryKey()
     .references(() => user.id, { onDelete: "cascade" }),
   type: text("type", { enum: NOTIFICATIONS }).notNull(),
-  count: integer("count").notNull().default(0),
-  updatedAt: integer("updated_at", { mode: "timestamp" })
+  message: text("message"),
+  isRead: integer("is_read", { mode: "boolean" }).notNull().default(false),
+  createdAt: integer("created_at", { mode: "timestamp" })
     .notNull()
-    .$onUpdateFn(() => new Date()),
+    .$defaultFn(() => new Date()),
 });
 
 export const session = createTable("session", {

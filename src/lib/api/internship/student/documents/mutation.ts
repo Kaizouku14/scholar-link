@@ -1,7 +1,7 @@
 import { generateUUID } from "@/lib/utils";
 import { db, eq, and } from "@/server/db";
 import { internDocuments as internDocumentsTable } from "@/server/db/schema/internship";
-import { deleteFileIfExists } from "@/server/api/uploadthing";
+import { deleteFilesIfExist } from "@/server/api/uploadthing";
 import { TRPCError } from "@trpc/server";
 
 export const insertDocument = async ({
@@ -68,7 +68,7 @@ export const insertDocument = async ({
 
   if (oldFileKeyToDelete) {
     try {
-      await deleteFileIfExists(oldFileKeyToDelete);
+      await deleteFilesIfExist(oldFileKeyToDelete);
     } catch (error) {
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",

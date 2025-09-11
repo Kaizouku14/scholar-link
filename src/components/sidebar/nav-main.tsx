@@ -1,12 +1,14 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { SidebarSeparator } from "@/components/ui/sidebar";
 import { NavGroups } from "./nav-group";
 import { NAVIGATION_DATA } from "@/data/navigation-data";
 import type { roleType } from "@/constants/users/roles";
 import type { NavGroup } from "@/interfaces/navigation";
 import NavItemsSkeleton from "./nav-main-skeleton";
+import { api } from "@/trpc/react";
+import type { notificationType } from "@/constants/notification";
 
 interface NavMainProps {
   userRole: roleType;
@@ -14,6 +16,13 @@ interface NavMainProps {
 }
 
 export function NavMain({ userRole, isPending }: NavMainProps) {
+  const [notification, setNotification] = useState<
+    Record<notificationType, number>
+  >({
+    applications: 0,
+    documents: 0,
+    messages: 0,
+  });
   const navigation = useMemo(() => {
     return (
       NAVIGATION_DATA[userRole] || { main: [], secondary: [], management: [] }
@@ -25,6 +34,12 @@ export function NavMain({ userRole, isPending }: NavMainProps) {
   const hasManagementNav =
     navigation.management && navigation.management.length > 0;
 
+  api.user.getNotification.useSubscription(undefined, {
+    onData: (data) => {
+      setNotification(data);
+    },
+  });
+
   return (
     <div>
       {/* Main Navigation */}
@@ -33,7 +48,11 @@ export function NavMain({ userRole, isPending }: NavMainProps) {
       ) : (
         <>
           {navigation.main.map((group: NavGroup, index: number) => (
-            <NavGroups key={`main-${index}`} group={group} />
+            <NavGroups
+              key={`main-${index}`}
+              group={group}
+              notificationCounts={{ ...notification, messages: 0 }}
+            />
           ))}
         </>
       )}
@@ -47,7 +66,15 @@ export function NavMain({ userRole, isPending }: NavMainProps) {
             <>
               <SidebarSeparator className="mx-auto" />
               {navigation.secondary!.map((group: NavGroup, index: number) => (
-                <NavGroups key={`secondary-${index}`} group={group} />
+                <NavGroups
+                  key={`secondary-${index}`}
+                  group={group}
+                  notificationCounts={{
+                    ...notification,
+                    applications: 0,
+                    documents: 0,
+                  }}
+                />
               ))}
             </>
           )}

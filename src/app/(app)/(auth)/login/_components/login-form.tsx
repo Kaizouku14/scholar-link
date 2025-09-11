@@ -69,7 +69,6 @@ const LoginForm = () => {
 
       toast.success("You're signed in! Redirecting shortly...", {
         id: toastId,
-        position: "top-center",
         className: "text-sm",
       });
 
@@ -78,7 +77,6 @@ const LoginForm = () => {
       else router.push(PageRoutes.SETUP);
     } catch (error) {
       toast.error((error as Error).message, {
-        position: "top-center",
         className: "text-sm",
         duration: 5000,
       });

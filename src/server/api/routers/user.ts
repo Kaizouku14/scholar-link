@@ -7,7 +7,9 @@ import {
 import { GENDERS } from "@/constants/users/genders";
 import { YEAR_LEVEL } from "@/constants/users/year-level";
 import { COURSES } from "@/constants/users/courses";
-import { getStudentInfo } from "@/lib/api/user/query";
+import { getNotification, getStudentInfo } from "@/lib/api/user/query";
+import { ee, Events } from "@/lib/event";
+import type { notificationType } from "@/constants/notification";
 
 export const userRouter = createTRPCRouter({
   createStudentInfo: publicProcedure
@@ -50,5 +52,36 @@ export const userRouter = createTRPCRouter({
   getUserInformation: protectedRoute.query(async ({ ctx }) => {
     const userId = ctx.session!.user.id;
     return await getStudentInfo(userId);
+  }),
+  getNotification: protectedRoute.subscription(async function* ({ ctx }) {
+    try {
+      const { id } = ctx.session!.user;
+
+      const initialData = await getNotification({ userId: id });
+      yield initialData;
+
+      while (true) {
+        const notifications = await new Promise<
+          Record<notificationType, number>
+        >((resolve) => {
+          const onNotify = () => {
+            ee.off(Events.NEW_NOTIFICATION, onNotify);
+
+            getNotification({ userId: id })
+              .then((data) => {
+                resolve(data);
+              })
+              .catch((error) => {
+                throw error;
+              });
+          };
+          ee.on(Events.NEW_NOTIFICATION, onNotify);
+        });
+
+        yield notifications;
+      }
+    } catch (error) {
+      throw error;
+    }
   }),
 });

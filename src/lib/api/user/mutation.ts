@@ -1,8 +1,12 @@
+import type { notificationType } from "@/constants/notification";
 import type { StudentProfileType } from "@/interfaces/student-profile";
+import { ee, Events } from "@/lib/event";
+import { generateUUID } from "@/lib/utils";
 import { db, eq } from "@/server/db";
 import {
   user as userTable,
   student as studentTable,
+  notifications as NotificationTable,
 } from "@/server/db/schema/auth";
 import { TRPCError } from "@trpc/server";
 
@@ -108,4 +112,16 @@ export const insertStudentProfile = async ({
       message: "Failed to update student profile.",
     });
   }
+};
+
+export const createNotification = async (
+  userId: string,
+  type: notificationType,
+  message: string,
+) => {
+  await db
+    .insert(NotificationTable)
+    .values({ id: generateUUID(), userId, type, message });
+
+  ee.emit(Events.NEW_NOTIFICATION, userId);
 };

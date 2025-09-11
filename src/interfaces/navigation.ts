@@ -25,6 +25,11 @@ export interface RoleNavigation {
   management?: NavGroup[];
 }
 
+export interface Notification {
+  notification: number;
+  type: notificationType;
+}
+
 export interface NotificationCounts {
   messages?: number;
   applications?: number;
