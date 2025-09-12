@@ -11,7 +11,7 @@ const Layout = async ({ children }: PropsWithChildren) => {
   });
 
   if (!session) {
-    redirect(PageRoutes.DASHBOARD);
+    redirect(PageRoutes.LOGIN);
   }
 
   // Allowed roles

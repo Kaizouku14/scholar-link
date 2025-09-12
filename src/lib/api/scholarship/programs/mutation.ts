@@ -89,7 +89,7 @@ export const createApplication = async ({
       await tx.insert(ScholarsDocumentTable).values(
         Object.values(application.requirements).map((value) => ({
           id: generateUUID(),
-          applicantId: applicationsId,
+          applicationsId,
           documentName: value.label,
           documentUrl: value.url,
           documentKey: value.key,

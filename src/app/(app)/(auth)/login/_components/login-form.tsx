@@ -33,8 +33,6 @@ const LoginForm = () => {
     },
   });
 
-  const { mutateAsync: onBoardedMutation } =
-    api.auth.checkStudendIsOnBoarded.useMutation();
   const { mutateAsync: checkIfEmailIsAuthorized } =
     api.auth.isEmailAuthorized.useMutation();
   const onSubmit = async (values: LoginSchema) => {
@@ -51,7 +49,7 @@ const LoginForm = () => {
         );
       }
 
-      const { data, error } = await authClient.signIn.email({
+      const { error } = await authClient.signIn.email({
         email,
         password,
         rememberMe,
@@ -72,9 +70,7 @@ const LoginForm = () => {
         className: "text-sm",
       });
 
-      const onboarded = await onBoardedMutation({ id: data.user.id });
-      if (onboarded) router.push(PageRoutes.DASHBOARD);
-      else router.push(PageRoutes.SETUP);
+      router.push(PageRoutes.DASHBOARD);
     } catch (error) {
       toast.error((error as Error).message, {
         className: "text-sm",

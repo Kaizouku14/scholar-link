@@ -76,9 +76,6 @@ export const documentDeadlineNotifier = async () => {
 
     if (resutls.length > 0) {
       await sendNotification(resutls);
-      console.log("Sent deadline reminders");
-    } else {
-      console.log("No student need deadline reminders today");
     }
 
     return resutls;
@@ -91,15 +88,17 @@ export const documentDeadlineNotifier = async () => {
 };
 
 async function sendNotification(notifications: StudentNotification[]) {
-  for (const notification of notifications) {
-    try {
-      await sendEmail({
-        to: "mandaalv72@gmail.com",
-        subject: "Deadline Reminder",
-        html: deadlineReminderEmailTemplate(notification),
-      });
-    } catch (error) {
-      console.error(`Failed to notify ${notification.email}:`, error);
-    }
-  }
+  await Promise.all(
+    notifications.map(async (notification) => {
+      try {
+        await sendEmail({
+          to: notification.email,
+          subject: "Deadline Reminder",
+          html: deadlineReminderEmailTemplate(notification),
+        });
+      } catch (error) {
+        console.error(`Failed to notify ${notification.email}:`, error);
+      }
+    }),
+  );
 }

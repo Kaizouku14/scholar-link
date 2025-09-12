@@ -75,7 +75,7 @@ export const scholars_documents = createTable(
   "scholars_documents",
   {
     id: text("document_id").primaryKey(),
-    applicantId: text("applicant_id")
+    applicationsId: text("applications_id")
       .notNull()
       .references(() => applications.applicationsId, { onDelete: "cascade" }),
     submittedAt: integer("submitted_at", { mode: "timestamp" }).notNull(),
@@ -84,5 +84,5 @@ export const scholars_documents = createTable(
     documentName: text("document_name"),
     reviewStatus: text("review_status", { enum: STATUS }).default("pending"),
   },
-  (table) => [index("idx_documents_applicant").on(table.applicantId)],
+  (table) => [index("idx_documents_applications_id").on(table.applicationsId)],
 );

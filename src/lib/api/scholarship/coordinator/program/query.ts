@@ -62,7 +62,10 @@ export const getCoordProgramApplications = async ({
     .leftJoin(StudentTable, eq(StudentTable.id, ApplicationsTable.userId))
     .leftJoin(
       ScholarsDocumentTable,
-      eq(ScholarsDocumentTable.applicantId, ApplicationsTable.applicationsId),
+      eq(
+        ScholarsDocumentTable.applicationsId,
+        ApplicationsTable.applicationsId,
+      ),
     )
     .where(
       and(
