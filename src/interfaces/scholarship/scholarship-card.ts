@@ -1,6 +1,6 @@
 import type { submissionType } from "@/constants/scholarship/submittion-type";
 
-export interface ScholarshipCardProps {
+export interface ProgramCardProps {
   programId: string;
   name: string;
   imageUrl: string | null;

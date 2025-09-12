@@ -21,10 +21,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { ShieldCheck } from "lucide-react";
+import { LoaderCircle, ShieldCheck } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { useState } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -45,25 +44,11 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../ui/select";
+} from "@/components/ui/select";
 import { toast } from "react-hot-toast";
 import { api } from "@/trpc/react";
 import type { QueryObserverResult } from "@tanstack/react-query";
-
-const formSchema = z.object({
-  deadline: z.date({
-    required_error: "A deadline date is required.",
-  }),
-  submissionType: z.enum(SUBMISSION_TYPE),
-  slots: z.coerce
-    .number()
-    .min(1, {
-      message: "Number of slots must be at least 1.",
-    })
-    .max(1000, {
-      message: "Number of slots cannot exceed 1000.",
-    }),
-});
+import { type ActivationSchema, activationSchema } from "./activation-schema";
 
 const ActivateProgram = ({
   data,
@@ -78,34 +63,30 @@ const ActivateProgram = ({
   refetch: () => Promise<QueryObserverResult<unknown[] | undefined, unknown>>;
 }) => {
   const [open, setOpen] = useState(false);
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<ActivationSchema>({
+    resolver: zodResolver(activationSchema),
     defaultValues: {
       deadline: data.deadline,
       submissionType: data.submissionType,
       slots: data.slots,
     },
   });
-  const { mutateAsync: activateProgram } =
+  const { mutateAsync: activateProgram, isPending } =
     api.scholarshipCoordinator.updateProgramAvailability.useMutation();
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    await toast.promise(
-      activateProgram({
+  async function onSubmit(values: ActivationSchema) {
+    try {
+      await activateProgram({
         programId: data.programId,
         ...values,
-      }),
-      {
-        loading: "activating scholarship program status...",
-        success: () => {
-          void refetch();
-          return "Scholarship program status activated successfully!";
-        },
-        error: (error: unknown) => {
-          return (error as Error).message;
-        },
-      },
-    );
+      });
+
+      await refetch();
+      toast.success("Scholarship program status activated successfully!");
+      setOpen(false);
+    } catch (error) {
+      toast.error((error as Error).message);
+    }
   }
 
   return (
@@ -236,7 +217,13 @@ const ActivateProgram = ({
                   Cancel
                 </Button>
               </DialogClose>
-              <Button type="submit">Activate Program</Button>
+              <Button type="submit" disabled={isPending} className="w-40">
+                {isPending ? (
+                  <LoaderCircle className="text-primary-foreground h-6 w-6 animate-spin" />
+                ) : (
+                  "Activate Program"
+                )}
+              </Button>
             </DialogFooter>
           </form>
         </Form>

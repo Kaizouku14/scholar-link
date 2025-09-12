@@ -14,43 +14,43 @@ import { api } from "@/trpc/react";
 import { toast } from "react-hot-toast";
 import type { QueryObserverResult } from "@tanstack/react-query";
 import { format } from "date-fns";
-import ActivateProgram from "../../dialog/activate-program";
-import { isDeadlineApproaching, isDeadlinePassed } from "@/lib/utils";
-import type { ScholarshipCardProps } from "@/interfaces/scholarship/scholarship-card";
+import ActivateProgram from "../dialog/activate-program";
+import { isDeadlineApproaching, isDeadlinePassed, slugify } from "@/lib/utils";
+import type { ProgramCardProps } from "@/interfaces/scholarship/scholarship-card";
+import { PageRoutes } from "@/constants/page-routes";
+import Link from "next/link";
 
-const ScholarshipCard = ({
+const ProgramCard = ({
   data,
   refetch,
 }: {
-  data: ScholarshipCardProps;
+  data: ProgramCardProps;
   refetch: () => Promise<
-    QueryObserverResult<ScholarshipCardProps[] | undefined, unknown>
+    QueryObserverResult<ProgramCardProps[] | undefined, unknown>
   >;
 }) => {
   const { mutateAsync: disableProgram } =
     api.scholarshipCoordinator.disableScholarshipProgram.useMutation();
 
   const handleDisableProgram = async () => {
-    await toast.promise(
-      disableProgram({
+    const toastId = toast.loading("Disabling Scholarship Program...");
+    try {
+      await disableProgram({
         programId: data.programId,
-      }),
-      {
-        loading: "disabling scholarship program status...",
-        success: () => {
-          void refetch();
-          return "Scholarship program status disabled successfully!";
-        },
-        error: (error: unknown) => {
-          return (error as Error).message;
-        },
-      },
-    );
+      });
+
+      await refetch();
+      toast.success("Scholarship program status disabled successfully!");
+    } catch (error) {
+      toast.error((error as Error).message);
+    } finally {
+      toast.dismiss(toastId);
+    }
   };
 
   return (
     <Card
-      className={`mx-auto w-full transition-all duration-200 hover:shadow-lg ${
+      className={`mx-auto w-full shadow-none transition-all duration-200 ${
         !data.isActive ? "bg-muted/30 opacity-75" : ""
       }`}
     >
@@ -152,15 +152,20 @@ const ScholarshipCard = ({
       <CardFooter className="flex flex-col space-y-3">
         <div className="w-full border-t">
           <div className="grid w-full grid-cols-1 gap-2 sm:grid-cols-2">
-            <Button
-              size="lg"
-              className="w-full cursor-pointer"
-              disabled={isDeadlinePassed(data.deadline)}
+            <Link
+              href={`${PageRoutes.SCHOLARSHIP_DETAILS}/${data.programId}/${slugify(data.name)}`}
+              className="flex-1"
             >
-              {isDeadlinePassed(data.deadline)
-                ? "Application Closed"
-                : "View Details"}
-            </Button>
+              <Button
+                size="lg"
+                className="w-full cursor-pointer"
+                disabled={isDeadlinePassed(data.deadline)}
+              >
+                {isDeadlinePassed(data.deadline)
+                  ? "Application Closed"
+                  : "View Details"}
+              </Button>
+            </Link>
 
             {data.isActive ? (
               <Button
@@ -194,4 +199,4 @@ const ScholarshipCard = ({
   );
 };
 
-export default ScholarshipCard;
+export default ProgramCard;

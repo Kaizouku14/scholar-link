@@ -3,6 +3,7 @@
 import { ShareButton } from "@/components/dropdown/share-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { PageRoutes } from "@/constants/page-routes";
 import { env } from "@/env";
 import type { ScholarshipCardProps } from "@/interfaces/scholarship/scholarship-card";
 import { calculateDaysLeft, isDeadlineApproaching } from "@/lib/utils";
@@ -19,7 +20,8 @@ import {
   CloudUpload,
 } from "lucide-react";
 import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import type { RefObject } from "react";
 
 const ScholarshipHeader = ({
@@ -31,9 +33,7 @@ const ScholarshipHeader = ({
   setTab: (tab: string) => void;
   applicationRef?: RefObject<HTMLDivElement | null>;
 }) => {
-  const router = useRouter();
   const pathname = usePathname();
-
   const daysUntilDeadline = calculateDaysLeft(data.deadline);
   const isDeadlineSoon = isDeadlineApproaching(data.deadline);
   const isDeadlinePassed = daysUntilDeadline < 0;
@@ -45,16 +45,15 @@ const ScholarshipHeader = ({
         <div className="flex flex-col gap-8 lg:flex-row lg:gap-12">
           <div className="flex-1 space-y-6">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <div>
+              <Link href={PageRoutes.SCHOLARSHIPS_PUBLIC}>
                 <Button
                   variant={"link"}
-                  onClick={() => router.back()}
                   className="text-primary inline-flex items-center text-sm font-medium transition-colors hover:underline"
                 >
                   <ArrowLeft className="mr-2 h-4 w-4" />
-                  Back to Scholarships
+                  Scholarships
                 </Button>
-              </div>
+              </Link>
 
               <div className="flex flex-wrap gap-2">
                 <Badge variant="secondary" className="font-medium">

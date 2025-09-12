@@ -3,7 +3,7 @@
 import { Input } from "@/components/ui/input";
 import ProgramType from "./program-type";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import ScholarshipCard from "@/components/cards/scholarship/scholarship-card";
+import ProgramCardProps from "../_components/card/scholarship-card";
 import { api } from "@/trpc/react";
 import { useMemo, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -54,7 +54,7 @@ const ProgramList = () => {
           ) : (
             <div className="space-y-4">
               {filteredData?.map((program) => (
-                <ScholarshipCard
+                <ProgramCardProps
                   key={program.programId}
                   data={program}
                   refetch={refetch}
