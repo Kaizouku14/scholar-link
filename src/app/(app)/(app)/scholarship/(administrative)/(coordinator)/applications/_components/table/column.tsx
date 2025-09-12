@@ -30,7 +30,7 @@ export const ApplicationsColumn: ColumnDef<Applications>[] = [
     cell: ({ row }) => {
       const { name, profile, course, section, yearLevel } = row.original;
       return (
-        <div className="flex items-center gap-x-1.5">
+        <div className="relative flex items-center gap-x-1.5">
           <Avatar className="h-10 w-10">
             <AvatarImage src={profile ?? undefined} />
             <AvatarFallback className="text-sm">

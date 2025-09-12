@@ -27,6 +27,7 @@ import { useState } from "react";
 import { DataTableToolbar } from "./table-toolbar";
 import { DataTablePagination } from "./table-pagination";
 import { ActionDialog } from "../dropdown/actions-dialog";
+import { cn } from "@/lib/utils";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -110,7 +111,7 @@ export function DataTable<TData, TValue>({
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow
                 key={headerGroup.id}
-                className="border-border border-b hover:bg-transparent"
+                className={`border-border border-b hover:bg-transparent`}
               >
                 {headerGroup.headers.map((header, index) => {
                   const isLastColumn = index === headerGroup.headers.length - 1;
@@ -151,33 +152,45 @@ export function DataTable<TData, TValue>({
 
           <TableBody>
             {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row, rowIndex) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                  className={`border-border/50 hover:bg-muted/50 data-[state=selected]:bg-primary/5 data-[state=selected]:border-primary/20 border-b transition-colors duration-150 ease-in-out ${
-                    rowIndex % 2 === 0 ? "bg-background" : "bg-muted/20"
-                  }`}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell
-                      key={cell.id}
-                      className={`border-border/30 border-r px-4 py-3 text-sm last:border-r-0 ${
-                        row.getIsSelected()
-                          ? "text-foreground font-medium"
-                          : "text-foreground/90"
-                      } whitespace-nowrap transition-colors duration-150`}
-                    >
-                      <div className="flex min-h-[20px] items-center">
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
-                        )}
-                      </div>
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
+              table.getRowModel().rows.map((row, rowIndex) => {
+                const timestamp =
+                  (row.original as { appliedAt?: Date })?.appliedAt ??
+                  (row.original as { createdAt?: Date })?.createdAt;
+
+                const isNew =
+                  timestamp &&
+                  Date.now() - new Date(timestamp).getTime() < 1 * 60 * 1000;
+
+                return (
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
+                    className={cn(
+                      "border-b transition-colors duration-150 ease-in-out",
+                      rowIndex % 2 === 0 ? "bg-background" : "bg-muted/20",
+                      isNew && "bg-green-200 dark:bg-green-900/40",
+                    )}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell
+                        key={cell.id}
+                        className={`border-border/30 border-r px-4 py-3 text-sm last:border-r-0 ${
+                          row.getIsSelected()
+                            ? "text-foreground font-medium"
+                            : "text-foreground/90"
+                        } whitespace-nowrap transition-colors duration-150`}
+                      >
+                        <div className="flex min-h-[20px] items-center">
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext(),
+                          )}
+                        </div>
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                );
+              })
             ) : (
               <TableRow className="hover:bg-transparent">
                 <TableCell

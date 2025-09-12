@@ -83,6 +83,12 @@ export const scholars_documents = createTable(
     documentKey: text("document_key"),
     documentName: text("document_name"),
     reviewStatus: text("review_status", { enum: STATUS }).default("pending"),
+    createdAt: integer("created_at", { mode: "timestamp" }).default(
+      sql`(unixepoch())`,
+    ),
+    updatedAt: integer("updated_at", { mode: "timestamp" }).$onUpdateFn(
+      () => new Date(),
+    ),
   },
   (table) => [index("idx_documents_applications_id").on(table.applicationsId)],
 );
