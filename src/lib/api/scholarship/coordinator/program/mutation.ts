@@ -53,11 +53,7 @@ export const createScholarshipProgram = async ({
   });
 };
 
-export const disableScholarshipProgram = async ({
-  programId,
-}: {
-  programId: string;
-}) => {
+export const disableProgram = async ({ programId }: { programId: string }) => {
   try {
     const response = await db
       .update(ProgramTable)
@@ -80,7 +76,7 @@ export const disableScholarshipProgram = async ({
   }
 };
 
-export const updateProgramAvailability = async ({
+export const updateProgramStatus = async ({
   programId,
   deadline,
   submissionType,

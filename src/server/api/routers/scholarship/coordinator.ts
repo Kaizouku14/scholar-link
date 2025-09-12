@@ -4,12 +4,16 @@ import { SCHOLARSHIP_TYPES } from "@/constants/scholarship/scholarship-types";
 import { SUBMISSION_TYPE } from "@/constants/scholarship/submittion-type";
 import {
   createScholarshipProgram,
-  disableScholarshipProgram,
-  updateProgramAvailability,
+  disableProgram,
+  updateProgramStatus,
 } from "@/lib/api/scholarship/coordinator/program/mutation";
-import { getCoordProgramApplications } from "@/lib/api/scholarship/coordinator/program/query";
 import { cacheData } from "@/lib/redis";
 import { clearNotifications } from "@/lib/api/user/mutation";
+import { getCoordProgramApplications } from "@/lib/api/scholarship/coordinator/applications/query";
+import {
+  getAllPrograms,
+  getAllScholarshipType,
+} from "@/lib/api/scholarship/coordinator/program/query";
 
 export const scholarshipCoordinatorRouter = createTRPCRouter({
   createProgram: adminRoute
@@ -47,7 +51,7 @@ export const scholarshipCoordinatorRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ input }) => {
-      return await disableScholarshipProgram(input);
+      return await disableProgram(input);
     }),
   updateProgramAvailability: adminRoute
     .input(
@@ -59,10 +63,16 @@ export const scholarshipCoordinatorRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ input }) => {
-      return await updateProgramAvailability(input);
+      return await updateProgramStatus(input);
     }),
 
   //Queries
+  fetchAllProgram: adminRoute.query(async () => {
+    return await getAllPrograms();
+  }),
+  fetchAllProgramType: adminRoute.query(async () => {
+    return await getAllScholarshipType();
+  }),
   getAllScholarsApplications: adminRoute.query(async ({ ctx }) => {
     const userId = ctx.session!.user.id;
 

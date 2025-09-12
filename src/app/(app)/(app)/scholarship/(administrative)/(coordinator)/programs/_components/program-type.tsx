@@ -27,7 +27,8 @@ const ProgramType = ({
   selectedType: string;
   onTypeChange: (value: string) => void;
 }) => {
-  const { data, isLoading } = api.scholarships.getAllScholarshipType.useQuery();
+  const { data, isLoading } =
+    api.scholarshipCoordinator.fetchAllProgramType.useQuery();
   const [open, setOpen] = useState(false);
 
   return (

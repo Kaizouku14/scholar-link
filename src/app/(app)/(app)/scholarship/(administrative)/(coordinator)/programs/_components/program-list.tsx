@@ -10,7 +10,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 const ProgramList = () => {
   const { data, isLoading, refetch } =
-    api.scholarships.getAllPrograms.useQuery();
+    api.scholarshipCoordinator.fetchAllProgram.useQuery();
   const [filterSearch, setFilterSearch] = useState<string>("");
   const [selectedType, setSelectedType] = useState<string>("");
 

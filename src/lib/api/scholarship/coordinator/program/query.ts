@@ -1,86 +1,50 @@
-import { db, desc, eq, inArray, sql, and } from "@/server/db";
-import {
-  programCoodinators as ProgramCoordinatorTable,
-  applications as ApplicationsTable,
-  scholars_documents as ScholarsDocumentTable,
-} from "@/server/db/schema/scholarship";
-import {
-  user as UserTable,
-  student as StudentTable,
-} from "@/server/db/schema/auth";
-import type { ScholarDocument } from "@/interfaces/scholarship/documents";
-import type { Applications } from "@/interfaces/scholarship/application";
+import { db, desc } from "@/server/db";
+import { scholarshipProgram as ProgramTable } from "@/server/db/schema/scholarship";
+import { TRPCError } from "@trpc/server";
 
-//Coordinator Program
-export const getCoordProgramApplications = async ({
-  userId,
-}: {
-  userId: string;
-}) => {
-  const program = await db
-    .select({
-      programId: ProgramCoordinatorTable.programId,
-    })
-    .from(ProgramCoordinatorTable)
-    .where(eq(ProgramCoordinatorTable.userId, userId))
-    .execute();
+export const getAllPrograms = async () => {
+  try {
+    const response = await db
+      .select({
+        programId: ProgramTable.programId,
+        name: ProgramTable.name,
+        imageUrl: ProgramTable.imageUrl,
+        isActive: ProgramTable.isActive,
+        slots: ProgramTable.slots,
+        deadline: ProgramTable.deadline,
+        type: ProgramTable.type,
+        description: ProgramTable.description,
+        section: ProgramTable.section,
+        submissionType: ProgramTable.submissionType,
+      })
+      .from(ProgramTable)
+      .orderBy(desc(ProgramTable.deadline))
+      .execute();
 
-  const programIds = program.map((program) => program.programId);
-  const applicants = await db
-    .selectDistinct({
-      //Application
-      applicationId: ApplicationsTable.applicationsId,
-      appliedAt: ApplicationsTable.appliedAt,
-      status: ApplicationsTable.status,
+    return response;
+  } catch (error) {
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message:
+        "Failed to get all scholarship programs," + (error as Error).message,
+    });
+  }
+};
 
-      //User
-      name: UserTable.name,
-      profile: UserTable.profile,
-      yearLevel: StudentTable.yearLevel,
-      course: UserTable.course,
-      section: UserTable.section,
+export const getAllScholarshipType = async () => {
+  try {
+    const response = await db
+      .select({ type: ProgramTable.type })
+      .from(ProgramTable)
+      .execute();
 
-      email: UserTable.email,
-      contact: UserTable.contact,
-      address: UserTable.address,
-
-      //Document Submitted
-      documents: sql<string>`
-        json_group_array(
-          json_object(
-            'id', ${ScholarsDocumentTable.id},
-            'label', ${ScholarsDocumentTable.documentName},
-            'url', ${ScholarsDocumentTable.documentUrl},
-            'reviewStatus', ${ScholarsDocumentTable.reviewStatus},
-            'submittedAt', ${ScholarsDocumentTable.submittedAt}
-          )
-        )
-      `.as("documents"),
-    })
-    .from(ApplicationsTable)
-    .leftJoin(UserTable, eq(UserTable.id, ApplicationsTable.userId))
-    .leftJoin(StudentTable, eq(StudentTable.id, ApplicationsTable.userId))
-    .leftJoin(
-      ScholarsDocumentTable,
-      eq(
-        ScholarsDocumentTable.applicationsId,
-        ApplicationsTable.applicationsId,
-      ),
-    )
-    .where(
-      and(
-        inArray(ApplicationsTable.programId, programIds),
-        eq(ApplicationsTable.status, "pending"),
-      ),
-    )
-    .orderBy(desc(ApplicationsTable.appliedAt))
-    .groupBy(ApplicationsTable.applicationsId)
-    .execute();
-
-  return applicants.map((app) => ({
-    ...app,
-    documents: app.documents
-      ? (JSON.parse(app.documents) as ScholarDocument)
-      : [],
-  })) as Applications[];
+    return response.map((type) => type.type);
+  } catch (error) {
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message:
+        "Failed to fetch scholarships program types," +
+        (error as Error).message,
+    });
+  }
 };

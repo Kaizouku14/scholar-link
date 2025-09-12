@@ -2,17 +2,15 @@ import { createTRPCRouter, publicProcedure } from "../../trpc";
 import z from "zod";
 import {
   getAllActivePrograms,
-  getAllPrograms,
-  getAllScholarshipType,
   getProgramById,
-} from "@/lib/api/scholarship/programs/query";
+} from "@/lib/api/scholarship/public/query";
 import { cacheData } from "@/lib/redis";
 import { GENDERS } from "@/constants/users/genders";
 import { COURSES } from "@/constants/users/courses";
 import { DEPARTMENTS } from "@/constants/users/departments";
 import { SECTIONS } from "@/constants/users/sections";
 import { YEAR_LEVEL } from "@/constants/users/year-level";
-import { createApplication } from "@/lib/api/scholarship/programs/mutation";
+import { createApplication } from "@/lib/api/scholarship/public/mutation";
 
 export const scholarshipRouter = createTRPCRouter({
   sendApplication: publicProcedure
@@ -50,12 +48,6 @@ export const scholarshipRouter = createTRPCRouter({
       "active-programs",
       async () => await getAllActivePrograms(),
     );
-  }),
-  getAllPrograms: publicProcedure.query(async () => {
-    return await getAllPrograms();
-  }),
-  getAllScholarshipType: publicProcedure.query(async () => {
-    return await getAllScholarshipType();
   }),
   getScholarshipProgramById: publicProcedure
     .input(z.object({ id: z.string() }))

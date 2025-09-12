@@ -48,7 +48,10 @@ import {
 import { toast } from "react-hot-toast";
 import { api } from "@/trpc/react";
 import type { QueryObserverResult } from "@tanstack/react-query";
-import { type ActivationSchema, activationSchema } from "./activation-schema";
+import {
+  type ActivationSchema,
+  activationSchema,
+} from "./schema/activation-schema";
 
 const ActivateProgram = ({
   data,

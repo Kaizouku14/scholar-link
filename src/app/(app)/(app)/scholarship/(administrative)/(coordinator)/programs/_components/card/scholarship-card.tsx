@@ -9,7 +9,7 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import { ShieldX, Calendar, Users, FileText, FolderMinus } from "lucide-react";
+import { ShieldX, Calendar, Users, FileText, SquarePen } from "lucide-react";
 import { api } from "@/trpc/react";
 import { toast } from "react-hot-toast";
 import type { QueryObserverResult } from "@tanstack/react-query";
@@ -19,6 +19,7 @@ import { isDeadlineApproaching, isDeadlinePassed, slugify } from "@/lib/utils";
 import type { ProgramCardProps } from "@/interfaces/scholarship/scholarship-card";
 import { PageRoutes } from "@/constants/page-routes";
 import Link from "next/link";
+import EditProgram from "../dialog/edit-program";
 
 const ProgramCard = ({
   data,
@@ -95,9 +96,7 @@ const ProgramCard = ({
               </div>
             </div>
           </div>
-          <Button size={"icon"} variant={"outline"} className="cursor-pointer">
-            <FolderMinus className="h-5 w-5" />
-          </Button>
+          <EditProgram />
         </div>
       </CardHeader>
 
