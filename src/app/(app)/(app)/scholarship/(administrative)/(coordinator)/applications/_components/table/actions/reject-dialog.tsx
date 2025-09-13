@@ -17,18 +17,31 @@ import {
 } from "@/components/ui/alert-dialog";
 import { LoaderCircle, XCircle } from "lucide-react";
 import { useState } from "react";
+import { api } from "@/trpc/react";
+import toast from "react-hot-toast";
 
 interface DataTableRowActionsProps {
   row: Row<Applications>;
 }
 
 export function RejectApplication({ row }: DataTableRowActionsProps) {
-  const { applicationId, email } = row.original;
+  const { applicationId, email, programName, name } = row.original;
   const [open, setOpen] = useState<boolean>(false);
+  const { mutateAsync: RejectApplication, isPending } =
+    api.scholarshipCoordinator.rejectStudentApplication.useMutation();
 
-  const handleRejection = async () => {
-    console.log(applicationId, email);
-    setOpen(false);
+  const handleRejection = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const toastId = toast.loading("Rejecting student application...");
+    try {
+      await RejectApplication({ applicationId, name, email, programName });
+      setOpen(false);
+      toast.success("Application rejected successfully!", { id: toastId });
+    } catch (error) {
+      toast.error((error as Error).message);
+    } finally {
+      toast.dismiss(toastId);
+    }
   };
 
   return (
@@ -42,7 +55,9 @@ export function RejectApplication({ row }: DataTableRowActionsProps) {
       <AlertDialogContent>
         <form onSubmit={handleRejection} className="space-y-4">
           <AlertDialogHeader>
-            <AlertDialogTitle>Confirm Rejection</AlertDialogTitle>
+            <AlertDialogTitle className="text-primary">
+              Confirm Rejection
+            </AlertDialogTitle>
             <AlertDialogDescription>
               Please provide a reason for rejecting this application. Your
               message will be sent directly to the student&apos;s email.
@@ -51,12 +66,8 @@ export function RejectApplication({ row }: DataTableRowActionsProps) {
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction asChild>
-              <Button
-                type="submit"
-                //    disabled={isPending}
-                className="w-32"
-              >
-                {false ? (
+              <Button type="submit" disabled={isPending} className="w-32">
+                {isPending ? (
                   <LoaderCircle className="text-primary-foreground h-6 w-6 animate-spin" />
                 ) : (
                   "Reject"

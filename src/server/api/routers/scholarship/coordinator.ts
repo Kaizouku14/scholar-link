@@ -14,6 +14,7 @@ import {
   getAllPrograms,
   getAllScholarshipType,
 } from "@/lib/api/scholarship/coordinator/program/query";
+import { rejectApplication } from "@/lib/api/scholarship/coordinator/applications/mutation";
 
 export const scholarshipCoordinatorRouter = createTRPCRouter({
   createProgram: adminRoute
@@ -74,6 +75,19 @@ export const scholarshipCoordinatorRouter = createTRPCRouter({
     )
     .mutation(async ({ input }) => {
       return await updateProgramStatus(input);
+    }),
+  //Applications
+  rejectStudentApplication: adminRoute
+    .input(
+      z.object({
+        applicationId: z.string(),
+        name: z.string(),
+        email: z.string(),
+        programName: z.string(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      return await rejectApplication(input);
     }),
 
   //Queries

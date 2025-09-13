@@ -1,5 +1,10 @@
 import ProgramList from "./_components/program-list";
 import ProgramHeader from "./_components/header";
+import type { Metadata } from "next";
+
+export const MetaData: Metadata = {
+  title: "Programs",
+};
 
 const Pages = () => {
   return (

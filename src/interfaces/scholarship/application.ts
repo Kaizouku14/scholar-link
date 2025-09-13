@@ -33,6 +33,7 @@ export interface NewApplication extends BaseApplication {
 }
 
 export interface Applications extends BaseApplication {
+  programName: string;
   applicationId: string;
   appliedAt: Date;
   status: statusType;

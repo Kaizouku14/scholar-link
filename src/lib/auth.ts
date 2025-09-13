@@ -5,7 +5,7 @@ import * as schema from "@/server/db/schema/auth";
 import { admin } from "better-auth/plugins";
 import { ROLES } from "@/constants/users/roles";
 import { sendEmail } from "@/services/email";
-import { linkVerificationTemplate } from "@/services/verfityEmailTemplate";
+import { linkVerificationTemplate } from "@/services/email-templates/verfityEmailTemplate";
 import { siteConfig } from "@/types/site.config";
 import { env } from "@/env";
 import { SECTIONS } from "@/constants/users/sections";

@@ -8,7 +8,7 @@ import {
 import { sendEmail } from "@/services/email";
 import { TRPCError } from "@trpc/server";
 import type { StudentNotification } from "@/interfaces/internship/notification";
-import { deadlineReminderEmailTemplate } from "@/services/deadlineReminderEmail";
+import { deadlineReminderEmailTemplate } from "@/services/email-templates/deadlineReminderEmail";
 
 export const documentDeadlineNotifier = async () => {
   try {
