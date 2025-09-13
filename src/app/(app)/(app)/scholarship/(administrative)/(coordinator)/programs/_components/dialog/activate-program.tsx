@@ -53,6 +53,8 @@ import {
   activationSchema,
 } from "./schema/activation-schema";
 import type { Requirement } from "@/interfaces/scholarship/requirements";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import EditRequirements from "./form/crud-requirements";
 
 const ActivateProgram = ({
   data,
@@ -74,6 +76,11 @@ const ActivateProgram = ({
       deadline: data.deadline,
       submissionType: data.submissionType,
       slots: data.slots,
+      requirements:
+        data.requirements?.map((req) => ({
+          ...req,
+          isRequired: Boolean(req.isRequired),
+        })) ?? [],
     },
   });
   const { mutateAsync: activateProgram, isPending } =
@@ -106,7 +113,7 @@ const ActivateProgram = ({
           <span>Activate</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>Activate Program</DialogTitle>
           <DialogDescription>
@@ -115,117 +122,114 @@ const ActivateProgram = ({
         </DialogHeader>
 
         <Form {...form}>
-          <form
-            className="mt-4 space-y-6"
-            onSubmit={form.handleSubmit(onSubmit)}
-          >
-            <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
-              <FormField
-                control={form.control}
-                name="deadline"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col">
-                    <FormLabel>Program Deadline</FormLabel>
-                    <Popover>
-                      <PopoverTrigger asChild>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <Tabs defaultValue="information">
+              <TabsList>
+                <TabsTrigger value="information">Program Details</TabsTrigger>
+                <TabsTrigger value="requirements">Requirements</TabsTrigger>
+              </TabsList>
+              <TabsContent value="information" className="my-2 space-y-6">
+                <FormField
+                  control={form.control}
+                  name="deadline"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col">
+                      <FormLabel>Program Deadline</FormLabel>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant={"outline"}
+                              className={cn(
+                                "w-full pl-3 text-left font-normal",
+                                !field.value && "text-muted-foreground",
+                              )}
+                            >
+                              {field.value ? (
+                                format(field.value, "PPP")
+                              ) : (
+                                <span>Pick a date</span>
+                              )}
+                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={field.value}
+                            onSelect={field.onChange}
+                            disabled={(date) =>
+                              date < new Date() || date < new Date("1900-01-01")
+                            }
+                          />
+                        </PopoverContent>
+                      </Popover>
+                      <FormDescription className="text-xs">
+                        Set the deadline for program submissions.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="submissionType"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Submission Type</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        value={field.value}
+                      >
                         <FormControl>
-                          <Button
-                            variant={"outline"}
-                            className={cn(
-                              "w-full pl-3 text-left font-normal",
-                              !field.value && "text-muted-foreground",
-                            )}
-                          >
-                            {field.value ? (
-                              format(field.value, "PPP")
-                            ) : (
-                              <span>Pick a date</span>
-                            )}
-                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                          </Button>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Select submission type" />
+                          </SelectTrigger>
                         </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={field.value}
-                          onSelect={field.onChange}
-                          disabled={(date) =>
-                            date < new Date() || date < new Date("1900-01-01")
-                          }
-                        />
-                      </PopoverContent>
-                    </Popover>
-                    <FormDescription className="text-xs">
-                      Set the deadline for program submissions.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                        <SelectContent>
+                          {SUBMISSION_TYPE.map((type) => (
+                            <SelectItem key={type} value={type}>
+                              {type}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                      <FormDescription className="text-xs">
+                        Set the submission type of the program.
+                      </FormDescription>
+                    </FormItem>
+                  )}
+                />
 
-              <FormField
-                control={form.control}
-                name="submissionType"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Submission Type</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                      value={field.value}
-                    >
+                <FormField
+                  control={form.control}
+                  name="slots"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Number of Slots</FormLabel>
                       <FormControl>
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Select submission type" />
-                        </SelectTrigger>
+                        <Input
+                          type="number"
+                          placeholder="Enter number of slots"
+                          {...field}
+                        />
                       </FormControl>
-                      <SelectContent>
-                        {SUBMISSION_TYPE.map((type) => (
-                          <SelectItem key={type} value={type}>
-                            {type}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                    <FormDescription className="text-xs">
-                      Set the submission type of the program.
-                    </FormDescription>
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <FormField
-              control={form.control}
-              name="slots"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Number of Slots</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      placeholder="Enter number of slots"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormDescription className="text-xs">
-                    Maximum number of participants allowed in this program.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <div className="flex flex-col gap-1">
-              {data.requirements.map((req) => (
-                <div className="" key={req.requirementId}>
-                  {req.label}
-                </div>
-              ))}
-            </div>
-
+                      <FormDescription className="text-xs">
+                        Maximum number of participants allowed in this program.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </TabsContent>
+              <TabsContent value="requirements">
+                <EditRequirements />
+              </TabsContent>
+            </Tabs>
             <DialogFooter>
               <DialogClose asChild>
                 <Button variant="outline" type="button">

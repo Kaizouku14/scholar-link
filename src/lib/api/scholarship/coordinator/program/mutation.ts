@@ -1,7 +1,8 @@
 import type { submissionType } from "@/constants/scholarship/submittion-type";
 import type { ScholarshipPrograms } from "@/interfaces/scholarship/program";
+import type { Requirement } from "@/interfaces/scholarship/requirements";
 import { generateUUID } from "@/lib/utils";
-import { db, eq } from "@/server/db";
+import { db, eq, sql } from "@/server/db";
 import {
   scholarshipProgram as ProgramTable,
   programCoodinators as ProgramCoordinatorTable,
@@ -81,29 +82,47 @@ export const updateProgramStatus = async ({
   deadline,
   submissionType,
   slots,
+  requirements,
 }: {
   programId: string;
   deadline: Date;
   submissionType: submissionType;
   slots: number;
+  requirements?: Requirement[];
 }) => {
   try {
-    const response = await db
-      .update(ProgramTable)
-      .set({
-        deadline,
-        submissionType,
-        slots,
-        isActive: true,
-      })
-      .where(eq(ProgramTable.programId, programId));
+    await db.transaction(async (tx) => {
+      await tx
+        .update(ProgramTable)
+        .set({
+          deadline,
+          submissionType,
+          slots,
+          isActive: true,
+        })
+        .where(eq(ProgramTable.programId, programId));
 
-    if (!response) {
-      throw new TRPCError({
-        code: "BAD_REQUEST",
-        message: "Failed to udpate scholarship program",
-      });
-    }
+      console.log(Object.values(requirements!));
+      await tx
+        .insert(RequirementsTable)
+        .values(
+          requirements!.map((r) => ({
+            requirementId: r.requirementId,
+            programId,
+            label: r.label,
+            description: r.description,
+            isRequired: r.isRequired,
+          })),
+        )
+        .onConflictDoUpdate({
+          target: [RequirementsTable.requirementId],
+          set: {
+            label: sql`excluded.label`,
+            description: sql`excluded.description`,
+            isRequired: sql`excluded.is_required`,
+          },
+        });
+    });
   } catch (error) {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",

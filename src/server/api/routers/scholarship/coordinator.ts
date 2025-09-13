@@ -60,6 +60,16 @@ export const scholarshipCoordinatorRouter = createTRPCRouter({
         deadline: z.date(),
         submissionType: z.enum(SUBMISSION_TYPE),
         slots: z.number(),
+        requirements: z
+          .array(
+            z.object({
+              requirementId: z.string(),
+              label: z.string().min(1, "Requirement label is required"),
+              description: z.string().optional().nullish(),
+              isRequired: z.boolean(),
+            }),
+          )
+          .optional(),
       }),
     )
     .mutation(async ({ input }) => {

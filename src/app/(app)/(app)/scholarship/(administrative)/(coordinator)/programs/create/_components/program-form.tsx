@@ -38,13 +38,13 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import TiptapEditor from "./titap/editor";
 import { RequirementsForm } from "./requirements-form";
 import { api } from "@/trpc/react";
 import toast from "react-hot-toast";
 import SubmitButton from "@/components/forms/submit-button";
 import { uploadFile } from "@/lib/uploadthing";
 import { Textarea } from "@/components/ui/textarea";
+import ScholarshipEditor from "./titap/editor";
 
 const ProgramForm = () => {
   const form = useForm<ScholarshipFormData>({
@@ -311,7 +311,7 @@ const ProgramForm = () => {
                 </CardContent>
               </TabsContent>
 
-              <TabsContent value="description">
+              <TabsContent value="overview">
                 <CardContent className="mt-4">
                   <FormField
                     control={form.control}
@@ -320,7 +320,7 @@ const ProgramForm = () => {
                       <FormItem className="mt-4">
                         <FormLabel>Program Overview *</FormLabel>
                         <FormControl>
-                          <TiptapEditor {...field} />
+                          <ScholarshipEditor {...field} />
                         </FormControl>
                         <FormDescription>
                           Provide details about eligibility, application
