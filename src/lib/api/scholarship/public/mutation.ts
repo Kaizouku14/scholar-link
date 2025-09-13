@@ -8,7 +8,7 @@ import {
 } from "@/server/db/schema/auth";
 import {
   applications as ApplicationTable,
-  scholars_documents as ScholarsDocumentTable,
+  scholarsDocuments as ScholarsDocumentTable,
   programCoodinators as ProgramCoordinatorTable,
 } from "@/server/db/schema/scholarship";
 import { createNotification } from "../../user/mutation";

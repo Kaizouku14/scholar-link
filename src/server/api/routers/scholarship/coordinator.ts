@@ -14,7 +14,11 @@ import {
   getAllPrograms,
   getAllScholarshipType,
 } from "@/lib/api/scholarship/coordinator/program/query";
-import { rejectApplication } from "@/lib/api/scholarship/coordinator/applications/mutation";
+import {
+  markApplicationAsQualified,
+  markDocumentAsReviewed,
+  rejectApplication,
+} from "@/lib/api/scholarship/coordinator/applications/mutation";
 
 export const scholarshipCoordinatorRouter = createTRPCRouter({
   createProgram: adminRoute
@@ -88,6 +92,28 @@ export const scholarshipCoordinatorRouter = createTRPCRouter({
     )
     .mutation(async ({ input }) => {
       return await rejectApplication(input);
+    }),
+  markStudentAsQualified: adminRoute
+    .input(
+      z.object({
+        applicationId: z.string(),
+        name: z.string(),
+        email: z.string(),
+        programName: z.string(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      await markApplicationAsQualified(input);
+    }),
+  markAsReiviewed: adminRoute
+    .input(
+      z.object({
+        documentId: z.string(),
+        reviewStatus: z.boolean(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      await markDocumentAsReviewed(input);
     }),
 
   //Queries

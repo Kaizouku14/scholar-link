@@ -3,7 +3,7 @@ import {
   scholarshipProgram as ProgramTable,
   programCoodinators as ProgramCoordinatorTable,
   applications as ApplicationsTable,
-  scholars_documents as ScholarsDocumentTable,
+  scholarsDocuments as ScholarsDocumentTable,
 } from "@/server/db/schema/scholarship";
 import {
   user as UserTable,

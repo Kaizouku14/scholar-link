@@ -3,7 +3,7 @@ import { user } from "./auth";
 import { createTable } from "../schema";
 import { SUBMISSION_TYPE } from "@/constants/scholarship/submittion-type";
 import { SCHOLARSHIP_TYPES } from "@/constants/scholarship/scholarship-types";
-import { SCHOLARSHIP_STATUS, STATUS } from "@/constants/users/status";
+import { SCHOLARSHIP_STATUS } from "@/constants/users/status";
 import { sql } from "drizzle-orm";
 
 export const scholarshipProgram = createTable("programs", {
@@ -71,7 +71,7 @@ export const applications = createTable(
   ],
 );
 
-export const scholars_documents = createTable(
+export const scholarsDocuments = createTable(
   "scholars_documents",
   {
     id: text("document_id").primaryKey(),
@@ -82,7 +82,9 @@ export const scholars_documents = createTable(
     documentUrl: text("document_url"),
     documentKey: text("document_key"),
     documentName: text("document_name"),
-    reviewStatus: text("review_status", { enum: STATUS }).default("pending"),
+    reviewStatus: integer("review_status", { mode: "boolean" })
+      .notNull()
+      .default(false),
     createdAt: integer("created_at", { mode: "timestamp" }).default(
       sql`(unixepoch())`,
     ),
