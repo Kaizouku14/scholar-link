@@ -1,19 +1,22 @@
 import type { ScholarshipType } from "@/constants/scholarship/scholarship-types";
 import type { submissionType } from "@/constants/scholarship/submittion-type";
 
-export interface ScholarshipPrograms {
+export interface ProgramHeader {
   name: string;
   description: string;
-  section: string;
-  slots: number;
   type: ScholarshipType;
   submissionType: submissionType;
   deadline: Date;
+  slots: number;
   imageUrl?: string | null;
+}
+
+export interface ScholarshipPrograms extends ProgramHeader {
   imageKey?: string | null;
+  section: string;
   requirements?: {
     label: string;
-    description?: string;
+    description?: string | null;
     isRequired: boolean;
   }[];
 }

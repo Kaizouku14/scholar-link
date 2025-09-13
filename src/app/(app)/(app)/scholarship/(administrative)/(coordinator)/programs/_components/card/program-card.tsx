@@ -9,14 +9,14 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import { ShieldX, Calendar, Users, FileText, SquarePen } from "lucide-react";
+import { ShieldX, Calendar, Users, FileText, LoaderCircle } from "lucide-react";
 import { api } from "@/trpc/react";
 import { toast } from "react-hot-toast";
 import type { QueryObserverResult } from "@tanstack/react-query";
 import { format } from "date-fns";
 import ActivateProgram from "../dialog/activate-program";
-import { isDeadlineApproaching, isDeadlinePassed, slugify } from "@/lib/utils";
-import type { ProgramCardProps } from "@/interfaces/scholarship/scholarship-card";
+import { isDeadlineApproaching, isDeadlinePassed } from "@/lib/utils";
+import type { Program } from "@/interfaces/scholarship/scholarship-card";
 import { PageRoutes } from "@/constants/page-routes";
 import Link from "next/link";
 import EditProgram from "../dialog/edit-program";
@@ -25,12 +25,10 @@ const ProgramCard = ({
   data,
   refetch,
 }: {
-  data: ProgramCardProps;
-  refetch: () => Promise<
-    QueryObserverResult<ProgramCardProps[] | undefined, unknown>
-  >;
+  data: Program;
+  refetch: () => Promise<QueryObserverResult<Program[] | undefined, unknown>>;
 }) => {
-  const { mutateAsync: disableProgram } =
+  const { mutateAsync: disableProgram, isPending } =
     api.scholarshipCoordinator.disableScholarshipProgram.useMutation();
 
   const handleDisableProgram = async () => {
@@ -96,7 +94,7 @@ const ProgramCard = ({
               </div>
             </div>
           </div>
-          <EditProgram />
+          <EditProgram data={data} />
         </div>
       </CardHeader>
 
@@ -152,7 +150,7 @@ const ProgramCard = ({
         <div className="w-full border-t">
           <div className="grid w-full grid-cols-1 gap-2 sm:grid-cols-2">
             <Link
-              href={`${PageRoutes.SCHOLARSHIP_DETAILS}/${data.programId}/${slugify(data.name)}`}
+              href={`${PageRoutes.SCHOLARSHIPS_PROGRAMS_DETAILS}/${data.programId}}`} //to change
               className="flex-1"
             >
               <Button
@@ -162,7 +160,7 @@ const ProgramCard = ({
               >
                 {isDeadlinePassed(data.deadline)
                   ? "Application Closed"
-                  : "View Details"}
+                  : "View Program"}
               </Button>
             </Link>
 
@@ -172,9 +170,16 @@ const ProgramCard = ({
                 size="lg"
                 className="text-destructive hover:text-destructive/80 hover:bg-destructive/10 flex w-full cursor-pointer items-center justify-center space-x-2 transition-colors"
                 onClick={handleDisableProgram}
+                disabled={isPending}
               >
-                <ShieldX className="h-4 w-4" />
-                <span>Deactivate</span>
+                {isPending ? (
+                  <LoaderCircle className="text-primary h-6 w-6 animate-spin" />
+                ) : (
+                  <>
+                    <ShieldX className="h-4 w-4" />
+                    <span>Deactivate</span>
+                  </>
+                )}
               </Button>
             ) : (
               <>
@@ -185,6 +190,7 @@ const ProgramCard = ({
                       deadline: data.deadline,
                       submissionType: data.submissionType,
                       slots: data.slots,
+                      requirements: data.requirements,
                     }}
                     refetch={refetch}
                   />

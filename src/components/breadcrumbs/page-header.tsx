@@ -12,6 +12,8 @@ import { Separator } from "@/components/ui/separator";
 import { usePathname } from "next/navigation";
 import { ROUTE_LABELS } from "@/constants/page-routes";
 import React from "react";
+import { isUuidLike } from "@/lib/utils";
+import Link from "next/link";
 
 export const PageBreadCrumb = () => {
   const pathname = usePathname();
@@ -25,7 +27,9 @@ export const PageBreadCrumb = () => {
     : parts;
 
   relevant = relevant.filter(
-    (part) => part.toLowerCase() !== "higher-education-institutions",
+    (part) =>
+      part.toLowerCase() !== "higher-education-institutions" &&
+      !isUuidLike(part),
   );
 
   // build cumulative paths like /internship/accounts, /scholarship/students/create
@@ -56,11 +60,10 @@ export const PageBreadCrumb = () => {
             <React.Fragment key={segment}>
               <BreadcrumbItem className="flex items-center">
                 {!isLast ? (
-                  <BreadcrumbLink
-                    href={segment}
-                    className="text-mute-foreground"
-                  >
-                    {label}
+                  <BreadcrumbLink asChild>
+                    <Link href={segment} className="text-muted-foreground">
+                      {label}
+                    </Link>
                   </BreadcrumbLink>
                 ) : (
                   <BreadcrumbPage className="text-primary font-medium">

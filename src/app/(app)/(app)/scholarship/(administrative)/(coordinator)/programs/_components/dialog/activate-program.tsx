@@ -52,6 +52,7 @@ import {
   type ActivationSchema,
   activationSchema,
 } from "./schema/activation-schema";
+import type { Requirement } from "@/interfaces/scholarship/requirements";
 
 const ActivateProgram = ({
   data,
@@ -62,6 +63,7 @@ const ActivateProgram = ({
     deadline: Date;
     submissionType: submissionType;
     slots: number;
+    requirements: Requirement[];
   };
   refetch: () => Promise<QueryObserverResult<unknown[] | undefined, unknown>>;
 }) => {
@@ -104,7 +106,7 @@ const ActivateProgram = ({
           <span>Activate</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="">
         <DialogHeader>
           <DialogTitle>Activate Program</DialogTitle>
           <DialogDescription>
@@ -117,81 +119,83 @@ const ActivateProgram = ({
             className="mt-4 space-y-6"
             onSubmit={form.handleSubmit(onSubmit)}
           >
-            <FormField
-              control={form.control}
-              name="deadline"
-              render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel>Program Deadline</FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant={"outline"}
-                          className={cn(
-                            "w-full pl-3 text-left font-normal",
-                            !field.value && "text-muted-foreground",
-                          )}
-                        >
-                          {field.value ? (
-                            format(field.value, "PPP")
-                          ) : (
-                            <span>Pick a date</span>
-                          )}
-                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={field.value}
-                        onSelect={field.onChange}
-                        disabled={(date) =>
-                          date < new Date() || date < new Date("1900-01-01")
-                        }
-                      />
-                    </PopoverContent>
-                  </Popover>
-                  <FormDescription className="text-xs">
-                    Set the deadline for program submissions.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
+              <FormField
+                control={form.control}
+                name="deadline"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel>Program Deadline</FormLabel>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant={"outline"}
+                            className={cn(
+                              "w-full pl-3 text-left font-normal",
+                              !field.value && "text-muted-foreground",
+                            )}
+                          >
+                            {field.value ? (
+                              format(field.value, "PPP")
+                            ) : (
+                              <span>Pick a date</span>
+                            )}
+                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={field.value}
+                          onSelect={field.onChange}
+                          disabled={(date) =>
+                            date < new Date() || date < new Date("1900-01-01")
+                          }
+                        />
+                      </PopoverContent>
+                    </Popover>
+                    <FormDescription className="text-xs">
+                      Set the deadline for program submissions.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <FormField
-              control={form.control}
-              name="submissionType"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Submission Type</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                    value={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select submission type" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {SUBMISSION_TYPE.map((type) => (
-                        <SelectItem key={type} value={type}>
-                          {type}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                  <FormDescription className="text-xs">
-                    Set the submission type of the program.
-                  </FormDescription>
-                </FormItem>
-              )}
-            />
+              <FormField
+                control={form.control}
+                name="submissionType"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Submission Type</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      value={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Select submission type" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {SUBMISSION_TYPE.map((type) => (
+                          <SelectItem key={type} value={type}>
+                            {type}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                    <FormDescription className="text-xs">
+                      Set the submission type of the program.
+                    </FormDescription>
+                  </FormItem>
+                )}
+              />
+            </div>
 
             <FormField
               control={form.control}
@@ -213,6 +217,14 @@ const ActivateProgram = ({
                 </FormItem>
               )}
             />
+
+            <div className="flex flex-col gap-1">
+              {data.requirements.map((req) => (
+                <div className="" key={req.requirementId}>
+                  {req.label}
+                </div>
+              ))}
+            </div>
 
             <DialogFooter>
               <DialogClose asChild>

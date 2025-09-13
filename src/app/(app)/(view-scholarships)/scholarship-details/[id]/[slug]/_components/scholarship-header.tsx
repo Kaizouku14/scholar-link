@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { PageRoutes } from "@/constants/page-routes";
 import { env } from "@/env";
-import type { ScholarshipCardProps } from "@/interfaces/scholarship/scholarship-card";
+import type { ProgramHeader } from "@/interfaces/scholarship/program";
 import { calculateDaysLeft, isDeadlineApproaching } from "@/lib/utils";
 import { format } from "date-fns";
 import {
@@ -29,8 +29,8 @@ const ScholarshipHeader = ({
   setTab,
   applicationRef,
 }: {
-  data: ScholarshipCardProps;
-  setTab: (tab: string) => void;
+  data: ProgramHeader;
+  setTab?: (tab: string) => void;
   applicationRef?: RefObject<HTMLDivElement | null>;
 }) => {
   const pathname = usePathname();
@@ -177,7 +177,7 @@ const ScholarshipHeader = ({
                 disabled={isDeadlinePassed}
                 className="flex-1 cursor-pointer py-2.5 sm:flex-none md:py-1"
                 onClick={() => {
-                  setTab("application");
+                  setTab?.("application");
                   setTimeout(() => {
                     applicationRef?.current?.scrollIntoView({
                       behavior: "smooth",

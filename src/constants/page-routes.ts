@@ -33,12 +33,13 @@ export enum PageRoutes {
   SCHOLARSHIPS_BROWSE = `${SCHOLARSHIPS}/browse`,
   SCHOLARSHIP_MY_APPLICATIONS = `${SCHOLARSHIPS}/my-applications`,
 
-  // Students + Coordinators/Admin (different views)
+  // Coordinators only
   SCHOLARSHIPS_APPLICATIONS = `${SCHOLARSHIPS}/applications`,
-
-  // Coordinators + Admin
+  //Program
   SCHOLARSHIPS_PROGRAMS = `${SCHOLARSHIPS}/programs`,
   SCHOLARSHIPS_PROGRAMS_CREATE = `${SCHOLARSHIPS_PROGRAMS}/create`,
+  SCHOLARSHIPS_PROGRAMS_DETAILS = `${SCHOLARSHIPS_PROGRAMS}/details`,
+
   SCHOLARSHIPS_SCHOLARS = `${SCHOLARSHIPS}/scholars`,
 
   //Admin Only

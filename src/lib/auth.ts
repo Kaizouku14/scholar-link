@@ -55,6 +55,10 @@ export const auth = betterAuth({
       profile: { type: "string", required: false },
     },
   },
+  session: {
+    expiresIn: 604800, //7 days
+    updateAge: 86400, //1 day
+  },
   plugins: [
     admin({
       defaultRole: ROLES[0], //Internship Student

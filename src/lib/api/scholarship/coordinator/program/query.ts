@@ -1,5 +1,10 @@
-import { db, desc } from "@/server/db";
-import { scholarshipProgram as ProgramTable } from "@/server/db/schema/scholarship";
+import type { Requirement } from "@/interfaces/scholarship/requirements";
+import type { Program } from "@/interfaces/scholarship/scholarship-card";
+import { db, desc, eq, sql } from "@/server/db";
+import {
+  scholarshipProgram as ProgramTable,
+  requirements as RequirementsTable,
+} from "@/server/db/schema/scholarship";
 import { TRPCError } from "@trpc/server";
 
 export const getAllPrograms = async () => {
@@ -16,12 +21,31 @@ export const getAllPrograms = async () => {
         description: ProgramTable.description,
         section: ProgramTable.section,
         submissionType: ProgramTable.submissionType,
+        requirements: sql<string>`
+          json_group_array(
+            json_object(
+            'requirementId', ${RequirementsTable.requirementId},
+            'label', ${RequirementsTable.label},
+            'description', ${RequirementsTable.description},
+            'isRequired', ${RequirementsTable.isRequired}
+            )
+        )
+        `.as("requirements"),
       })
       .from(ProgramTable)
+      .leftJoin(
+        RequirementsTable,
+        eq(RequirementsTable.programId, ProgramTable.programId),
+      )
       .orderBy(desc(ProgramTable.deadline))
       .execute();
 
-    return response;
+    return response.map((program) => ({
+      ...program,
+      requirements: program.requirements
+        ? (JSON.parse(program.requirements) as Requirement)
+        : [],
+    })) as Program[];
   } catch (error) {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",

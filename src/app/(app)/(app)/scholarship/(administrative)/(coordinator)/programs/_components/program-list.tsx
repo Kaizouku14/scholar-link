@@ -3,7 +3,7 @@
 import { Input } from "@/components/ui/input";
 import ProgramType from "./program-type";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import ProgramCardProps from "../_components/card/scholarship-card";
+import ProgramCardProps from "./card/program-card";
 import { api } from "@/trpc/react";
 import { useMemo, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";

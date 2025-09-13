@@ -10,7 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState, useRef } from "react";
 import { ApplicationForm } from "./form/flexible-form";
 
-const Section = ({ id }: { id: string }) => {
+const ProgramSection = ({ id }: { id: string }) => {
   const [tab, setTab] = useState("program-overview");
   const applicationRef = useRef<HTMLDivElement | null>(null);
   const { data, isLoading } =
@@ -84,8 +84,7 @@ const Section = ({ id }: { id: string }) => {
                 </div>
               </div>
             </TabsContent>
-            {(data.program.submissionType === "online" ||
-              data.program.submissionType === "hybrid") &&
+            {data.program.submissionType === "online" &&
               data.requirements.length > 0 && (
                 <TabsContent value="application">
                   <div
@@ -109,4 +108,4 @@ const Section = ({ id }: { id: string }) => {
   );
 };
 
-export default Section;
+export default ProgramSection;

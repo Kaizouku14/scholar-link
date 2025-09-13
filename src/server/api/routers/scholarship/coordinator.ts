@@ -32,7 +32,7 @@ export const scholarshipCoordinatorRouter = createTRPCRouter({
           .array(
             z.object({
               label: z.string(),
-              description: z.string().optional(),
+              description: z.string().optional().nullish(),
               isRequired: z.boolean(),
             }),
           )

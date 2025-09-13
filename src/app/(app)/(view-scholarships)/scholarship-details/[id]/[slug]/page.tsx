@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Section from "./_components/scholarship-section";
+import ProgramSection from "./_components/scholarship-section";
 
 export const metadata: Metadata = {
   title: "Scholarship Details",
@@ -14,7 +14,7 @@ const ScholarshipDetailsPage = async ({
 
   return (
     <div className="h-auto">
-      <Section id={id} />
+      <ProgramSection id={id} />
     </div>
   );
 };

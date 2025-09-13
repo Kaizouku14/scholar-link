@@ -223,3 +223,21 @@ export const getStatusFromPercentage = (percentage: number): string => {
   if (percentage >= 100) return "completed";
   return "on-going";
 };
+
+/**
+ * Clean a string by decoding any URI components and removing any non-alphanumeric characters
+ * @param {string} part - The string to clean
+ * @returns {string} The cleaned string
+ */
+const cleanPart = (part: string) =>
+  decodeURIComponent(part).replace(/[^a-zA-Z0-9-]/g, "");
+/**
+ * Checks if a given string is a valid UUID.
+ *
+ * @param {string} part - The string to check
+ * @returns {boolean} True if the string is a valid UUID, false otherwise
+ */
+export const isUuidLike = (part: string) =>
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+    cleanPart(part),
+  );

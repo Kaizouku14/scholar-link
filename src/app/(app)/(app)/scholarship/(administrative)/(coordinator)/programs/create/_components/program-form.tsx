@@ -106,7 +106,7 @@ const ProgramForm = () => {
             <Tabs defaultValue="program" className="w-full">
               <TabsList>
                 <TabsTrigger value="program">Program</TabsTrigger>
-                <TabsTrigger value="description">Description</TabsTrigger>
+                <TabsTrigger value="overview">Overview</TabsTrigger>
                 <TabsTrigger value="requirements">Requirements</TabsTrigger>
               </TabsList>
 
