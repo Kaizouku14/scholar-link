@@ -47,6 +47,29 @@ export const INTERNSHIP_STATUS_LABELS = [
   },
 ];
 
+export const SCHOLARSHIP_STATUS_LABELS = [
+  {
+    value: "pending",
+    label: "Pending",
+  },
+  {
+    value: "rejected",
+    label: "Rejected",
+  },
+  {
+    value: "qualified",
+    label: "Qualified",
+  },
+  {
+    value: "active",
+    label: "Active",
+  },
+  {
+    value: "unactive",
+    label: "Unactive",
+  },
+];
+
 export type statusType = (typeof STATUS)[number];
 export type internshipStatusType = (typeof INTERNSHIP_STATUS)[number];
 export type scholarshipStatusType = (typeof SCHOLARSHIP_STATUS)[number];

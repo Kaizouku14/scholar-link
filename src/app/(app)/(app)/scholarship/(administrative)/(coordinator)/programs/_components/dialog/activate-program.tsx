@@ -54,7 +54,7 @@ import {
 } from "./schema/activation-schema";
 import type { Requirement } from "@/interfaces/scholarship/requirements";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import EditRequirements from "./form/crud-requirements";
+import EditRequirements from "./form/edit-requirements";
 
 const ActivateProgram = ({
   data,
@@ -93,9 +93,9 @@ const ActivateProgram = ({
         ...values,
       });
 
-      await refetch();
-      toast.success("Scholarship program status activated successfully!");
       setOpen(false);
+      toast.success("Scholarship program status activated successfully!");
+      await refetch();
     } catch (error) {
       toast.error((error as Error).message);
     }

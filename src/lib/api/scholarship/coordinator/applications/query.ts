@@ -1,4 +1,4 @@
-import { db, desc, eq, inArray, sql, and } from "@/server/db";
+import { db, desc, eq, inArray, sql, and, ne } from "@/server/db";
 import {
   programCoodinators as ProgramCoordinatorTable,
   applications as ApplicationsTable,
@@ -69,7 +69,8 @@ export const getCoordProgramApplications = async ({
     .where(
       and(
         inArray(ApplicationsTable.programId, programIds),
-        eq(ApplicationsTable.status, "pending"),
+        ne(ApplicationsTable.status, "active"),
+        ne(ApplicationsTable.status, "unactive"),
       ),
     )
     .orderBy(desc(ApplicationsTable.appliedAt))

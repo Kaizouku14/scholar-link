@@ -102,7 +102,6 @@ export const updateProgramStatus = async ({
         })
         .where(eq(ProgramTable.programId, programId));
 
-      console.log(Object.values(requirements!));
       await tx
         .insert(RequirementsTable)
         .values(

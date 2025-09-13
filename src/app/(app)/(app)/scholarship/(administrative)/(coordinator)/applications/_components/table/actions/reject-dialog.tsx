@@ -16,7 +16,6 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { LoaderCircle, XCircle } from "lucide-react";
-import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
 
 interface DataTableRowActionsProps {
@@ -26,10 +25,8 @@ interface DataTableRowActionsProps {
 export function RejectApplication({ row }: DataTableRowActionsProps) {
   const { applicationId, email } = row.original;
   const [open, setOpen] = useState<boolean>(false);
-  const [reason, setReason] = useState<string>("");
 
   const handleRejection = async () => {
-    console.log(reason);
     console.log(applicationId, email);
     setOpen(false);
   };
@@ -51,12 +48,6 @@ export function RejectApplication({ row }: DataTableRowActionsProps) {
               message will be sent directly to the student&apos;s email.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <Textarea
-            value={reason}
-            onChange={(event) => setReason(event.target.value)}
-            placeholder="Type your rejection reason here..."
-            className="border-input bg-background focus:border-destructive focus:ring-destructive min-h-[6rem] resize-none rounded-md border px-3 py-2 text-sm shadow-sm focus:ring-1"
-          />
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction asChild>

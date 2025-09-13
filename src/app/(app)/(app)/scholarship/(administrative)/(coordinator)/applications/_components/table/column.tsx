@@ -92,6 +92,10 @@ export const ApplicationsColumn: ColumnDef<Applications>[] = [
     cell: ({ row }) => format(row.original.appliedAt, "MMM dd, yyyy"),
   },
   {
+    accessorKey: "year",
+    accessorFn: (row) => new Date(row.appliedAt).getFullYear().toString(),
+  },
+  {
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => {

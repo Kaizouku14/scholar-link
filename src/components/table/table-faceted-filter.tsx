@@ -38,7 +38,7 @@ interface DataTableFacetedFilterProps<TData, TValue> {
 export function DataTableFacetedFilter<TData, TValue>({
   filter,
 }: DataTableFacetedFilterProps<TData, TValue>) {
-  const title = filter.column.id;
+  const title = formatText(filter.column.id);
   const selected = filter.column.getFilterValue() as string[] | undefined;
   const totalSelected = selected?.length ?? 0;
 
@@ -47,7 +47,7 @@ export function DataTableFacetedFilter<TData, TValue>({
       <PopoverTrigger asChild>
         <Button variant="outline" size="lg" className="h-10 border-dashed">
           <PlusCircle />
-          {formatText(title)}
+          {title}
           {totalSelected > 0 && (
             <>
               <Separator orientation="vertical" className="mx-2 h-4" />
@@ -64,7 +64,7 @@ export function DataTableFacetedFilter<TData, TValue>({
 
       <PopoverContent className="w-[250px] p-0" align="start">
         <Command>
-          <CommandInput placeholder={`Search ${formatText(title)}...`} />
+          <CommandInput placeholder={`Search ${title}...`} />
           <CommandList>
             <CommandEmpty>No results found.</CommandEmpty>
 

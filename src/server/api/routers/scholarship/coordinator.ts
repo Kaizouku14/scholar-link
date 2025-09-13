@@ -85,9 +85,7 @@ export const scholarshipCoordinatorRouter = createTRPCRouter({
   }),
   getAllScholarsApplications: adminRoute.query(async ({ ctx }) => {
     const userId = ctx.session!.user.id;
-
     await clearNotifications(userId);
-
     return cacheData(
       `${userId}-applications`,
       async () =>

@@ -12,16 +12,16 @@ import {
   DialogFooter,
   DialogClose,
 } from "@/components/ui/dialog";
-import { Eye, FileText, LoaderCircle } from "lucide-react";
+import { CheckCircle2, Eye, FileText, LoaderCircle } from "lucide-react";
 import type { Applications } from "@/interfaces/scholarship/application";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useState } from "react";
 
-interface DataTableRowActionsProps {
+interface ViewDocumentProps {
   row: Row<Applications>;
 }
 
-export function ViewDocuments({ row }: DataTableRowActionsProps) {
+export function ViewDocuments({ row }: ViewDocumentProps) {
   const documents = row.original.documents;
   const [open, setOpen] = useState<boolean>(false);
 
@@ -57,27 +57,31 @@ export function ViewDocuments({ row }: DataTableRowActionsProps) {
                 </div>
               ) : (
                 documents.map((document) => (
-                  <Button
-                    key={document.id}
-                    className="m-0 h-fit w-full cursor-pointer border-none p-0 shadow-none"
-                    variant={"outline"}
-                    onClick={() => {
-                      window.open(
-                        document.url ?? undefined,
-                        "_blank",
-                        "noopener,noreferrer",
-                      );
-                    }}
-                  >
-                    <div className="border-border bg-muted/20 flex w-full items-center gap-3 rounded-md border p-3">
-                      <div className="bg-primary/10 text-primary flex h-10 w-10 items-center justify-center rounded-md">
-                        <FileText className="h-5 w-5" />
+                  <div key={document.id} className="flex items-center gap-2">
+                    {document.reviewStatus === "pending" && (
+                      <CheckCircle2 className="text-green-600" />
+                    )}
+                    <Button
+                      className="m-0 h-fit w-full cursor-pointer border-none p-0 shadow-none"
+                      variant={"outline"}
+                      onClick={() => {
+                        window.open(
+                          document.url ?? undefined,
+                          "_blank",
+                          "noopener,noreferrer",
+                        );
+                      }}
+                    >
+                      <div className="border-border bg-muted/20 flex w-full items-center gap-3 rounded-md border p-3">
+                        <div className="bg-primary/10 text-primary flex h-10 w-10 items-center justify-center rounded-md">
+                          <FileText className="h-5 w-5" />
+                        </div>
+                        <span className="text-foreground max-w-[15rem] truncate text-sm font-semibold">
+                          {document.label}
+                        </span>
                       </div>
-                      <span className="text-foreground text-sm font-semibold">
-                        {document.label}
-                      </span>
-                    </div>
-                  </Button>
+                    </Button>
+                  </div>
                 ))
               )}
             </div>
