@@ -25,7 +25,8 @@ interface ViewDocumentProps {
 }
 
 export function ViewDocuments({ row }: ViewDocumentProps) {
-  const { documents, name, programName, email, applicationId } = row.original;
+  const { documents, name, programName, email, applicationId, status } =
+    row.original;
   const [open, setOpen] = useState<boolean>(false);
   const [reviewedDocuments, setReviewedDocuments] = useState<Set<string>>(
     () =>
@@ -33,8 +34,8 @@ export function ViewDocuments({ row }: ViewDocumentProps) {
   );
   const { mutateAsync: markAsReview } =
     api.scholarshipCoordinator.markAsReiviewed.useMutation();
-  const { mutateAsync: markAsQualified, isPending } =
-    api.scholarshipCoordinator.markStudentAsQualified.useMutation();
+  const { mutateAsync: markAsQualifiedOrApproved, isPending } =
+    api.scholarshipCoordinator.updateStudentApplication.useMutation();
   const { refetch } =
     api.scholarshipCoordinator.getAllScholarsApplications.useQuery(undefined, {
       enabled: false,
@@ -72,14 +73,43 @@ export function ViewDocuments({ row }: ViewDocumentProps) {
   const allDocumentsReviewed =
     documents.length > 0 && reviewedDocuments.size === documents.length;
 
-  const handleMarkAsQualified = async () => {
-    const toastId = toast.loading("Marking as qualified...");
+  const handleMarkAsQualified = async (
+    event: React.FormEvent<HTMLFormElement>,
+  ) => {
+    event.preventDefault();
+    const toastId = toast.loading(
+      status === "qualified"
+        ? "Marking as active..."
+        : "Marking as qualified...",
+    );
     try {
+      let message = "";
       if (allDocumentsReviewed) {
-        await markAsQualified({ applicationId, name, programName, email });
+        if (status === "qualified") {
+          await markAsQualifiedOrApproved({
+            applicationId,
+            name,
+            programName,
+            email,
+            status: "active",
+            subject: `Congratulations! You’ve Been Accepted for ${programName}`,
+          });
+          message = "Application Successfully Accepted!";
+        } else {
+          await markAsQualifiedOrApproved({
+            applicationId,
+            name,
+            programName,
+            email,
+            status: "qualified",
+            subject: `Congratulations! You’re Qualified for ${programName}`,
+          });
+          message = "Application Successfully Qualified!";
+        }
+
         await refetch();
         setOpen(false);
-        toast.success("Application marked as qualified!");
+        toast.success(message);
       } else {
         toast.error(
           "All documents must be reviewed before marking as qualified!",
@@ -162,8 +192,8 @@ export function ViewDocuments({ row }: ViewDocumentProps) {
           </ScrollArea>
 
           <DialogFooter>
-            <div className="flex w-full items-center justify-between px-2.5">
-              <div className="text-muted-foreground text-sm">
+            <div className="flex w-full items-center justify-between">
+              <div className="text-muted-foreground text-xs">
                 {reviewedDocuments.size} of {documents.length} document
                 {documents.length !== 1 && "s"} reviewed
               </div>
@@ -171,9 +201,15 @@ export function ViewDocuments({ row }: ViewDocumentProps) {
                 <DialogClose asChild>
                   <Button variant="outline">Close</Button>
                 </DialogClose>
-                <Button type="submit" className="w-38" disabled={isPending}>
+                <Button
+                  type="submit"
+                  className="w-42 cursor-pointer"
+                  disabled={isPending}
+                >
                   {isPending ? (
                     <LoaderCircle className="text-primary-foreground h-6 w-6 animate-spin" />
+                  ) : status === "qualified" ? (
+                    "Approve Application"
                   ) : (
                     "Mark As Qualified"
                   )}

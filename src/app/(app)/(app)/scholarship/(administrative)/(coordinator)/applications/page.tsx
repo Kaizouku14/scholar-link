@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import ApplicationsHeader from "./_components/header";
 import ApplicantionsTable from "./_components/table/data-table";
 
-export const MetaData: Metadata = {
+export const metadata: Metadata = {
   title: "Applications",
 };
 

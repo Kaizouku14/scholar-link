@@ -28,13 +28,20 @@ export function RejectApplication({ row }: DataTableRowActionsProps) {
   const { applicationId, email, programName, name } = row.original;
   const [open, setOpen] = useState<boolean>(false);
   const { mutateAsync: RejectApplication, isPending } =
-    api.scholarshipCoordinator.rejectStudentApplication.useMutation();
+    api.scholarshipCoordinator.updateStudentApplication.useMutation();
 
   const handleRejection = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const toastId = toast.loading("Rejecting student application...");
     try {
-      await RejectApplication({ applicationId, name, email, programName });
+      await RejectApplication({
+        applicationId,
+        name,
+        email,
+        programName,
+        status: "rejected",
+        subject: "Scholarship Application Rejected",
+      });
       setOpen(false);
       toast.success("Application rejected successfully!", { id: toastId });
     } catch (error) {
@@ -59,8 +66,8 @@ export function RejectApplication({ row }: DataTableRowActionsProps) {
               Confirm Rejection
             </AlertDialogTitle>
             <AlertDialogDescription>
-              Please provide a reason for rejecting this application. Your
-              message will be sent directly to the student&apos;s email.
+              The student will be notified via email that their application was
+              not selected. This helps them stay informed about the outcome.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

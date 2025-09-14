@@ -15,10 +15,13 @@ import {
   getAllScholarshipType,
 } from "@/lib/api/scholarship/coordinator/program/query";
 import {
-  markApplicationAsQualified,
+  updateApplicationStatus,
   markDocumentAsReviewed,
-  rejectApplication,
 } from "@/lib/api/scholarship/coordinator/applications/mutation";
+import { SCHOLARSHIP_STATUS } from "@/constants/users/status";
+import { AcceptanceApplicationTemplate } from "@/services/email-templates/acceptanceApplicationTemplate";
+import { QualifiedApplicationTemplate } from "@/services/email-templates/qualifiedTemplate";
+import { RejectApplicationTemplate } from "@/services/email-templates/rejectApplicationTemplate";
 
 export const scholarshipCoordinatorRouter = createTRPCRouter({
   createProgram: adminRoute
@@ -80,30 +83,28 @@ export const scholarshipCoordinatorRouter = createTRPCRouter({
     .mutation(async ({ input }) => {
       return await updateProgramStatus(input);
     }),
+
   //Applications
-  rejectStudentApplication: adminRoute
+  updateStudentApplication: adminRoute
     .input(
       z.object({
         applicationId: z.string(),
         name: z.string(),
         email: z.string(),
         programName: z.string(),
+        status: z.enum(SCHOLARSHIP_STATUS),
+        subject: z.string(),
       }),
     )
     .mutation(async ({ input }) => {
-      return await rejectApplication(input);
-    }),
-  markStudentAsQualified: adminRoute
-    .input(
-      z.object({
-        applicationId: z.string(),
-        name: z.string(),
-        email: z.string(),
-        programName: z.string(),
-      }),
-    )
-    .mutation(async ({ input }) => {
-      await markApplicationAsQualified(input);
+      const templates = {
+        acceptance: AcceptanceApplicationTemplate,
+        qualified: QualifiedApplicationTemplate,
+        rejected: RejectApplicationTemplate,
+      };
+
+      const templateFn = templates[input.status as keyof typeof templates];
+      await updateApplicationStatus({ ...input, template: templateFn });
     }),
   markAsReiviewed: adminRoute
     .input(

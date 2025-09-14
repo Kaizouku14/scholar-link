@@ -1,72 +1,45 @@
+import type { scholarshipStatusType } from "@/constants/users/status";
 import { db, eq } from "@/server/db";
 import {
   applications as ApplicationsTable,
   scholarsDocuments as ScholarsDocumentTable,
 } from "@/server/db/schema/scholarship";
 import { sendEmail } from "@/services/email";
-import { QualifiedApplicationTemplate } from "@/services/email-templates/qualifiedTemplate";
-import { RejectApplicationTemplate } from "@/services/email-templates/rejectApplicationTemplate";
 import { TRPCError } from "@trpc/server";
 
-export const rejectApplication = async ({
-  applicationId,
-  email,
-  programName,
-  name,
-}: {
-  applicationId: string;
-  email: string;
-  programName: string;
-  name: string;
-}) => {
-  try {
-    await db
-      .update(ApplicationsTable)
-      .set({ status: "rejected" })
-      .where(eq(ApplicationsTable.applicationsId, applicationId))
-      .execute();
-
-    await sendEmail({
-      to: email,
-      subject: "Scholarship Application Rejected",
-      html: RejectApplicationTemplate({ programName, name }),
-    });
-  } catch (error) {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: "Failed to reject application," + (error as Error).message,
-    });
-  }
-};
-
-export const markApplicationAsQualified = async ({
+export const updateApplicationStatus = async ({
   applicationId,
   name,
   email,
   programName,
+  status,
+  subject,
+  template,
 }: {
   applicationId: string;
   name: string;
   email: string;
   programName: string;
+  status: scholarshipStatusType;
+  subject: string;
+  template: (args: { programName: string; name: string }) => string;
 }) => {
   try {
     await db
       .update(ApplicationsTable)
-      .set({ status: "qualified" })
+      .set({ status })
       .where(eq(ApplicationsTable.applicationsId, applicationId))
       .execute();
 
     await sendEmail({
       to: email,
-      subject: `Congratulations! You’re Qualified for the ${programName}`,
-      html: QualifiedApplicationTemplate({ programName, name }),
+      subject,
+      html: template({ programName, name }),
     });
   } catch (error) {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
-      message:
-        "Failed to mark application as qualified," + (error as Error).message,
+      message: `Failed to update application status: ${(error as Error).message}`,
     });
   }
 };

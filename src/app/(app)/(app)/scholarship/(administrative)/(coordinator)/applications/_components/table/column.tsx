@@ -24,7 +24,11 @@ export const ApplicationsColumn: ColumnDef<Applications>[] = [
     accessorKey: "name",
     header: (header) => (
       <div className="text-left">
-        <DataTableColumnHeader column={header.column} title="Applicant" />
+        <DataTableColumnHeader
+          column={header.column}
+          title="Applicant"
+          enableHiding={false}
+        />
       </div>
     ),
     cell: ({ row }) => {

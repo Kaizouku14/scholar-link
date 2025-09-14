@@ -4,7 +4,7 @@ import type { GenderType } from "@/constants/users/genders";
 import type { SectionType } from "@/constants/users/sections";
 import type { YearLevelType } from "@/constants/users/year-level";
 import type { ScholarDocument } from "./documents";
-import type { statusType } from "@/constants/users/status";
+import type { scholarshipStatusType } from "@/constants/users/status";
 
 interface BaseApplication {
   name: string;
@@ -36,7 +36,7 @@ export interface Applications extends BaseApplication {
   programName: string;
   applicationId: string;
   appliedAt: Date;
-  status: statusType;
+  status: scholarshipStatusType;
   profile?: string;
   documents: ScholarDocument[];
 }
