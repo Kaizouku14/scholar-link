@@ -32,6 +32,7 @@ import toast from "react-hot-toast";
 export function DataTableRowActions({ row }: { row: Row<ProgramScholars> }) {
   const { documents, status, email, applicationId } = row.original;
   const activate = status === "active";
+  const renewal = status === "for-renewal";
   const { mutateAsync: updateApplicationStatus, isPending } =
     api.scholarshipCoordinator.updateScholarStatus.useMutation();
   const { refetch } =
@@ -42,7 +43,7 @@ export function DataTableRowActions({ row }: { row: Row<ProgramScholars> }) {
   const handleActions = async () => {
     const toastId = toast.loading("Updating scholar status...");
     try {
-      if (activate) {
+      if (activate || renewal) {
         await updateApplicationStatus({
           applicationId,
           email,
@@ -78,7 +79,7 @@ export function DataTableRowActions({ row }: { row: Row<ProgramScholars> }) {
         <DialogTrigger asChild>
           <Button variant="outline" className="flex items-center gap-2">
             <Eye className="h-4 w-4" />
-            <span className="text-sm">View Details</span>
+            <span className="text-sm">View</span>
           </Button>
         </DialogTrigger>
 
@@ -213,12 +214,12 @@ export function DataTableRowActions({ row }: { row: Row<ProgramScholars> }) {
       <Button
         className={cn(
           "flex cursor-pointer items-center gap-2",
-          !activate && "bg-green-700 hover:bg-green-600",
+          !activate || (renewal && "bg-green-700 hover:bg-green-600"),
         )}
         onClick={handleActions}
         disabled={isPending}
       >
-        {activate ? (
+        {activate || renewal ? (
           <>
             <Ban className="h-4 w-4" />
             Deactivate

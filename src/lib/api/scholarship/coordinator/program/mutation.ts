@@ -2,11 +2,12 @@ import type { submissionType } from "@/constants/scholarship/submittion-type";
 import type { ScholarshipPrograms } from "@/interfaces/scholarship/program";
 import type { Requirement } from "@/interfaces/scholarship/requirements";
 import { generateUUID } from "@/lib/utils";
-import { db, eq, sql } from "@/server/db";
+import { db, eq, sql, and } from "@/server/db";
 import {
   scholarshipProgram as ProgramTable,
   programCoodinators as ProgramCoordinatorTable,
   requirements as RequirementsTable,
+  applications as ApplicationsTable,
 } from "@/server/db/schema/scholarship";
 import { TRPCError } from "@trpc/server";
 
@@ -98,6 +99,19 @@ export const updateProgramStatus = async ({
             isRequired: sql`excluded.is_required`,
           },
         });
+
+      await tx
+        .update(ApplicationsTable)
+        .set({
+          status: "for-renewal",
+        })
+        .where(
+          and(
+            eq(ApplicationsTable.programId, programId),
+            eq(ApplicationsTable.status, "active"),
+          ),
+        )
+        .execute();
     });
   } catch (error) {
     throw new TRPCError({

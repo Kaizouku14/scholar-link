@@ -64,6 +64,7 @@ export const getScholarsByProgram = async ({ userId }: { userId: string }) => {
           or(
             eq(ApplicationsTable.status, "active"),
             eq(ApplicationsTable.status, "inactive"),
+            eq(ApplicationsTable.status, "for-renewal"),
           ),
         ),
       )

@@ -16,8 +16,33 @@ import React from "react";
 import { IdCard, Phone } from "lucide-react";
 import type { ProgramScholars } from "@/interfaces/scholarship/scholars";
 import { DataTableRowActions } from "./table-row-actions";
+import { Checkbox } from "@/components/ui/checkbox";
+import { ActionsHeader } from "./actions-header";
 
 export const ScholarsColumns: ColumnDef<ProgramScholars>[] = [
+  {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        className="mr-4"
+        checked={
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && "indeterminate")
+        }
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
   {
     accessorKey: "studentNo",
     header: "Student No.",
@@ -126,7 +151,7 @@ export const ScholarsColumns: ColumnDef<ProgramScholars>[] = [
   },
   {
     accessorKey: "actions",
-    header: "Actions",
+    header: ({ table }) => <ActionsHeader table={table} title="Actions" />,
     cell: ({ row }) => <DataTableRowActions row={row} />,
   },
 ];

@@ -12,7 +12,7 @@ import {
 import { Calendar, Users, FileText } from "lucide-react";
 import type { QueryObserverResult } from "@tanstack/react-query";
 import { format } from "date-fns";
-import ActivateProgram from "../dialog/activate-program";
+import RepostProgram from "../dialog/repost-program";
 import { isDeadlineApproaching, isDeadlinePassed } from "@/lib/utils";
 import type { Program } from "@/interfaces/scholarship/scholarship-card";
 import { PageRoutes } from "@/constants/page-routes";
@@ -141,7 +141,7 @@ const ProgramCard = ({
             </Link>
 
             {data && (
-              <ActivateProgram
+              <RepostProgram
                 data={{
                   programId: data.programId,
                   deadline: data.deadline,

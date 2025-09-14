@@ -56,7 +56,7 @@ import type { Requirement } from "@/interfaces/scholarship/requirements";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import EditRequirements from "./form/edit-requirements";
 
-const ActivateProgram = ({
+const RepostProgram = ({
   data,
   refetch,
 }: {
@@ -115,7 +115,7 @@ const ActivateProgram = ({
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Activate Program</DialogTitle>
+          <DialogTitle>Repost Program</DialogTitle>
           <DialogDescription>
             Configure and activate your program.
           </DialogDescription>
@@ -240,7 +240,7 @@ const ActivateProgram = ({
                 {isPending ? (
                   <LoaderCircle className="text-primary-foreground h-6 w-6 animate-spin" />
                 ) : (
-                  "Activate Program"
+                  "Repost Program"
                 )}
               </Button>
             </DialogFooter>
@@ -251,4 +251,4 @@ const ActivateProgram = ({
   );
 };
 
-export default ActivateProgram;
+export default RepostProgram;

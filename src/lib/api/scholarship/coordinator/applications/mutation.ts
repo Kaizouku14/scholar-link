@@ -6,7 +6,7 @@ import {
 } from "@/server/db/schema/scholarship";
 import { sendEmail } from "@/services/email";
 import { TRPCError } from "@trpc/server";
-import { authorizeEmail } from "../../../auth/mutation";
+import { authorizeEmail, isEmailAuthorized } from "../../../auth/mutation";
 
 export const updateApplicationStatus = async ({
   applicationId,
@@ -39,7 +39,8 @@ export const updateApplicationStatus = async ({
     });
 
     if (status === "active") {
-      await authorizeEmail({ email });
+      const isAuthorized = await isEmailAuthorized({ email });
+      if (!isAuthorized) await authorizeEmail({ email });
     }
   } catch (error) {
     throw new TRPCError({

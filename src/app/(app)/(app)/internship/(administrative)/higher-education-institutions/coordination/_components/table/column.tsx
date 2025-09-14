@@ -102,7 +102,7 @@ export const CoordinatorInternsColumns: ColumnDef<CoordinatorSectionData>[] = [
             color,
           )}
         >
-          {React.createElement(getStatusIcon(status ?? "default"), {
+          {React.createElement(getStatusIcon(status) ?? "div", {
             className: cn(color),
           })}
           {status}

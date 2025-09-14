@@ -4,7 +4,6 @@ import { SCHOLARSHIP_TYPES } from "@/constants/scholarship/scholarship-types";
 import { SUBMISSION_TYPE } from "@/constants/scholarship/submittion-type";
 import {
   createScholarshipProgram,
-  disableProgram,
   updateProgramStatus,
 } from "@/lib/api/scholarship/coordinator/program/mutation";
 import { cacheData } from "@/lib/redis";
