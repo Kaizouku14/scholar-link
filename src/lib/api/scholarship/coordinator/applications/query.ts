@@ -70,7 +70,7 @@ export const getCoordProgramApplications = async ({
         and(
           inArray(ApplicationsTable.programId, programIds),
           ne(ApplicationsTable.status, "active"),
-          ne(ApplicationsTable.status, "unactive"),
+          ne(ApplicationsTable.status, "inactive"),
         ),
       )
       .orderBy(desc(ApplicationsTable.appliedAt))

@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import { getCoordinatorPrograms } from "../query";
-import { db, eq, inArray, and, or, sql } from "@/server/db";
+import { db, eq, inArray, and, or, sql, desc } from "@/server/db";
 import {
   scholarshipProgram as ProgramTable,
   applications as ApplicationsTable,
@@ -22,6 +22,7 @@ export const getScholarsByProgram = async ({ userId }: { userId: string }) => {
         //Application
         applicationId: ApplicationsTable.applicationsId,
         appliedAt: ApplicationsTable.appliedAt,
+        updatedAt: ApplicationsTable.updatedAt,
         status: ApplicationsTable.status,
         //User
         studentNo: StudentTable.studentNo,
@@ -38,14 +39,13 @@ export const getScholarsByProgram = async ({ userId }: { userId: string }) => {
             json_object(
             'id', ${ScholarsDocumentTable.id},
             'label', ${ScholarsDocumentTable.documentName},
-            'url', ${ScholarsDocumentTable.documentUrl},
-            'submittedAt', ${ScholarsDocumentTable.submittedAt}
+            'url', ${ScholarsDocumentTable.documentUrl}
             )
         )
         `.as("documents"),
       })
       .from(ApplicationsTable)
-      .leftJoin(
+      .innerJoin(
         ProgramTable,
         eq(ProgramTable.programId, ApplicationsTable.programId),
       )
@@ -63,10 +63,12 @@ export const getScholarsByProgram = async ({ userId }: { userId: string }) => {
           inArray(ProgramTable.programId, programIds),
           or(
             eq(ApplicationsTable.status, "active"),
-            eq(ApplicationsTable.status, "unactive"),
+            eq(ApplicationsTable.status, "inactive"),
           ),
         ),
       )
+      .orderBy(desc(ApplicationsTable.appliedAt))
+      .groupBy(ApplicationsTable.applicationsId)
       .execute();
 
     return scholars.map((app) => ({

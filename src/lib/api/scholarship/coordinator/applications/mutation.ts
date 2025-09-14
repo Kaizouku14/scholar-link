@@ -6,6 +6,7 @@ import {
 } from "@/server/db/schema/scholarship";
 import { sendEmail } from "@/services/email";
 import { TRPCError } from "@trpc/server";
+import { authorizeEmail } from "../../../auth/mutation";
 
 export const updateApplicationStatus = async ({
   applicationId,
@@ -36,6 +37,10 @@ export const updateApplicationStatus = async ({
       subject,
       html: template({ programName, name }),
     });
+
+    if (status === "active") {
+      await authorizeEmail({ email });
+    }
   } catch (error) {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",

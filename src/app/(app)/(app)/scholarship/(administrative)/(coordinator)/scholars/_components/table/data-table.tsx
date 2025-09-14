@@ -10,6 +10,8 @@ const ScholarsTable = () => {
   const { data, isLoading } =
     api.scholarshipCoordinator.getAllScholarsByProgram.useQuery();
 
+  console.log(data);
+
   return (
     <div className="mx-auto mt-4 w-full">
       {!isLoading && data ? (

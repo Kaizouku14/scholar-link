@@ -15,6 +15,7 @@ import { Badge } from "@/components/ui/badge";
 import React from "react";
 import { IdCard, Phone } from "lucide-react";
 import type { ProgramScholars } from "@/interfaces/scholarship/scholars";
+import { DataTableRowActions } from "./table-row-actions";
 
 export const ScholarsColumns: ColumnDef<ProgramScholars>[] = [
   {
@@ -115,7 +116,7 @@ export const ScholarsColumns: ColumnDef<ProgramScholars>[] = [
             color,
           )}
         >
-          {React.createElement(getStatusIcon(status), {
+          {React.createElement(getStatusIcon(status) ?? "div", {
             className: cn(color),
           })}
           {status}
@@ -126,5 +127,6 @@ export const ScholarsColumns: ColumnDef<ProgramScholars>[] = [
   {
     accessorKey: "actions",
     header: "Actions",
+    cell: ({ row }) => <DataTableRowActions row={row} />,
   },
 ];

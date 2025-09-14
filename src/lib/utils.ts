@@ -106,6 +106,8 @@ export const calculateDaysLeft = (deadline: Date) => {
 };
 
 export const getStatusVariant = (status: string) => {
+  if (!status) return;
+
   switch (status.toLowerCase()) {
     case "pending":
       return "outline";
@@ -117,6 +119,8 @@ export const getStatusVariant = (status: string) => {
 };
 
 export const getStatusColor = (status: string) => {
+  if (!status) return;
+
   switch (status.toLowerCase()) {
     case "pending":
       return "bg-yellow-50 text-yellow-700 border-yellow-200";
@@ -139,6 +143,8 @@ export const getStatusColor = (status: string) => {
 };
 
 export const getStatusIcon = (status: string) => {
+  if (!status) return;
+
   switch (status.toLowerCase()) {
     case "pending":
       return Clock;

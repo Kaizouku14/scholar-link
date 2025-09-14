@@ -64,6 +64,12 @@ export const applications = createTable(
       .references(() => scholarshipProgram.programId, { onDelete: "cascade" }),
     appliedAt: integer("appliedAt", { mode: "timestamp" }).notNull(),
     status: text("status", { enum: SCHOLARSHIP_STATUS }).default("pending"),
+    createdAt: integer("created_at", { mode: "timestamp" }).default(
+      sql`(unixepoch())`,
+    ),
+    updatedAt: integer("updated_at", { mode: "timestamp" }).$onUpdateFn(
+      () => new Date(),
+    ),
   },
   (table) => [
     index("idx_applications_user_status").on(table.userId, table.status),

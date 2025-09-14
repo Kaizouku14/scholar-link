@@ -99,7 +99,7 @@ export const scholarshipCoordinatorRouter = createTRPCRouter({
     )
     .mutation(async ({ input }) => {
       const templates = {
-        acceptance: AcceptanceApplicationTemplate,
+        active: AcceptanceApplicationTemplate,
         qualified: QualifiedApplicationTemplate,
         rejected: RejectApplicationTemplate,
       };

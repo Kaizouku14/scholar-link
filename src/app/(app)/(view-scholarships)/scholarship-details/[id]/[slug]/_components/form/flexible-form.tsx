@@ -137,11 +137,6 @@ export const ApplicationForm = ({
             <FileText className="text-muted-foreground h-4 w-4" />
             {requirement.label}
           </FormLabel>
-          {requirement.description && (
-            <FormDescription className="text-muted-foreground text-xs">
-              {requirement.description}
-            </FormDescription>
-          )}
           <FormControl>
             <Input
               type="file"
@@ -151,6 +146,13 @@ export const ApplicationForm = ({
               className="cursor-pointer text-sm"
             />
           </FormControl>
+          {requirement.description ? (
+            <FormDescription className="text-muted-foreground text-xs">
+              {requirement.description}
+            </FormDescription>
+          ) : (
+            <div className="mt-1 h-[0.75rem]"></div>
+          )}
           <FormMessage />
         </FormItem>
       )}
@@ -180,7 +182,7 @@ export const ApplicationForm = ({
                   <h3 className="text-lg font-semibold">Requirements</h3>
                 </div>
 
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   {requirements.map(renderField)}
                 </div>
               </div>

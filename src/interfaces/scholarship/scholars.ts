@@ -8,6 +8,7 @@ export interface ProgramScholars {
   programName: string;
   applicationId: string;
   appliedAt: Date;
+  updatedAt: Date;
   status: scholarshipStatusType;
   studentNo: string;
   name: string;
