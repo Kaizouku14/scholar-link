@@ -4,6 +4,7 @@ import { DataTable } from "@/components/table/data-table";
 import { DataTableSkeleton } from "@/components/table/table-skeleton";
 import { ApplicationsColumn } from "./column";
 import { api } from "@/trpc/react";
+import { getAllYears } from "@/lib/utils";
 
 const ApplicantionsTable = () => {
   const { data, isLoading } =
@@ -38,15 +39,7 @@ const ApplicantionsTable = () => {
             },
             {
               column: "year",
-              options: Array.from(new Set(data.map((y) => y.appliedAt))) // unique years
-                .sort(
-                  (a: Date, b: Date) =>
-                    new Date(b).getTime() - new Date(a).getTime(),
-                ) // latest first
-                .map((year) => ({
-                  label: new Date(year).getFullYear().toString(),
-                  value: new Date(year).getFullYear().toString(),
-                })),
+              options: getAllYears({ data }),
             },
           ]}
         />

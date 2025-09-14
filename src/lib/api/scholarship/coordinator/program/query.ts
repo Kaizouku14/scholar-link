@@ -1,14 +1,16 @@
 import type { Requirement } from "@/interfaces/scholarship/requirements";
 import type { Program } from "@/interfaces/scholarship/scholarship-card";
-import { db, desc, eq, sql } from "@/server/db";
+import { db, desc, eq, inArray, sql } from "@/server/db";
 import {
   scholarshipProgram as ProgramTable,
   requirements as RequirementsTable,
 } from "@/server/db/schema/scholarship";
 import { TRPCError } from "@trpc/server";
+import { getCoordinatorPrograms } from "../query";
 
-export const getAllPrograms = async () => {
+export const getAllPrograms = async ({ userId }: { userId: string }) => {
   try {
+    const programIds = await getCoordinatorPrograms({ userId });
     const response = await db
       .select({
         programId: ProgramTable.programId,
@@ -37,6 +39,7 @@ export const getAllPrograms = async () => {
         RequirementsTable,
         eq(RequirementsTable.programId, ProgramTable.programId),
       )
+      .where(inArray(ProgramTable.programId, programIds))
       .orderBy(desc(ProgramTable.deadline))
       .execute();
 
@@ -55,11 +58,13 @@ export const getAllPrograms = async () => {
   }
 };
 
-export const getAllScholarshipType = async () => {
+export const getAllScholarshipType = async ({ userId }: { userId: string }) => {
   try {
+    const programIds = await getCoordinatorPrograms({ userId });
     const response = await db
       .select({ type: ProgramTable.type })
       .from(ProgramTable)
+      .where(inArray(ProgramTable.programId, programIds))
       .execute();
 
     return response.map((type) => type.type);

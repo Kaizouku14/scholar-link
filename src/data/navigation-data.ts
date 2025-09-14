@@ -130,14 +130,14 @@ export const NAVIGATION_DATA: NavigationData = {
             description: "View interns documents",
           },
           {
-            title: "Document Review",
+            title: "Review Docs",
             url: PageRoutes.INTERNSHIPS_DOCUMENTS_REVIEW,
             icon: FileCheck,
-            badgeType: "messages",
+            badgeType: "documents",
             description: "Pending document reviews",
           },
           {
-            title: "Progress Monitoring",
+            title: "Monitoring",
             url: PageRoutes.INTERNSHIPS_PROGRESS_MONITOR,
             icon: ChartLine,
             description: "Student progress tracking",

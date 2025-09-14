@@ -22,6 +22,7 @@ import { SCHOLARSHIP_STATUS } from "@/constants/users/status";
 import { AcceptanceApplicationTemplate } from "@/services/email-templates/acceptanceApplicationTemplate";
 import { QualifiedApplicationTemplate } from "@/services/email-templates/qualifiedTemplate";
 import { RejectApplicationTemplate } from "@/services/email-templates/rejectApplicationTemplate";
+import { getScholarsByProgram } from "@/lib/api/scholarship/coordinator/scholars/query";
 
 export const scholarshipCoordinatorRouter = createTRPCRouter({
   createProgram: adminRoute
@@ -118,11 +119,19 @@ export const scholarshipCoordinatorRouter = createTRPCRouter({
     }),
 
   //Queries
-  fetchAllProgram: adminRoute.query(async () => {
-    return await getAllPrograms();
+  fetchAllProgram: adminRoute.query(({ ctx }) => {
+    const userId = ctx.session!.user.id;
+    return cacheData(
+      `${userId}-programs`,
+      async () => await getAllPrograms({ userId }),
+    );
   }),
-  fetchAllProgramType: adminRoute.query(async () => {
-    return await getAllScholarshipType();
+  fetchAllProgramType: adminRoute.query(async ({ ctx }) => {
+    const userId = ctx.session!.user.id;
+    return cacheData(
+      `${userId}-types`,
+      async () => await getAllScholarshipType({ userId }),
+    );
   }),
   getAllScholarsApplications: adminRoute.query(async ({ ctx }) => {
     const userId = ctx.session!.user.id;
@@ -133,6 +142,13 @@ export const scholarshipCoordinatorRouter = createTRPCRouter({
         await getCoordProgramApplications({
           userId,
         }),
+    );
+  }),
+  getAllScholarsByProgram: adminRoute.query(async ({ ctx }) => {
+    const userId = ctx.session!.user.id;
+    return cacheData(
+      `${userId}-scholars`,
+      async () => await getScholarsByProgram({ userId }),
     );
   }),
 });

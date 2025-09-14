@@ -1,7 +1,6 @@
 "use client";
 
 import type { ColumnDef } from "@tanstack/react-table";
-import type { Applications } from "@/interfaces/scholarship/application";
 import { DataTableColumnHeader } from "@/components/table/table-column-header";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { COURSE_LABELS } from "@/constants/users/courses";
@@ -14,12 +13,24 @@ import {
 } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import React from "react";
-import { format } from "date-fns";
-import { Phone } from "lucide-react";
-import { ViewDocuments } from "./actions/review-dialog";
-import { RejectApplication } from "./actions/reject-dialog";
+import { IdCard, Phone } from "lucide-react";
+import type { ProgramScholars } from "@/interfaces/scholarship/scholars";
 
-export const ApplicationsColumn: ColumnDef<Applications>[] = [
+export const ScholarsColumns: ColumnDef<ProgramScholars>[] = [
+  {
+    accessorKey: "studentNo",
+    header: "Student No.",
+    cell: ({ row }) => {
+      return (
+        <div className="flex space-x-1.5">
+          <IdCard className="h-4 w-4" />
+          <span className="text-foreground text-sm leading-tight font-medium">
+            {row.original.studentNo}
+          </span>
+        </div>
+      );
+    },
+  },
   {
     accessorKey: "name",
     header: (header) => (
@@ -65,21 +76,6 @@ export const ApplicationsColumn: ColumnDef<Applications>[] = [
       </div>
     ),
   },
-  //   {
-  //     accessorKey: "email",
-  //     header: "Email Address",
-  //     cell: ({ row }) => (
-  //       <div className="flex items-center gap-1.5">
-  //         <Mail className="text-muted-foreground h-4 w-4 flex-shrink-0" />
-  //         <a
-  //           href={`mailto:${row.original.email}`}
-  //           className="py-0 text-blue-500 hover:text-blue-800 hover:underline"
-  //         >
-  //           {row.original.email}
-  //         </a>
-  //       </div>
-  //     ),
-  //   },
   {
     accessorKey: "address",
     header: "Address",
@@ -98,11 +94,6 @@ export const ApplicationsColumn: ColumnDef<Applications>[] = [
         </a>
       </div>
     ),
-  },
-  {
-    accessorKey: "appliedAt",
-    header: "Date Applied",
-    cell: ({ row }) => format(row.original.appliedAt, "MMM dd, yyyy"),
   },
   {
     accessorKey: "year",
@@ -135,11 +126,5 @@ export const ApplicationsColumn: ColumnDef<Applications>[] = [
   {
     accessorKey: "actions",
     header: "Actions",
-    cell: ({ row }) => (
-      <div className="space-x-2">
-        <ViewDocuments row={row} />
-        <RejectApplication row={row} />
-      </div>
-    ),
   },
 ];

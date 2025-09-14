@@ -10,7 +10,7 @@ export const SCHOLARSHIP_STATUS = [
   "rejected",
   "qualified",
   "active",
-  "unactive",
+  "inactive",
 ] as const;
 
 export const STATUS_LABELS = [
@@ -65,8 +65,8 @@ export const SCHOLARSHIP_STATUS_LABELS = [
     label: "Active",
   },
   {
-    value: "unactive",
-    label: "Unactive",
+    value: "inactive",
+    label: "InActive",
   },
 ];
 

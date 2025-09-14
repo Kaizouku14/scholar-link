@@ -241,3 +241,20 @@ export const isUuidLike = (part: string) =>
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
     cleanPart(part),
   );
+
+/**
+ * Returns an array of objects with label and value properties, containing all the unique years present in the given data.
+ * The years are sorted in descending order (latest first), and the label and value of each object are the year number as a string.
+ * @param {{ data: { appliedAt: Date }[] }} data - The data to extract the years from
+ * @returns { { label: string, value: string }[] } - An array of objects with label and value properties, containing all the unique years present in the given data.
+ */
+export const getAllYears = ({ data }: { data: { appliedAt: Date }[] }) => {
+  const years = Array.from(new Set(data.map((y) => y.appliedAt))) // unique years
+    .sort((a: Date, b: Date) => new Date(b).getTime() - new Date(a).getTime()) // latest first
+    .map((year) => ({
+      label: new Date(year).getFullYear().toString(),
+      value: new Date(year).getFullYear().toString(),
+    }));
+
+  return years;
+};
