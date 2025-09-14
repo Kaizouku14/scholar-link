@@ -109,7 +109,7 @@ export function ViewDocuments({ row }: ViewDocumentProps) {
 
         await refetch();
         setOpen(false);
-        toast.success(message);
+        toast.success(message, { id: toastId, duration: 5000 });
       } else {
         toast.error(
           "All documents must be reviewed before marking as qualified!",

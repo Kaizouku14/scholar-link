@@ -48,7 +48,10 @@ export function RejectApplication({ row }: DataTableRowActionsProps) {
         subject: "Scholarship Application Rejected",
       });
       setOpen(false);
-      toast.success("Application rejected successfully!", { id: toastId });
+      toast.success("Application rejected successfully!", {
+        id: toastId,
+        duration: 5000,
+      });
     } catch (error) {
       toast.error((error as Error).message);
     } finally {

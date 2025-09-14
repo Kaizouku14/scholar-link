@@ -98,7 +98,7 @@ export const ScholarsColumns: ColumnDef<ProgramScholars>[] = [
   },
   {
     accessorKey: "year",
-    accessorFn: (row) => new Date(row.appliedAt).getFullYear().toString(),
+    accessorFn: (row) => new Date(row.updatedAt).getFullYear().toString(),
   },
   {
     accessorKey: "status",

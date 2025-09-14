@@ -23,6 +23,7 @@ import { AcceptanceApplicationTemplate } from "@/services/email-templates/accept
 import { QualifiedApplicationTemplate } from "@/services/email-templates/qualifiedTemplate";
 import { RejectApplicationTemplate } from "@/services/email-templates/rejectApplicationTemplate";
 import { getScholarsByProgram } from "@/lib/api/scholarship/coordinator/scholars/query";
+import { updateActiveApplication } from "@/lib/api/scholarship/coordinator/scholars/mutation";
 
 export const scholarshipCoordinatorRouter = createTRPCRouter({
   createProgram: adminRoute
@@ -116,6 +117,18 @@ export const scholarshipCoordinatorRouter = createTRPCRouter({
     )
     .mutation(async ({ input }) => {
       await markDocumentAsReviewed(input);
+    }),
+  //scholars
+  updateScholarStatus: adminRoute
+    .input(
+      z.object({
+        applicationId: z.string(),
+        email: z.string(),
+        status: z.enum(SCHOLARSHIP_STATUS),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      await updateActiveApplication(input);
     }),
 
   //Queries
