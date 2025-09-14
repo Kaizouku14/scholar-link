@@ -25,13 +25,18 @@ interface DataTableRowActionsProps {
 }
 
 export function RejectApplication({ row }: DataTableRowActionsProps) {
-  const { applicationId, email, programName, name } = row.original;
+  const { applicationId, email, programName, name, status } = row.original;
   const [open, setOpen] = useState<boolean>(false);
   const { mutateAsync: RejectApplication, isPending } =
     api.scholarshipCoordinator.updateStudentApplication.useMutation();
 
   const handleRejection = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (status === "rejected") {
+      toast.error("Application already rejected!");
+      return;
+    }
+
     const toastId = toast.loading("Rejecting student application...");
     try {
       await RejectApplication({
