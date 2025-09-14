@@ -23,9 +23,12 @@ import { slugify } from "@/lib/utils";
 import { format } from "date-fns";
 import { env } from "@/env";
 import type { FeaturedCardProps } from "@/constants/scholarship/featured";
+import { isDeadlinePassed, cn } from "@/lib/utils";
 
 const FeaturedCard = ({ data }: { data: FeaturedCardProps }) => {
   const slug = slugify(data.name);
+
+  const isPassed = isDeadlinePassed(data.deadline);
 
   return (
     <Card className="bg-accent flex h-[28.5rem] w-[22.5rem] justify-center overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-lg md:w-[23rem]">
@@ -69,7 +72,12 @@ const FeaturedCard = ({ data }: { data: FeaturedCardProps }) => {
             <CalendarDays className="text-muted-foreground mt-0.5 h-4 w-4 flex-shrink-0" />
             <div className="min-w-0 flex-1">
               <span className="text-muted-foreground text-xs">Deadline</span>
-              <span className="text-foreground line-clamp-1 text-sm font-medium">
+              <span
+                className={cn(
+                  "text-foreground line-clamp-1 text-sm font-medium",
+                  isPassed && "text-primary",
+                )}
+              >
                 {format(data.deadline, "MMM dd, yyyy")}
               </span>
             </div>
@@ -111,7 +119,7 @@ const FeaturedCard = ({ data }: { data: FeaturedCardProps }) => {
           className="flex-1"
         >
           <Button variant="default" className="w-full" size="sm">
-            Apply Now
+            {isPassed ? "View Program" : "Apply Now"}
           </Button>
         </Link>
         <ShareButton

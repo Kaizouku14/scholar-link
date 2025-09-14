@@ -102,7 +102,7 @@ export const isDeadlinePassed = (deadline: Date) => {
 export const calculateDaysLeft = (deadline: Date) => {
   const today = new Date();
   const diffTime = deadline.getTime() - today.getTime();
-  return Math.abs(Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
+  return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 };
 
 export const getStatusVariant = (status: string) => {
@@ -123,9 +123,11 @@ export const getStatusColor = (status: string) => {
 
   switch (status.toLowerCase()) {
     case "pending":
+    case "renewal":
       return "bg-yellow-50 text-yellow-700 border-yellow-200";
     case "on-going":
     case "in-progress":
+    case "for-renewal":
       return "bg-blue-50 text-blue-700 border-blue-200";
     case "approved":
     case "completed":
@@ -147,9 +149,11 @@ export const getStatusIcon = (status: string) => {
 
   switch (status.toLowerCase()) {
     case "pending":
+    case "renewal":
       return Clock;
     case "on-going":
     case "in-progress":
+    case "for-renewal":
       return Hourglass;
     case "qualified":
     case "approved":

@@ -53,16 +53,6 @@ export const scholarshipCoordinatorRouter = createTRPCRouter({
       const userId = ctx.session!.user.id;
       await createScholarshipProgram({ data: input, userId });
     }),
-
-  disableScholarshipProgram: adminRoute
-    .input(
-      z.object({
-        programId: z.string(),
-      }),
-    )
-    .mutation(async ({ input }) => {
-      return await disableProgram(input);
-    }),
   updateProgramAvailability: adminRoute
     .input(
       z.object({

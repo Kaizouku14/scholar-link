@@ -19,7 +19,6 @@ export const getAllActivePrograms = async () => {
         submissionType: ProgramTable.submissionType,
       })
       .from(ProgramTable)
-      .where(eq(ProgramTable.isActive, true))
       .orderBy(desc(ProgramTable.deadline))
       .execute();
 

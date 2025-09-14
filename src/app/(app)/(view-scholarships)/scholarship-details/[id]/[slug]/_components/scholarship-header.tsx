@@ -142,12 +142,12 @@ const ScholarshipHeader = ({
                     Available Slots
                   </p>
                   <p className="text-foreground font-semibold">
-                    {data.slots} {data.slots === 1 ? "slot" : "slots"}
+                    {data.slots} slots
                   </p>
                   <p className="text-muted-foreground text-xs">
-                    {data.slots > 0
+                    {!isDeadlinePassed
                       ? "Applications open"
-                      : "No slots available"}
+                      : "Applications closed"}
                   </p>
                 </div>
               </div>

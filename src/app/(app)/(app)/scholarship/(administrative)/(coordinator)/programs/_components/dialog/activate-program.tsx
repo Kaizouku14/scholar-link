@@ -21,7 +21,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { LoaderCircle, ShieldCheck } from "lucide-react";
+import { LoaderCircle, RotateCcw } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
@@ -109,8 +109,8 @@ const ActivateProgram = ({
           size="lg"
           className="flex w-full cursor-pointer items-center justify-center space-x-2 bg-transparent text-green-600 transition-colors hover:bg-green-50 hover:text-green-700"
         >
-          <ShieldCheck className="h-4 w-4" />
-          <span>Activate</span>
+          <RotateCcw className="h-4 w-4" />
+          <span>Repost Program</span>
         </Button>
       </DialogTrigger>
       <DialogContent>

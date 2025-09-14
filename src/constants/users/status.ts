@@ -7,6 +7,8 @@ export const INTERNSHIP_STATUS = [
 ] as const;
 export const SCHOLARSHIP_STATUS = [
   "pending",
+  "for-renewal",
+  "renewal",
   "rejected",
   "qualified",
   "active",

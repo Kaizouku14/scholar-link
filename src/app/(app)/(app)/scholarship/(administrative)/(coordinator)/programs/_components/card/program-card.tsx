@@ -9,9 +9,7 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import { ShieldX, Calendar, Users, FileText, LoaderCircle } from "lucide-react";
-import { api } from "@/trpc/react";
-import { toast } from "react-hot-toast";
+import { Calendar, Users, FileText } from "lucide-react";
 import type { QueryObserverResult } from "@tanstack/react-query";
 import { format } from "date-fns";
 import ActivateProgram from "../dialog/activate-program";
@@ -28,24 +26,8 @@ const ProgramCard = ({
   data: Program;
   refetch: () => Promise<QueryObserverResult<Program[] | undefined, unknown>>;
 }) => {
-  const { mutateAsync: disableProgram, isPending } =
-    api.scholarshipCoordinator.disableScholarshipProgram.useMutation();
-
-  const handleDisableProgram = async () => {
-    const toastId = toast.loading("Disabling Scholarship Program...");
-    try {
-      await disableProgram({
-        programId: data.programId,
-      });
-
-      await refetch();
-      toast.success("Scholarship program status disabled successfully!");
-    } catch (error) {
-      toast.error((error as Error).message);
-    } finally {
-      toast.dismiss(toastId);
-    }
-  };
+  const isPassed = isDeadlinePassed(data.deadline);
+  const isApproaching = isDeadlineApproaching(data.deadline);
 
   return (
     <Card
@@ -78,12 +60,12 @@ const ProgramCard = ({
                 >
                   {data.isActive ? "Active" : "Inactive"}
                 </Badge>
-                {isDeadlineApproaching(data.deadline) && (
+                {isApproaching && (
                   <Badge variant="destructive" className="text-xs">
                     Deadline Soon
                   </Badge>
                 )}
-                {isDeadlinePassed(data.deadline) && (
+                {isPassed && (
                   <Badge
                     variant="outline"
                     className="text-muted-foreground text-xs"
@@ -111,9 +93,9 @@ const ProgramCard = ({
             </div>
             <span
               className={`font-medium ${
-                isDeadlinePassed(data.deadline)
-                  ? "text-destructive"
-                  : isDeadlineApproaching(data.deadline)
+                isPassed
+                  ? "text-primary"
+                  : isApproaching
                     ? "text-primary"
                     : "text-foreground"
               }`}
@@ -153,49 +135,22 @@ const ProgramCard = ({
               href={`${PageRoutes.SCHOLARSHIPS_PROGRAMS_DETAILS}/${data.programId}}`} //to change
               className="flex-1"
             >
-              <Button
-                size="lg"
-                className="w-full cursor-pointer"
-                disabled={isDeadlinePassed(data.deadline)}
-              >
-                {isDeadlinePassed(data.deadline)
-                  ? "Application Closed"
-                  : "View Program"}
+              <Button size="lg" className="w-full cursor-pointer">
+                {isPassed ? "Application Closed" : "View Program"}
               </Button>
             </Link>
 
-            {data.isActive ? (
-              <Button
-                variant="outline"
-                size="lg"
-                className="text-destructive hover:text-destructive/80 hover:bg-destructive/10 flex w-full cursor-pointer items-center justify-center space-x-2 transition-colors"
-                onClick={handleDisableProgram}
-                disabled={isPending}
-              >
-                {isPending ? (
-                  <LoaderCircle className="text-primary h-6 w-6 animate-spin" />
-                ) : (
-                  <>
-                    <ShieldX className="h-4 w-4" />
-                    <span>Deactivate</span>
-                  </>
-                )}
-              </Button>
-            ) : (
-              <>
-                {data && (
-                  <ActivateProgram
-                    data={{
-                      programId: data.programId,
-                      deadline: data.deadline,
-                      submissionType: data.submissionType,
-                      slots: data.slots,
-                      requirements: data.requirements,
-                    }}
-                    refetch={refetch}
-                  />
-                )}
-              </>
+            {data && (
+              <ActivateProgram
+                data={{
+                  programId: data.programId,
+                  deadline: data.deadline,
+                  submissionType: data.submissionType,
+                  slots: data.slots,
+                  requirements: data.requirements,
+                }}
+                refetch={refetch}
+              />
             )}
           </div>
         </div>

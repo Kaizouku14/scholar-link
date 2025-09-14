@@ -9,6 +9,7 @@ import ScholarshipHeader from "./scholarship-header";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState, useRef } from "react";
 import { ApplicationForm } from "./form/flexible-form";
+import { isDeadlinePassed } from "@/lib/utils";
 
 const ProgramSection = ({ id }: { id: string }) => {
   const [tab, setTab] = useState("program-overview");
@@ -26,6 +27,7 @@ const ProgramSection = ({ id }: { id: string }) => {
 
   if (!data?.program) return <ScholarshipProgramNotFound />;
 
+  const isPassed = isDeadlinePassed(data.program.deadline);
   return (
     <div className="w-full">
       <ScholarshipHeader
@@ -41,16 +43,20 @@ const ProgramSection = ({ id }: { id: string }) => {
             onValueChange={setTab}
             className="w-full"
           >
-            <TabsList>
-              <TabsTrigger value="program-overview">
-                Program Overview
-              </TabsTrigger>
-              {data.program.submissionType === "online" &&
-                data.requirements &&
-                data.requirements.length > 0 && (
-                  <TabsTrigger value="application">Application</TabsTrigger>
-                )}
-            </TabsList>
+            {!isPassed && (
+              <TabsList>
+                <TabsTrigger value="program-overview">
+                  Program Overview
+                </TabsTrigger>
+
+                {data.program.submissionType === "online" &&
+                  data.requirements &&
+                  data.requirements.length > 0 && (
+                    <TabsTrigger value="application">Application</TabsTrigger>
+                  )}
+              </TabsList>
+            )}
+
             <TabsContent value="program-overview">
               <div className="flex flex-col space-y-6 max-md:items-center md:flex-row md:justify-evenly md:space-y-0 md:space-x-6">
                 <div className="flex flex-1 flex-col gap-4 px-6">

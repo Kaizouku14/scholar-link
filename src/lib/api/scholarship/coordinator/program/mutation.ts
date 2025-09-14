@@ -54,29 +54,6 @@ export const createScholarshipProgram = async ({
   });
 };
 
-export const disableProgram = async ({ programId }: { programId: string }) => {
-  try {
-    const response = await db
-      .update(ProgramTable)
-      .set({ isActive: false })
-      .where(eq(ProgramTable.programId, programId));
-
-    if (!response) {
-      throw new TRPCError({
-        code: "BAD_REQUEST",
-        message: "Failed to disable scholarship program status!",
-      });
-    }
-  } catch (error) {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message:
-        "Failed to update scholarship program status," +
-        (error as Error).message,
-    });
-  }
-};
-
 export const updateProgramStatus = async ({
   programId,
   deadline,
