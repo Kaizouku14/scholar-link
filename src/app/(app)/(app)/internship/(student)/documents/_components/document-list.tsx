@@ -54,7 +54,7 @@ const DocumentList = ({ documents }: { documents: DocumentCardProps }) => {
                   color,
                 )}
               >
-                {React.createElement(getStatusIcon(documents.status), {
+                {React.createElement(getStatusIcon(documents.status) ?? "div", {
                   className: cn(color),
                 })}
                 {documents.status.replace(/_/g, " ")}

@@ -13,14 +13,14 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import type { CompanySchema } from "./column-schema";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { InternCard } from "@/components/cards/internship/intern-cards";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
+import type { Company } from "@/interfaces/internship/hte";
 
 interface DataTableRowActionsProps {
-  row: Row<CompanySchema>;
+  row: Row<Company>;
 }
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {

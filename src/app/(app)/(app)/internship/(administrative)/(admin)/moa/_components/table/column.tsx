@@ -1,24 +1,24 @@
 "use client";
 
 import type { ColumnDef } from "@tanstack/react-table";
-import type { ColumnSchema } from "./column-schema";
 import { Button } from "@/components/ui/button";
 import { FileText, Mail, Phone } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { COURSE_LABELS } from "@/constants/users/courses";
+import type { MOA } from "@/interfaces/internship/moa";
 
-export const MoaColumns: ColumnDef<ColumnSchema>[] = [
+export const MoaColumns: ColumnDef<MOA>[] = [
   {
     accessorKey: "documentUrl",
     header: "Memorandum of Agreement",
     cell: ({ row }) => (
       <Button
-        title={row.original.documentUrl!}
+        title={row.original.documentUrl}
         className="m-0 h-fit w-full cursor-pointer border-none p-0 shadow-none"
         variant={"outline"}
         onClick={() => {
           window.open(
-            row.original.documentUrl!,
+            row.original.documentUrl,
             "_blank",
             "noopener,noreferrer",
           );
@@ -61,7 +61,7 @@ export const MoaColumns: ColumnDef<ColumnSchema>[] = [
             </div>
 
             <div className="text-muted-foreground text-xs">
-              {COURSE_LABELS[course!]} · {section}
+              {COURSE_LABELS[course]} · {section}
             </div>
           </div>
         </div>

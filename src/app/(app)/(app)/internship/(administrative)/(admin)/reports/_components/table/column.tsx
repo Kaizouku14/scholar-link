@@ -1,11 +1,11 @@
 "use client";
 
 import type { ColumnDef } from "@tanstack/react-table";
-import type { ReportSchema } from "./column-schema";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Phone } from "lucide-react";
+import type { Reports } from "@/interfaces/internship/reports";
 
-export const ReportsColumn: ColumnDef<ReportSchema>[] = [
+export const ReportsColumn: ColumnDef<Reports>[] = [
   {
     accessorKey: "company",
     header: "HTEs",

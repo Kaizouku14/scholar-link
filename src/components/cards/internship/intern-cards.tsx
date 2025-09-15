@@ -19,9 +19,9 @@ export const InternCard = ({
     email: string;
     profile?: string | null;
 
-    course?: courseType | null;
-    status?: internshipStatusType | null;
-    section?: SectionType[] | null;
+    course?: courseType;
+    status?: internshipStatusType;
+    section?: SectionType[];
   };
 }) => {
   const { status } = intern;
@@ -78,7 +78,7 @@ export const InternCard = ({
             color,
           )}
         >
-          {React.createElement(getStatusIcon(status ?? "default"), {
+          {React.createElement(getStatusIcon(status ?? "default") ?? "div", {
             className: cn("h-3 w-3", color),
           })}
           {status}

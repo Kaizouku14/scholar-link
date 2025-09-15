@@ -10,12 +10,12 @@ import {
   getStatusVariant,
 } from "@/lib/utils";
 import type { ColumnDef } from "@tanstack/react-table";
-import type { ColumnSchema } from "./column-schema";
 import { Progress } from "@/components/ui/progress";
 import { DataTableRowActions } from "./table-row-actions";
 import React from "react";
+import type { progressMonitoring } from "@/interfaces/internship/progress";
 
-export const ProgressMonitoringColumns: ColumnDef<ColumnSchema>[] = [
+export const ProgressMonitoringColumns: ColumnDef<progressMonitoring>[] = [
   {
     accessorKey: "section",
     filterFn: (row, columnId, filterValues: string[]) => {
@@ -44,7 +44,7 @@ export const ProgressMonitoringColumns: ColumnDef<ColumnSchema>[] = [
             </div>
 
             <div className="text-muted-foreground text-xs">
-              {COURSE_LABELS[course!]} · {section}
+              {COURSE_LABELS[course]} · {section}
             </div>
           </div>
         </div>
@@ -55,7 +55,7 @@ export const ProgressMonitoringColumns: ColumnDef<ColumnSchema>[] = [
     accessorKey: "companyName",
     header: "Host Training Establishments",
     cell: ({ row }) => (
-      <div className="text-sm" title={row.original.companyName!}>
+      <div className="text-sm" title={row.original.companyName}>
         {row.original.companyName}
       </div>
     ),
@@ -80,8 +80,8 @@ export const ProgressMonitoringColumns: ColumnDef<ColumnSchema>[] = [
     header: "Status",
     cell: ({ row }) => {
       const { status } = row.original;
-      const color = getStatusColor(status ?? "");
-      const variant = getStatusVariant(status ?? "");
+      const color = getStatusColor(status);
+      const variant = getStatusVariant(status);
 
       return (
         <Badge
@@ -91,7 +91,7 @@ export const ProgressMonitoringColumns: ColumnDef<ColumnSchema>[] = [
             color,
           )}
         >
-          {React.createElement(getStatusIcon(status ?? "default"), {
+          {React.createElement(getStatusIcon(status) ?? "div", {
             className: cn(color),
           })}
           {status}

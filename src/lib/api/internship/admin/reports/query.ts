@@ -1,4 +1,5 @@
 import { ROLE } from "@/constants/users/roles";
+import type { Reports } from "@/interfaces/internship/reports";
 import { db, eq } from "@/server/db";
 import {
   student as StudenTable,
@@ -74,7 +75,7 @@ export const getInternshipReports = async () => {
       })
       .filter((item) => item !== null);
 
-    return report;
+    return report as Reports[];
   } catch (error) {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",

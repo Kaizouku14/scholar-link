@@ -1,9 +1,9 @@
-import type { ReportSchema } from "../table/column-schema";
+import type { Reports } from "@/interfaces/internship/reports";
 import type ExcelJS from "exceljs";
 
 export const createWorksheet = (
   workbook: ExcelJS.Workbook,
-  students: ReportSchema[],
+  students: Reports[],
   coordinatorName: string,
 ) => {
   const worksheetName = `${coordinatorName.toUpperCase()}`

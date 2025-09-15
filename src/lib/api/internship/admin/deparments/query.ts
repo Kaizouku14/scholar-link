@@ -1,5 +1,8 @@
 import { ROLE } from "@/constants/users/roles";
-import type { DeparmentUsers } from "@/interfaces/internship/department";
+import type {
+  Deparments,
+  DeparmentUsers,
+} from "@/interfaces/internship/department";
 import {
   countDistinct,
   db,
@@ -26,7 +29,7 @@ export const getAllInternshipDeparments = async () => {
   try {
     const response = await db
       .select({
-        deparment: UserTable.department,
+        department: UserTable.department,
         coordinators: sql<number>`COUNT(DISTINCT ${UserTable.id}) FILTER (WHERE ${UserTable.role} = ${ROLE.INTERNSHIP_COORDINATOR})`,
         interns: countDistinct(InternshipTable.userId),
         requiredHours: max(InternshipTable.totalOfHoursRequired),
@@ -66,7 +69,7 @@ export const getAllInternshipDeparments = async () => {
       users: row.users
         ? (JSON.parse(row.users as string) as DeparmentUsers[])
         : [],
-    }));
+    })) as Deparments[];
   } catch (error) {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",

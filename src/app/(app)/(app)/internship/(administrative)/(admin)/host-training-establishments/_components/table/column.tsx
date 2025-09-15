@@ -1,5 +1,4 @@
 import type { ColumnDef } from "@tanstack/react-table";
-import type { CompanySchema } from "./column-schema";
 import { Building2, Mail, MapPin, Phone, UserCheck, Users } from "lucide-react";
 import { DataTableColumnHeader } from "@/components/table/table-column-header";
 import { DataTableRowActions } from "./table-row-actions";
@@ -11,8 +10,9 @@ import {
   cn,
   getStatusIcon,
 } from "@/lib/utils";
+import type { Company } from "@/interfaces/internship/hte";
 
-export const CompaniesColumns: ColumnDef<CompanySchema>[] = [
+export const CompaniesColumns: ColumnDef<Company>[] = [
   {
     accessorKey: "companyName",
     header: ({ column }) => (
@@ -158,7 +158,7 @@ export const CompaniesColumns: ColumnDef<CompanySchema>[] = [
             color,
           )}
         >
-          {React.createElement(getStatusIcon(status), {
+          {React.createElement(getStatusIcon(status) ?? "div", {
             className: cn(color),
           })}
           {status}

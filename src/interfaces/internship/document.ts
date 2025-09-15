@@ -1,4 +1,6 @@
+import type { courseType } from "@/constants/users/courses";
 import type { SectionType } from "@/constants/users/sections";
+import type { statusType } from "@/constants/users/status";
 
 export interface DocumentCardProps {
   documentId: string;
@@ -25,4 +27,18 @@ export interface StudentDocuments {
   requiredDocuments: {
     documentType: string;
   }[];
+}
+
+export interface DocumentReview {
+  id: string;
+  documentType: string;
+  documentUrl: string;
+  reviewStatus: statusType;
+  submittedAt: Date;
+  studentId: string;
+  name: string;
+  profile: string | null;
+  section: SectionType[];
+  course: courseType;
+  companyName: string;
 }

@@ -6,14 +6,14 @@ import { DataTableSkeleton } from "@/components/table/table-skeleton";
 import { ReportsColumn } from "./column";
 import { COURSE_FILTER } from "@/constants/users/courses";
 import type { Table } from "@tanstack/react-table";
-import type { ReportSchema } from "./column-schema";
 import { exportByCoordinator } from "./export-xlsx";
+import type { Reports } from "@/interfaces/internship/reports";
 
 const ReportsTable = () => {
   const { data, isLoading } =
     api.internshipAdmin.getInternshipReports.useQuery();
 
-  const handleExport = async (row: Table<ReportSchema>) => {
+  const handleExport = async (row: Table<Reports>) => {
     const rows = row.getFilteredRowModel().rows.map((r) => r.original);
 
     await exportByCoordinator(rows);

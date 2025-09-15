@@ -9,7 +9,7 @@ import {
   user as UserTable,
   student as StudentTable,
 } from "@/server/db/schema/auth";
-import type { CompanyInterns } from "@/interfaces/internship/hte";
+import type { Company, CompanyInterns } from "@/interfaces/internship/hte";
 
 export const getAllCompany = async () => {
   const response = await db
@@ -55,5 +55,5 @@ export const getAllCompany = async () => {
   return response.map((row) => ({
     ...row,
     interns: row.interns ? (JSON.parse(row.interns) as CompanyInterns[]) : [],
-  }));
+  })) as Company[];
 };

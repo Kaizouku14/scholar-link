@@ -1,10 +1,10 @@
 import toast from "react-hot-toast";
-import type { ReportSchema } from "./column-schema";
 import ExcelJS from "exceljs";
 import { createWorksheet } from "../helpers/create-worksheet";
 import { exportWorkbook, groupByCoordinator } from "../helpers/utils";
+import type { Reports } from "@/interfaces/internship/reports";
 
-export const exportByCoordinator = async (rows: ReportSchema[]) => {
+export const exportByCoordinator = async (rows: Reports[]) => {
   if (!rows || rows.length === 0) {
     toast.error("No data to export.");
     return;

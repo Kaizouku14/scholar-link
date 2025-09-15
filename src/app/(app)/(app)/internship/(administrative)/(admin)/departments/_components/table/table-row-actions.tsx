@@ -13,7 +13,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import type { DepartmentColumn } from "./column-schema";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
 import { useMemo, useState } from "react";
@@ -33,9 +32,10 @@ import {
   INTERNSHIP_STATUS,
   type internshipStatusType,
 } from "@/constants/users/status";
+import type { Deparments } from "@/interfaces/internship/department";
 
 interface DataTableRowActionsProps {
-  row: Row<DepartmentColumn>;
+  row: Row<Deparments>;
 }
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {

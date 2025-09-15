@@ -1,6 +1,6 @@
 "use client";
 
-import type { Row, Table } from "@tanstack/react-table";
+import type { Row } from "@tanstack/react-table";
 import { MoreHorizontal, XCircle } from "lucide-react";
 import {
   DropdownMenu,
@@ -13,19 +13,22 @@ import { Button } from "@/components/ui/button";
 import { toast } from "react-hot-toast";
 import { useState } from "react";
 import { api } from "@/trpc/react";
-import type { AccountSchema } from "./column-schema";
+import type { Accounts } from "@/interfaces/internship/accounts";
 
 interface DataTableRowActionsProps {
-  row: Row<AccountSchema>;
-  table: Table<AccountSchema>;
+  row: Row<Accounts>;
 }
 
-export function DataTableRowActions({ row, table }: DataTableRowActionsProps) {
+export function DataTableRowActions({ row }: DataTableRowActionsProps) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { email, status } = row.original;
 
   const { mutateAsync: revokedEmail } =
     api.auth.revokeAuthorizedEmail.useMutation();
+  const { refetch } = api.auth.getAllInternshipAccounts.useQuery(undefined, {
+    enabled: false,
+  });
+
   const handleRevokeEmail = async () => {
     if (!email?.trim()) return;
 
@@ -34,7 +37,7 @@ export function DataTableRowActions({ row, table }: DataTableRowActionsProps) {
     try {
       await revokedEmail({ email });
       toast.success("Email revoked successfully", { id: toastId });
-      (table.options.meta as { refetch: () => void }).refetch();
+      await refetch();
     } catch (error) {
       toast.error((error as Error).message);
     } finally {

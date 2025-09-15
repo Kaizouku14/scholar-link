@@ -99,7 +99,9 @@ export const AdminInternsColumns: ColumnDef<AdminSectionData>[] = [
             color,
           )}
         >
-          {React.createElement(getStatusIcon(status), { className: cn(color) })}
+          {React.createElement(getStatusIcon(status) ?? "div", {
+            className: cn(color),
+          })}
           {status}
         </Badge>
       );

@@ -1,5 +1,4 @@
 import type { ColumnDef } from "@tanstack/react-table";
-import type { DepartmentColumn } from "./column-schema";
 import { Building, Users, UsersRound } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
@@ -11,17 +10,18 @@ import {
 } from "@/lib/utils";
 import { DataTableRowActions } from "./table-row-actions";
 import React from "react";
+import type { Deparments } from "@/interfaces/internship/department";
 
-export const departmentsColumn: ColumnDef<DepartmentColumn>[] = [
+export const departmentsColumn: ColumnDef<Deparments>[] = [
   {
-    accessorKey: "deparment",
+    accessorKey: "department",
     header: "Department",
     cell: ({ row }) => (
       <div className="flex items-center gap-2">
         <div className="bg-primary/10 flex h-8 w-8 items-center justify-center rounded-full">
           <Building className="text-muted-foreground h-4 w-4" />
         </div>
-        {row.original.deparment}
+        {row.original.department}
         {/* {DEPARMENTS_LABELS[row.original.deparment]} */}
       </div>
     ),
@@ -121,7 +121,7 @@ export const departmentsColumn: ColumnDef<DepartmentColumn>[] = [
             color,
           )}
         >
-          {React.createElement(getStatusIcon(status), {
+          {React.createElement(getStatusIcon(status) ?? "div", {
             className: cn(color),
           })}
           {status}

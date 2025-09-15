@@ -10,3 +10,13 @@ export interface CompanyInterns {
   section: SectionType[];
   status: internshipStatusType;
 }
+
+export interface Company {
+  companyName: string | null;
+  address: string | null;
+  supervisor: string | null;
+  supervisorEmail: string | null;
+  supervisorNo: string | null;
+  studentCount: number;
+  interns: CompanyInterns[];
+}

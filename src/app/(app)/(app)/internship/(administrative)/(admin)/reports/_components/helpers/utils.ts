@@ -1,8 +1,8 @@
-import type { ReportSchema } from "../table/column-schema";
+import type { Reports } from "@/interfaces/internship/reports";
 import type ExcelJS from "exceljs";
 
-export const groupByCoordinator = (rows: ReportSchema[]) => {
-  const grouped: Record<string, ReportSchema[]> = {};
+export const groupByCoordinator = (rows: Reports[]) => {
+  const grouped: Record<string, Reports[]> = {};
   rows.forEach((row) => {
     if (
       !row.coordinatorName ||

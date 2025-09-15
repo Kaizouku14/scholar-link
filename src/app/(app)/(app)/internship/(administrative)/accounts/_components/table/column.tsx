@@ -1,13 +1,13 @@
 "use client";
 
 import type { ColumnDef } from "@tanstack/react-table";
-import type { AccountSchema } from "./column-schema";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DataTableRowActions } from "./table-row-actions";
 import { ROLE } from "@/constants/users/roles";
+import type { Accounts } from "@/interfaces/internship/accounts";
 
-export const AccountColumns: ColumnDef<AccountSchema>[] = [
+export const AccountColumns: ColumnDef<Accounts>[] = [
   {
     accessorKey: "name",
     header: "User",
@@ -89,6 +89,6 @@ export const AccountColumns: ColumnDef<AccountSchema>[] = [
   {
     id: "actions",
     header: "Actions",
-    cell: ({ row, table }) => <DataTableRowActions row={row} table={table} />,
+    cell: ({ row }) => <DataTableRowActions row={row} />,
   },
 ];

@@ -1,3 +1,4 @@
+import type { MOA } from "@/interfaces/internship/moa";
 import { db, eq, or, and } from "@/server/db";
 import { user as UserTable } from "@/server/db/schema/auth";
 import { internDocuments as InternsDocumentsTable } from "@/server/db/schema/internship";
@@ -31,7 +32,7 @@ export const getInternsMoa = async () => {
         ),
       );
 
-    return response;
+    return response as MOA[];
   } catch (error) {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",

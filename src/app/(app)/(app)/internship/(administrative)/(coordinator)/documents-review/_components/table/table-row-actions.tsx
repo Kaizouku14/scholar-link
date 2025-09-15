@@ -4,12 +4,12 @@ import { Button } from "@/components/ui/button";
 import type { Row } from "@tanstack/react-table";
 import { CheckCircle } from "lucide-react";
 import { RejectDocumentDialog } from "../dialog/reject-dialog";
-import type { DocumentSchema } from "./column-schema";
 import { api } from "@/trpc/react";
 import { toast } from "react-hot-toast";
+import type { DocumentReview } from "@/interfaces/internship/document";
 
 interface DataTableRowActionsProps {
-  row: Row<DocumentSchema>;
+  row: Row<DocumentReview>;
 }
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {

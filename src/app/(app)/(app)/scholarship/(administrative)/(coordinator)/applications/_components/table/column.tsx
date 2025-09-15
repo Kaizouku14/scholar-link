@@ -124,7 +124,7 @@ export const ApplicationsColumn: ColumnDef<Applications>[] = [
             color,
           )}
         >
-          {React.createElement(getStatusIcon(status), {
+          {React.createElement(getStatusIcon(status) ?? "div", {
             className: cn(color),
           })}
           {status}

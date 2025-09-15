@@ -11,6 +11,7 @@ import {
   student as StudentTable,
 } from "@/server/db/schema/auth";
 import { getCoordinatorInfo } from "../query";
+import type { DocumentReview } from "@/interfaces/internship/document";
 
 export const getAllDocumentsToReviewBySection = async ({
   userId,
@@ -21,7 +22,7 @@ export const getAllDocumentsToReviewBySection = async ({
     const { coordinatorSections, coordinatorDepartment, coordinatorCourse } =
       await getCoordinatorInfo({ userId });
 
-    return await db
+    const response = await db
       .select({
         id: InternDocumentsTable.documentId,
         documentType: InternDocumentsTable.documentType,
@@ -55,6 +56,8 @@ export const getAllDocumentsToReviewBySection = async ({
         eq(InternshipTable.companyId, CompanyTable.companyId),
       )
       .orderBy(InternDocumentsTable.submittedAt, UserTable.section);
+
+    return response as DocumentReview[];
   } catch (error) {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",

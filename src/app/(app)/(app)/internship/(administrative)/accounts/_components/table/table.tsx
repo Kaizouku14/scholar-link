@@ -21,7 +21,6 @@ const AccountsTable = () => {
             columns={AccountColumns}
             data={data}
             filteredTitle={"email"}
-            refetch={refetch}
           />
         </>
       ) : (

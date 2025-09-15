@@ -11,9 +11,11 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Clock, Eye, ClipboardCheck } from "lucide-react";
-import type { ColumnSchema } from "./column-schema";
 import { Calendar } from "@/components/ui/calendar";
-import type { ProgressLogs } from "@/interfaces/internship/progress";
+import type {
+  ProgressLogs,
+  progressMonitoring,
+} from "@/interfaces/internship/progress";
 import {
   Popover,
   PopoverContent,
@@ -40,7 +42,7 @@ import { api } from "@/trpc/react";
 import toast from "react-hot-toast";
 
 interface DataTableRowActionsProps {
-  row: Row<ColumnSchema>;
+  row: Row<progressMonitoring>;
 }
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {

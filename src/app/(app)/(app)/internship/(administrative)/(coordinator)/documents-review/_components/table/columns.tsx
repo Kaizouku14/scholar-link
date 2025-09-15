@@ -1,7 +1,6 @@
 "use client";
 
 import type { ColumnDef } from "@tanstack/react-table";
-import { type DocumentSchema } from "./column-schema";
 import { FileText } from "lucide-react";
 import { COURSE_LABELS } from "@/constants/users/courses";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -17,8 +16,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DataTableRowActions } from "./table-row-actions";
 import React from "react";
+import type { DocumentReview } from "@/interfaces/internship/document";
 
-export const DocumentReviewColumns: ColumnDef<DocumentSchema>[] = [
+export const DocumentReviewColumns: ColumnDef<DocumentReview>[] = [
   {
     accessorKey: "documentType",
     header: "Document",
@@ -29,7 +29,7 @@ export const DocumentReviewColumns: ColumnDef<DocumentSchema>[] = [
         variant={"outline"}
         onClick={() => {
           window.open(
-            row.original.documentUrl!,
+            row.original.documentUrl,
             "_blank",
             "noopener,noreferrer",
           );
@@ -79,7 +79,7 @@ export const DocumentReviewColumns: ColumnDef<DocumentSchema>[] = [
             </div>
 
             <div className="text-muted-foreground text-xs">
-              {COURSE_LABELS[course!]} · {section?.[0]}
+              {COURSE_LABELS[course]} · {section?.[0]}
             </div>
           </div>
         </div>
@@ -92,7 +92,7 @@ export const DocumentReviewColumns: ColumnDef<DocumentSchema>[] = [
     cell: ({ row }) => (
       <div
         className="max-w-[15rem] truncate text-base"
-        title={row.original.companyName!}
+        title={row.original.companyName}
       >
         {row.original.companyName}
       </div>
@@ -103,7 +103,7 @@ export const DocumentReviewColumns: ColumnDef<DocumentSchema>[] = [
     header: "Submitted",
     cell: ({ row }) => (
       <div className="text-sm">
-        {format(new Date(row.original.submittedAt!), "MMM dd, yyyy")}
+        {format(new Date(row.original.submittedAt), "MMM dd, yyyy")}
       </div>
     ),
   },
@@ -123,9 +123,12 @@ export const DocumentReviewColumns: ColumnDef<DocumentSchema>[] = [
             color,
           )}
         >
-          {React.createElement(getStatusIcon(reviewStatus ?? "default"), {
-            className: cn(color),
-          })}
+          {React.createElement(
+            getStatusIcon(reviewStatus ?? "default") ?? "div",
+            {
+              className: cn(color),
+            },
+          )}
           {reviewStatus}
         </Badge>
       );

@@ -5,6 +5,7 @@ import {
 } from "@/server/db/schema/auth";
 import { ROLE } from "@/constants/users/roles";
 import type { SectionType } from "@/constants/users/sections";
+import type { Accounts } from "@/interfaces/internship/accounts";
 
 export const gellAllInternshipAccounts = async ({
   userId,
@@ -65,6 +66,6 @@ export const gellAllInternshipAccounts = async ({
       .where(or(and(...conditions), eq(UserTable.id, userId)))
       .execute();
 
-    return response;
+    return response as Accounts[];
   });
 };

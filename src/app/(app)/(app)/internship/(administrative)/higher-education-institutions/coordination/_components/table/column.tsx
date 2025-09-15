@@ -183,7 +183,6 @@ export const CoordinatorInternsColumns: ColumnDef<CoordinatorSectionData>[] = [
   {
     accessorKey: "actions",
     header: ({ table }) => <ActionsHeader table={table} />,
-
     cell: ({ row, table }) => {
       const selected = table.getSelectedRowModel().rows.length > 0;
       return <DataTableRowActions row={row} disabled={selected} />;

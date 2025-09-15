@@ -10,7 +10,10 @@ import {
 } from "@/server/db/schema/internship";
 import { TRPCError } from "@trpc/server";
 import { getCoordinatorInfo } from "../query";
-import type { ProgressLogs } from "@/interfaces/internship/progress";
+import type {
+  ProgressLogs,
+  progressMonitoring,
+} from "@/interfaces/internship/progress";
 
 export const getStudentProgressBySection = async ({
   userId,
@@ -72,7 +75,7 @@ export const getStudentProgressBySection = async ({
       logs: JSON.parse(r.logs) as ProgressLogs[],
     }));
 
-    return logs;
+    return logs as progressMonitoring[];
   } catch (error) {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
