@@ -4,7 +4,7 @@ import Link from "next/link";
 
 const ProgramHeader = () => {
   return (
-    <div className="bg-primary mt-4 rounded-lg p-6 shadow-md">
+    <div className="bg-primary rounded-lg p-6 shadow-md">
       <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
         <div className="space-y-1.5">
           <h1 className="text-2xl font-bold text-white md:text-3xl">

@@ -24,7 +24,8 @@ const ScholarsTable = () => {
               column: "status",
               options: [
                 { label: "Active", value: "active" },
-                { label: "Inactive", value: "inactive" },
+                { label: "In Active", value: "inactive" },
+                { label: "For Renewal", value: "for-renewal" },
               ],
             },
             {

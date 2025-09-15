@@ -34,6 +34,7 @@ export const getAllPrograms = async ({ userId }: { userId: string }) => {
             )
         )
         `.as("requirements"),
+        announcement: ProgramTable.announcements,
       })
       .from(ProgramTable)
       .leftJoin(

@@ -270,7 +270,7 @@ const RepostProgram = ({
                 <EditRequirements />
               </TabsContent>
             </Tabs>
-            <DialogFooter>
+            <DialogFooter className="mt-2">
               <DialogClose asChild>
                 <Button variant="outline" type="button">
                   Cancel

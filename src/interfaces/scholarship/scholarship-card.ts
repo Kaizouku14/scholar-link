@@ -16,4 +16,5 @@ export interface Program {
   eligibilityType: eligibilityType;
   submissionType: submissionType;
   requirements: Requirement[];
+  announcement: string;
 }

@@ -20,6 +20,12 @@ import {
   MinusIcon,
   Palette,
   Ban,
+  Columns,
+  Merge,
+  Minus,
+  Rows,
+  Split,
+  TableIcon,
 } from "lucide-react";
 import { ToggleGroup } from "@/components/ui/toggle-group";
 import { Separator } from "@/components/ui/separator";
@@ -32,16 +38,15 @@ import {
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 
-interface ScholarshipEditorProps {
+interface Editor {
   value?: string;
   onChange?: (content: string) => void;
+  className?: string;
 }
 
-export default function ScholarshipEditor({
-  value,
-  onChange,
-}: ScholarshipEditorProps) {
+export default function TipTapEditor({ value, onChange, className }: Editor) {
   const editor = useEditor({
     extensions,
     content: value,
@@ -164,7 +169,7 @@ export default function ScholarshipEditor({
       render: () => (
         <Popover key="textColor">
           <PopoverTrigger asChild>
-            <Button variant="ghost" className="h-full" size="icon">
+            <Button variant="ghost" size="icon">
               <Palette className="h-4 w-4" />
             </Button>
           </PopoverTrigger>
@@ -237,6 +242,69 @@ export default function ScholarshipEditor({
     },
   ];
 
+  const tableActions = [
+    {
+      value: "insertTable",
+      icon: TableIcon,
+      label: "Insert Table",
+      command: () =>
+        editor
+          .chain()
+          .focus()
+          .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
+          .run(),
+    },
+    {
+      value: "addRow",
+      icon: Rows,
+      label: "Add Row",
+      command: () => editor.chain().focus().addRowAfter().run(),
+      isActive: () => false,
+    },
+    {
+      value: "removeRow",
+      icon: Minus,
+      label: "Remove Row",
+      command: () => editor.chain().focus().deleteRow().run(),
+      isActive: () => false,
+    },
+    {
+      value: "addColumn",
+      icon: Columns,
+      label: "Add Column",
+      command: () => editor.chain().focus().addColumnAfter().run(),
+      isActive: () => false,
+    },
+    {
+      value: "removeColumn",
+      icon: Minus,
+      label: "Remove Column",
+      command: () => editor.chain().focus().deleteColumn().run(),
+      isActive: () => false,
+    },
+    {
+      value: "mergeCells",
+      icon: Merge,
+      label: "Merge Cells",
+      command: () => editor.chain().focus().mergeCells().run(),
+      isActive: () => editor.isActive("tableCell", { colspan: 2 }) || false,
+    },
+    {
+      value: "splitCell",
+      icon: Split,
+      label: "Split Cell",
+      command: () => editor.chain().focus().splitCell().run(),
+      isActive: () => false,
+    },
+    {
+      value: "deleteTable",
+      icon: Minus,
+      label: "Delete Table",
+      command: () => editor.chain().focus().deleteTable().run(),
+      isActive: () => editor.isActive("table"),
+    },
+  ];
+
   return (
     <div className="w-full space-y-4">
       <div className="bg-muted/20 flex flex-wrap gap-2 rounded-lg border p-3">
@@ -267,6 +335,12 @@ export default function ScholarshipEditor({
           ))}
         </ToggleGroup>
 
+        <ToggleGroup type="single" variant="outline">
+          {tableActions.map((action) => (
+            <ToolbarButton key={action.value} {...action} />
+          ))}
+        </ToggleGroup>
+
         <ToggleGroup type="single" variant="outline" className="flex gap-1">
           {popoverActions.map((action) => (
             <ToolbarButton key={action.value} {...action} />
@@ -276,7 +350,10 @@ export default function ScholarshipEditor({
 
       <EditorContent
         editor={editor}
-        className="bg-background focus-within:ring-ring border-border min-h-[300px] w-full rounded-lg border p-4 focus-within:ring-2 focus-within:ring-offset-2"
+        className={cn(
+          "bg-background focus-within:ring-ring border-border w-full overflow-auto rounded-lg border p-4 focus-within:ring-2 focus-within:ring-offset-2",
+          className,
+        )}
       />
     </div>
   );

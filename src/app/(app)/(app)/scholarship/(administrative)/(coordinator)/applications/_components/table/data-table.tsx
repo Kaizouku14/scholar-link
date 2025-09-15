@@ -28,6 +28,10 @@ const ApplicantionsTable = () => {
                   value: "pending",
                 },
                 {
+                  label: "Renewal",
+                  value: "renewal",
+                },
+                {
                   label: "Qualified",
                   value: "qualified",
                 },

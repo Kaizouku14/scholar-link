@@ -44,7 +44,7 @@ import toast from "react-hot-toast";
 import SubmitButton from "@/components/forms/submit-button";
 import { uploadFile } from "@/lib/uploadthing";
 import { Textarea } from "@/components/ui/textarea";
-import ScholarshipEditor from "./titap/editor";
+import TipTapEditor from "@/components/titap/editor";
 import { ELIGIBILITY_TYPE } from "@/constants/scholarship/eligiblity-type";
 import { formatText } from "@/lib/utils";
 
@@ -362,7 +362,10 @@ const ProgramForm = () => {
                       <FormItem className="mt-4">
                         <FormLabel>Program Overview *</FormLabel>
                         <FormControl>
-                          <ScholarshipEditor {...field} />
+                          <TipTapEditor
+                            {...field}
+                            className="max-h-[25rem] min-h-[25rem]"
+                          />
                         </FormControl>
                         <FormDescription>
                           Provide details about eligibility, application
