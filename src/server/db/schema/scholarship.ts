@@ -22,9 +22,7 @@ export const scholarshipProgram = createTable("programs", {
   isActive: integer("is_active", { mode: "boolean" }).notNull().default(false), //To Remove
   eligibilityType: text("eligibility_type", {
     enum: ELIGIBILITY_TYPE,
-  })
-    .notNull()
-    .default("document-only"),
+  }).notNull(),
   deadline: integer("deadline", { mode: "timestamp" }).notNull(),
   announcements: text("announcements"),
 });

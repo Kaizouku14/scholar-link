@@ -23,6 +23,7 @@ import { QualifiedApplicationTemplate } from "@/services/email-templates/qualifi
 import { RejectApplicationTemplate } from "@/services/email-templates/rejectApplicationTemplate";
 import { getScholarsByProgram } from "@/lib/api/scholarship/coordinator/scholars/query";
 import { updateActiveApplication } from "@/lib/api/scholarship/coordinator/scholars/mutation";
+import { ELIGIBILITY_TYPE } from "@/constants/scholarship/eligiblity-type";
 
 export const scholarshipCoordinatorRouter = createTRPCRouter({
   createProgram: adminRoute
@@ -30,6 +31,7 @@ export const scholarshipCoordinatorRouter = createTRPCRouter({
       z.object({
         name: z.string(),
         type: z.enum(SCHOLARSHIP_TYPES),
+        eligibilityType: z.enum(ELIGIBILITY_TYPE),
         description: z.string(),
         section: z.string(),
         slots: z.number(),
@@ -57,6 +59,7 @@ export const scholarshipCoordinatorRouter = createTRPCRouter({
       z.object({
         programId: z.string(),
         deadline: z.date(),
+        eligibilityType: z.enum(ELIGIBILITY_TYPE),
         submissionType: z.enum(SUBMISSION_TYPE),
         slots: z.number(),
         requirements: z

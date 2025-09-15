@@ -21,7 +21,6 @@ export const scholarshipFormSchema = z.object({
   deadline: z.date({
     required_error: "Deadline is required",
   }),
-
   requirements: z
     .array(
       z.object({

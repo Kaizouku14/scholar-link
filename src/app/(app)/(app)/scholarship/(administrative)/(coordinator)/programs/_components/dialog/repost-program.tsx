@@ -33,7 +33,7 @@ import {
 } from "@/components/ui/popover";
 import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
-import { cn } from "@/lib/utils";
+import { cn, formatText } from "@/lib/utils";
 import {
   SUBMISSION_TYPE,
   type submissionType,
@@ -55,6 +55,10 @@ import {
 import type { Requirement } from "@/interfaces/scholarship/requirements";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import EditRequirements from "./form/edit-requirements";
+import {
+  ELIGIBILITY_TYPE,
+  type eligibilityType,
+} from "@/constants/scholarship/eligiblity-type";
 
 const RepostProgram = ({
   data,
@@ -64,6 +68,7 @@ const RepostProgram = ({
     programId: string;
     deadline: Date;
     submissionType: submissionType;
+    eligibilityType: eligibilityType;
     slots: number;
     requirements: Requirement[];
   };
@@ -74,6 +79,7 @@ const RepostProgram = ({
     resolver: zodResolver(activationSchema),
     defaultValues: {
       deadline: data.deadline,
+      eligibilityType: data.eligibilityType,
       submissionType: data.submissionType,
       slots: data.slots,
       requirements:
@@ -173,37 +179,71 @@ const RepostProgram = ({
                   )}
                 />
 
-                <FormField
-                  control={form.control}
-                  name="submissionType"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Submission Type</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                        value={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Select submission type" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {SUBMISSION_TYPE.map((type) => (
-                            <SelectItem key={type} value={type}>
-                              {type}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                      <FormDescription className="text-xs">
-                        Set the submission type of the program.
-                      </FormDescription>
-                    </FormItem>
-                  )}
-                />
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  <FormField
+                    control={form.control}
+                    name="submissionType"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Submission Type</FormLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                          value={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger className="w-full">
+                              <SelectValue placeholder="Select submission type" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {SUBMISSION_TYPE.map((type) => (
+                              <SelectItem key={type} value={type}>
+                                {formatText(type)}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                        <FormDescription className="text-xs">
+                          Set the submission type of the program.
+                        </FormDescription>
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="eligibilityType"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Eligibility Type</FormLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                          value={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger className="w-full">
+                              <SelectValue placeholder="Select submission type" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {ELIGIBILITY_TYPE.map((type) => (
+                              <SelectItem key={type} value={type}>
+                                {formatText(type)}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                        <FormDescription className="text-xs">
+                          Set the eligibility type of the program.
+                        </FormDescription>
+                      </FormItem>
+                    )}
+                  />
+                </div>
 
                 <FormField
                   control={form.control}

@@ -1,3 +1,4 @@
+import type { eligibilityType } from "@/constants/scholarship/eligiblity-type";
 import type { submissionType } from "@/constants/scholarship/submittion-type";
 import type { ScholarshipPrograms } from "@/interfaces/scholarship/program";
 import type { Requirement } from "@/interfaces/scholarship/requirements";
@@ -59,12 +60,14 @@ export const createScholarshipProgram = async ({
 export const updateProgramStatus = async ({
   programId,
   deadline,
+  eligibilityType,
   submissionType,
   slots,
   requirements,
 }: {
   programId: string;
   deadline: Date;
+  eligibilityType: eligibilityType;
   submissionType: submissionType;
   slots: number;
   requirements?: Requirement[];
@@ -75,6 +78,7 @@ export const updateProgramStatus = async ({
         .update(ProgramTable)
         .set({
           deadline,
+          eligibilityType,
           submissionType,
           slots,
           isActive: true,

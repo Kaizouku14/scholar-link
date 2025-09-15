@@ -13,7 +13,7 @@ import { Calendar, Users, FileText } from "lucide-react";
 import type { QueryObserverResult } from "@tanstack/react-query";
 import { format } from "date-fns";
 import RepostProgram from "../dialog/repost-program";
-import { isDeadlineApproaching, isDeadlinePassed } from "@/lib/utils";
+import { cn, isDeadlineApproaching, isDeadlinePassed } from "@/lib/utils";
 import type { Program } from "@/interfaces/scholarship/scholarship-card";
 import { PageRoutes } from "@/constants/page-routes";
 import Link from "next/link";
@@ -31,9 +31,10 @@ const ProgramCard = ({
 
   return (
     <Card
-      className={`mx-auto w-full shadow-none transition-all duration-200 ${
-        !data.isActive ? "bg-muted/30 opacity-75" : ""
-      }`}
+      className={cn(
+        "mx-auto w-full shadow-none transition-all duration-200",
+        (!data.isActive || isPassed) && "bg-muted/30 opacity-75",
+      )}
     >
       <CardHeader className="flex items-start space-y-0 pb-4">
         <div className="flex w-full items-center justify-between">
@@ -136,7 +137,7 @@ const ProgramCard = ({
               className="flex-1"
             >
               <Button size="lg" className="w-full cursor-pointer">
-                {isPassed ? "Application Closed" : "View Program"}
+                View Program
               </Button>
             </Link>
 
@@ -145,6 +146,7 @@ const ProgramCard = ({
                 data={{
                   programId: data.programId,
                   deadline: data.deadline,
+                  eligibilityType: data.eligibilityType,
                   submissionType: data.submissionType,
                   slots: data.slots,
                   requirements: data.requirements,

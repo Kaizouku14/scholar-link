@@ -20,6 +20,7 @@ export const getAllPrograms = async ({ userId }: { userId: string }) => {
         slots: ProgramTable.slots,
         deadline: ProgramTable.deadline,
         type: ProgramTable.type,
+        eligibilityType: ProgramTable.eligibilityType,
         description: ProgramTable.description,
         section: ProgramTable.section,
         submissionType: ProgramTable.submissionType,

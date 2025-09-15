@@ -1,6 +1,7 @@
 import type { ScholarshipType } from "@/constants/scholarship/scholarship-types";
 import type { submissionType } from "@/constants/scholarship/submittion-type";
 import type { Requirement } from "./requirements";
+import type { eligibilityType } from "@/constants/scholarship/eligiblity-type";
 
 export interface Program {
   programId: string;
@@ -12,6 +13,7 @@ export interface Program {
   type: ScholarshipType;
   description: string;
   section: string;
+  eligibilityType: eligibilityType;
   submissionType: submissionType;
   requirements: Requirement[];
 }
