@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { PageRoutes } from "@/constants/page-routes";
 import { env } from "@/env";
 import type { ProgramHeader } from "@/interfaces/scholarship/program";
-import { calculateDaysLeft, isDeadlineApproaching } from "@/lib/utils";
+import { calculateDaysLeft, cn, isDeadlineApproaching } from "@/lib/utils";
 import { format } from "date-fns";
 import {
   Calendar,
@@ -47,11 +47,11 @@ const ScholarshipHeader = ({
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <Link href={PageRoutes.SCHOLARSHIPS_PUBLIC}>
                 <Button
-                  variant={"link"}
+                  variant="link"
                   className="text-primary inline-flex items-center text-sm font-medium transition-colors hover:underline"
                 >
                   <ArrowLeft className="mr-2 h-4 w-4" />
-                  Scholarships
+                  Back to Programs
                 </Button>
               </Link>
 
@@ -61,7 +61,12 @@ const ScholarshipHeader = ({
                 </Badge>
                 <Badge
                   variant="outline"
-                  className={`font-medium ${data.submissionType === "online" ? "border-green-200 bg-green-100 text-green-800" : "border-blue-200 bg-blue-100 text-blue-800"}`}
+                  className={cn(
+                    "font-medium",
+                    data.submissionType === "online"
+                      ? "border-green-200 bg-green-100 text-green-800"
+                      : "border-blue-200 bg-blue-100 text-blue-800",
+                  )}
                 >
                   <Globe className="mr-1 h-3 w-3" />
                   {data.submissionType}
@@ -94,7 +99,6 @@ const ScholarshipHeader = ({
               <h1 className="text-foreground text-2xl font-bold tracking-tight md:text-4xl lg:text-5xl">
                 {data.name}
               </h1>
-
               {data.description && (
                 <div className="flex items-start gap-3">
                   <FileText className="text-muted-foreground mt-1 h-5 w-5 flex-shrink-0" />
@@ -108,7 +112,12 @@ const ScholarshipHeader = ({
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <div className="bg-background/50 flex items-center gap-3 rounded-lg border p-4">
                 <div
-                  className={`rounded-full p-2 ${isDeadlineSoon || isDeadlinePassed ? "bg-red-100 text-red-600" : "bg-blue-100 text-blue-600"}`}
+                  className={cn(
+                    "rounded-full p-2",
+                    isDeadlineSoon || isDeadlinePassed
+                      ? "bg-red-100 text-red-600"
+                      : "bg-blue-100 text-blue-600",
+                  )}
                 >
                   <Calendar className="h-4 w-4" />
                 </div>
@@ -117,7 +126,12 @@ const ScholarshipHeader = ({
                     Application Deadline
                   </p>
                   <p
-                    className={`font-semibold ${isDeadlineSoon || isDeadlinePassed ? "text-primary" : "text-foreground"}`}
+                    className={cn(
+                      "font-semibold",
+                      isDeadlineSoon || isDeadlinePassed
+                        ? "text-primary"
+                        : "text-foreground",
+                    )}
                   >
                     {format(new Date(data.deadline), "MMM, dd yyyy")}
                   </p>
@@ -133,7 +147,12 @@ const ScholarshipHeader = ({
 
               <div className="bg-background/50 flex items-center gap-3 rounded-lg border p-4">
                 <div
-                  className={`rounded-full p-2 ${data.slots > 0 ? "bg-green-100 text-green-600" : "bg-gray-100 text-gray-600"}`}
+                  className={cn(
+                    "rounded-full p-2",
+                    isDeadlinePassed
+                      ? "bg-green-100 text-green-600"
+                      : "bg-gray-100 text-gray-600",
+                  )}
                 >
                   <Users className="h-4 w-4" />
                 </div>
@@ -196,7 +215,6 @@ const ScholarshipHeader = ({
 
           <div className="flex-shrink-0 lg:w-80">
             <div className="bg-background relative hidden overflow-hidden rounded-xl border shadow-lg lg:block">
-              {/* {TODO: Replace this with actual image placeholder} */}
               <Image
                 src={data.imageUrl ?? "/placeholder.svg?height=320&width=400"}
                 alt={`${data.name} scholarship program`}

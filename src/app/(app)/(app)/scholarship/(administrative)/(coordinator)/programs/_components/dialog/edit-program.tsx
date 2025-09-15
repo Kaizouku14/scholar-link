@@ -82,6 +82,7 @@ const PostAnnouncement = ({ data }: { data: Program }) => {
             value={announcement}
             onChange={setAnnouncement}
             className="max-h-[16.5rem] min-h-[16.5rem]"
+            editable={true}
           />
           <DialogFooter>
             <DialogClose asChild>

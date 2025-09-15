@@ -365,6 +365,7 @@ const ProgramForm = () => {
                           <TipTapEditor
                             {...field}
                             className="max-h-[25rem] min-h-[25rem]"
+                            editable={true}
                           />
                         </FormControl>
                         <FormDescription>

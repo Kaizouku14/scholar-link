@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { PageRoutes } from "@/constants/page-routes";
 import { env } from "@/env";
 import type { ProgramHeader } from "@/interfaces/scholarship/program";
-import { calculateDaysLeft, isDeadlineApproaching } from "@/lib/utils";
+import { calculateDaysLeft, cn, isDeadlineApproaching } from "@/lib/utils";
 import { format } from "date-fns";
 import {
   ArrowLeft,
@@ -21,7 +21,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const ScholarshipHeader = ({ data }: { data: ProgramHeader }) => {
+const ProgramDetailsHeader = ({
+  data,
+  onEdit,
+  setOnEdit,
+}: {
+  data: ProgramHeader;
+  onEdit: boolean;
+  setOnEdit: (value: boolean) => void;
+}) => {
   const pathname = usePathname();
   const daysUntilDeadline = calculateDaysLeft(data.deadline);
   const isDeadlineSoon = isDeadlineApproaching(data.deadline);
@@ -29,18 +37,18 @@ const ScholarshipHeader = ({ data }: { data: ProgramHeader }) => {
   const isSlotsAvailable = data.slots > 0;
 
   return (
-    <section className="border-b bg-gradient-to-r from-gray-500/10 to-gray-500/5">
-      <div className="container px-4 py-8 md:px-12 md:py-12">
+    <section className="rounded-lg border-b bg-gradient-to-r from-gray-500/10 to-gray-500/5 text-xs">
+      <div className="container scale-95 px-3 py-6 md:py-8">
         <div className="flex flex-col gap-8 lg:flex-row lg:gap-12">
           <div className="flex-1 space-y-6">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <Link href={PageRoutes.SCHOLARSHIPS_PUBLIC}>
+              <Link href={PageRoutes.SCHOLARSHIPS_PROGRAMS}>
                 <Button
-                  variant={"link"}
-                  className="text-primary inline-flex items-center text-sm font-medium transition-colors hover:underline"
+                  variant="link"
+                  className="text-primary inline-flex cursor-pointer items-center text-sm font-medium transition-colors hover:underline"
                 >
                   <ArrowLeft className="mr-2 h-4 w-4" />
-                  Scholarships
+                  Back to Programs
                 </Button>
               </Link>
 
@@ -50,7 +58,12 @@ const ScholarshipHeader = ({ data }: { data: ProgramHeader }) => {
                 </Badge>
                 <Badge
                   variant="outline"
-                  className={`font-medium ${data.submissionType === "online" ? "border-green-200 bg-green-100 text-green-800" : "border-blue-200 bg-blue-100 text-blue-800"}`}
+                  className={cn(
+                    "font-medium",
+                    data.submissionType === "online"
+                      ? "border-green-200 bg-green-100 text-green-800"
+                      : "border-blue-200 bg-blue-100 text-blue-800",
+                  )}
                 >
                   <Globe className="mr-1 h-3 w-3" />
                   {data.submissionType}
@@ -80,10 +93,9 @@ const ScholarshipHeader = ({ data }: { data: ProgramHeader }) => {
             </div>
 
             <div className="space-y-4">
-              <h1 className="text-foreground text-2xl font-bold tracking-tight md:text-4xl lg:text-5xl">
+              <h1 className="text-foreground text-xl font-bold tracking-tight md:text-4xl lg:text-5xl">
                 {data.name}
               </h1>
-
               {data.description && (
                 <div className="flex items-start gap-3">
                   <FileText className="text-muted-foreground mt-1 h-5 w-5 flex-shrink-0" />
@@ -97,7 +109,12 @@ const ScholarshipHeader = ({ data }: { data: ProgramHeader }) => {
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <div className="bg-background/50 flex items-center gap-3 rounded-lg border p-4">
                 <div
-                  className={`rounded-full p-2 ${isDeadlineSoon || isDeadlinePassed ? "bg-red-100 text-red-600" : "bg-blue-100 text-blue-600"}`}
+                  className={cn(
+                    "rounded-full p-2",
+                    isDeadlineSoon || isDeadlinePassed
+                      ? "bg-red-100 text-red-600"
+                      : "bg-blue-100 text-blue-600",
+                  )}
                 >
                   <Calendar className="h-4 w-4" />
                 </div>
@@ -106,7 +123,12 @@ const ScholarshipHeader = ({ data }: { data: ProgramHeader }) => {
                     Application Deadline
                   </p>
                   <p
-                    className={`font-semibold ${isDeadlineSoon || isDeadlinePassed ? "text-primary" : "text-foreground"}`}
+                    className={cn(
+                      "font-semibold",
+                      isDeadlineSoon || isDeadlinePassed
+                        ? "text-primary"
+                        : "text-foreground",
+                    )}
                   >
                     {format(new Date(data.deadline), "MMM, dd yyyy")}
                   </p>
@@ -122,7 +144,12 @@ const ScholarshipHeader = ({ data }: { data: ProgramHeader }) => {
 
               <div className="bg-background/50 flex items-center gap-3 rounded-lg border p-4">
                 <div
-                  className={`rounded-full p-2 ${data.slots > 0 ? "bg-green-100 text-green-600" : "bg-gray-100 text-gray-600"}`}
+                  className={cn(
+                    "rounded-full p-2",
+                    isDeadlinePassed
+                      ? "bg-green-100 text-green-600"
+                      : "bg-gray-100 text-gray-600",
+                  )}
                 >
                   <Users className="h-4 w-4" />
                 </div>
@@ -163,10 +190,10 @@ const ScholarshipHeader = ({ data }: { data: ProgramHeader }) => {
             <div className="flex items-center gap-3 pt-2">
               <Button
                 size="lg"
-                disabled={isDeadlinePassed}
                 className="flex-1 cursor-pointer py-2.5 sm:flex-none md:py-1"
+                onClick={() => setOnEdit(!onEdit)}
               >
-                {isDeadlinePassed ? "Application Closed" : "Apply Now"}
+                {onEdit ? "Save Program" : "Edit Program Overview"}
               </Button>
               <ShareButton
                 url={`${env.NEXT_PUBLIC_BETTER_AUTH_URL}${pathname}`}
@@ -176,7 +203,6 @@ const ScholarshipHeader = ({ data }: { data: ProgramHeader }) => {
 
           <div className="flex-shrink-0 lg:w-80">
             <div className="bg-background relative hidden overflow-hidden rounded-xl border shadow-lg lg:block">
-              {/* {TODO: Replace this with actual image placeholder} */}
               <Image
                 src={data.imageUrl ?? "/placeholder.svg?height=320&width=400"}
                 alt={`${data.name} scholarship program`}
@@ -193,4 +219,4 @@ const ScholarshipHeader = ({ data }: { data: ProgramHeader }) => {
   );
 };
 
-export default ScholarshipHeader;
+export default ProgramDetailsHeader;
