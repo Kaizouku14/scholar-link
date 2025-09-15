@@ -1,4 +1,4 @@
-import type { submissionType } from "./submittion-type";
+import type { submissionType } from "../../constants/scholarship/submittion-type";
 
 export interface FeaturedCardProps {
   programId: string;

@@ -1,3 +1,4 @@
+import { ELIGIBILITY_TYPE } from "@/constants/scholarship/eligiblity-type";
 import { SCHOLARSHIP_TYPES } from "@/constants/scholarship/scholarship-types";
 import { SUBMISSION_TYPE } from "@/constants/scholarship/submittion-type";
 import z from "zod";
@@ -5,6 +6,7 @@ import z from "zod";
 export const scholarshipFormSchema = z.object({
   name: z.string().min(1, "Program name is required"),
   type: z.enum(SCHOLARSHIP_TYPES),
+  eligibilityType: z.enum(ELIGIBILITY_TYPE),
   description: z.string().min(1, "Program description is required"),
   section: z.string().min(1, "Section is required"),
   slots: z.coerce
@@ -19,6 +21,7 @@ export const scholarshipFormSchema = z.object({
   deadline: z.date({
     required_error: "Deadline is required",
   }),
+
   requirements: z
     .array(
       z.object({

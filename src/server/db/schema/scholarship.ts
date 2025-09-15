@@ -5,6 +5,7 @@ import { SUBMISSION_TYPE } from "@/constants/scholarship/submittion-type";
 import { SCHOLARSHIP_TYPES } from "@/constants/scholarship/scholarship-types";
 import { SCHOLARSHIP_STATUS } from "@/constants/users/status";
 import { sql } from "drizzle-orm";
+import { ELIGIBILITY_TYPE } from "@/constants/scholarship/eligiblity-type";
 
 export const scholarshipProgram = createTable("programs", {
   programId: text("program_id").primaryKey(),
@@ -18,7 +19,12 @@ export const scholarshipProgram = createTable("programs", {
     .notNull(),
   imageUrl: text("image_url"),
   imageKey: text("image_key"),
-  isActive: integer("is_active", { mode: "boolean" }).notNull().default(false),
+  isActive: integer("is_active", { mode: "boolean" }).notNull().default(false), //To Remove
+  eligibilityType: text("eligibility_type", {
+    enum: ELIGIBILITY_TYPE,
+  })
+    .notNull()
+    .default("document-only"),
   deadline: integer("deadline", { mode: "timestamp" }).notNull(),
   announcements: text("announcements"),
 });

@@ -45,6 +45,8 @@ import SubmitButton from "@/components/forms/submit-button";
 import { uploadFile } from "@/lib/uploadthing";
 import { Textarea } from "@/components/ui/textarea";
 import ScholarshipEditor from "./titap/editor";
+import { ELIGIBILITY_TYPE } from "@/constants/scholarship/eligiblity-type";
+import { formatText } from "@/lib/utils";
 
 const ProgramForm = () => {
   const form = useForm<ScholarshipFormData>({
@@ -52,6 +54,7 @@ const ProgramForm = () => {
     defaultValues: {
       name: "",
       type: "Government",
+      eligibilityType: "document-only",
       description: "",
       section:
         "🎓 Welcome to ScholarLink! Start typing your scholarship details here. Use the toolbar to format text, add links, or highlight key info.",
@@ -111,110 +114,144 @@ const ProgramForm = () => {
               </TabsList>
 
               <TabsContent value="program">
-                <CardContent className="mt-4 grid grid-cols-1 gap-6 md:grid-cols-2">
-                  <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Program Name *</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="e.g. CHED Tulong Dunong"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormDescription>
-                          Enter the official title of the scholarship program.
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="type"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Program Type *</FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                        >
+                <CardContent className="mt-4 space-y-8">
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                    <FormField
+                      control={form.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Program Name *</FormLabel>
                           <FormControl>
-                            <SelectTrigger className="w-full">
-                              <SelectValue placeholder="Select type" />
-                            </SelectTrigger>
+                            <Input
+                              placeholder="e.g. CHED Tulong Dunong"
+                              {...field}
+                            />
                           </FormControl>
-                          <SelectContent>
-                            {SCHOLARSHIP_TYPES.map((type) => (
-                              <SelectItem key={type} value={type}>
-                                {type}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FormDescription>
-                          Choose the type of scholarship
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                          <FormDescription>
+                            Enter the official title of the scholarship program.
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-                  <FormField
-                    control={form.control}
-                    name="slots"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Available Slots *</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="number"
-                            placeholder="e.g. 50"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormDescription>
-                          Specify the number of students who can avail of this
-                          scholarship.
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                    <FormField
+                      control={form.control}
+                      name="type"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Program Type *</FormLabel>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Select type" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {SCHOLARSHIP_TYPES.map((type) => (
+                                <SelectItem key={type} value={type}>
+                                  {type}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormDescription>
+                            Choose the type of scholarship
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
 
-                  <FormField
-                    control={form.control}
-                    name="submissionType"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Submission Type *</FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                        >
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                    <FormField
+                      control={form.control}
+                      name="slots"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Available Slots *</FormLabel>
                           <FormControl>
-                            <SelectTrigger className="w-full">
-                              <SelectValue placeholder="Select submission type" />
-                            </SelectTrigger>
+                            <Input
+                              type="number"
+                              placeholder="e.g. 50"
+                              {...field}
+                            />
                           </FormControl>
-                          <SelectContent>
-                            {SUBMISSION_TYPE.map((type) => (
-                              <SelectItem key={type} value={type}>
-                                {type}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FormDescription>
-                          Define how students should submit their applications
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                          <FormDescription>
+                            Specify the number of students who can avail of this
+                            scholarship.
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="submissionType"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Submission Type *</FormLabel>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Select submission type" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {SUBMISSION_TYPE.map((type) => (
+                                <SelectItem key={type} value={type}>
+                                  {formatText(type)}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormDescription>
+                            Define how students should submit their applications
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="eligibilityType"
+                      render={({ field }) => (
+                        <FormItem className="mb-5">
+                          <FormLabel>Eligibility Type *</FormLabel>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Select eligibility type" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {ELIGIBILITY_TYPE.map((type) => (
+                                <SelectItem key={type} value={type}>
+                                  {formatText(type)}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormDescription>
+                            Define the application process
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
 
                   <FormField
                     control={form.control}
@@ -237,77 +274,82 @@ const ProgramForm = () => {
                     )}
                   />
 
-                  <FormField
-                    control={form.control}
-                    name="deadline"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Deadline *</FormLabel>
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <FormControl>
-                              <Button
-                                variant="outline"
-                                className={`w-full pl-3 text-left font-normal ${
-                                  !field.value ? "text-muted-foreground" : ""
-                                }`}
-                              >
-                                {field.value ? (
-                                  format(field.value, "PPP")
-                                ) : (
-                                  <span>Pick a date</span>
-                                )}
-                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                              </Button>
-                            </FormControl>
-                          </PopoverTrigger>
-                          <PopoverContent
-                            className="z-100 w-auto p-0"
-                            align="start"
-                          >
-                            <Calendar
-                              mode="single"
-                              selected={field.value}
-                              onSelect={field.onChange}
-                              disabled={(date) => date < new Date("2023-01-01")}
-                              captionLayout="dropdown"
-                            />
-                          </PopoverContent>
-                        </Popover>
-                        <FormDescription>
-                          Set the last date when applications will be accepted.
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                    <FormField
+                      control={form.control}
+                      name="deadline"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Deadline *</FormLabel>
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <FormControl>
+                                <Button
+                                  variant="outline"
+                                  className={`w-full pl-3 text-left font-normal ${
+                                    !field.value ? "text-muted-foreground" : ""
+                                  }`}
+                                >
+                                  {field.value ? (
+                                    format(field.value, "PPP")
+                                  ) : (
+                                    <span>Pick a date</span>
+                                  )}
+                                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                </Button>
+                              </FormControl>
+                            </PopoverTrigger>
+                            <PopoverContent
+                              className="z-100 w-auto p-0"
+                              align="start"
+                            >
+                              <Calendar
+                                mode="single"
+                                selected={field.value}
+                                onSelect={field.onChange}
+                                disabled={(date) =>
+                                  date < new Date("2023-01-01")
+                                }
+                                captionLayout="dropdown"
+                              />
+                            </PopoverContent>
+                          </Popover>
+                          <FormDescription>
+                            Set the last date when applications will be
+                            accepted.
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-                  <FormField
-                    control={form.control}
-                    name="image"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Program Image (Optional)</FormLabel>
-                        <FormControl>
-                          <div className="flex items-center gap-3">
-                            <Input
-                              type="file"
-                              accept="image/*"
-                              onChange={(e) => {
-                                const file = e.target.files?.[0]; // get first file
-                                field.onChange(file); // pass File object to RHF
-                              }}
-                            />
-                            <Upload className="text-muted-foreground h-5 w-5" />
-                          </div>
-                        </FormControl>
-                        <FormDescription>
-                          Upload an image banner or logo for the program.
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                    <FormField
+                      control={form.control}
+                      name="image"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Program Image (Optional)</FormLabel>
+                          <FormControl>
+                            <div className="flex items-center gap-3">
+                              <Input
+                                type="file"
+                                accept="image/*"
+                                onChange={(e) => {
+                                  const file = e.target.files?.[0]; // get first file
+                                  field.onChange(file); // pass File object to RHF
+                                }}
+                              />
+                              <Upload className="text-muted-foreground h-5 w-5" />
+                            </div>
+                          </FormControl>
+                          <FormDescription>
+                            Upload an image banner or logo for the program.
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                 </CardContent>
               </TabsContent>
 

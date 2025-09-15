@@ -22,7 +22,7 @@ import { ShareButton } from "../../dropdown/share-button";
 import { slugify } from "@/lib/utils";
 import { format } from "date-fns";
 import { env } from "@/env";
-import type { FeaturedCardProps } from "@/constants/scholarship/featured";
+import type { FeaturedCardProps } from "@/interfaces/scholarship/featured";
 import { isDeadlinePassed, cn } from "@/lib/utils";
 
 const FeaturedCard = ({ data }: { data: FeaturedCardProps }) => {

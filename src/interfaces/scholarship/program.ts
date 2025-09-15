@@ -1,3 +1,4 @@
+import type { eligibilityType } from "@/constants/scholarship/eligiblity-type";
 import type { ScholarshipType } from "@/constants/scholarship/scholarship-types";
 import type { submissionType } from "@/constants/scholarship/submittion-type";
 
@@ -13,6 +14,7 @@ export interface ProgramHeader {
 
 export interface ScholarshipPrograms extends ProgramHeader {
   imageKey?: string | null;
+  eligibilityType: eligibilityType;
   section: string;
   requirements?: {
     label: string;

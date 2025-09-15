@@ -28,6 +28,7 @@ export const createScholarshipProgram = async ({
       section: data.section,
       slots: data.slots,
       type: data.type,
+      eligibilityType: data.eligibilityType,
       submissionType: data.submissionType,
       imageUrl: data.imageUrl,
       imageKey: data.imageKey,
