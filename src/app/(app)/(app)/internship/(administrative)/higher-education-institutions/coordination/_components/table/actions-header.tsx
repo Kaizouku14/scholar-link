@@ -23,29 +23,36 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import type { CoordinatorSectionData } from "@/interfaces/internship/hei";
 
-interface DataTableRowActionsProps<TData> {
-  table: Table<TData>;
+interface DataTableRowActionsProps {
+  table: Table<CoordinatorSectionData>;
 }
 
-export function ActionDialog<TData>({
-  table,
-}: DataTableRowActionsProps<TData>) {
+export function ActionsHeader({ table }: DataTableRowActionsProps) {
   const selectedItem = table
     .getSelectedRowModel()
-    .rows.map((row) => row.original as { internshipId: string });
+    .rows.map((row) => row.original.internshipId);
   const { mutateAsync: cancelInternship, isPending: isCancelPending } =
     api.internshipCoordinator.cancelStudentInternship.useMutation();
   const { mutateAsync: deleteInternship, isPending: isDeletePending } =
     api.internshipCoordinator.deleteStudentInternship.useMutation();
+  const { refetch } = api.internshipCoordinator.getAllInternships.useQuery(
+    undefined,
+    {
+      enabled: false,
+    },
+  );
 
-  const ids = selectedItem.map((i) => i.internshipId);
   const handleCancelMutation = async () => {
     const toastId = toast.loading("Canceling all selected internship...");
     try {
-      await cancelInternship({ internshipId: ids });
-      toast.success("Internships canceled successfully!");
-      (table.options.meta as { refetch: () => void }).refetch();
+      await cancelInternship({ internshipId: selectedItem });
+      toast.success("Internships canceled successfully!", {
+        id: toastId,
+        duration: 5000,
+      });
+      await refetch();
     } catch (error) {
       toast.error((error as Error).message);
     } finally {
@@ -56,9 +63,12 @@ export function ActionDialog<TData>({
   const handleDeleteMutation = async () => {
     const toastId = toast.loading("Deleting all selected internship...");
     try {
-      await deleteInternship({ internshipId: ids });
-      toast.success("Internships deleted successfully!");
-      (table.options.meta as { refetch: () => void }).refetch();
+      await deleteInternship({ internshipId: selectedItem });
+      toast.success("Internships deleted successfully!", {
+        id: toastId,
+        duration: 5000,
+      });
+      await refetch();
     } catch (error) {
       toast.error((error as Error).message);
     } finally {
@@ -71,10 +81,15 @@ export function ActionDialog<TData>({
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
-          className="data-[state=open]:bg-muted ml-4 flex h-8 w-8 p-0"
+          className="data-[state=open]:bg-muted relative flex h-8 w-8 p-0"
+          disabled={selectedItem.length === 0}
         >
           <MoreHorizontal />
-          <span className="sr-only">Open menu</span>
+          {selectedItem.length > 0 && (
+            <span className="bg-primary absolute top-1 -right-1 size-auto h-4 w-4 rounded-full text-xs text-white">
+              {selectedItem.length}
+            </span>
+          )}
         </Button>
       </DropdownMenuTrigger>
 

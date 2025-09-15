@@ -10,6 +10,7 @@ import { DataTableColumnHeader } from "@/components/table/table-column-header";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DataTableRowActions } from "./data-row-actions";
+import { ActionsHeader } from "./actions-header";
 
 export const CoordinatorInternsColumns: ColumnDef<CoordinatorSectionData>[] = [
   {
@@ -181,7 +182,8 @@ export const CoordinatorInternsColumns: ColumnDef<CoordinatorSectionData>[] = [
   },
   {
     accessorKey: "actions",
-    header: "Actions",
+    header: ({ table }) => <ActionsHeader table={table} />,
+
     cell: ({ row, table }) => {
       const selected = table.getSelectedRowModel().rows.length > 0;
       return <DataTableRowActions row={row} disabled={selected} />;

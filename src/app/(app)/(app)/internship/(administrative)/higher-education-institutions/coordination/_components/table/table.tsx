@@ -32,7 +32,6 @@ const InternshipTable = () => {
             data={data}
             filteredTitle={"name"}
             onImport={handleImport}
-            refetch={refetch}
             filters={[
               {
                 column: "status",

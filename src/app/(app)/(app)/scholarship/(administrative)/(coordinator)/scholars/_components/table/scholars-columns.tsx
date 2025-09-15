@@ -13,7 +13,7 @@ import {
 } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import React from "react";
-import { IdCard, Phone } from "lucide-react";
+import { Ellipsis, IdCard, Phone } from "lucide-react";
 import type { ProgramScholars } from "@/interfaces/scholarship/scholars";
 import { DataTableRowActions } from "./table-row-actions";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -151,7 +151,16 @@ export const ScholarsColumns: ColumnDef<ProgramScholars>[] = [
   },
   {
     accessorKey: "actions",
-    header: ({ table }) => <ActionsHeader table={table} title="Actions" />,
+    header: ({ table }) => {
+      const selectedRows = table.getSelectedRowModel().rows;
+
+      return (
+        <div className="flex items-center justify-between">
+          <div>Actions</div>
+          <ActionsHeader table={table} />
+        </div>
+      );
+    },
     cell: ({ row }) => <DataTableRowActions row={row} />,
   },
 ];

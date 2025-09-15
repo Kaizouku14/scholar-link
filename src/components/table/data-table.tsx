@@ -26,7 +26,6 @@ import {
 import { useState } from "react";
 import { DataTableToolbar } from "./table-toolbar";
 import { DataTablePagination } from "./table-pagination";
-import { ActionDialog } from "../dropdown/actions-dialog";
 import { cn } from "@/lib/utils";
 
 interface DataTableProps<TData, TValue> {
@@ -53,7 +52,6 @@ export function DataTable<TData, TValue>({
   filteredTitle,
   columnVisibility,
   filters,
-  refetch,
   onImport,
   onExport,
   viewOptions = true,
@@ -88,9 +86,6 @@ export function DataTable<TData, TValue>({
       rowSelection,
       columnFilters,
       columnVisibility: columnVisibilityState,
-    },
-    meta: {
-      refetch,
     },
   });
 
@@ -133,7 +128,6 @@ export function DataTable<TData, TValue>({
                                   header.getContext(),
                                 )}
                           </span>
-                          <ActionDialog table={table} />
                         </div>
                       ) : header.isPlaceholder ? null : (
                         <span className="text-sm font-semibold">
