@@ -4,12 +4,12 @@ import { api } from "@/trpc/react";
 import ScholarshipProgramNotFound from "./not-found";
 import HeaderSkeleton from "./skeleton/header-skeleton";
 import SectionSkeleton from "./skeleton/section-skeleton";
-import ScholarshipDetails from "./tabs/scholarship-details";
 import ScholarshipHeader from "./scholarship-header";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState, useRef } from "react";
 import { ApplicationForm } from "./form/flexible-form";
 import { isDeadlinePassed } from "@/lib/utils";
+import RenderContent from "@/components/titap/render-content";
 
 const ProgramSection = ({ id }: { id: string }) => {
   const [tab, setTab] = useState("program-overview");
@@ -54,13 +54,20 @@ const ProgramSection = ({ id }: { id: string }) => {
                   data.requirements.length > 0 && (
                     <TabsTrigger value="application">Application</TabsTrigger>
                   )}
+
+                {data.program.announcements &&
+                  data.program.announcements.length > 0 && (
+                    <TabsTrigger value="announcement">
+                      Announcements
+                    </TabsTrigger>
+                  )}
               </TabsList>
             )}
 
             <TabsContent value="program-overview">
               <div className="flex flex-col space-y-6 max-md:items-center md:flex-row md:justify-evenly md:space-y-0 md:space-x-6">
                 <div className="flex flex-1 flex-col gap-4 px-6">
-                  <ScholarshipDetails content={data.program.section} />
+                  <RenderContent content={data.program.section} />
                 </div>
 
                 <div className="border-border bg-background h-fit w-full max-w-md flex-shrink-0 rounded-xl border p-6">
@@ -105,6 +112,13 @@ const ProgramSection = ({ id }: { id: string }) => {
                       />
                     </div>
                   </div>
+                </TabsContent>
+              )}
+
+            {data.program.announcements &&
+              data.program.announcements.length > 0 && (
+                <TabsContent value="announcement">
+                  <RenderContent content={data.program.announcements} />
                 </TabsContent>
               )}
           </Tabs>

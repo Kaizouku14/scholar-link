@@ -20,12 +20,6 @@ import {
   MinusIcon,
   Palette,
   Ban,
-  Columns,
-  Merge,
-  Minus,
-  Rows,
-  Split,
-  TableIcon,
 } from "lucide-react";
 import { ToggleGroup } from "@/components/ui/toggle-group";
 import { Separator } from "@/components/ui/separator";
@@ -242,69 +236,6 @@ export default function TipTapEditor({ value, onChange, className }: Editor) {
     },
   ];
 
-  const tableActions = [
-    {
-      value: "insertTable",
-      icon: TableIcon,
-      label: "Insert Table",
-      command: () =>
-        editor
-          .chain()
-          .focus()
-          .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
-          .run(),
-    },
-    {
-      value: "addRow",
-      icon: Rows,
-      label: "Add Row",
-      command: () => editor.chain().focus().addRowAfter().run(),
-      isActive: () => false,
-    },
-    {
-      value: "removeRow",
-      icon: Minus,
-      label: "Remove Row",
-      command: () => editor.chain().focus().deleteRow().run(),
-      isActive: () => false,
-    },
-    {
-      value: "addColumn",
-      icon: Columns,
-      label: "Add Column",
-      command: () => editor.chain().focus().addColumnAfter().run(),
-      isActive: () => false,
-    },
-    {
-      value: "removeColumn",
-      icon: Minus,
-      label: "Remove Column",
-      command: () => editor.chain().focus().deleteColumn().run(),
-      isActive: () => false,
-    },
-    {
-      value: "mergeCells",
-      icon: Merge,
-      label: "Merge Cells",
-      command: () => editor.chain().focus().mergeCells().run(),
-      isActive: () => editor.isActive("tableCell", { colspan: 2 }) || false,
-    },
-    {
-      value: "splitCell",
-      icon: Split,
-      label: "Split Cell",
-      command: () => editor.chain().focus().splitCell().run(),
-      isActive: () => false,
-    },
-    {
-      value: "deleteTable",
-      icon: Minus,
-      label: "Delete Table",
-      command: () => editor.chain().focus().deleteTable().run(),
-      isActive: () => editor.isActive("table"),
-    },
-  ];
-
   return (
     <div className="w-full space-y-4">
       <div className="bg-muted/20 flex flex-wrap gap-2 rounded-lg border p-3">
@@ -331,12 +262,6 @@ export default function TipTapEditor({ value, onChange, className }: Editor) {
 
         <ToggleGroup type="single" variant="outline">
           {alignActions.map((action) => (
-            <ToolbarButton key={action.value} {...action} />
-          ))}
-        </ToggleGroup>
-
-        <ToggleGroup type="single" variant="outline">
-          {tableActions.map((action) => (
             <ToolbarButton key={action.value} {...action} />
           ))}
         </ToggleGroup>

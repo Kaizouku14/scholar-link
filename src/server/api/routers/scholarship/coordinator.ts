@@ -4,6 +4,7 @@ import { SCHOLARSHIP_TYPES } from "@/constants/scholarship/scholarship-types";
 import { SUBMISSION_TYPE } from "@/constants/scholarship/submittion-type";
 import {
   createScholarshipProgram,
+  PostProgramAnnouncements,
   updateProgramStatus,
 } from "@/lib/api/scholarship/coordinator/program/mutation";
 import { cacheData } from "@/lib/redis";
@@ -79,6 +80,16 @@ export const scholarshipCoordinatorRouter = createTRPCRouter({
     )
     .mutation(async ({ input }) => {
       return await updateProgramStatus(input);
+    }),
+  postAnnouncements: adminRoute
+    .input(
+      z.object({
+        programId: z.string(),
+        announcements: z.string(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      await PostProgramAnnouncements(input);
     }),
 
   //Applications

@@ -82,6 +82,7 @@ export const updateProgramStatus = async ({
           submissionType,
           slots,
           isActive: true,
+          announcements: "",
         })
         .where(eq(ProgramTable.programId, programId));
 
@@ -124,6 +125,29 @@ export const updateProgramStatus = async ({
       message:
         "Failed to update scholarship program availability," +
         (error as Error).message,
+    });
+  }
+};
+
+export const PostProgramAnnouncements = async ({
+  programId,
+  announcements,
+}: {
+  programId: string;
+  announcements: string;
+}) => {
+  try {
+    await db
+      .update(ProgramTable)
+      .set({
+        announcements,
+      })
+      .where(eq(ProgramTable.programId, programId))
+      .execute();
+  } catch (error) {
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "Failed to post program announcement" + (error as Error).message,
     });
   }
 };

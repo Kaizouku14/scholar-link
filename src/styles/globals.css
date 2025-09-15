@@ -249,30 +249,4 @@ html {
   .ProseMirror ol ul {
     @apply mt-1 mb-1;
   }
-
-  .ProseMirror table {
-    @apply my-4 w-full border-collapse overflow-hidden rounded-md;
-  }
-
-  .ProseMirror table th,
-  .ProseMirror table td {
-    @apply border-muted-foreground/30 border px-3 py-2 text-left align-middle;
-  }
-
-  .ProseMirror table th {
-    @apply bg-muted text-foreground font-semibold;
-  }
-
-  .ProseMirror table tr:nth-child(even) td {
-    @apply bg-muted/20;
-  }
-
-  .ProseMirror table tr:hover td {
-    @apply bg-muted/40;
-  }
-
-  /* Selected cell (when editing/merging) */
-  .ProseMirror .selectedCell {
-    @apply bg-primary/20;
-  }
 }
