@@ -133,7 +133,7 @@ const ProgramCard = ({
         <div className="w-full border-t">
           <div className="grid w-full grid-cols-1 gap-2 sm:grid-cols-2">
             <Link
-              href={`${PageRoutes.SCHOLARSHIPS_PROGRAMS_DETAILS}/${data.programId}}`} //to change
+              href={`${PageRoutes.SCHOLARSHIPS_PROGRAMS_DETAILS}/${data.programId}`} //to change
               className="flex-1"
             >
               <Button size="lg" className="w-full cursor-pointer">
