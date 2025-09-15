@@ -19,14 +19,22 @@ import { useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { api } from "@/trpc/react";
 import toast from "react-hot-toast";
+import { getNextApplicationStep } from "@/lib/utils";
 
 interface ViewDocumentProps {
   row: Row<Applications>;
 }
 
 export function ViewDocuments({ row }: ViewDocumentProps) {
-  const { documents, name, programName, email, applicationId, status } =
-    row.original;
+  const {
+    documents,
+    name,
+    programName,
+    email,
+    applicationId,
+    status,
+    eligibilityType,
+  } = row.original;
   const [open, setOpen] = useState<boolean>(false);
   const [reviewedDocuments, setReviewedDocuments] = useState<Set<string>>(
     () =>
@@ -40,6 +48,10 @@ export function ViewDocuments({ row }: ViewDocumentProps) {
     api.scholarshipCoordinator.getAllScholarsApplications.useQuery(undefined, {
       enabled: false,
     });
+  const { nextStatus, actionLabel, toastMessage } = getNextApplicationStep({
+    status,
+    eligibilityType,
+  });
 
   const toggleDocumentReview = async (documentId: string) => {
     const isNowReviewed = !reviewedDocuments.has(documentId);
@@ -77,44 +89,34 @@ export function ViewDocuments({ row }: ViewDocumentProps) {
     event: React.FormEvent<HTMLFormElement>,
   ) => {
     event.preventDefault();
+
+    if (!allDocumentsReviewed) {
+      toast.error("All documents must be reviewed before proceeding!");
+      return;
+    }
+
     const toastId = toast.loading(
-      status === "qualified"
+      nextStatus === "active"
         ? "Marking as active..."
         : "Marking as qualified...",
     );
-    try {
-      let message = "";
-      if (allDocumentsReviewed) {
-        if (status === "qualified") {
-          await markAsQualifiedOrApproved({
-            applicationId,
-            name,
-            programName,
-            email,
-            status: "active",
-            subject: `Congratulations! You’ve Been Accepted for ${programName}`,
-          });
-          message = "Application Successfully Accepted!";
-        } else {
-          await markAsQualifiedOrApproved({
-            applicationId,
-            name,
-            programName,
-            email,
-            status: "qualified",
-            subject: `Congratulations! You’re Qualified for ${programName}`,
-          });
-          message = "Application Successfully Qualified!";
-        }
 
-        await refetch();
-        setOpen(false);
-        toast.success(message, { id: toastId, duration: 5000 });
-      } else {
-        toast.error(
-          "All documents must be reviewed before marking as qualified!",
-        );
-      }
+    try {
+      await markAsQualifiedOrApproved({
+        applicationId,
+        name,
+        programName,
+        email,
+        status: nextStatus,
+        subject:
+          nextStatus === "active"
+            ? `Congratulations! You’ve Been Accepted for ${programName}`
+            : `Congratulations! You’re Qualified for ${programName}`,
+      });
+
+      await refetch();
+      setOpen(false);
+      toast.success(toastMessage);
     } catch (error) {
       toast.error((error as Error).message);
     } finally {
@@ -208,10 +210,8 @@ export function ViewDocuments({ row }: ViewDocumentProps) {
                 >
                   {isPending ? (
                     <LoaderCircle className="text-primary-foreground h-6 w-6 animate-spin" />
-                  ) : status === "qualified" ? (
-                    "Approve Application"
                   ) : (
-                    "Mark As Qualified"
+                    actionLabel
                   )}
                 </Button>
               </div>

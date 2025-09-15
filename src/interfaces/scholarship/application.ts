@@ -5,6 +5,7 @@ import type { SectionType } from "@/constants/users/sections";
 import type { YearLevelType } from "@/constants/users/year-level";
 import type { ScholarDocument } from "./documents";
 import type { scholarshipStatusType } from "@/constants/users/status";
+import type { eligibilityType } from "@/constants/scholarship/eligiblity-type";
 
 interface BaseApplication {
   name: string;
@@ -34,6 +35,7 @@ export interface NewApplication extends BaseApplication {
 
 export interface Applications extends BaseApplication {
   programName: string;
+  eligibilityType: eligibilityType;
   applicationId: string;
   appliedAt: Date;
   status: scholarshipStatusType;

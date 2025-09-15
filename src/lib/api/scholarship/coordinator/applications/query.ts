@@ -23,6 +23,7 @@ export const getCoordProgramApplications = async ({
     const applicants = await db
       .selectDistinct({
         programName: ProgramTable.name,
+        eligibilityType: ProgramTable.eligibilityType,
         //Application
         applicationId: ApplicationsTable.applicationsId,
         appliedAt: ApplicationsTable.appliedAt,

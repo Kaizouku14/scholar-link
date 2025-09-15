@@ -10,6 +10,8 @@ import {
 } from "lucide-react";
 import type { departmentType } from "@/constants/users/departments";
 import { departmentHoursMap } from "@/constants/internship/hours";
+import type { scholarshipStatusType } from "@/constants/users/status";
+import type { eligibilityType } from "@/constants/scholarship/eligiblity-type";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -267,4 +269,33 @@ export const getAllYears = ({ data }: { data: { appliedAt: Date }[] }) => {
     }));
 
   return years;
+};
+
+export const getNextApplicationStep = ({
+  status,
+  eligibilityType,
+}: {
+  status: scholarshipStatusType;
+  eligibilityType: eligibilityType;
+}): {
+  nextStatus: scholarshipStatusType;
+  actionLabel: string;
+  toastMessage: string;
+} => {
+  const isSpecial =
+    status === "qualified" ||
+    status === "renewal" ||
+    eligibilityType === "document-only";
+
+  return isSpecial
+    ? {
+        nextStatus: "active",
+        actionLabel: "Approve Application",
+        toastMessage: "Application Successfully Accepted!",
+      }
+    : {
+        nextStatus: "qualified",
+        actionLabel: "Mark As Qualified",
+        toastMessage: "Application Successfully Qualified!",
+      };
 };
