@@ -22,7 +22,10 @@ import { AcceptanceApplicationTemplate } from "@/services/email-templates/accept
 import { QualifiedApplicationTemplate } from "@/services/email-templates/qualifiedTemplate";
 import { RejectApplicationTemplate } from "@/services/email-templates/rejectApplicationTemplate";
 import { getScholarsByProgram } from "@/lib/api/scholarship/coordinator/scholars/query";
-import { updateActiveApplication } from "@/lib/api/scholarship/coordinator/scholars/mutation";
+import {
+  bulkDeactivation,
+  updateActiveApplication,
+} from "@/lib/api/scholarship/coordinator/scholars/mutation";
 import { ELIGIBILITY_TYPE } from "@/constants/scholarship/eligiblity-type";
 
 export const scholarshipCoordinatorRouter = createTRPCRouter({
@@ -122,7 +125,16 @@ export const scholarshipCoordinatorRouter = createTRPCRouter({
     .mutation(async ({ input }) => {
       await updateActiveApplication(input);
     }),
-
+  bulkAccountDeactivation: adminRoute
+    .input(
+      z.object({
+        applicationIds: z.array(z.string()),
+        emails: z.array(z.string()),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      await bulkDeactivation(input);
+    }),
   //Queries
   fetchAllProgram: adminRoute.query(({ ctx }) => {
     const userId = ctx.session!.user.id;

@@ -7,7 +7,7 @@ const ScholarsPageHeader = () => {
             Manage Scholars
           </h1>
           <p className="text-center text-sm font-medium text-white/90 md:text-start md:text-base">
-            Manage your scholarss efficiently.
+            View and manage your scholars with ease.
           </p>
         </div>
       </div>

@@ -29,7 +29,13 @@ import { cn } from "@/lib/utils";
 import { api } from "@/trpc/react";
 import toast from "react-hot-toast";
 
-export function DataTableRowActions({ row }: { row: Row<ProgramScholars> }) {
+export function DataTableRowActions({
+  row,
+  selectedRows,
+}: {
+  row: Row<ProgramScholars>;
+  selectedRows: number;
+}) {
   const { documents, status, email, applicationId } = row.original;
   const activate = status === "active";
   const renewal = status === "for-renewal";
@@ -77,7 +83,11 @@ export function DataTableRowActions({ row }: { row: Row<ProgramScholars> }) {
     <div className="flex items-center gap-2">
       <Dialog>
         <DialogTrigger asChild>
-          <Button variant="outline" className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            className="flex items-center gap-2"
+            disabled={selectedRows > 0}
+          >
             <Eye className="h-4 w-4" />
             <span className="text-sm">View</span>
           </Button>
@@ -217,7 +227,7 @@ export function DataTableRowActions({ row }: { row: Row<ProgramScholars> }) {
           !activate || (renewal && "bg-green-700 hover:bg-green-600"),
         )}
         onClick={handleActions}
-        disabled={isPending}
+        disabled={isPending || selectedRows > 0}
       >
         {activate || renewal ? (
           <>
