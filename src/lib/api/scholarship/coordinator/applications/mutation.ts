@@ -52,15 +52,15 @@ export const updateApplicationStatus = async ({
 
 export const markDocumentAsReviewed = async ({
   documentId,
-  reviewStatus,
+  reviewed,
 }: {
   documentId: string;
-  reviewStatus: boolean;
+  reviewed: boolean;
 }) => {
   try {
     await db
       .update(ScholarsDocumentTable)
-      .set({ reviewStatus })
+      .set({ reviewed })
       .where(eq(ScholarsDocumentTable.id, documentId))
       .execute();
   } catch (error) {

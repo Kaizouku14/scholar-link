@@ -2,6 +2,6 @@ export interface ScholarDocument {
   id: string;
   label: string;
   url: string | null;
-  reviewStatus: boolean;
+  reviewed: boolean;
   submittedAt: Date;
 }

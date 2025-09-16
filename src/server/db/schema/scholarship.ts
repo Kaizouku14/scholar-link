@@ -92,9 +92,7 @@ export const scholarsDocuments = createTable(
     documentUrl: text("document_url"),
     documentKey: text("document_key"),
     documentName: text("document_name"),
-    reviewStatus: integer("review_status", { mode: "boolean" })
-      .notNull()
-      .default(false),
+    reviewed: integer("reviewed", { mode: "boolean" }).notNull().default(false),
     createdAt: integer("created_at", { mode: "timestamp" }).default(
       sql`(unixepoch())`,
     ),

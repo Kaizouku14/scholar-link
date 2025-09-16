@@ -23,6 +23,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import type { ProgramScholars } from "@/interfaces/scholarship/scholars";
+import { useState } from "react";
 
 interface DataTableRowActionsProps {
   table: Table<ProgramScholars>;
@@ -33,6 +34,7 @@ export function ActionsHeader({ table }: DataTableRowActionsProps) {
     applicationId: row.original.applicationId,
     email: row.original.email,
   }));
+  const [open, setOpen] = useState(false);
 
   const { mutateAsync: bulkDeactivation, isPending } =
     api.scholarshipCoordinator.bulkAccountDeactivation.useMutation();
@@ -49,6 +51,7 @@ export function ActionsHeader({ table }: DataTableRowActionsProps) {
       });
 
       await refetch();
+      setOpen(false);
       toast.success("All account deactivated successfully!", {
         duration: 5000,
       });
@@ -75,7 +78,7 @@ export function ActionsHeader({ table }: DataTableRowActionsProps) {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent align="end" className="w-fit">
-        <AlertDialog>
+        <AlertDialog open={open} onOpenChange={setOpen}>
           <AlertDialogTrigger asChild>
             <DropdownMenuItem
               className="flex"

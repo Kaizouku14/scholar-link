@@ -47,7 +47,7 @@ export const getCoordProgramApplications = async ({
                 'id', ${ScholarsDocumentTable.id},
                 'label', ${ScholarsDocumentTable.documentName},
                 'url', ${ScholarsDocumentTable.documentUrl},
-                'reviewStatus', ${ScholarsDocumentTable.reviewStatus},
+                'reviewed', ${ScholarsDocumentTable.reviewed},
                 'submittedAt', ${ScholarsDocumentTable.submittedAt}
               )
             )

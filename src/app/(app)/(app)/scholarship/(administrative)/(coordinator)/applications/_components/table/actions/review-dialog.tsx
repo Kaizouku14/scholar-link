@@ -37,8 +37,7 @@ export function ViewDocuments({ row }: ViewDocumentProps) {
   } = row.original;
   const [open, setOpen] = useState<boolean>(false);
   const [reviewedDocuments, setReviewedDocuments] = useState<Set<string>>(
-    () =>
-      new Set(documents.filter((doc) => doc.reviewStatus).map((doc) => doc.id)),
+    () => new Set(documents.filter((doc) => doc.reviewed).map((doc) => doc.id)),
   );
   const { mutateAsync: markAsReview } =
     api.scholarshipCoordinator.markAsReiviewed.useMutation();
@@ -68,7 +67,7 @@ export function ViewDocuments({ row }: ViewDocumentProps) {
     });
 
     try {
-      await markAsReview({ documentId, reviewStatus: isNowReviewed });
+      await markAsReview({ documentId, reviewed: isNowReviewed });
     } catch {
       // rollback on error
       setReviewedDocuments((prev) => {

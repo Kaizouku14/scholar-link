@@ -226,16 +226,16 @@ export const NAVIGATION_DATA: NavigationData = {
             icon: LayoutDashboard,
           },
           {
-            title: "Browse Scholarships",
+            title: "Applications",
+            url: PageRoutes.SCHOLARSHIP_MY_APPLICATIONS,
+            icon: FileText,
+            description: "Track your application",
+          },
+          {
+            title: "Browse",
             url: PageRoutes.SCHOLARSHIPS_BROWSE,
             icon: Search,
             description: "Find available scholarships",
-          },
-          {
-            title: "My Applications",
-            url: PageRoutes.SCHOLARSHIP_MY_APPLICATIONS,
-            icon: FileText,
-            description: "Track your applications",
           },
         ],
       },

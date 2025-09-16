@@ -154,7 +154,7 @@ export const scholarshipCoordinatorRouter = createTRPCRouter({
     .input(
       z.object({
         documentId: z.string(),
-        reviewStatus: z.boolean(),
+        reviewed: z.boolean(),
       }),
     )
     .mutation(async ({ input }) => {

@@ -29,7 +29,7 @@ export const updateActiveApplication = async ({
       await revokeAuthorizedEmail({ email });
     } else {
       const authorized = await isEmailAuthorized({ email });
-      if (authorized) await authorizeEmail({ email });
+      if (!authorized) await authorizeEmail({ email });
     }
   } catch (error) {
     throw new TRPCError({
