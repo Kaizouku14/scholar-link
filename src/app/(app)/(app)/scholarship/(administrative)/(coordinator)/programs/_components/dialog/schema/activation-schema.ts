@@ -16,16 +16,14 @@ export const activationSchema = z.object({
     .max(1000, {
       message: "Number of slots cannot exceed 1000.",
     }),
-  requirements: z
-    .array(
-      z.object({
-        requirementId: z.string(),
-        label: z.string().min(1, "Requirement label is required"),
-        description: z.string().optional().nullish(),
-        isRequired: z.boolean(),
-      }),
-    )
-    .optional(),
+  requirements: z.array(
+    z.object({
+      requirementId: z.string(),
+      label: z.string().min(1, "Requirement label is required"),
+      description: z.string().optional().nullish(),
+      isRequired: z.boolean(),
+    }),
+  ),
 });
 
 export type ActivationSchema = z.infer<typeof activationSchema>;

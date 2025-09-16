@@ -82,11 +82,10 @@ const RepostProgram = ({
       eligibilityType: data.eligibilityType,
       submissionType: data.submissionType,
       slots: data.slots,
-      requirements:
-        data.requirements?.map((req) => ({
-          ...req,
-          isRequired: Boolean(req.isRequired),
-        })) ?? [],
+      requirements: data.requirements?.map((req) => ({
+        ...req,
+        isRequired: Boolean(req.isRequired),
+      })),
     },
   });
   const { mutateAsync: activateProgram, isPending } =

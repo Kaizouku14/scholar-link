@@ -45,15 +45,13 @@ export const scholarshipCoordinatorRouter = createTRPCRouter({
         deadline: z.date(),
         imageUrl: z.string().optional(),
         imageKey: z.string().optional(),
-        requirements: z
-          .array(
-            z.object({
-              label: z.string(),
-              description: z.string().optional().nullish(),
-              isRequired: z.boolean(),
-            }),
-          )
-          .optional(),
+        requirements: z.array(
+          z.object({
+            label: z.string(),
+            description: z.string().optional().nullish(),
+            isRequired: z.boolean(),
+          }),
+        ),
       }),
     )
     .mutation(async ({ input, ctx }) => {
@@ -74,16 +72,14 @@ export const scholarshipCoordinatorRouter = createTRPCRouter({
         deadline: z.date(),
         imageUrl: z.string().optional(),
         imageKey: z.string().optional(),
-        requirements: z
-          .array(
-            z.object({
-              requirementId: z.string().optional(),
-              label: z.string(),
-              description: z.string().optional().nullish(),
-              isRequired: z.boolean(),
-            }),
-          )
-          .optional(),
+        requirements: z.array(
+          z.object({
+            requirementId: z.string().optional(),
+            label: z.string(),
+            description: z.string().optional().nullish(),
+            isRequired: z.boolean(),
+          }),
+        ),
         announcement: z.string(),
       }),
     )
@@ -98,16 +94,14 @@ export const scholarshipCoordinatorRouter = createTRPCRouter({
         eligibilityType: z.enum(ELIGIBILITY_TYPE),
         submissionType: z.enum(SUBMISSION_TYPE),
         slots: z.number(),
-        requirements: z
-          .array(
-            z.object({
-              requirementId: z.string(),
-              label: z.string().min(1, "Requirement label is required"),
-              description: z.string().optional().nullish(),
-              isRequired: z.boolean(),
-            }),
-          )
-          .optional(),
+        requirements: z.array(
+          z.object({
+            requirementId: z.string(),
+            label: z.string().min(1, "Requirement label is required"),
+            description: z.string().optional().nullish(),
+            isRequired: z.boolean(),
+          }),
+        ),
       }),
     )
     .mutation(async ({ input }) => {

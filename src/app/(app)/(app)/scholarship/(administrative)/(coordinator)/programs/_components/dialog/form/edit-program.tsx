@@ -38,11 +38,10 @@ export const EditProgram = ({ data }: { data: Program }) => {
     resolver: zodResolver(scholarshipFormSchema),
     defaultValues: {
       ...data,
-      requirements:
-        data.requirements?.map((req) => ({
-          ...req,
-          isRequired: Boolean(req.isRequired),
-        })) ?? [],
+      requirements: data.requirements?.map((req) => ({
+        ...req,
+        isRequired: Boolean(req.isRequired),
+      })),
     },
   });
   const { mutateAsync: updateProgram } =
