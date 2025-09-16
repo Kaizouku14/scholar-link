@@ -151,3 +151,26 @@ export const PostProgramAnnouncements = async ({
     });
   }
 };
+
+export const EditProgramSection = async ({
+  programId,
+  overview,
+}: {
+  programId: string;
+  overview: string;
+}) => {
+  try {
+    await db
+      .update(ProgramTable)
+      .set({
+        section: overview,
+      })
+      .where(eq(ProgramTable.programId, programId))
+      .execute();
+  } catch (error) {
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "Failed to Update" + (error as Error).message,
+    });
+  }
+};

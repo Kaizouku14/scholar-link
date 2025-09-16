@@ -93,13 +93,14 @@ const ProgramCard = ({
               <span>Application Deadline:</span>
             </div>
             <span
-              className={`font-medium ${
+              className={cn(
+                "font-medium",
                 isPassed
                   ? "text-primary"
                   : isApproaching
                     ? "text-primary"
-                    : "text-foreground"
-              }`}
+                    : "text-foreground",
+              )}
             >
               {format(data.deadline, "MMM dd, yyyy")}
             </span>
@@ -121,7 +122,10 @@ const ProgramCard = ({
               <span>Available Slots:</span>
             </div>
             <span
-              className={`font-medium ${data.slots < 50 ? "text-primary" : "text-foreground"}`}
+              className={cn(
+                "font-medium",
+                isApproaching ? "text-primary" : "text-foreground",
+              )}
             >
               {data.slots.toLocaleString()}
             </span>
@@ -137,7 +141,7 @@ const ProgramCard = ({
               className="flex-1"
             >
               <Button size="lg" className="w-full cursor-pointer">
-                View Program
+                View Program Overview
               </Button>
             </Link>
 

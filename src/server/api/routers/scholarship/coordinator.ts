@@ -4,6 +4,7 @@ import { SCHOLARSHIP_TYPES } from "@/constants/scholarship/scholarship-types";
 import { SUBMISSION_TYPE } from "@/constants/scholarship/submittion-type";
 import {
   createScholarshipProgram,
+  EditProgramSection,
   PostProgramAnnouncements,
   updateProgramStatus,
 } from "@/lib/api/scholarship/coordinator/program/mutation";
@@ -90,6 +91,16 @@ export const scholarshipCoordinatorRouter = createTRPCRouter({
     )
     .mutation(async ({ input }) => {
       await PostProgramAnnouncements(input);
+    }),
+  onUpdateOverview: adminRoute
+    .input(
+      z.object({
+        programId: z.string(),
+        overview: z.string(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      await EditProgramSection(input);
     }),
 
   //Applications

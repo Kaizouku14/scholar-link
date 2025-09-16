@@ -16,6 +16,7 @@ import {
   Calendar,
   Users,
   CloudUpload,
+  LoaderCircle,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -24,11 +25,13 @@ import { usePathname } from "next/navigation";
 const ProgramDetailsHeader = ({
   data,
   onEdit,
-  setOnEdit,
+  handleToggleEdit,
+  isPending,
 }: {
   data: ProgramHeader;
   onEdit: boolean;
-  setOnEdit: (value: boolean) => void;
+  handleToggleEdit: () => void;
+  isPending: boolean;
 }) => {
   const pathname = usePathname();
   const daysUntilDeadline = calculateDaysLeft(data.deadline);
@@ -190,10 +193,17 @@ const ProgramDetailsHeader = ({
             <div className="flex items-center gap-3 pt-2">
               <Button
                 size="lg"
-                className="flex-1 cursor-pointer py-2.5 sm:flex-none md:py-1"
-                onClick={() => setOnEdit(!onEdit)}
+                className="w-48 flex-1 cursor-pointer py-2.5 sm:flex-none md:py-1"
+                onClick={handleToggleEdit}
+                disabled={isPending}
               >
-                {onEdit ? "Save Program" : "Edit Program Overview"}
+                {isPending ? (
+                  <LoaderCircle className="text-primary-foreground h-6 w-6 animate-spin" />
+                ) : onEdit ? (
+                  "Save Program"
+                ) : (
+                  "Edit Program Overview"
+                )}
               </Button>
               <ShareButton
                 url={`${env.NEXT_PUBLIC_BETTER_AUTH_URL}${pathname}`}
