@@ -1,5 +1,5 @@
 export interface Requirement {
-  requirementId: string;
+  requirementId?: string;
   label: string;
   description?: string | null;
   isRequired: boolean;

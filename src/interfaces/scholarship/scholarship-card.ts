@@ -3,18 +3,27 @@ import type { submissionType } from "@/constants/scholarship/submittion-type";
 import type { Requirement } from "./requirements";
 import type { eligibilityType } from "@/constants/scholarship/eligiblity-type";
 
-export interface Program {
+interface BaseProgram {
   programId: string;
   name: string;
-  imageUrl: string | null;
   slots: number;
   deadline: Date;
-  isActive: boolean;
   type: ScholarshipType;
   description: string;
   section: string;
   eligibilityType: eligibilityType;
   submissionType: submissionType;
-  requirements: Requirement[];
   announcement: string;
+}
+
+export interface Program extends BaseProgram {
+  imageUrl: string | null;
+  isActive: boolean;
+  requirements: Requirement[];
+}
+
+export interface UpdateProgram extends BaseProgram {
+  imageUrl?: string;
+  imageKey?: string;
+  requirements: Requirement[];
 }

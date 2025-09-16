@@ -24,6 +24,7 @@ export const scholarshipFormSchema = z.object({
   requirements: z
     .array(
       z.object({
+        requirementId: z.string().optional(),
         label: z.string().min(1, "Requirement label is required"),
         description: z.string().optional().nullish(),
         isRequired: z.boolean(),

@@ -6,6 +6,7 @@ import {
   createScholarshipProgram,
   EditProgramSection,
   PostProgramAnnouncements,
+  updateProgram,
   updateProgramStatus,
 } from "@/lib/api/scholarship/coordinator/program/mutation";
 import { cacheData } from "@/lib/redis";
@@ -58,6 +59,36 @@ export const scholarshipCoordinatorRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       const userId = ctx.session!.user.id;
       await createScholarshipProgram({ data: input, userId });
+    }),
+  updateProgramDetails: adminRoute
+    .input(
+      z.object({
+        programId: z.string(),
+        name: z.string(),
+        type: z.enum(SCHOLARSHIP_TYPES),
+        eligibilityType: z.enum(ELIGIBILITY_TYPE),
+        description: z.string(),
+        section: z.string(),
+        slots: z.number(),
+        submissionType: z.enum(SUBMISSION_TYPE),
+        deadline: z.date(),
+        imageUrl: z.string().optional(),
+        imageKey: z.string().optional(),
+        requirements: z
+          .array(
+            z.object({
+              requirementId: z.string().optional(),
+              label: z.string(),
+              description: z.string().optional().nullish(),
+              isRequired: z.boolean(),
+            }),
+          )
+          .optional(),
+        announcement: z.string(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      await updateProgram({ data: input });
     }),
   updateProgramAvailability: adminRoute
     .input(

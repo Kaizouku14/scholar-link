@@ -2,7 +2,9 @@ import type { eligibilityType } from "@/constants/scholarship/eligiblity-type";
 import type { submissionType } from "@/constants/scholarship/submittion-type";
 import type { ScholarshipPrograms } from "@/interfaces/scholarship/program";
 import type { Requirement } from "@/interfaces/scholarship/requirements";
+import type { UpdateProgram } from "@/interfaces/scholarship/scholarship-card";
 import { generateUUID } from "@/lib/utils";
+import { deleteFilesIfExist } from "@/server/api/uploadthing";
 import { db, eq, sql, and } from "@/server/db";
 import {
   scholarshipProgram as ProgramTable,
@@ -19,42 +21,102 @@ export const createScholarshipProgram = async ({
   data: ScholarshipPrograms;
   userId: string;
 }) => {
-  await db.transaction(async (tx) => {
-    const programId = generateUUID();
+  const fileKey = data.imageKey;
 
-    await tx.insert(ProgramTable).values({
-      programId: programId,
-      name: data.name,
-      description: data.description,
-      section: data.section,
-      slots: data.slots,
-      type: data.type,
-      eligibilityType: data.eligibilityType,
-      submissionType: data.submissionType,
-      imageUrl: data.imageUrl,
-      imageKey: data.imageKey,
-      deadline: data.deadline,
-      isActive: true,
-    });
+  try {
+    await db.transaction(async (tx) => {
+      const programId = generateUUID();
 
-    await tx.insert(ProgramCoordinatorTable).values({
-      id: generateUUID(),
-      programId,
-      userId,
-    });
+      await tx.insert(ProgramTable).values({
+        programId: programId,
+        name: data.name,
+        description: data.description,
+        section: data.section,
+        slots: data.slots,
+        type: data.type,
+        eligibilityType: data.eligibilityType,
+        submissionType: data.submissionType,
+        imageUrl: data.imageUrl,
+        imageKey: data.imageKey,
+        deadline: data.deadline,
+        isActive: true,
+      });
 
-    if (data.requirements && data.requirements?.length > 0) {
-      for (const requirement of data.requirements) {
-        await tx.insert(RequirementsTable).values({
-          requirementId: generateUUID(),
-          programId: programId,
-          label: requirement.label,
-          description: requirement.description,
-          isRequired: requirement.isRequired,
-        });
+      await tx.insert(ProgramCoordinatorTable).values({
+        id: generateUUID(),
+        programId,
+        userId,
+      });
+
+      if (data.requirements && data.requirements?.length > 0) {
+        for (const requirement of data.requirements) {
+          await tx.insert(RequirementsTable).values({
+            requirementId: generateUUID(),
+            programId: programId,
+            label: requirement.label,
+            description: requirement.description,
+            isRequired: requirement.isRequired,
+          });
+        }
       }
+    });
+  } catch (error) {
+    if (fileKey) {
+      await deleteFilesIfExist(fileKey);
     }
-  });
+
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "Failed to create program" + (error as Error).message,
+    });
+  }
+};
+
+export const updateProgram = async ({ data }: { data: UpdateProgram }) => {
+  try {
+    await db.transaction(async (tx) => {
+      await tx
+        .update(ProgramTable)
+        .set({
+          name: data.name,
+          description: data.description,
+          section: data.section,
+          slots: data.slots,
+          type: data.type,
+          eligibilityType: data.eligibilityType,
+          submissionType: data.submissionType,
+          imageUrl: data.imageUrl,
+          imageKey: data.imageKey,
+          deadline: data.deadline,
+        })
+        .where(eq(ProgramTable.programId, data.programId));
+
+      await tx
+        .insert(RequirementsTable)
+        .values(
+          data.requirements.map((r) => ({
+            requirementId: r.requirementId!,
+            programId: data.programId,
+            label: r.label,
+            description: r.description,
+            isRequired: r.isRequired,
+          })),
+        )
+        .onConflictDoUpdate({
+          target: [RequirementsTable.requirementId],
+          set: {
+            label: sql`excluded.label`,
+            description: sql`excluded.description`,
+            isRequired: sql`excluded.is_required`,
+          },
+        });
+    });
+  } catch (error) {
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "Failed to update program" + (error as Error).message,
+    });
+  }
 };
 
 export const updateProgramStatus = async ({
@@ -90,7 +152,7 @@ export const updateProgramStatus = async ({
         .insert(RequirementsTable)
         .values(
           requirements!.map((r) => ({
-            requirementId: r.requirementId,
+            requirementId: r.requirementId!,
             programId,
             label: r.label,
             description: r.description,

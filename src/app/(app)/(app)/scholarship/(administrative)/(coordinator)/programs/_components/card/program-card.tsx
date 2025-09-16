@@ -17,7 +17,8 @@ import { cn, isDeadlineApproaching, isDeadlinePassed } from "@/lib/utils";
 import type { Program } from "@/interfaces/scholarship/scholarship-card";
 import { PageRoutes } from "@/constants/page-routes";
 import Link from "next/link";
-import PostAnnouncement from "../dialog/edit-program";
+import PostAnnouncement from "../dialog/post-announcement";
+import { EditProgram } from "../dialog/form/edit-program";
 
 const ProgramCard = ({
   data,
@@ -77,7 +78,10 @@ const ProgramCard = ({
               </div>
             </div>
           </div>
-          <PostAnnouncement data={data} />
+          <div className="flex gap-1.5">
+            <PostAnnouncement data={data} />
+            <EditProgram data={data} />
+          </div>
         </div>
       </CardHeader>
 
