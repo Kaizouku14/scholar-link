@@ -130,7 +130,7 @@ export const ApplicationForm = ({
     <FormField
       key={requirement.requirementId}
       control={form.control}
-      name={requirement.requirementId}
+      name={requirement.requirementId!}
       render={({ field: { onChange, ref } }) => (
         <FormItem className="space-y-1">
           <FormLabel className="flex items-center gap-2 text-sm font-medium">

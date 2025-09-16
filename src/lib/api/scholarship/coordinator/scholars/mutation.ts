@@ -1,5 +1,9 @@
 import type { scholarshipStatusType } from "@/constants/users/status";
-import { authorizeEmail, revokeAuthorizedEmail } from "@/lib/api/auth/mutation";
+import {
+  authorizeEmail,
+  isEmailAuthorized,
+  revokeAuthorizedEmail,
+} from "@/lib/api/auth/mutation";
 import { db, eq, inArray } from "@/server/db";
 import { authorizedEmail as AuthorizedEmailTable } from "@/server/db/schema/auth";
 import { applications as ApplicationsTable } from "@/server/db/schema/scholarship";
@@ -24,7 +28,8 @@ export const updateActiveApplication = async ({
     if (status === "inactive") {
       await revokeAuthorizedEmail({ email });
     } else {
-      await authorizeEmail({ email });
+      const authorized = await isEmailAuthorized({ email });
+      if (authorized) await authorizeEmail({ email });
     }
   } catch (error) {
     throw new TRPCError({

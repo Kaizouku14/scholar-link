@@ -40,7 +40,7 @@ export const createFormSchema = (requirements: Requirement[]) => {
         message: "File size should be less than 5MB",
       });
 
-    schemaFields[req.requirementId] = req.isRequired
+    schemaFields[req.requirementId!] = req.isRequired
       ? baseFileSchema.refine((files) => files?.length > 0, {
           message: `${req.label} is required`,
         })

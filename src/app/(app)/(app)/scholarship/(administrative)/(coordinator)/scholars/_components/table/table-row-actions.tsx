@@ -224,7 +224,7 @@ export function DataTableRowActions({
       <Button
         className={cn(
           "flex cursor-pointer items-center gap-2",
-          !activate || (renewal && "bg-green-700 hover:bg-green-600"),
+          !activate && !renewal && "bg-green-700 hover:bg-green-600",
         )}
         onClick={handleActions}
         disabled={isPending || selectedRows > 0}

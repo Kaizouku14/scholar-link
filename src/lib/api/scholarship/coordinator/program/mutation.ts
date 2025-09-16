@@ -132,7 +132,7 @@ export const updateProgramStatus = async ({
   eligibilityType: eligibilityType;
   submissionType: submissionType;
   slots: number;
-  requirements?: Requirement[];
+  requirements: Requirement[];
 }) => {
   try {
     await db.transaction(async (tx) => {
@@ -151,7 +151,7 @@ export const updateProgramStatus = async ({
       await tx
         .insert(RequirementsTable)
         .values(
-          requirements!.map((r) => ({
+          requirements.map((r) => ({
             requirementId: r.requirementId!,
             programId,
             label: r.label,
