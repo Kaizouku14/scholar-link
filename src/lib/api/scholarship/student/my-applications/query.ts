@@ -1,5 +1,5 @@
 import type { Requirement } from "@/interfaces/scholarship/requirements";
-import type { ScholarsProgramCard } from "@/interfaces/scholarship/scholars";
+import type { ScholarApplications } from "@/interfaces/scholarship/scholars";
 import { db, eq, sql } from "@/server/db";
 import {
   applications as ApplicationsTable,
@@ -57,7 +57,7 @@ export const getAllApplications = async ({ userId }: { userId: string }) => {
       requirements: app.requirements
         ? (JSON.parse(app.requirements) as Requirement)
         : [],
-    })) as ScholarsProgramCard[];
+    })) as ScholarApplications[];
   } catch (error) {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",

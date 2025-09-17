@@ -9,7 +9,14 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import { Calendar, CheckCircle, Users, XCircle } from "lucide-react";
+import {
+  Calendar,
+  CheckCircle,
+  Users,
+  XCircle,
+  Clock,
+  RefreshCw,
+} from "lucide-react";
 import { format } from "date-fns";
 import { cn, isDeadlineApproaching, isDeadlinePassed } from "@/lib/utils";
 import { PageRoutes } from "@/constants/page-routes";
@@ -20,11 +27,58 @@ const ScholarsProgramCard = ({ data }: { data: ScholarApplications }) => {
   const isPassed = isDeadlinePassed(data.deadline);
   const isApproaching = isDeadlineApproaching(data.deadline);
 
+  const renderStatusRow = (status: string, updatedAt: string | Date) => {
+    let icon, label, color;
+
+    switch (status) {
+      case "active":
+        icon = <CheckCircle className="h-4 w-4 text-green-600" />;
+        label = "Accepted At";
+        color = "text-green-600";
+        break;
+
+      case "inactive":
+        icon = <XCircle className="text-destructive h-4 w-4" />;
+        label = "Deactivated At";
+        color = "text-destructive";
+        break;
+
+      case "for-renewal":
+        icon = <RefreshCw className="h-4 w-4 text-amber-500" />;
+        label = "For Renewal";
+        color = "text-amber-500";
+        break;
+
+      case "renewal":
+        icon = <Clock className="h-4 w-4 text-blue-500" />;
+        label = "Renewed At";
+        color = "text-blue-500";
+        break;
+
+      default:
+        icon = <Clock className="text-muted-foreground h-4 w-4" />;
+        label = "Updated At";
+        color = "text-muted-foreground";
+    }
+
+    return (
+      <div className="flex items-center justify-between py-2">
+        <div className="flex items-center gap-2 text-sm">
+          {icon}
+          <span className={cn("font-medium", color)}>{label}</span>
+        </div>
+        <span className="text-muted-foreground text-sm">
+          {format(new Date(updatedAt), "MMM dd, yyyy")}
+        </span>
+      </div>
+    );
+  };
+
   return (
     <Card
       className={cn(
         "mx-auto w-full rounded-lg border shadow-sm transition-all duration-200",
-        (data.status !== "active" || isPassed) && "bg-muted/30 opacity-75",
+        (data.status === "inactive" || isPassed) && "bg-muted/30 opacity-75",
       )}
     >
       <CardHeader className="flex items-start space-y-0 pb-4">
@@ -85,12 +139,12 @@ const ScholarsProgramCard = ({ data }: { data: ScholarApplications }) => {
             </div>
             <span
               className={cn(
-                "text-sm font-semibold",
+                "text-sm",
                 isPassed
                   ? "text-primary"
                   : isApproaching
                     ? "text-primary"
-                    : "text-foreground",
+                    : "text-muted-foreground",
               )}
             >
               {format(data.deadline, "MMM dd, yyyy")}
@@ -104,33 +158,12 @@ const ScholarsProgramCard = ({ data }: { data: ScholarApplications }) => {
                 {data.status === "inactive" ? "Last Applied" : "Applied At"}
               </span>
             </div>
-            <span className="text-foreground text-sm font-semibold">
+            <span className="text-muted-foreground text-sm">
               {format(data.appliedAt, "MMM dd, yyyy")}
             </span>
           </div>
 
-          <div className="flex items-center justify-between py-2">
-            <div className="flex items-center gap-2 text-sm">
-              {data.status === "inactive" ? (
-                <XCircle className="text-destructive h-4 w-4" />
-              ) : (
-                <CheckCircle className="h-4 w-4 text-green-600" />
-              )}
-              <span
-                className={cn(
-                  "font-medium",
-                  data.status === "inactive"
-                    ? "text-destructive"
-                    : "text-green-600",
-                )}
-              >
-                {data.status === "inactive" ? "Deactivated At" : "Accepted At"}
-              </span>
-            </div>
-            <span className="text-foreground text-sm font-semibold">
-              {format(new Date(data.updatedAt), "MMM dd, yyyy")}
-            </span>
-          </div>
+          {renderStatusRow(data.status, data.updatedAt)}
         </div>
       </CardContent>
 

@@ -24,11 +24,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { COURSES } from "@/constants/users/courses";
-import { DEPARTMENTS } from "@/constants/users/departments";
 import { GENDERS } from "@/constants/users/genders";
-import { SECTIONS } from "@/constants/users/sections";
-import { YEAR_LEVEL } from "@/constants/users/year-level";
-import { CalendarIcon, User, GraduationCap } from "lucide-react";
+import { CalendarIcon, User } from "lucide-react";
 import { format } from "date-fns";
 import type { FieldValues, UseFormReturn, Path } from "react-hook-form";
 
@@ -185,30 +182,6 @@ export const renderPersonalInfoFields = <T extends FieldValues>({
             </FormItem>
           )}
         />
-      </div>
-    </div>
-
-    <div className="space-y-6">
-      <div className="flex items-center gap-2 border-b pb-2">
-        <GraduationCap className="h-5 w-5" />
-        <h3 className="text-lg font-semibold">Student Information</h3>
-      </div>
-
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <FormField
-          control={form.control}
-          name={"studentNo" as Path<T>}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Student No</FormLabel>
-              <FormControl>
-                <Input placeholder="i.e 2022123400" {...field} />
-              </FormControl>
-              <FormDescription>Enter your student number</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
 
         <FormField
           control={form.control}
@@ -236,90 +209,6 @@ export const renderPersonalInfoFields = <T extends FieldValues>({
               <FormDescription>
                 Enter your current course or program.
               </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name={"department" as Path<T>}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Department</FormLabel>
-              <Select
-                onValueChange={field.onChange}
-                defaultValue={field.value as string}
-              >
-                <FormControl>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select your department" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {DEPARTMENTS.map((department) => (
-                    <SelectItem key={department} value={department}>
-                      {department}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormDescription>Select your department.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name={"yearLevel" as Path<T>}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Year Level</FormLabel>
-              <Select
-                onValueChange={field.onChange}
-                defaultValue={field.value as string}
-              >
-                <FormControl>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select your year level" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {YEAR_LEVEL.map((year) => (
-                    <SelectItem key={year} value={year}>
-                      {year}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormDescription>Select your current year level.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name={"section" as Path<T>}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Section</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select your section" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {SECTIONS.map((section) => (
-                    <SelectItem key={section} value={section}>
-                      {section}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormDescription>Select your section.</FormDescription>
               <FormMessage />
             </FormItem>
           )}

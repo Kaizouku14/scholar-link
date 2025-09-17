@@ -1,8 +1,5 @@
 import { COURSES } from "@/constants/users/courses";
-import { DEPARTMENTS } from "@/constants/users/departments";
 import { GENDERS } from "@/constants/users/genders";
-import { SECTIONS } from "@/constants/users/sections";
-import { YEAR_LEVEL } from "@/constants/users/year-level";
 import type { Requirement } from "@/interfaces/scholarship/requirements";
 import * as z from "zod";
 
@@ -27,10 +24,6 @@ export const createFormSchema = (requirements: Requirement[]) => {
       .min(1, "Address is required")
       .min(10, "Please provide a complete address"),
     course: z.enum(COURSES, { message: "Course is required" }),
-    yearLevel: z.enum(YEAR_LEVEL, { message: "Year level is required" }),
-    section: z.enum(SECTIONS, { message: "Section is required" }),
-    department: z.enum(DEPARTMENTS, { message: "Department is required" }),
-    studentNo: z.string().min(1, "Student No. is required"),
   };
 
   requirements.forEach((req) => {

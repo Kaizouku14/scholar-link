@@ -2,10 +2,7 @@ import { ROLE } from "@/constants/users/roles";
 import type { NewApplication } from "@/interfaces/scholarship/application";
 import { generateUUID } from "@/lib/utils";
 import { db, eq, and, or } from "@/server/db";
-import {
-  user as UserTable,
-  student as StudentTable,
-} from "@/server/db/schema/auth";
+import { user as UserTable } from "@/server/db/schema/auth";
 import {
   applications as ApplicationTable,
   scholarsDocuments as ScholarsDocumentTable,
@@ -65,15 +62,7 @@ export const createApplication = async ({
           contact: application.contact,
           address: application.address,
           course: application.course,
-          department: application.department,
-          section: application.section,
           role: ROLE.SCHOLARSHIP_STUDENT,
-        });
-
-        await tx.insert(StudentTable).values({
-          id: userId,
-          studentNo: application.studentNo,
-          yearLevel: application.yearLevel,
         });
       }
 

@@ -7,9 +7,6 @@ import {
 import { cacheData } from "@/lib/redis";
 import { GENDERS } from "@/constants/users/genders";
 import { COURSES } from "@/constants/users/courses";
-import { DEPARTMENTS } from "@/constants/users/departments";
-import { SECTIONS } from "@/constants/users/sections";
-import { YEAR_LEVEL } from "@/constants/users/year-level";
 import { createApplication } from "@/lib/api/scholarship/public/mutation";
 
 export const scholarshipRouter = createTRPCRouter({
@@ -24,10 +21,6 @@ export const scholarshipRouter = createTRPCRouter({
         contact: z.string(),
         address: z.string(),
         course: z.enum(COURSES),
-        yearLevel: z.enum(YEAR_LEVEL),
-        section: z.array(z.enum(SECTIONS)),
-        department: z.enum(DEPARTMENTS),
-        studentNo: z.string(),
         requirements: z.record(
           z.string(),
           z.object({

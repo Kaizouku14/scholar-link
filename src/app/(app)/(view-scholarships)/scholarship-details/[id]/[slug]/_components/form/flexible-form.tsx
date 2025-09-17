@@ -29,7 +29,6 @@ import toast from "react-hot-toast";
 import { api } from "@/trpc/react";
 import type { NewApplication } from "@/interfaces/scholarship/application";
 import SubmitButton from "@/components/forms/submit-button";
-import type { SectionType } from "@/constants/users/sections";
 
 export const ApplicationForm = ({
   requirements,
@@ -51,10 +50,6 @@ export const ApplicationForm = ({
       contact: "",
       address: "",
       course: undefined,
-      yearLevel: undefined,
-      department: "",
-      section: undefined,
-      studentNo: "",
       requirements: [
         {
           label: "",
@@ -112,7 +107,6 @@ export const ApplicationForm = ({
       const formData = {
         programId,
         ...data,
-        section: [data.section] as SectionType[],
         requirements: uploadedRequirements,
       } as NewApplication;
 
