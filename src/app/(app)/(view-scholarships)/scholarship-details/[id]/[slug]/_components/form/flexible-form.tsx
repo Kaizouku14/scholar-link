@@ -9,26 +9,18 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Form } from "@/components/ui/form";
 import { FileText } from "lucide-react";
 import type { Requirement } from "@/interfaces/scholarship/requirements";
 import { createFormSchema } from "./flexible-form-schema";
 import type z from "zod";
-import { uploadFile } from "@/lib/uploadthing";
 import { renderPersonalInfoFields } from "./personal-field";
 import toast from "react-hot-toast";
 import { api } from "@/trpc/react";
 import type { NewApplication } from "@/interfaces/scholarship/application";
 import SubmitButton from "@/components/forms/submit-button";
+import { handleSubmittedRequirements } from "@/lib/utils";
+import { RenderRequirementItem } from "@/components/forms/flexible-form-item";
 
 export const ApplicationForm = ({
   requirements,
@@ -60,37 +52,6 @@ export const ApplicationForm = ({
     },
   });
 
-  const handleSubmittedRequirements = async (
-    data: FormData,
-    requirements: Requirement[],
-  ) => {
-    const uploadedRequirements: Record<
-      string,
-      { label: string; key: string; url: string }
-    > = {};
-
-    for (const [requirementId, value] of Object.entries(data)) {
-      if (value instanceof FileList) {
-        const file = value[0];
-        if (!file) continue;
-
-        const uploaded = await uploadFile(file);
-        if (uploaded?.key && uploaded?.url) {
-          const reqMeta = requirements.find(
-            (req) => req.requirementId === requirementId,
-          );
-          uploadedRequirements[requirementId] = {
-            label: reqMeta?.label ?? file.name,
-            key: uploaded.key,
-            url: uploaded.url,
-          };
-        }
-      }
-    }
-
-    return uploadedRequirements;
-  };
-
   const { mutateAsync: sendApplication } =
     api.scholarships.sendApplication.useMutation();
   const onSubmit = async (data: FormData) => {
@@ -120,39 +81,6 @@ export const ApplicationForm = ({
     }
   };
 
-  const renderField = (requirement: Requirement) => (
-    <FormField
-      key={requirement.requirementId}
-      control={form.control}
-      name={requirement.requirementId!}
-      render={({ field: { onChange, ref } }) => (
-        <FormItem className="space-y-1">
-          <FormLabel className="flex items-center gap-2 text-sm font-medium">
-            <FileText className="text-muted-foreground h-4 w-4" />
-            {requirement.label}
-          </FormLabel>
-          <FormControl>
-            <Input
-              type="file"
-              accept=".pdf,.doc,.docx,.xlsx,.csv,.png,.jpeg.,jpg"
-              onChange={(e) => onChange(e.target.files)}
-              ref={ref}
-              className="cursor-pointer text-sm"
-            />
-          </FormControl>
-          {requirement.description ? (
-            <FormDescription className="text-muted-foreground text-xs">
-              {requirement.description}
-            </FormDescription>
-          ) : (
-            <div className="mt-1 h-[0.75rem]"></div>
-          )}
-          <FormMessage />
-        </FormItem>
-      )}
-    />
-  );
-
   return (
     <Card className="mt-0 pt-0 shadow-none">
       <CardHeader className="bg-primary/10 mt-0 rounded-t-lg border-b py-4">
@@ -177,7 +105,13 @@ export const ApplicationForm = ({
                 </div>
 
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                  {requirements.map(renderField)}
+                  {requirements.map((req) => (
+                    <RenderRequirementItem<typeof formSchema>
+                      key={req.requirementId}
+                      requirement={req}
+                      control={form.control}
+                    />
+                  ))}
                 </div>
               </div>
             )}

@@ -9,24 +9,26 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import {
-  Calendar,
-  CheckCircle,
-  Users,
-  XCircle,
-  Clock,
-  RefreshCw,
-} from "lucide-react";
+import { Calendar, CheckCircle, Users, XCircle, Clock } from "lucide-react";
 import { format } from "date-fns";
-import { cn, isDeadlineApproaching, isDeadlinePassed } from "@/lib/utils";
-import { PageRoutes } from "@/constants/page-routes";
+import {
+  cn,
+  getStatusColor,
+  getStatusIcon,
+  getStatusVariant,
+  isDeadlineApproaching,
+  isDeadlinePassed,
+} from "@/lib/utils";
 import Link from "next/link";
 import type { ScholarApplications } from "@/interfaces/scholarship/scholars";
+import React from "react";
+import { RenewalForm } from "../forms/renewal-form";
 
 const ScholarsProgramCard = ({ data }: { data: ScholarApplications }) => {
   const isPassed = isDeadlinePassed(data.deadline);
   const isApproaching = isDeadlineApproaching(data.deadline);
-
+  const color = getStatusColor(data.status);
+  const variant = getStatusVariant(data.status);
   const renderStatusRow = (status: string, updatedAt: string | Date) => {
     let icon, label, color;
 
@@ -41,12 +43,6 @@ const ScholarsProgramCard = ({ data }: { data: ScholarApplications }) => {
         icon = <XCircle className="text-destructive h-4 w-4" />;
         label = "Deactivated At";
         color = "text-destructive";
-        break;
-
-      case "for-renewal":
-        icon = <RefreshCw className="h-4 w-4 text-amber-500" />;
-        label = "For Renewal";
-        color = "text-amber-500";
         break;
 
       case "renewal":
@@ -101,9 +97,15 @@ const ScholarsProgramCard = ({ data }: { data: ScholarApplications }) => {
 
               <div className="mt-2 flex flex-wrap items-center gap-2">
                 <Badge
-                  variant={data.status === "active" ? "default" : "secondary"}
-                  className="px-2 py-0.5 text-xs font-medium capitalize"
+                  variant={variant}
+                  className={cn(
+                    "px-2 py-0.5 text-xs font-medium capitalize",
+                    color,
+                  )}
                 >
+                  {React.createElement(getStatusIcon(data.status) ?? "div", {
+                    className: cn(color),
+                  })}
                   {data.status}
                 </Badge>
 
@@ -155,25 +157,27 @@ const ScholarsProgramCard = ({ data }: { data: ScholarApplications }) => {
             <div className="text-muted-foreground flex items-center gap-2 text-sm">
               <Users className="h-4 w-4" />
               <span className="font-medium">
-                {data.status === "inactive" ? "Last Applied" : "Applied At"}
+                {data.status === "active"
+                  ? "Applied At"
+                  : data.status === "renewal"
+                    ? "Renewed At"
+                    : "Last Applied"}
               </span>
             </div>
             <span className="text-muted-foreground text-sm">
               {format(data.appliedAt, "MMM dd, yyyy")}
             </span>
           </div>
-
-          {renderStatusRow(data.status, data.updatedAt)}
+          {data.status !== "for-renewal" && (
+            <div>{renderStatusRow(data.status, data.updatedAt)}</div>
+          )}
         </div>
       </CardContent>
 
       <CardFooter className="flex flex-col space-y-3">
         <div className="w-full pt-3">
           <div className="grid w-full grid-cols-1 gap-2 sm:grid-cols-2">
-            <Link
-              href={`${PageRoutes.SCHOLARSHIPS_PROGRAMS_DETAILS}/${data.applicationId}`}
-              className="flex-1"
-            >
+            <Link href={`${""}/${data.applicationId}`} className="flex-1">
               <Button
                 size="lg"
                 variant="default"
@@ -182,6 +186,10 @@ const ScholarsProgramCard = ({ data }: { data: ScholarApplications }) => {
                 View Program
               </Button>
             </Link>
+            <RenewalForm
+              programId={data.programId}
+              requirements={data.requirements}
+            />
           </div>
         </div>
       </CardFooter>

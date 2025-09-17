@@ -5,12 +5,16 @@ import type { SectionType } from "@/constants/users/sections";
 import type { scholarshipStatusType } from "@/constants/users/status";
 import type { Requirement } from "./requirements";
 
-export interface ProgramScholars {
+interface BaseApplication {
   programName: string;
   applicationId: string;
   appliedAt: Date;
   updatedAt: Date;
   status: scholarshipStatusType;
+  documents: ScholarDocument[];
+}
+
+export interface ProgramScholars extends BaseApplication {
   studentNo: string;
   name: string;
   profile: string;
@@ -20,18 +24,13 @@ export interface ProgramScholars {
   email: string;
   contact: string;
   address: string;
-  documents: ScholarDocument[];
 }
 
-export interface ScholarApplications {
-  programName: string;
+export interface ScholarApplications extends BaseApplication {
+  programId: string;
   image: string | null;
   description: string;
   deadline: Date;
-  applicationId: string;
-  appliedAt: Date;
-  updatedAt: Date;
-  status: scholarshipStatusType;
   announcement: string;
   requirements: Requirement[];
 }

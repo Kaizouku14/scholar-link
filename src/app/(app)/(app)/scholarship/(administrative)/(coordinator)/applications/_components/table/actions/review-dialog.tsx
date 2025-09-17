@@ -19,7 +19,7 @@ import { useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { api } from "@/trpc/react";
 import toast from "react-hot-toast";
-import { getNextApplicationStep } from "@/lib/utils";
+import { getNextApplicationStep } from "./helper";
 
 interface ViewDocumentProps {
   row: Row<Applications>;

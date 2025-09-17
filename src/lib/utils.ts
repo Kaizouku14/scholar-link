@@ -6,12 +6,13 @@ import {
   Clock,
   Hourglass,
   MinusCircle,
+  RefreshCw,
   XCircle,
 } from "lucide-react";
 import type { departmentType } from "@/constants/users/departments";
 import { departmentHoursMap } from "@/constants/internship/hours";
-import type { scholarshipStatusType } from "@/constants/users/status";
-import type { eligibilityType } from "@/constants/scholarship/eligiblity-type";
+import type { Requirement } from "@/interfaces/scholarship/requirements";
+import { uploadFile } from "./uploadthing";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -126,10 +127,11 @@ export const getStatusColor = (status: string) => {
   switch (status.toLowerCase()) {
     case "pending":
     case "renewal":
+    case "for-renewal":
       return "bg-yellow-50 text-yellow-700 border-yellow-200";
     case "on-going":
     case "in-progress":
-    case "for-renewal":
+    case "renewal":
       return "bg-blue-50 text-blue-700 border-blue-200";
     case "approved":
     case "completed":
@@ -152,9 +154,10 @@ export const getStatusIcon = (status: string) => {
     case "pending":
     case "renewal":
       return Clock;
+    case "for-renewal":
+      return RefreshCw;
     case "on-going":
     case "in-progress":
-    case "for-renewal":
       return Hourglass;
     case "qualified":
     case "approved":
@@ -270,31 +273,36 @@ export const getAllYears = ({ data }: { data: { appliedAt: Date }[] }) => {
   return years;
 };
 
-export const getNextApplicationStep = ({
-  status,
-  eligibilityType,
-}: {
-  status: scholarshipStatusType;
-  eligibilityType: eligibilityType;
-}): {
-  nextStatus: scholarshipStatusType;
-  actionLabel: string;
-  toastMessage: string;
-} => {
-  const isSpecial =
-    status === "qualified" ||
-    status === "renewal" ||
-    eligibilityType === "document-only";
+export const handleSubmittedRequirements = async <
+  TSchema extends z.ZodTypeAny,
+  TFormData extends Record<string, unknown> = z.infer<TSchema>,
+>(
+  data: TFormData,
+  requirements: Requirement[],
+) => {
+  const uploadedRequirements: Record<
+    string,
+    { label: string; key: string; url: string }
+  > = {};
 
-  return isSpecial
-    ? {
-        nextStatus: "active",
-        actionLabel: "Approve Application",
-        toastMessage: "Application Successfully Accepted!",
+  for (const [requirementId, value] of Object.entries(data)) {
+    if (value instanceof FileList) {
+      const file = value[0];
+      if (!file) continue;
+
+      const uploaded = await uploadFile(file);
+      if (uploaded?.key && uploaded?.url) {
+        const reqMeta = requirements.find(
+          (req) => req.requirementId === requirementId,
+        );
+        uploadedRequirements[requirementId] = {
+          label: reqMeta?.label ?? file.name,
+          key: uploaded.key,
+          url: uploaded.url,
+        };
       }
-    : {
-        nextStatus: "qualified",
-        actionLabel: "Mark As Qualified",
-        toastMessage: "Application Successfully Qualified!",
-      };
+    }
+  }
+
+  return uploadedRequirements;
 };

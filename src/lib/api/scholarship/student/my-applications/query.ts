@@ -1,3 +1,4 @@
+import type { ScholarDocument } from "@/interfaces/scholarship/documents";
 import type { Requirement } from "@/interfaces/scholarship/requirements";
 import type { ScholarApplications } from "@/interfaces/scholarship/scholars";
 import { db, eq, sql } from "@/server/db";
@@ -13,6 +14,7 @@ export const getAllApplications = async ({ userId }: { userId: string }) => {
   try {
     const response = await db
       .select({
+        programId: ProgramTable.programId,
         programName: ProgramTable.name,
         image: ProgramTable.imageUrl,
         description: ProgramTable.description,
@@ -32,6 +34,15 @@ export const getAllApplications = async ({ userId }: { userId: string }) => {
                 )
             )
             `.as("requirements"),
+        documents: sql<string>`
+        json_group_array(
+            json_object(
+            'id', ${ScholarsDocumentsTable.id},
+            'label', ${ScholarsDocumentsTable.documentName},
+            'url', ${ScholarsDocumentsTable.documentUrl}
+            )
+        )
+        `.as("documents"),
       })
       .from(ApplicationsTable)
       .innerJoin(
@@ -54,8 +65,25 @@ export const getAllApplications = async ({ userId }: { userId: string }) => {
 
     return response.map((app) => ({
       ...app,
+      documents: app.documents
+        ? Array.from(
+            new Map(
+              (JSON.parse(app.documents) as ScholarDocument[]).map((doc) => [
+                doc.id,
+                doc,
+              ]),
+            ).values(),
+          )
+        : [],
       requirements: app.requirements
-        ? (JSON.parse(app.requirements) as Requirement)
+        ? Array.from(
+            new Map(
+              (JSON.parse(app.requirements) as Requirement[]).map((req) => [
+                req.requirementId,
+                req,
+              ]),
+            ).values(),
+          )
         : [],
     })) as ScholarApplications[];
   } catch (error) {
