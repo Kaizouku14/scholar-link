@@ -41,26 +41,35 @@ export const updateActiveApplication = async ({
   }
 };
 
-export const bulkDeactivation = async ({
+export const bulkUpdate = async ({
   applicationIds,
   emails,
+  status,
 }: {
   applicationIds: string[];
-  emails: string[];
+  emails?: string[];
+  status: scholarshipStatusType;
 }) => {
   try {
     await db.transaction(async (tx) => {
-      await tx
-        .update(ApplicationsTable)
-        .set({ status: "inactive" })
-        .where(inArray(ApplicationsTable.applicationsId, applicationIds))
-        .execute();
+      if (status === "inactive") {
+        await tx
+          .update(ApplicationsTable)
+          .set({ status })
+          .where(inArray(ApplicationsTable.applicationsId, applicationIds))
+          .execute();
 
-      await tx
-        .select()
-        .from(AuthorizedEmailTable)
-        .where(inArray(AuthorizedEmailTable.email, emails))
-        .execute();
+        await tx
+          .delete(AuthorizedEmailTable)
+          .where(inArray(AuthorizedEmailTable.email, emails!))
+          .execute();
+      } else {
+        await tx
+          .update(ApplicationsTable)
+          .set({ status })
+          .where(inArray(ApplicationsTable.applicationsId, applicationIds))
+          .execute();
+      }
     });
   } catch (error) {
     throw new TRPCError({

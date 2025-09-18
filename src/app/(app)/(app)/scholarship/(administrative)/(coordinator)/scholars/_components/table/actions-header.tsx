@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { api } from "@/trpc/react";
 import type { Table } from "@tanstack/react-table";
-import { Ban, LoaderCircle, MoreHorizontal } from "lucide-react";
+import { Ban, LoaderCircle, MoreHorizontal, RefreshCcw } from "lucide-react";
 import { toast } from "react-hot-toast";
 import {
   AlertDialog,
@@ -24,6 +24,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import type { ProgramScholars } from "@/interfaces/scholarship/scholars";
 import { useState } from "react";
+import { DropdownMenuSeparator } from "@radix-ui/react-dropdown-menu";
+import type { scholarshipStatusType } from "@/constants/users/status";
 
 interface DataTableRowActionsProps {
   table: Table<ProgramScholars>;
@@ -33,28 +35,48 @@ export function ActionsHeader({ table }: DataTableRowActionsProps) {
   const selectedItems = table.getSelectedRowModel().rows.map((row) => ({
     applicationId: row.original.applicationId,
     email: row.original.email,
+    status: row.original.status,
   }));
-  const [open, setOpen] = useState(false);
+  const hasInactive = selectedItems.some((s) => s.status === "inactive");
+  const [openDeactivate, setOpenDeactivate] = useState(false);
+  const [openRenew, setOpenRenew] = useState(false);
 
-  const { mutateAsync: bulkDeactivation, isPending } =
-    api.scholarshipCoordinator.bulkAccountDeactivation.useMutation();
+  const { mutateAsync: bulkUpdate, isPending } =
+    api.scholarshipCoordinator.bulkUpdateApplication.useMutation();
   const { refetch } =
     api.scholarshipCoordinator.getAllScholarsByProgram.useQuery(undefined, {
       enabled: false,
     });
 
-  const handleBulkDeactivation = async () => {
+  const handleBulkUpdate = async ({
+    status,
+  }: {
+    status: scholarshipStatusType;
+  }) => {
     try {
-      await bulkDeactivation({
-        applicationIds: selectedItems.map((s) => s.applicationId),
-        emails: selectedItems.map((s) => s.email),
-      });
+      let message;
+      if (status === "inactive") {
+        await bulkUpdate({
+          applicationIds: selectedItems.map((s) => s.applicationId),
+          emails: selectedItems.map((s) => s.email),
+          status,
+        });
+        message = "All account deactivated successfully!";
+        setOpenDeactivate(false);
+      } else {
+        await bulkUpdate({
+          applicationIds: selectedItems.map((s) => s.applicationId),
+          emails: selectedItems.map((s) => s.email),
+          status,
+        });
+        message = "All account renewed successfully!";
+        setOpenRenew(false);
+      }
 
-      await refetch();
-      setOpen(false);
-      toast.success("All account deactivated successfully!", {
+      toast.success(message, {
         duration: 5000,
       });
+      await refetch();
     } catch (error) {
       toast.error((error as Error).message);
     }
@@ -67,7 +89,7 @@ export function ActionsHeader({ table }: DataTableRowActionsProps) {
           <Button
             variant="ghost"
             className="data-[state=open]:bg-muted relative flex h-8 w-8 p-0"
-            disabled={selectedItems.length === 0}
+            disabled={selectedItems.length === 0 || hasInactive}
           >
             <MoreHorizontal />
             <span className="bg-primary absolute top-1 -right-1 size-auto h-4 w-4 rounded-full text-xs text-white">
@@ -78,13 +100,13 @@ export function ActionsHeader({ table }: DataTableRowActionsProps) {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent align="end" className="w-fit">
-        <AlertDialog open={open} onOpenChange={setOpen}>
+        <AlertDialog open={openDeactivate} onOpenChange={setOpenDeactivate}>
           <AlertDialogTrigger asChild>
             <DropdownMenuItem
-              className="flex"
+              className="text-primary flex"
               onSelect={(e) => e.preventDefault()}
             >
-              <Ban />
+              <Ban className="text-primary" />
               Deactivate
             </DropdownMenuItem>
           </AlertDialogTrigger>
@@ -102,7 +124,7 @@ export function ActionsHeader({ table }: DataTableRowActionsProps) {
             <AlertDialogFooter>
               <AlertDialogCancel>Back</AlertDialogCancel>
               <AlertDialogAction
-                onClick={handleBulkDeactivation}
+                onClick={() => handleBulkUpdate({ status: "inactive" })}
                 disabled={isPending}
                 className="w-26"
               >
@@ -115,6 +137,42 @@ export function ActionsHeader({ table }: DataTableRowActionsProps) {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
+        <AlertDialog open={openRenew} onOpenChange={setOpenRenew}>
+          <AlertDialogTrigger asChild>
+            <DropdownMenuItem
+              className="flex"
+              onSelect={(e) => e.preventDefault()}
+            >
+              <RefreshCcw />
+              Renew Document
+            </DropdownMenuItem>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Renew Selected Applications?</AlertDialogTitle>
+              <AlertDialogDescription>
+                The selected applications will be marked for renewal. Students
+                associated with these applications will need to resubmit the
+                required documents for review.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Back</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={() => handleBulkUpdate({ status: "for-renewal" })}
+                disabled={isPending}
+                className="w-26"
+              >
+                {isPending ? (
+                  <LoaderCircle className="text-primary-foreground h-6 w-6 animate-spin" />
+                ) : (
+                  "Confirm"
+                )}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+        <DropdownMenuSeparator className="data-[state=open]:bg-muted border-border border" />
       </DropdownMenuContent>
     </DropdownMenu>
   );

@@ -34,12 +34,10 @@ export const submitRenewalApplication = async ({
           );
 
         if (existingDocs.length > 0) {
-          // 2. Delete old files
           await deleteFilesIfExist(
             existingDocs.map((d) => d.documentKey) as string[],
           );
 
-          // 3. Update the existing document with new key + url
           await tx
             .update(ScholarsDocumentsTable)
             .set({
@@ -50,7 +48,6 @@ export const submitRenewalApplication = async ({
             })
             .where(eq(ScholarsDocumentsTable.id, existingDocs[0]!.id));
         } else {
-          // 4. Insert new document if none exists
           await tx.insert(ScholarsDocumentsTable).values({
             id: generateUUID(),
             applicationsId: applicationId,

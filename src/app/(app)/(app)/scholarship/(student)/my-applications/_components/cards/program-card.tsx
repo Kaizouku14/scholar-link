@@ -186,11 +186,39 @@ const ScholarsProgramCard = ({ data }: { data: ScholarApplications }) => {
                 View Program
               </Button>
             </Link>
-            <RenewalForm
-              applicationId={data.applicationId}
-              documents={data.documents}
-              requirements={data.requirements}
-            />
+
+            {["renewal", "inactive"].includes(data.status) && (
+              <Button
+                variant="outline"
+                disabled
+                className={cn(
+                  "cursor-not-allowed",
+                  data.status === "renewal"
+                    ? "text-blue-600 hover:text-blue-700"
+                    : "text-red-600 hover:text-red-700",
+                )}
+              >
+                {data.status === "renewal" ? (
+                  <>
+                    <Clock className="mr-2 h-4 w-4" />
+                    Waiting for Review
+                  </>
+                ) : (
+                  <>
+                    <XCircle className="mr-2 h-4 w-4" />
+                    Deactivated
+                  </>
+                )}
+              </Button>
+            )}
+
+            {data.status === "for-renewal" && (
+              <RenewalForm
+                applicationId={data.applicationId}
+                documents={data.documents}
+                requirements={data.requirements}
+              />
+            )}
           </div>
         </div>
       </CardFooter>

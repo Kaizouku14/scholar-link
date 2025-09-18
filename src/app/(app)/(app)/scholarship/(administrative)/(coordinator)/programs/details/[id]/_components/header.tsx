@@ -1,8 +1,6 @@
-import { ShareButton } from "@/components/dropdown/share-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { PageRoutes } from "@/constants/page-routes";
-import { env } from "@/env";
 import type { ProgramHeader } from "@/interfaces/scholarship/program";
 import { calculateDaysLeft, cn, isDeadlineApproaching } from "@/lib/utils";
 import { format } from "date-fns";
@@ -20,7 +18,6 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 
 const ProgramDetailsHeader = ({
   data,
@@ -33,7 +30,6 @@ const ProgramDetailsHeader = ({
   handleToggleEdit: () => void;
   isPending: boolean;
 }) => {
-  const pathname = usePathname();
   const daysUntilDeadline = calculateDaysLeft(data.deadline);
   const isDeadlineSoon = isDeadlineApproaching(data.deadline);
   const isDeadlinePassed = daysUntilDeadline < 0;
@@ -205,9 +201,6 @@ const ProgramDetailsHeader = ({
                   "Edit Program Overview"
                 )}
               </Button>
-              <ShareButton
-                url={`${env.NEXT_PUBLIC_BETTER_AUTH_URL}${pathname}`}
-              />
             </div>
           </div>
 
