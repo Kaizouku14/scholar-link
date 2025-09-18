@@ -2,13 +2,14 @@ import { cacheData } from "@/lib/redis";
 import { createTRPCRouter, protectedRoute } from "../../trpc";
 import { getAllApplications } from "@/lib/api/scholarship/student/my-applications/query";
 import z from "zod";
+import { submitRenewalApplication } from "@/lib/api/scholarship/student/my-applications/mutation";
 
 export const scholarshipStudentRouter = createTRPCRouter({
-  //mutation
+  //mutations
   submitRenewal: protectedRoute
     .input(
       z.object({
-        programId: z.string(),
+        applicationId: z.string(),
         requirements: z.record(
           z.string(),
           z.object({
@@ -20,7 +21,7 @@ export const scholarshipStudentRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ input }) => {
-      console.log(input);
+      await submitRenewalApplication(input);
     }),
 
   //Queries

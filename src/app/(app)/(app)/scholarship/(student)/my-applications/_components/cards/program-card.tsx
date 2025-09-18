@@ -187,7 +187,8 @@ const ScholarsProgramCard = ({ data }: { data: ScholarApplications }) => {
               </Button>
             </Link>
             <RenewalForm
-              programId={data.programId}
+              applicationId={data.applicationId}
+              documents={data.documents}
               requirements={data.requirements}
             />
           </div>

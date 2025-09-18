@@ -14,6 +14,12 @@ interface BaseApplication {
   course: courseType;
 }
 
+export type UploadedRequirement = {
+  label: string;
+  key: string;
+  url: string;
+};
+
 export interface NewApplication extends BaseApplication {
   programId: string;
   sex: GenderType;

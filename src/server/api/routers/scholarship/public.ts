@@ -9,7 +9,7 @@ import { GENDERS } from "@/constants/users/genders";
 import { COURSES } from "@/constants/users/courses";
 import { createApplication } from "@/lib/api/scholarship/public/mutation";
 
-export const scholarshipRouter = createTRPCRouter({
+export const publicRouter = createTRPCRouter({
   sendApplication: publicProcedure
     .input(
       z.object({
