@@ -7,6 +7,8 @@ import {
 import { db, eq, inArray } from "@/server/db";
 import { authorizedEmail as AuthorizedEmailTable } from "@/server/db/schema/auth";
 import { applications as ApplicationsTable } from "@/server/db/schema/scholarship";
+import { sendEmail } from "@/services/email";
+import { DocumentRenewalTemplate } from "@/services/email-templates/document-renewal-template";
 import { TRPCError } from "@trpc/server";
 
 export const updateActiveApplication = async ({
@@ -44,11 +46,17 @@ export const updateActiveApplication = async ({
 export const bulkUpdate = async ({
   applicationIds,
   emails,
+  names,
   status,
+  message,
+  programName,
 }: {
   applicationIds: string[];
-  emails?: string[];
+  emails: string[];
+  names?: string[];
   status: scholarshipStatusType;
+  message?: string;
+  programName?: string;
 }) => {
   try {
     await db.transaction(async (tx) => {
@@ -61,7 +69,7 @@ export const bulkUpdate = async ({
 
         await tx
           .delete(AuthorizedEmailTable)
-          .where(inArray(AuthorizedEmailTable.email, emails!))
+          .where(inArray(AuthorizedEmailTable.email, emails))
           .execute();
       } else {
         await tx
@@ -69,6 +77,22 @@ export const bulkUpdate = async ({
           .set({ status })
           .where(inArray(ApplicationsTable.applicationsId, applicationIds))
           .execute();
+
+        await Promise.all(
+          emails.map((email, i) =>
+            sendEmail({
+              to: email,
+              subject: "Document Renewal Notice",
+              html: DocumentRenewalTemplate({
+                programName: programName ?? "Your Scholarship Program",
+                name: names?.[i],
+                message:
+                  message ??
+                  "Please renew your documents at the earliest convenience.",
+              }),
+            }),
+          ),
+        );
       }
     });
   } catch (error) {

@@ -26,21 +26,25 @@ import type { ProgramScholars } from "@/interfaces/scholarship/scholars";
 import { useState } from "react";
 import { DropdownMenuSeparator } from "@radix-ui/react-dropdown-menu";
 import type { scholarshipStatusType } from "@/constants/users/status";
+import { Textarea } from "@/components/ui/textarea";
 
 interface DataTableRowActionsProps {
   table: Table<ProgramScholars>;
 }
 
 export function ActionsHeader({ table }: DataTableRowActionsProps) {
-  const selectedItems = table.getSelectedRowModel().rows.map((row) => ({
+  const selectedRows = table.getSelectedRowModel().rows;
+  const selectedItems = selectedRows.map((row) => ({
     applicationId: row.original.applicationId,
     email: row.original.email,
+    name: row.original.name,
     status: row.original.status,
   }));
+  const programName = selectedRows[0]!.original.programName;
   const hasInactive = selectedItems.some((s) => s.status === "inactive");
-  const [openDeactivate, setOpenDeactivate] = useState(false);
-  const [openRenew, setOpenRenew] = useState(false);
-
+  const [openDeactivate, setOpenDeactivate] = useState<boolean>(false);
+  const [openRenew, setOpenRenew] = useState<boolean>(false);
+  const [message, setMessage] = useState<string>("");
   const { mutateAsync: bulkUpdate, isPending } =
     api.scholarshipCoordinator.bulkUpdateApplication.useMutation();
   const { refetch } =
@@ -67,7 +71,10 @@ export function ActionsHeader({ table }: DataTableRowActionsProps) {
         await bulkUpdate({
           applicationIds: selectedItems.map((s) => s.applicationId),
           emails: selectedItems.map((s) => s.email),
+          names: selectedItems.map((s) => s.name),
           status,
+          message,
+          programName,
         });
         message = "All account renewed successfully!";
         setOpenRenew(false);
@@ -156,6 +163,12 @@ export function ActionsHeader({ table }: DataTableRowActionsProps) {
                 required documents for review.
               </AlertDialogDescription>
             </AlertDialogHeader>
+            <Textarea
+              placeholder="Enter document to renew"
+              className="mt-2"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+            />
             <AlertDialogFooter>
               <AlertDialogCancel>Back</AlertDialogCancel>
               <AlertDialogAction

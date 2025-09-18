@@ -177,7 +177,10 @@ export const scholarshipCoordinatorRouter = createTRPCRouter({
       z.object({
         applicationIds: z.array(z.string()),
         emails: z.array(z.string()),
+        names: z.array(z.string()).optional(),
         status: z.enum(SCHOLARSHIP_STATUS),
+        message: z.string().optional(),
+        programName: z.string().optional(),
       }),
     )
     .mutation(async ({ input }) => {
