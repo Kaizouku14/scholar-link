@@ -1,6 +1,6 @@
 import { createCallerFactory, createTRPCRouter } from "@/server/api/trpc";
 import { userRouter } from "./routers/user";
-import { scholarshipRouter } from "./routers/scholarship/scholarship";
+import { publicRouter } from "./routers/scholarship/public";
 import { mailRouter } from "./routers/mail";
 import { authRouter } from "./routers/auth";
 import { internshipRouter } from "./routers/internship/internships";
@@ -33,7 +33,7 @@ export const appRouter = createTRPCRouter({
   scholarshipCoordinator: scholarshipCoordinatorRouter,
   scholarshipAdmin: scholarshipAdminRouter,
 
-  scholarships: scholarshipRouter,
+  public: publicRouter,
 });
 
 // export type definition of API

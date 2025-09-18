@@ -53,7 +53,7 @@ export const ApplicationForm = ({
   });
 
   const { mutateAsync: sendApplication } =
-    api.scholarships.sendApplication.useMutation();
+    api.public.sendApplication.useMutation();
   const onSubmit = async (data: FormData) => {
     const toastId = toast.loading(
       "Hang tight! We’re processing your application...",

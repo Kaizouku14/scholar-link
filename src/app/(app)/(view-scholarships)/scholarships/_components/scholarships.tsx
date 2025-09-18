@@ -9,7 +9,7 @@ import Header from "./header";
 
 const AvailableScholarships = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const { data, isLoading } = api.scholarships.getAllActivePrograms.useQuery();
+  const { data, isLoading } = api.public.getAllActivePrograms.useQuery();
 
   const itemsPerPage = 6;
   const totalPages = Math.ceil((data?.length ?? 0) / itemsPerPage);

@@ -13,8 +13,9 @@ import RenderContent from "@/components/titap/render-content";
 const ProgramSection = ({ id }: { id: string }) => {
   const [tab, setTab] = useState("program-overview");
   const applicationRef = useRef<HTMLDivElement | null>(null);
-  const { data, isLoading } =
-    api.scholarships.getScholarshipProgramById.useQuery({ id });
+  const { data, isLoading } = api.public.getScholarshipProgramById.useQuery({
+    id,
+  });
   const isPassed = data?.program && isDeadlinePassed(data.program.deadline);
 
   return (

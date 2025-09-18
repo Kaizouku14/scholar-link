@@ -17,7 +17,7 @@ const ScholarshipsCarousel = () => {
   const [carouselApi, setCarouselApi] = React.useState<CarouselApi>();
   const [current, setCurrent] = React.useState(0);
   const [count, setCount] = React.useState(0);
-  const { data, isLoading } = api.scholarships.getAllActivePrograms.useQuery();
+  const { data, isLoading } = api.public.getAllActivePrograms.useQuery();
 
   React.useEffect(() => {
     if (!carouselApi) {

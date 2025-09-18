@@ -11,7 +11,7 @@ import toast from "react-hot-toast";
 
 const ScholarshipDetails = ({ id }: { id: string }) => {
   const { data, isLoading, refetch } =
-    api.scholarships.getScholarshipProgramById.useQuery({ id });
+    api.public.getScholarshipProgramById.useQuery({ id });
   const { mutateAsync: updateProgramSection, isPending } =
     api.scholarshipCoordinator.onUpdateOverview.useMutation();
   const [onEdit, setOnEdit] = useState(false);
