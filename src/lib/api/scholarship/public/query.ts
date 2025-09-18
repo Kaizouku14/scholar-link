@@ -1,34 +1,10 @@
 import { db } from "@/server/db";
 import {
-  applications as ApplicationsTable,
   scholarshipProgram as ProgramTable,
   requirements as RequirementsTable,
 } from "@/server/db/schema/scholarship";
 import { TRPCError } from "@trpc/server";
 import { desc, eq } from "drizzle-orm";
-
-export const checkIfUserAlreadyApplied = async ({
-  email,
-}: {
-  email: string;
-}) => {
-  try {
-    const [application] = await db
-      .select({ id: ApplicationsTable.applicationsId })
-      .from(ProgramTable)
-      .where(eq(ProgramTable.programId, programId))
-      .limit(1)
-      .execute();
-
-    return !!application;
-  } catch (error) {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message:
-        "Failed to fetch scholarships program," + (error as Error).message,
-    });
-  }
-};
 
 export const getAllActivePrograms = async () => {
   try {
