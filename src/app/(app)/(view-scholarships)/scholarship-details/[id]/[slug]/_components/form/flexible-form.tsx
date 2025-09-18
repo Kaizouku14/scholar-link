@@ -54,10 +54,25 @@ export const ApplicationForm = ({
 
   const { mutateAsync: sendApplication } =
     api.public.sendApplication.useMutation();
+  const { mutateAsync: checkIfUserCanApply } =
+    api.public.checkIfUserCanApply.useMutation();
   const onSubmit = async (data: FormData) => {
     const toastId = toast.loading(
       "Hang tight! We’re processing your application...",
     );
+    const isAllowed = await checkIfUserCanApply({
+      email: data.email as string,
+    });
+    if (!isAllowed) {
+      toast.error(
+        "You are not allowed to apply for this scholarship programId.",
+        {
+          id: toastId,
+          duration: 5000,
+        },
+      );
+      return;
+    }
 
     try {
       const uploadedRequirements = await handleSubmittedRequirements(

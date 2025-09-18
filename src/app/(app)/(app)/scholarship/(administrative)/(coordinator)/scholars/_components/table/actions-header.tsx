@@ -40,7 +40,8 @@ export function ActionsHeader({ table }: DataTableRowActionsProps) {
     name: row.original.name,
     status: row.original.status,
   }));
-  const programName = selectedRows[0]!.original.programName;
+  const programName =
+    selectedRows?.length > 0 && selectedRows[0]!.original.programName;
   const hasInactive = selectedItems.some((s) => s.status === "inactive");
   const [openDeactivate, setOpenDeactivate] = useState<boolean>(false);
   const [openRenew, setOpenRenew] = useState<boolean>(false);

@@ -28,7 +28,7 @@ export const createFormSchema = (requirements: Requirement[]) => {
 
   requirements.forEach((req) => {
     const baseFileSchema = z
-      .instanceof(FileList)
+      .instanceof(FileList, { message: `${req.label} is required` })
       .refine((files) => files[0] && files?.[0]?.size <= 5_000_000, {
         message: "File size should be less than 5MB",
       });

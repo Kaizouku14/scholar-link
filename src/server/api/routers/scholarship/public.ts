@@ -7,9 +7,21 @@ import {
 import { cacheData } from "@/lib/redis";
 import { GENDERS } from "@/constants/users/genders";
 import { COURSES } from "@/constants/users/courses";
-import { createApplication } from "@/lib/api/scholarship/public/mutation";
+import {
+  isUserAllowed,
+  createApplication,
+} from "@/lib/api/scholarship/public/mutation";
 
 export const publicRouter = createTRPCRouter({
+  checkIfUserCanApply: publicProcedure
+    .input(
+      z.object({
+        email: z.string(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      return await isUserAllowed(input);
+    }),
   sendApplication: publicProcedure
     .input(
       z.object({
